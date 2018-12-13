@@ -9,6 +9,11 @@
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="MYRIADPRO-REGULAR.OTF">
+            <string>MyriadPro-Regular</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -18,10 +23,57 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="MobileAppScreenDesign" translatesAutoresizingMaskIntoConstraints="NO" id="emj-Pu-t13">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="LAA-ms-D32">
+                                <rect key="frame" x="32" y="307.5" width="320" height="52"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="52" id="tFS-yR-SG9"/>
+                                </constraints>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <textInputTraits key="textInputTraits" returnKeyType="next" textContentType="username"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7rj-0G-EHw">
+                                <rect key="frame" x="32" y="391.5" width="320" height="52"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="52" id="Gb0-WR-wC4"/>
+                                </constraints>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <textInputTraits key="textInputTraits" returnKeyType="done" textContentType="password"/>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="User/Email" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a2a-8P-L1h">
+                                <rect key="frame" x="32" y="285.5" width="320" height="16"/>
+                                <fontDescription key="fontDescription" name="MyriadPro-Regular" family="Myriad Pro" pointSize="16"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wXd-0A-LVz">
+                                <rect key="frame" x="67" y="516" width="250" height="57"/>
+                                <color key="backgroundColor" red="0.76092046499999999" green="0.39221301669999997" blue="0.86279797550000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="37"/>
+                                <state key="normal" title="LOGIN">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wnm-xo-dX9">
+                                <rect key="frame" x="32" y="369.5" width="320" height="16"/>
+                                <fontDescription key="fontDescription" name="MyriadPro-Regular" family="Myriad Pro" pointSize="16"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Forgot your password?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i1K-zt-QJz">
+                                <rect key="frame" x="32" y="449.5" width="152" height="16"/>
+                                <fontDescription key="fontDescription" name="MyriadPro-Regular" family="Myriad Pro" pointSize="16"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4nM-Ry-DdE">
+                                <rect key="frame" x="185" y="443.5" width="58" height="28"/>
+                                <fontDescription key="fontDescription" name="MyriadPro-Regular" family="Myriad Pro" pointSize="16"/>
+                                <state key="normal" title="Tap here">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                            </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SiteSnapLogo" translatesAutoresizingMaskIntoConstraints="NO" id="wFn-Pg-Voz">
                                 <rect key="frame" x="71" y="276" width="233" height="115"/>
                                 <constraints>
@@ -29,39 +81,39 @@
                                     <constraint firstAttribute="width" constant="233" id="hFe-H6-Wyt"/>
                                 </constraints>
                             </imageView>
-                            <textField opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="LAA-ms-D32">
-                                <rect key="frame" x="32" y="304" width="320" height="52"/>
-                                <nil key="textColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7rj-0G-EHw">
-                                <rect key="frame" x="32" y="391" width="320" height="52"/>
-                                <nil key="textColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="User/Email" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a2a-8P-L1h">
-                                <rect key="frame" x="35" y="256" width="80" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="Optima-Regular" family="Optima" pointSize="17"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.10196078431372549" green="0.10196078431372549" blue="0.10196078431372549" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="7rj-0G-EHw" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="32" id="09y-SF-sGw"/>
+                            <constraint firstItem="LAA-ms-D32" firstAttribute="trailing" secondItem="a2a-8P-L1h" secondAttribute="trailing" id="1Px-zV-v57"/>
+                            <constraint firstItem="i1K-zt-QJz" firstAttribute="leading" secondItem="7rj-0G-EHw" secondAttribute="leading" id="3YO-xl-eaE"/>
+                            <constraint firstItem="7rj-0G-EHw" firstAttribute="trailing" secondItem="wnm-xo-dX9" secondAttribute="trailing" id="5df-Mp-h8R"/>
+                            <constraint firstItem="4nM-Ry-DdE" firstAttribute="leading" secondItem="i1K-zt-QJz" secondAttribute="trailing" constant="1" id="6as-e0-RHW"/>
+                            <constraint firstItem="LAA-ms-D32" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="8H6-8I-Bd8"/>
+                            <constraint firstItem="wXd-0A-LVz" firstAttribute="top" secondItem="7rj-0G-EHw" secondAttribute="bottom" constant="72.5" id="9B9-DK-g6b"/>
+                            <constraint firstItem="wXd-0A-LVz" firstAttribute="leading" secondItem="7rj-0G-EHw" secondAttribute="leading" constant="35" id="CMA-98-zze"/>
+                            <constraint firstItem="i1K-zt-QJz" firstAttribute="top" secondItem="7rj-0G-EHw" secondAttribute="bottom" constant="6" id="IBe-6i-e2m"/>
                             <constraint firstItem="LAA-ms-D32" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="32" id="LsN-s6-BcS"/>
+                            <constraint firstItem="7rj-0G-EHw" firstAttribute="leading" secondItem="wnm-xo-dX9" secondAttribute="leading" id="M0h-nt-J7V"/>
+                            <constraint firstItem="7rj-0G-EHw" firstAttribute="top" secondItem="wnm-xo-dX9" secondAttribute="bottom" constant="6" id="TVb-zj-jcz"/>
                             <constraint firstItem="wFn-Pg-Voz" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="aY5-JZ-nJ1"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="7rj-0G-EHw" secondAttribute="trailing" constant="23" id="b5N-Ub-S70"/>
+                            <constraint firstItem="LAA-ms-D32" firstAttribute="top" secondItem="a2a-8P-L1h" secondAttribute="bottom" constant="6" id="bnW-vQ-nZZ"/>
+                            <constraint firstItem="wXd-0A-LVz" firstAttribute="trailing" secondItem="7rj-0G-EHw" secondAttribute="trailing" constant="-35" id="buz-aq-z2R"/>
+                            <constraint firstItem="LAA-ms-D32" firstAttribute="leading" secondItem="a2a-8P-L1h" secondAttribute="leading" id="eRC-e0-QEy"/>
+                            <constraint firstItem="7rj-0G-EHw" firstAttribute="top" secondItem="LAA-ms-D32" secondAttribute="bottom" constant="32" id="f1w-3i-xZz"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="LAA-ms-D32" secondAttribute="trailing" constant="23" id="g9u-Mv-JPe"/>
                             <constraint firstItem="wFn-Pg-Voz" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="hxI-6E-j5x"/>
+                            <constraint firstItem="4nM-Ry-DdE" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="7rj-0G-EHw" secondAttribute="trailing" id="lIc-TD-X6U"/>
+                            <constraint firstItem="4nM-Ry-DdE" firstAttribute="top" secondItem="7rj-0G-EHw" secondAttribute="bottom" id="ssC-sT-KWO"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="loginButton" destination="wXd-0A-LVz" id="cTQ-O5-pk3"/>
                         <outlet property="logo" destination="wFn-Pg-Voz" id="aOQ-Kj-JmT"/>
+                        <outlet property="passwordTextField" destination="7rj-0G-EHw" id="QfU-qU-8bi"/>
+                        <outlet property="tapHereButton" destination="4nM-Ry-DdE" id="Wah-AM-9YJ"/>
                         <outlet property="userNameTextField" destination="LAA-ms-D32" id="ieq-1t-NPF"/>
                     </connections>
                 </viewController>
@@ -71,7 +123,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="MobileAppScreenDesign" width="720" height="1280"/>
         <image name="SiteSnapLogo" width="445" height="221"/>
     </resources>
 </document>
