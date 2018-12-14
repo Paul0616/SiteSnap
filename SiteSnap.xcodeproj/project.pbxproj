@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		40B9655F21C3A1BF004A383D /* MobileAppScreenDesign.png in Resources */ = {isa = PBXBuildFile; fileRef = 40B9655E21C3A1BF004A383D /* MobileAppScreenDesign.png */; };
 		DA977F0921C1460F00883640 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F0821C1460F00883640 /* AppDelegate.swift */; };
 		DA977F0B21C1460F00883640 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F0A21C1460F00883640 /* ViewController.swift */; };
 		DA977F0E21C1460F00883640 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DA977F0C21C1460F00883640 /* Main.storyboard */; };
@@ -38,6 +39,7 @@
 
 /* Begin PBXFileReference section */
 		405977E921C2455700AF9F4B /* MYRIADPRO-REGULAR.OTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MYRIADPRO-REGULAR.OTF"; sourceTree = "<group>"; };
+		40B9655E21C3A1BF004A383D /* MobileAppScreenDesign.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MobileAppScreenDesign.png; sourceTree = "<group>"; };
 		DA977F0521C1460F00883640 /* SiteSnap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SiteSnap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA977F0821C1460F00883640 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DA977F0A21C1460F00883640 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 				DA977F0A21C1460F00883640 /* ViewController.swift */,
 				DA977F5421C2E91300883640 /* CameraViewController.swift */,
 				DA977F0C21C1460F00883640 /* Main.storyboard */,
+				40B9655E21C3A1BF004A383D /* MobileAppScreenDesign.png */,
 				DA977F1221C1461100883640 /* Assets.xcassets */,
 				DA977F1421C1461100883640 /* LaunchScreen.storyboard */,
 				DA977F1721C1461100883640 /* Info.plist */,
@@ -259,6 +262,7 @@
 				DA977F1621C1461100883640 /* LaunchScreen.storyboard in Resources */,
 				DA977F1321C1461100883640 /* Assets.xcassets in Resources */,
 				DA977F0E21C1460F00883640 /* Main.storyboard in Resources */,
+				40B9655F21C3A1BF004A383D /* MobileAppScreenDesign.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

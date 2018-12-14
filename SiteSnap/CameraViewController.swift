@@ -16,20 +16,22 @@ class CameraViewController: UIViewController {
     var frontCamera: AVCaptureDevice?
     var rearCamera: AVCaptureDevice?
    
+    @IBOutlet weak var buttonContainerView: UIView!
     @IBOutlet weak var capturePreviewView: UIView!
-   // let cameraController = CameraController()
+    @IBOutlet weak var captureButton: UIButton!
+    // let cameraController = CameraController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
      //   configureCameraController()
-        let captureDevice = AVCaptureDevice.default(for: AVMediaType.video)
+     //   let captureDevice = AVCaptureDevice.default(for: AVMediaType.video)
         
         do {
-            let input = try AVCaptureDeviceInput(device: captureDevice!)
+           // let input = try AVCaptureDeviceInput(device: captureDevice!)
             captureSession = AVCaptureSession()
-            captureSession?.addInput(input)
+            //captureSession?.addInput(input)
             let session = AVCaptureDevice.DiscoverySession.init(deviceTypes: [.builtInWideAngleCamera], mediaType: AVMediaType.video, position: .unspecified)
             let cameras = (session.devices.compactMap{ $0 })
             for camera in cameras {
@@ -42,6 +44,8 @@ class CameraViewController: UIViewController {
                     try camera.lockForConfiguration()
                     camera.focusMode = .continuousAutoFocus
                     camera.unlockForConfiguration()
+                    let input = try AVCaptureDeviceInput(device: camera)
+                    captureSession?.addInput(input)
                 }
             }
         } catch {
@@ -52,6 +56,13 @@ class CameraViewController: UIViewController {
         videoPreviewLayer?.frame = view.layer.bounds
         capturePreviewView.layer.addSublayer(videoPreviewLayer!)
         captureSession?.startRunning()
+        
+        captureButton.layer.borderColor = UIColor.black.cgColor
+        captureButton.layer.borderWidth = 2
+        //captureButton.frame.width = 70
+        //captureButton.frame.height = 70
+        captureButton.layer.cornerRadius = 35
+        
     }
     
 //    func configureCameraController(){
