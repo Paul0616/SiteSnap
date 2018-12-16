@@ -25,8 +25,12 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     @IBOutlet weak var dropDownListProjectsTableView: UITableView!
     
+    var userProjects = [ProjectModel]()
+    var projectId: Int = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        dropDownListProjectsTableView.isHidden = true
         setupInputOutput()
         setupPreviewLayer()
         captureSession?.startRunning()
@@ -39,12 +43,48 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     }
     
+    @IBAction func onClickSelectedProjectButton(_ sender: ActivityIndicatorButton) {
+         animateProjectsList(toogle: dropDownListProjectsTableView.isHidden)
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        <#code#>
+        return userProjects.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        <#code#>
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cellProject", for: indexPath)
+        cell.textLabel?.textColor = UIColor.white
+        cell.textLabel?.text = userProjects[indexPath.row].projectName
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let selected = tableView.indexPathForSelectedRow
+        if selected == indexPath {
+            cell.contentView.backgroundColor = UIColor.black
+        } else {
+            cell.contentView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if tableView == dropDownListProjectsTableView {
+            projectId = userProjects[indexPath.row].id
+            selectedProjectButton.setTitle("\(userProjects[indexPath.row].projectName)", for: .normal)
+            animateProjectsList(toogle: false)
+            let selectedCell:UITableViewCell = tableView.cellForRow(at: indexPath)!
+            selectedCell.contentView.backgroundColor = UIColor.black
+            setProjectsSelected(projectId: projectId)
+            //UserDefaults.standard.setValuesForKeys([Constants.LOCATION_NAME_KEY + Constants.ID_KEY: locationId])
+           // loadLocationTodayDocuments(locationId: locationId)
+        }
+    }
+    
+    func setProjectsSelected(projectId: Int){
+        for i in 0...userProjects.count-1 {
+            userProjects[i].selected = userProjects[i].id == projectId
+        }
     }
     
     func animateProjectsList(toogle: Bool){
@@ -147,7 +187,15 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     @IBAction func onClickGalerry(_ sender: UIButton) {
         print("GALERY")
-        selectedProjectButton.hideLoading()
+        selectedProjectButton.hideLoading(buttonText: nil)
+        userProjects.removeAll()
+        for i in 0...3 {
+            guard let project = ProjectModel(id: i+1, projectName: "Project \(i+1)") else {
+                fatalError("Unable to instantiate ProductModel")
+            }
+            self.userProjects += [project]
+        }
+        self.dropDownListProjectsTableView.reloadData()
     }
     
     /*

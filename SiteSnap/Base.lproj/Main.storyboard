@@ -215,8 +215,11 @@
                                         </constraints>
                                         <inset key="contentEdgeInsets" minX="0.0" minY="0.0" maxX="25" maxY="0.0"/>
                                         <state key="normal" title="Uploading to:"/>
+                                        <connections>
+                                            <action selector="onClickSelectedProjectButton:" destination="c4J-9c-Nyi" eventType="touchUpInside" id="Xam-rs-CXW"/>
+                                        </connections>
                                     </button>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="r0N-4q-P6E">
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="r0N-4q-P6E">
                                         <rect key="frame" x="0.0" y="50" width="254" height="100"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
@@ -227,26 +230,17 @@
                                                 <rect key="frame" x="0.0" y="28" width="254" height="44"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="esJ-li-yO1" id="YnH-yJ-Th4">
-                                                    <rect key="frame" x="0.0" y="0.0" width="254" height="43.666666666666664"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="254" height="44"/>
                                                     <autoresizingMask key="autoresizingMask"/>
-                                                    <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Project" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FeD-xd-wEe">
-                                                            <rect key="frame" x="8" y="0.0" width="238" height="43.666666666666664"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                    </subviews>
-                                                    <constraints>
-                                                        <constraint firstItem="FeD-xd-wEe" firstAttribute="leading" secondItem="YnH-yJ-Th4" secondAttribute="leading" constant="8" id="0A8-fv-7TU"/>
-                                                        <constraint firstAttribute="bottom" secondItem="FeD-xd-wEe" secondAttribute="bottom" id="Fuj-7x-yyV"/>
-                                                        <constraint firstItem="FeD-xd-wEe" firstAttribute="top" secondItem="YnH-yJ-Th4" secondAttribute="top" id="Sgf-72-yUM"/>
-                                                        <constraint firstAttribute="trailing" secondItem="FeD-xd-wEe" secondAttribute="trailing" constant="8" id="Ubq-Ye-2Q5"/>
-                                                    </constraints>
                                                 </tableViewCellContentView>
                                                 <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
                                             </tableViewCell>
                                         </prototypes>
+                                        <connections>
+                                            <outlet property="dataSource" destination="c4J-9c-Nyi" id="Y6D-vV-NC0"/>
+                                            <outlet property="delegate" destination="c4J-9c-Nyi" id="Mxn-mc-BBs"/>
+                                        </connections>
                                     </tableView>
                                 </subviews>
                             </stackView>

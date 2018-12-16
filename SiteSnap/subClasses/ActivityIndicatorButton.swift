@@ -10,6 +10,7 @@ import UIKit
 
 class ActivityIndicatorButton: UIButton {
     var activityIndicator: UIActivityIndicatorView!
+    var image: UIImageView!
     
     
 //      Only override draw() if you perform custom drawing.
@@ -41,11 +42,17 @@ class ActivityIndicatorButton: UIButton {
         self.layer.cornerRadius = 10
         self.layer.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5).cgColor
         self.setTitleColor(UIColor.white, for: .normal)
+        self.image = UIImageView(image: UIImage(named: "import_export-24px"))
+        self.image.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(image)
+        positioningImage()
     }
+    
     func showLoading() {
         if (activityIndicator == nil) {
             activityIndicator = createActivityIndicator()
         }
+        self.image.isHidden = true
         showSpinning()
     }
     
@@ -64,9 +71,32 @@ class ActivityIndicatorButton: UIButton {
         activityIndicator.startAnimating()
     }
     
-    func hideLoading() {
-        activityIndicator.stopAnimating()
-        self.setTitle("Uploading to:", for: .normal)
+    func hideLoading(buttonText: String?) {
+        guard let currentActivityIndicator = activityIndicator else {
+            print("No activity Indicator")
+            return
+        }
+        currentActivityIndicator.stopAnimating()
+        self.image.isHidden = false
+        guard let text = buttonText else {
+            self.setTitle("Uploading to:", for: .normal)
+            return
+        }
+        self.setTitle(text, for: .normal)
+        
+    }
+    private func positioningImage() {
+        let xRightConstraint = NSLayoutConstraint(item: self, attribute: .rightMargin, relatedBy: .equal, toItem: image, attribute: .rightMargin, multiplier: 1, constant: 10)
+        self.addConstraint(xRightConstraint)
+        
+        let yCenterConstraint = NSLayoutConstraint(item: self, attribute: .centerY, relatedBy: .equal, toItem: image, attribute: .centerY, multiplier: 1, constant: 0)
+        self.addConstraint(yCenterConstraint)
+        
+        let height = NSLayoutConstraint(item: self.image, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 30)
+        let width = NSLayoutConstraint(item: self.image, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 30)
+        self.image.addConstraints([height, width])
+        
+//        self.image.isHidden = true
     }
     
     private func positioningActivityIndicatorInButton() {

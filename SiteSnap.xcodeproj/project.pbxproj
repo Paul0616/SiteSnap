@@ -19,6 +19,7 @@
 		DA977F5521C2E91300883640 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F5421C2E91300883640 /* CameraViewController.swift */; };
 		DA977F5821C3F25200883640 /* FlashStateButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F5721C3F25200883640 /* FlashStateButton.swift */; };
 		DA977F5A21C4E38B00883640 /* ActivityIndicatorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F5921C4E38B00883640 /* ActivityIndicatorButton.swift */; };
+		DAA5DC7421C655170000B966 /* ProjectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA5DC7321C655170000B966 /* ProjectModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,7 @@
 		DA977F5421C2E91300883640 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		DA977F5721C3F25200883640 /* FlashStateButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashStateButton.swift; sourceTree = "<group>"; };
 		DA977F5921C4E38B00883640 /* ActivityIndicatorButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorButton.swift; sourceTree = "<group>"; };
+		DAA5DC7321C655170000B966 /* ProjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +118,7 @@
 		DA977F0721C1460F00883640 /* SiteSnap */ = {
 			isa = PBXGroup;
 			children = (
+				DAA5DC7221C654EB0000B966 /* Models */,
 				DA977F5621C3F21C00883640 /* subClasses */,
 				DA977F5121C2CEA900883640 /* CameraUsage */,
 				405977E821C242BF00AF9F4B /* Fonts */,
@@ -164,6 +167,14 @@
 				DA977F5921C4E38B00883640 /* ActivityIndicatorButton.swift */,
 			);
 			path = subClasses;
+			sourceTree = "<group>";
+		};
+		DAA5DC7221C654EB0000B966 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				DAA5DC7321C655170000B966 /* ProjectModel.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -302,6 +313,7 @@
 				DA977F5A21C4E38B00883640 /* ActivityIndicatorButton.swift in Sources */,
 				DA977F5821C3F25200883640 /* FlashStateButton.swift in Sources */,
 				DA977F0B21C1460F00883640 /* ViewController.swift in Sources */,
+				DAA5DC7421C655170000B966 /* ProjectModel.swift in Sources */,
 				DA977F5321C2D07900883640 /* CameraController.swift in Sources */,
 				DA977F0921C1460F00883640 /* AppDelegate.swift in Sources */,
 			);
