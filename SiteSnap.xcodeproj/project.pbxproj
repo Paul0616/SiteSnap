@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		40B9655F21C3A1BF004A383D /* MobileAppScreenDesign.png in Resources */ = {isa = PBXBuildFile; fileRef = 40B9655E21C3A1BF004A383D /* MobileAppScreenDesign.png */; };
 		DA977F0921C1460F00883640 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F0821C1460F00883640 /* AppDelegate.swift */; };
 		DA977F0B21C1460F00883640 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F0A21C1460F00883640 /* ViewController.swift */; };
 		DA977F0E21C1460F00883640 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DA977F0C21C1460F00883640 /* Main.storyboard */; };
@@ -18,6 +17,8 @@
 		DA977F2C21C1461100883640 /* SiteSnapUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F2B21C1461100883640 /* SiteSnapUITests.swift */; };
 		DA977F5321C2D07900883640 /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F5221C2D07900883640 /* CameraController.swift */; };
 		DA977F5521C2E91300883640 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F5421C2E91300883640 /* CameraViewController.swift */; };
+		DA977F5821C3F25200883640 /* FlashStateButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F5721C3F25200883640 /* FlashStateButton.swift */; };
+		DA977F5A21C4E38B00883640 /* ActivityIndicatorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F5921C4E38B00883640 /* ActivityIndicatorButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,7 +40,6 @@
 
 /* Begin PBXFileReference section */
 		405977E921C2455700AF9F4B /* MYRIADPRO-REGULAR.OTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MYRIADPRO-REGULAR.OTF"; sourceTree = "<group>"; };
-		40B9655E21C3A1BF004A383D /* MobileAppScreenDesign.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MobileAppScreenDesign.png; sourceTree = "<group>"; };
 		DA977F0521C1460F00883640 /* SiteSnap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SiteSnap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA977F0821C1460F00883640 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DA977F0A21C1460F00883640 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -56,6 +56,8 @@
 		DA977F2D21C1461100883640 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DA977F5221C2D07900883640 /* CameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		DA977F5421C2E91300883640 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
+		DA977F5721C3F25200883640 /* FlashStateButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashStateButton.swift; sourceTree = "<group>"; };
+		DA977F5921C4E38B00883640 /* ActivityIndicatorButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,9 +97,9 @@
 			isa = PBXGroup;
 			children = (
 				DA977F0721C1460F00883640 /* SiteSnap */,
-				DA977F1F21C1461100883640 /* SiteSnapTests */,
 				DA977F2A21C1461100883640 /* SiteSnapUITests */,
 				DA977F0621C1460F00883640 /* Products */,
+				DA977F1F21C1461100883640 /* SiteSnapTests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -114,13 +116,13 @@
 		DA977F0721C1460F00883640 /* SiteSnap */ = {
 			isa = PBXGroup;
 			children = (
+				DA977F5621C3F21C00883640 /* subClasses */,
 				DA977F5121C2CEA900883640 /* CameraUsage */,
 				405977E821C242BF00AF9F4B /* Fonts */,
 				DA977F0821C1460F00883640 /* AppDelegate.swift */,
 				DA977F0A21C1460F00883640 /* ViewController.swift */,
 				DA977F5421C2E91300883640 /* CameraViewController.swift */,
 				DA977F0C21C1460F00883640 /* Main.storyboard */,
-				40B9655E21C3A1BF004A383D /* MobileAppScreenDesign.png */,
 				DA977F1221C1461100883640 /* Assets.xcassets */,
 				DA977F1421C1461100883640 /* LaunchScreen.storyboard */,
 				DA977F1721C1461100883640 /* Info.plist */,
@@ -153,6 +155,15 @@
 				DA977F5221C2D07900883640 /* CameraController.swift */,
 			);
 			path = CameraUsage;
+			sourceTree = "<group>";
+		};
+		DA977F5621C3F21C00883640 /* subClasses */ = {
+			isa = PBXGroup;
+			children = (
+				DA977F5721C3F25200883640 /* FlashStateButton.swift */,
+				DA977F5921C4E38B00883640 /* ActivityIndicatorButton.swift */,
+			);
+			path = subClasses;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -262,7 +273,6 @@
 				DA977F1621C1461100883640 /* LaunchScreen.storyboard in Resources */,
 				DA977F1321C1461100883640 /* Assets.xcassets in Resources */,
 				DA977F0E21C1460F00883640 /* Main.storyboard in Resources */,
-				40B9655F21C3A1BF004A383D /* MobileAppScreenDesign.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,6 +299,8 @@
 			files = (
 				DA977F1121C1460F00883640 /* SiteSnap.xcdatamodeld in Sources */,
 				DA977F5521C2E91300883640 /* CameraViewController.swift in Sources */,
+				DA977F5A21C4E38B00883640 /* ActivityIndicatorButton.swift in Sources */,
+				DA977F5821C3F25200883640 /* FlashStateButton.swift in Sources */,
 				DA977F0B21C1460F00883640 /* ViewController.swift in Sources */,
 				DA977F5321C2D07900883640 /* CameraController.swift in Sources */,
 				DA977F0921C1460F00883640 /* AppDelegate.swift in Sources */,
