@@ -8,14 +8,27 @@
 
 import UIKit
 import AVFoundation
+import Photos
 
-class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
     var captureSession: AVCaptureSession?
     var videoPreviewLayer: AVCaptureVideoPreviewLayer?
     var frontCamera: AVCaptureDevice?
     var rearCamera: AVCaptureDevice?
+    var capturePhotoOutput: AVCapturePhotoOutput?
     var orientation = "Portrait"
+    
+    var assetCollection: PHAssetCollection!
+    var albumFound : Bool = false
+   // var collection: PHAssetCollection!
+    var assetCollectionPlaceholder: PHObjectPlaceholder!
+    //var photosAsset: PHFetchResult<AnyObject>!
+    var currentPhoto: UIImage!
+    var projectImages = [UIImage]()
+    
+    var imagePicker = UIImagePickerController()
+   
    
     @IBOutlet weak var buttonContainerView: UIView!
     @IBOutlet weak var capturePreviewView: UIView!
@@ -30,6 +43,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        imagePicker.delegate = self
         dropDownListProjectsTableView.isHidden = true
         setupInputOutput()
         setupPreviewLayer()
@@ -148,6 +162,12 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                     captureSession?.addInput(input)
                 }
             }
+            
+            // Get an instance of ACCapturePhotoOutput class
+            capturePhotoOutput = AVCapturePhotoOutput()
+            capturePhotoOutput?.isHighResolutionCaptureEnabled = true
+            // Set the output on the capture session
+            captureSession?.addOutput(capturePhotoOutput!)
         } catch {
             print(error)
         }
@@ -182,22 +202,182 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         print(sender.currentFlashState)
     }
     @IBAction func onClickCaptureButton(_ sender: UIButton) {
-        print("CLICK")
-        selectedProjectButton.showLoading()
+        //print("CLICK")
+        //selectedProjectButton.showLoading()
+        
+        // Make sure capturePhotoOutput is valid
+        guard let capturePhotoOutput = self.capturePhotoOutput else { return }
+        // Get an instance of AVCapturePhotoSettings class
+        let photoSettings = AVCapturePhotoSettings()
+        // Set photo settings for our need
+        photoSettings.isAutoStillImageStabilizationEnabled = true
+        photoSettings.isHighResolutionPhotoEnabled = true
+        photoSettings.flashMode = .auto
+        // Call capturePhoto method by passing our photo settings and a
+        // delegate implementing AVCapturePhotoCaptureDelegate
+        capturePhotoOutput.capturePhoto(with: photoSettings, delegate: self)
     }
     @IBAction func onClickGalerry(_ sender: UIButton) {
-        print("GALERY")
-        selectedProjectButton.hideLoading(buttonText: nil)
-        userProjects.removeAll()
-        for i in 0...3 {
-            guard let project = ProjectModel(id: i+1, projectName: "Project \(i+1)") else {
-                fatalError("Unable to instantiate ProductModel")
-            }
-            self.userProjects += [project]
-        }
-        self.dropDownListProjectsTableView.reloadData()
+//        print("GALERY")
+//        selectedProjectButton.hideLoading(buttonText: nil)
+//        userProjects.removeAll()
+//        for i in 0...3 {
+//            guard let project = ProjectModel(id: i+1, projectName: "Project \(i+1)") else {
+//                fatalError("Unable to instantiate ProductModel")
+//            }
+//            self.userProjects += [project]
+//        }
+//        self.dropDownListProjectsTableView.reloadData()
+        //-------------
+        //showImages()
+        //-------------
+        checkPermission()
     }
     
+    
+    
+    func checkPermission() {
+        let photoAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
+        switch photoAuthorizationStatus {
+            case .authorized:
+                print("Access is granted by user")
+                if UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum){
+                    print("Button capture")
+                    
+                    self.imagePicker.delegate = self
+                    self.imagePicker.sourceType = .photoLibrary;
+                    self.imagePicker.allowsEditing = false
+                    
+                    self.present(self.imagePicker, animated: true, completion: nil)
+                }
+            case .notDetermined:
+                PHPhotoLibrary.requestAuthorization({
+                (newStatus) in print("status is \(newStatus)")
+                    if newStatus == PHAuthorizationStatus.authorized {
+                        /* do stuff here */
+                        print("success")
+                        if UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum){
+                            print("Button capture")
+                            
+                            self.imagePicker.delegate = self
+                            self.imagePicker.sourceType = .photoLibrary;
+                            self.imagePicker.allowsEditing = false
+                            
+                            self.present(self.imagePicker, animated: true, completion: nil)
+                        }
+                    }
+                })
+            case .restricted:
+                print("User do not have access to photo album.")
+            case .denied:
+                print("User has denied the permission.")
+        }
+    }
+    
+    @objc func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let originalImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            // Use originalImage Here
+            
+            currentPhoto = originalImage
+        
+        }
+        picker.dismiss(animated: true)
+    }
+    
+    @objc func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true)
+    }
+    
+
+//    }
+//    func imagePickerController(picker: UIImagePickerController!, didFinishPickingImage image: UIImage!, editingInfo: NSDictionary!){
+//        self.dismiss(animated: true, completion: { () -> Void in
+//
+//        })
+        
+//        currentPhoto = image
+//        self.addImgToArray(uploadImage: self.currentPhoto!)
+//    }
+
+    func createAlbumAndSave(image: UIImage!) {
+        //Get PHFetch Options
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.predicate = NSPredicate(format: "title = %@", "My SiteSnap photos")
+        let collection : PHFetchResult = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions)
+        //Check return value - If found, then get the first album out
+        if let _: AnyObject = collection.firstObject {
+            self.albumFound = true
+            assetCollection = collection.firstObject
+        } else {
+            //If not found - Then create a new album
+            PHPhotoLibrary.shared().performChanges({
+                let createAlbumRequest : PHAssetCollectionChangeRequest = PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: "My SiteSnap photos")
+                self.assetCollectionPlaceholder = createAlbumRequest.placeholderForCreatedAssetCollection
+            }, completionHandler: { success, error in
+                self.albumFound = success
+                
+                if (success) {
+                    let collectionFetchResult = PHAssetCollection.fetchAssetCollections(withLocalIdentifiers: [self.assetCollectionPlaceholder.localIdentifier], options: nil)
+                    print(collectionFetchResult)
+                    self.assetCollection = collectionFetchResult.firstObject
+                }
+            })
+        }
+        saveImage(image: image)
+    }
+    
+    func saveImage(image: UIImage!){
+        PHPhotoLibrary.shared().performChanges({
+            let assetRequest = PHAssetChangeRequest.creationRequestForAsset(from: image)
+            let assetPlaceholder = assetRequest.placeholderForCreatedAsset
+            let albumChangeRequest = PHAssetCollectionChangeRequest(for: self.assetCollection)
+            albumChangeRequest!.addAssets([assetPlaceholder!] as NSFastEnumeration)
+        }, completionHandler: { success, error in
+            print("added image to album")
+            print(error as Any)
+        
+            
+            self.showImages()
+        })
+    }
+    
+    func showImages() {
+        //This will fetch all the assets in the collection
+        
+        let assets : PHFetchResult = PHAsset.fetchAssets(in: assetCollection, options: nil)
+        print(assets)
+        
+        let imageManager = PHCachingImageManager()
+        //Enumerating objects to get a chached image - This is to save loading time
+        assets.enumerateObjects{(object: AnyObject!,
+            count: Int,
+            stop: UnsafeMutablePointer<ObjCBool>) in
+            
+            if object is PHAsset {
+                let asset = object as! PHAsset
+                print(asset)
+                
+                let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
+                
+                let options = PHImageRequestOptions()
+                options.deliveryMode = .fastFormat
+                imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFill, options: options, resultHandler: {
+                    (image, info) -> Void in
+                    self.currentPhoto = image!
+                    /* The image is now available to us */
+                    self.addImgToArray(uploadImage: self.currentPhoto!)
+                    print("enum for image, This is number 2")
+                    
+                })
+            }
+        }
+    }
+    
+    func addImgToArray(uploadImage:UIImage)
+    {
+        self.projectImages.append(uploadImage)
+        print(projectImages.count)
+    }
     /*
     // MARK: - Navigation
 
@@ -208,4 +388,52 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     */
 
+}
+extension CameraViewController : AVCapturePhotoCaptureDelegate {
+    
+   
+    func photoOutput(_ output: AVCapturePhotoOutput,
+                     didFinishProcessingPhoto photo: AVCapturePhoto,
+                     error: Error?) {
+//        PHPhotoLibrary.shared().performChanges( {
+//            let creationRequest = PHAssetCreationRequest.forAsset()
+//            creationRequest.addResource(with: PHAssetResourceType.photo, data: photo.fileDataRepresentation()!, options: nil)
+//        }, completionHandler: nil)
+        let uiImage = UIImage(data: photo.fileDataRepresentation()!)
+        self.createAlbumAndSave(image: uiImage)
+        guard error == nil else {
+            print("Error in capture process: \(String(describing: error))")
+            return
+        }
+    }
+  
+//    func photoOutput(_ captureOutput: AVCapturePhotoOutput,
+//                     didFinishCaptureFor resolvedSettings: AVCaptureResolvedPhotoSettings,
+//                     error: Error?) {
+//        <#code#>
+//    }
+    
+    
+//    func photoOutput(_ output: AVCapturePhotoOutput,
+//                     didFinishProcessingPhoto photoSampleBuffer: CMSampleBuffer?,
+//                     previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?,
+//                     resolvedSettings: AVCaptureResolvedPhotoSettings,
+//                     bracketSettings: AVCaptureBracketedStillImageSettings?,
+//                     error: Error?) {
+//        // get captured image
+//
+//        // Make sure we get some photo sample buffer
+//        guard error == nil,
+//            let photoSampleBuffer = photoSampleBuffer else {
+//                print("Error capturing photo: \(String(describing: error))")
+//                return
+//        }
+//
+//        // Convert photo same buffer to a jpeg image data by using // AVCapturePhotoOutput
+//        guard let imageData =
+//            AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: photoSampleBuffer, previewPhotoSampleBuffer: previewPhotoSampleBuffer) else {
+//                return
+//        }
+//
+//    }
 }
