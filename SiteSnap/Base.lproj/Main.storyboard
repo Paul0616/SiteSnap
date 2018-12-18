@@ -215,6 +215,9 @@
                                     <constraint firstAttribute="width" constant="60" id="aXt-Ce-v3Z"/>
                                 </constraints>
                                 <state key="normal" backgroundImage="menu-24px"/>
+                                <connections>
+                                    <action selector="onClickMenu:" destination="c4J-9c-Nyi" eventType="touchUpInside" id="249-mj-tdg"/>
+                                </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="APg-gK-bOu">
                                 <rect key="frame" x="80" y="32" width="254" height="150"/>
@@ -329,6 +332,7 @@
                         <outlet property="captureInnerButton" destination="evf-4T-LnQ" id="nEH-Sy-sFE"/>
                         <outlet property="capturePreviewView" destination="JPC-8R-cVF" id="Rzh-Rk-eCe"/>
                         <outlet property="dropDownListProjectsTableView" destination="r0N-4q-P6E" id="HT4-9r-Ew7"/>
+                        <outlet property="menuButton" destination="X3g-6a-Fel" id="Qg7-o6-5MP"/>
                         <outlet property="selectedProjectButton" destination="DrV-oQ-auP" id="Jiw-ru-SYM"/>
                     </connections>
                 </viewController>

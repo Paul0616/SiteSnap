@@ -29,8 +29,10 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var projectImages = [UIImage]()
     
     var imagePicker = UIImagePickerController()
+    var processingPopup = ProcessingPopup()
    
    
+    @IBOutlet weak var menuButton: UIButton!
     @IBOutlet weak var buttonContainerView: UIView!
     @IBOutlet weak var capturePreviewView: UIView!
     @IBOutlet weak var captureButton: UIButton!
@@ -61,6 +63,11 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     @IBAction func onClickSelectedProjectButton(_ sender: ActivityIndicatorButton) {
          animateProjectsList(toogle: dropDownListProjectsTableView.isHidden)
     }
+    
+    @IBAction func onClickMenu(_ sender: UIButton){
+    
+    }
+   
     
     func whiteFlash(){
         let screenFlash = UIView(frame: capturePreviewView.frame)
@@ -213,10 +220,11 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     @IBAction func onClickFlashButton(_ sender: FlashStateButton) {
         print(sender.currentFlashState)
+        processingPopup.hideAndDestroy(from: view)
     }
     @IBAction func onClickCaptureButton(_ sender: UIButton) {
         //print("CLICK")
-        //selectedProjectButton.showLoading()
+    //selectedProjectButton.showLoading()
         
         // Make sure capturePhotoOutput is valid
         guard let capturePhotoOutput = self.capturePhotoOutput else { return }
@@ -349,8 +357,11 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             print("added image to album")
             print(error as Any)
         
+            DispatchQueue.main.async {
+                self.processingPopup.hideAndDestroy(from: self.view)
+            }
             
-            self.showImages()
+            //self.showImages()
         })
     }
     
@@ -405,6 +416,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
 extension CameraViewController : AVCapturePhotoCaptureDelegate {
     
     func photoOutput(_ output: AVCapturePhotoOutput, willBeginCaptureFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
+        processingPopup.createAndShow(text: "Processing...", view: view)
         whiteFlash()
     }
     func photoOutput(_ output: AVCapturePhotoOutput,
@@ -412,6 +424,7 @@ extension CameraViewController : AVCapturePhotoCaptureDelegate {
                      error: Error?) {
         let uiImage = UIImage(data: photo.fileDataRepresentation()!)
         self.createAlbumAndSave(image: uiImage)
+       // processingPopup.hideAndDestroy(from: view)
         guard error == nil else {
             print("Error in capture process: \(String(describing: error))")
             return

@@ -19,6 +19,7 @@
 		DA977F5821C3F25200883640 /* FlashStateButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F5721C3F25200883640 /* FlashStateButton.swift */; };
 		DA977F5A21C4E38B00883640 /* ActivityIndicatorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F5921C4E38B00883640 /* ActivityIndicatorButton.swift */; };
 		DAA2705E21C8FAB10058148A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DAA2705B21C8FAB10058148A /* Main.storyboard */; };
+		DAA2706021C922B80058148A /* ProcessingPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA2705F21C922B80058148A /* ProcessingPopup.swift */; };
 		DAA5DC7421C655170000B966 /* ProjectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA5DC7321C655170000B966 /* ProjectModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -59,6 +60,7 @@
 		DA977F5721C3F25200883640 /* FlashStateButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashStateButton.swift; sourceTree = "<group>"; };
 		DA977F5921C4E38B00883640 /* ActivityIndicatorButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorButton.swift; sourceTree = "<group>"; };
 		DAA2705C21C8FAB10058148A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Main.storyboard; sourceTree = "<group>"; };
+		DAA2705F21C922B80058148A /* ProcessingPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingPopup.swift; sourceTree = "<group>"; };
 		DAA5DC7321C655170000B966 /* ProjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -164,6 +166,7 @@
 			children = (
 				DA977F5721C3F25200883640 /* FlashStateButton.swift */,
 				DA977F5921C4E38B00883640 /* ActivityIndicatorButton.swift */,
+				DAA2705F21C922B80058148A /* ProcessingPopup.swift */,
 			);
 			path = subClasses;
 			sourceTree = "<group>";
@@ -319,6 +322,7 @@
 				DA977F1121C1460F00883640 /* SiteSnap.xcdatamodeld in Sources */,
 				DA977F5521C2E91300883640 /* CameraViewController.swift in Sources */,
 				DA977F5A21C4E38B00883640 /* ActivityIndicatorButton.swift in Sources */,
+				DAA2706021C922B80058148A /* ProcessingPopup.swift in Sources */,
 				DA977F5821C3F25200883640 /* FlashStateButton.swift in Sources */,
 				DA977F0B21C1460F00883640 /* ViewController.swift in Sources */,
 				DAA5DC7421C655170000B966 /* ProjectModel.swift in Sources */,
