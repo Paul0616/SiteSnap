@@ -62,6 +62,18 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
          animateProjectsList(toogle: dropDownListProjectsTableView.isHidden)
     }
     
+    func whiteFlash(){
+        let screenFlash = UIView(frame: capturePreviewView.frame)
+        screenFlash.backgroundColor = UIColor.white
+        capturePreviewView.addSubview(screenFlash)
+        UIView.animate(withDuration: 0.1, delay: 0.0, options: [.curveEaseOut], animations: {() -> Void in
+            screenFlash.alpha = 0
+        }, completion: {(finished: Bool) -> Void in
+            screenFlash.removeFromSuperview()
+        })
+        
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return userProjects.count
     }
@@ -392,14 +404,12 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
 }
 extension CameraViewController : AVCapturePhotoCaptureDelegate {
     
-   
+    func photoOutput(_ output: AVCapturePhotoOutput, willBeginCaptureFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
+        whiteFlash()
+    }
     func photoOutput(_ output: AVCapturePhotoOutput,
                      didFinishProcessingPhoto photo: AVCapturePhoto,
                      error: Error?) {
-//        PHPhotoLibrary.shared().performChanges( {
-//            let creationRequest = PHAssetCreationRequest.forAsset()
-//            creationRequest.addResource(with: PHAssetResourceType.photo, data: photo.fileDataRepresentation()!, options: nil)
-//        }, completionHandler: nil)
         let uiImage = UIImage(data: photo.fileDataRepresentation()!)
         self.createAlbumAndSave(image: uiImage)
         guard error == nil else {
@@ -407,34 +417,5 @@ extension CameraViewController : AVCapturePhotoCaptureDelegate {
             return
         }
     }
-  
-//    func photoOutput(_ captureOutput: AVCapturePhotoOutput,
-//                     didFinishCaptureFor resolvedSettings: AVCaptureResolvedPhotoSettings,
-//                     error: Error?) {
-//        <#code#>
-//    }
-    
-    
-//    func photoOutput(_ output: AVCapturePhotoOutput,
-//                     didFinishProcessingPhoto photoSampleBuffer: CMSampleBuffer?,
-//                     previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?,
-//                     resolvedSettings: AVCaptureResolvedPhotoSettings,
-//                     bracketSettings: AVCaptureBracketedStillImageSettings?,
-//                     error: Error?) {
-//        // get captured image
-//
-//        // Make sure we get some photo sample buffer
-//        guard error == nil,
-//            let photoSampleBuffer = photoSampleBuffer else {
-//                print("Error capturing photo: \(String(describing: error))")
-//                return
-//        }
-//
-//        // Convert photo same buffer to a jpeg image data by using // AVCapturePhotoOutput
-//        guard let imageData =
-//            AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: photoSampleBuffer, previewPhotoSampleBuffer: previewPhotoSampleBuffer) else {
-//                return
-//        }
-//
-//    }
+ 
 }
