@@ -18,6 +18,8 @@
 		DA977F5521C2E91300883640 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F5421C2E91300883640 /* CameraViewController.swift */; };
 		DA977F5821C3F25200883640 /* FlashStateButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F5721C3F25200883640 /* FlashStateButton.swift */; };
 		DA977F5A21C4E38B00883640 /* ActivityIndicatorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F5921C4E38B00883640 /* ActivityIndicatorButton.swift */; };
+		DAA2705D21C8FAB10058148A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DAA2705921C8FAB10058148A /* LaunchScreen.storyboard */; };
+		DAA2705E21C8FAB10058148A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DAA2705B21C8FAB10058148A /* Main.storyboard */; };
 		DAA5DC7421C655170000B966 /* ProjectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA5DC7321C655170000B966 /* ProjectModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -57,6 +59,8 @@
 		DA977F5421C2E91300883640 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		DA977F5721C3F25200883640 /* FlashStateButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashStateButton.swift; sourceTree = "<group>"; };
 		DA977F5921C4E38B00883640 /* ActivityIndicatorButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorButton.swift; sourceTree = "<group>"; };
+		DAA2705A21C8FAB10058148A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		DAA2705C21C8FAB10058148A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Main.storyboard; sourceTree = "<group>"; };
 		DAA5DC7321C655170000B966 /* ProjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -127,6 +131,7 @@
 				DA977F1421C1461100883640 /* LaunchScreen.storyboard */,
 				DA977F1721C1461100883640 /* Info.plist */,
 				DA977F0F21C1460F00883640 /* SiteSnap.xcdatamodeld */,
+				DAA2705821C8FAB10058148A /* Base.lproj */,
 			);
 			path = SiteSnap;
 			sourceTree = "<group>";
@@ -164,6 +169,15 @@
 				DA977F5921C4E38B00883640 /* ActivityIndicatorButton.swift */,
 			);
 			path = subClasses;
+			sourceTree = "<group>";
+		};
+		DAA2705821C8FAB10058148A /* Base.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				DAA2705921C8FAB10058148A /* LaunchScreen.storyboard */,
+				DAA2705B21C8FAB10058148A /* Main.storyboard */,
+			);
+			path = Base.lproj;
 			sourceTree = "<group>";
 		};
 		DAA5DC7221C654EB0000B966 /* Models */ = {
@@ -278,6 +292,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DAA2705E21C8FAB10058148A /* Main.storyboard in Resources */,
+				DAA2705D21C8FAB10058148A /* LaunchScreen.storyboard in Resources */,
 				DA977F1621C1461100883640 /* LaunchScreen.storyboard in Resources */,
 				DA977F1321C1461100883640 /* Assets.xcassets in Resources */,
 			);
@@ -353,6 +369,22 @@
 				DA977F1521C1461100883640 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		DAA2705921C8FAB10058148A /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DAA2705A21C8FAB10058148A /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		DAA2705B21C8FAB10058148A /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DAA2705C21C8FAB10058148A /* Base */,
+			);
+			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
