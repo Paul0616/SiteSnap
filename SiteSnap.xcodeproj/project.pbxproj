@@ -126,7 +126,6 @@
 				DA977F0A21C1460F00883640 /* ViewController.swift */,
 				DA977F5421C2E91300883640 /* CameraViewController.swift */,
 				DA977F1221C1461100883640 /* Assets.xcassets */,
-				DA977F1421C1461100883640 /* LaunchScreen.storyboard */,
 				DA977F1721C1461100883640 /* Info.plist */,
 				DA977F0F21C1460F00883640 /* SiteSnap.xcdatamodeld */,
 				DAA2705821C8FAB10058148A /* Base.lproj */,
@@ -172,6 +171,7 @@
 		DAA2705821C8FAB10058148A /* Base.lproj */ = {
 			isa = PBXGroup;
 			children = (
+				DA977F1421C1461100883640 /* LaunchScreen.storyboard */,
 				DAA2705B21C8FAB10058148A /* Main.storyboard */,
 			);
 			path = Base.lproj;

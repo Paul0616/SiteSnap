@@ -66,7 +66,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let screenFlash = UIView(frame: capturePreviewView.frame)
         screenFlash.backgroundColor = UIColor.white
         capturePreviewView.addSubview(screenFlash)
-        UIView.animate(withDuration: 0.1, delay: 0.0, options: [.curveEaseOut], animations: {() -> Void in
+        UIView.animate(withDuration: 0.8, delay: 0.0, options: [.curveEaseOut], animations: {() -> Void in
             screenFlash.alpha = 0
         }, completion: {(finished: Bool) -> Void in
             screenFlash.removeFromSuperview()
