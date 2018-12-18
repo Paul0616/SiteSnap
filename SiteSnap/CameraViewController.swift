@@ -9,9 +9,10 @@
 import UIKit
 import AVFoundation
 import Photos
+import AssetsPickerViewController
 
 
-class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var captureSession: AVCaptureSession?
     var videoPreviewLayer: AVCaptureVideoPreviewLayer?
@@ -19,6 +20,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var rearCamera: AVCaptureDevice?
     var capturePhotoOutput: AVCapturePhotoOutput?
     var orientation = "Portrait"
+    var currentFlashMode = AVCaptureDevice.FlashMode.auto
     
     var assetCollection: PHAssetCollection!
     var albumFound : Bool = false
@@ -46,7 +48,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        imagePicker.delegate = self
+        
         dropDownListProjectsTableView.isHidden = true
         setupInputOutput()
         setupPreviewLayer()
@@ -220,7 +222,17 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     @IBAction func onClickFlashButton(_ sender: FlashStateButton) {
         print(sender.currentFlashState)
-        processingPopup.hideAndDestroy(from: view)
+        switch sender.currentFlashState {
+            case "auto":
+                currentFlashMode = AVCaptureDevice.FlashMode.auto
+            case "on":
+                currentFlashMode = AVCaptureDevice.FlashMode.on
+            case "off":
+                currentFlashMode = AVCaptureDevice.FlashMode.off
+            default:
+                currentFlashMode = AVCaptureDevice.FlashMode.auto
+        }
+       
     }
     @IBAction func onClickCaptureButton(_ sender: UIButton) {
         //print("CLICK")
@@ -233,7 +245,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         // Set photo settings for our need
         photoSettings.isAutoStillImageStabilizationEnabled = true
         photoSettings.isHighResolutionPhotoEnabled = true
-        photoSettings.flashMode = .auto
+        photoSettings.flashMode = currentFlashMode
         // Call capturePhoto method by passing our photo settings and a
         // delegate implementing AVCapturePhotoCaptureDelegate
         capturePhotoOutput.capturePhoto(with: photoSettings, delegate: self)
@@ -255,37 +267,71 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         checkPermission()
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let touch = touches.first
+        animateCircle(point: touch!.location(in: self.view))
+        
+        
+        print("Began.x = \(touch!.location(in: self.view).x)")
+        print("Began.y = \(touch!.location(in: self.view).y)")
+    }
+    
+    func animateCircle(point: CGPoint){
+        let rect = CGRect(x: point.x - 30 , y: point.y - 30, width: 60, height: 60)
+        let dot = UIView(frame: rect)
+        dot.layer.cornerRadius = 30
+        dot.layer.borderColor = UIColor.white.cgColor
+        dot.layer.borderWidth = 1
+        self.capturePreviewView.addSubview(dot)
+        
+        UIView.animate(withDuration: 0.3, delay: 0.0, animations: {() -> Void in
+            dot.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+        }, completion: {(finished: Bool) -> Void in
+            dot.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.5).cgColor
+            let focusPoint: CGPoint = CGPoint(x: point.y / UIScreen.main.bounds.height, y: 1.0 - point.x / UIScreen.main.bounds.width)
+            do {
+                if(self.rearCamera!.isFocusModeSupported(AVCaptureDevice.FocusMode.continuousAutoFocus)){
+                    try self.rearCamera!.lockForConfiguration()
+                    self.rearCamera!.focusPointOfInterest = focusPoint
+                    self.rearCamera!.focusMode = AVCaptureDevice.FocusMode.continuousAutoFocus
+                    self.rearCamera!.exposurePointOfInterest = focusPoint
+                    self.rearCamera!.exposureMode = AVCaptureDevice.ExposureMode.continuousAutoExposure
+                    self.rearCamera!.unlockForConfiguration()
+                    dot.removeFromSuperview()
+                }
+            } catch {
+                print(error)
+            }
+           // dot.removeFromSuperview()
+        })
+    }
+//    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        let touch = touches.first
+//
+//        print("Moved.x = \(touch!.location(in: self.view).x)")
+//        print("Moved.y = \(touch!.location(in: self.view).y)")
+//    }
     
     
     func checkPermission() {
         let photoAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
         switch photoAuthorizationStatus {
             case .authorized:
-                print("Access is granted by user")
-                if UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum){
-                    print("Button capture")
-                    
-                    self.imagePicker.delegate = self
-                    self.imagePicker.sourceType = .photoLibrary;
-                    self.imagePicker.allowsEditing = false
-                    
-                    self.present(self.imagePicker, animated: true, completion: nil)
-                }
+                print("Access was already granted.")
+                let picker = AssetsPickerViewController()
+                picker.pickerDelegate = self
+                picker.pickerConfig.albumIsShowEmptyAlbum = false
+                self.present(picker, animated: true, completion: nil)
             case .notDetermined:
                 PHPhotoLibrary.requestAuthorization({
                 (newStatus) in print("status is \(newStatus)")
                     if newStatus == PHAuthorizationStatus.authorized {
                         /* do stuff here */
-                        print("success")
-                        if UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum){
-                            print("Button capture")
-                            
-                            self.imagePicker.delegate = self
-                            self.imagePicker.sourceType = .photoLibrary;
-                            self.imagePicker.allowsEditing = false
-                            
-                            self.present(self.imagePicker, animated: true, completion: nil)
-                        }
+                        print("Success. Access was granted.")
+                        let picker = AssetsPickerViewController()
+                        picker.pickerDelegate = self
+                        picker.pickerConfig.albumIsShowEmptyAlbum = false
+                        self.present(picker, animated: true, completion: nil)
                     }
                 })
             case .restricted:
@@ -295,30 +341,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
     
-    @objc func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        if let originalImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            // Use originalImage Here
-            
-            currentPhoto = originalImage
-        
-        }
-        picker.dismiss(animated: true)
-    }
-    
-    @objc func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true)
-    }
-    
-
-//    }
-//    func imagePickerController(picker: UIImagePickerController!, didFinishPickingImage image: UIImage!, editingInfo: NSDictionary!){
-//        self.dismiss(animated: true, completion: { () -> Void in
-//
-//        })
-        
-//        currentPhoto = image
-//        self.addImgToArray(uploadImage: self.currentPhoto!)
-//    }
+  
 
     func createAlbumAndSave(image: UIImage!) {
         //Get PHFetch Options
@@ -385,6 +408,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 
                 let options = PHImageRequestOptions()
                 options.deliveryMode = .fastFormat
+                
                 imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFill, options: options, resultHandler: {
                     (image, info) -> Void in
                     self.currentPhoto = image!
@@ -431,4 +455,24 @@ extension CameraViewController : AVCapturePhotoCaptureDelegate {
         }
     }
  
+}
+extension CameraViewController: AssetsPickerViewControllerDelegate {
+    
+    func assetsPickerCannotAccessPhotoLibrary(controller: AssetsPickerViewController) {}
+    func assetsPickerDidCancel(controller: AssetsPickerViewController) {}
+    func assetsPicker(controller: AssetsPickerViewController, selected assets: [PHAsset]) {
+        // do your job with selected assets
+        
+        for phAsset in assets {
+            print(phAsset.localIdentifier)
+        }
+    }
+    func assetsPicker(controller: AssetsPickerViewController, shouldSelect asset: PHAsset, at indexPath: IndexPath) -> Bool {
+        return true
+    }
+    func assetsPicker(controller: AssetsPickerViewController, didSelect asset: PHAsset, at indexPath: IndexPath) {}
+    func assetsPicker(controller: AssetsPickerViewController, shouldDeselect asset: PHAsset, at indexPath: IndexPath) -> Bool {
+        return true
+    }
+    func assetsPicker(controller: AssetsPickerViewController, didDeselect asset: PHAsset, at indexPath: IndexPath) {}
 }
