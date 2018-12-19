@@ -65,6 +65,17 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         captureInnerButton.layer.cornerRadius = 24
         captureButton.layer.cornerRadius = 35
         determineMyCurrentLocation()
+        //Photos
+        let photos = PHPhotoLibrary.authorizationStatus()
+        if photos == .notDetermined {
+            PHPhotoLibrary.requestAuthorization({status in
+                if status == .authorized{
+                    print(status)
+                } else {
+                    print(status)
+                }
+            })
+        }
     }
     
    
@@ -77,7 +88,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     //MARK: - Click on UI buttons
     @IBAction func onClickMenu(_ sender: UIButton){
-        determineMyCurrentLocation()
+//        determineMyCurrentLocation()
     }
    
     @IBAction func onClickFlashButton(_ sender: FlashStateButton) {
@@ -95,6 +106,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     @IBAction func onClickCaptureButton(_ sender: UIButton) {
+        determineMyCurrentLocation()
     // Make sure capturePhotoOutput is valid
         guard let capturePhotoOutput = self.capturePhotoOutput else { return }
         // Get an instance of AVCapturePhotoSettings class
@@ -105,6 +117,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         photoSettings.flashMode = currentFlashMode
         // Call capturePhoto method by passing our photo settings and a
         // delegate implementing AVCapturePhotoCaptureDelegate
+        
         capturePhotoOutput.capturePhoto(with: photoSettings, delegate: self)
     }
     
@@ -448,6 +461,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         if LocationManager.locationServicesEnabled() {
             //locationManager.requestLocation()
+            
             locationManager.startUpdatingLocation()
             //locationManager.startUpdatingHeading()
         }
@@ -459,10 +473,12 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         // Call stopUpdatingLocation() to stop listening for location updates,
         // other wise this function will be called every time when user location changes.
         
-        // manager.stopUpdatingLocation()
+        manager.stopUpdatingLocation()
         
         print("user latitude = \(userLocation.coordinate.latitude)")
         print("user longitude = \(userLocation.coordinate.longitude)")
+//        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+//        print(documentsURL)
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error)
