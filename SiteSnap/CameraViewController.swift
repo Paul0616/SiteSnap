@@ -277,6 +277,9 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func animateCircle(point: CGPoint){
+        guard let device = self.rearCamera else {
+            return
+        }
         let rect = CGRect(x: point.x - 30 , y: point.y - 30, width: 60, height: 60)
         let dot = UIView(frame: rect)
         dot.layer.cornerRadius = 30
@@ -290,13 +293,13 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             dot.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.5).cgColor
             let focusPoint: CGPoint = CGPoint(x: point.y / UIScreen.main.bounds.height, y: 1.0 - point.x / UIScreen.main.bounds.width)
             do {
-                if(self.rearCamera!.isFocusModeSupported(AVCaptureDevice.FocusMode.continuousAutoFocus)){
-                    try self.rearCamera!.lockForConfiguration()
-                    self.rearCamera!.focusPointOfInterest = focusPoint
-                    self.rearCamera!.focusMode = AVCaptureDevice.FocusMode.continuousAutoFocus
-                    self.rearCamera!.exposurePointOfInterest = focusPoint
-                    self.rearCamera!.exposureMode = AVCaptureDevice.ExposureMode.continuousAutoExposure
-                    self.rearCamera!.unlockForConfiguration()
+                if(device.isFocusModeSupported(AVCaptureDevice.FocusMode.continuousAutoFocus)){
+                    try device.lockForConfiguration()
+                    device.focusPointOfInterest = focusPoint
+                    device.focusMode = AVCaptureDevice.FocusMode.continuousAutoFocus
+                    device.exposurePointOfInterest = focusPoint
+                    device.exposureMode = AVCaptureDevice.ExposureMode.continuousAutoExposure
+                    device.unlockForConfiguration()
                     dot.removeFromSuperview()
                 }
             } catch {
