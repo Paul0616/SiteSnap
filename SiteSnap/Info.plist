@@ -24,6 +24,10 @@
 	<string>For taking photos used with SiteSnap application</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>For saving photos from SiteSnap application</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>App need to know your current location</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>App need to know your current location</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>MYRIADPRO-REGULAR.OTF</string>

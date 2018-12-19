@@ -10,9 +10,10 @@ import UIKit
 import AVFoundation
 import Photos
 import AssetsPickerViewController
+import CoreLocation
 
 
-class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate {
     
     var captureSession: AVCaptureSession?
     var videoPreviewLayer: AVCaptureVideoPreviewLayer?
@@ -21,6 +22,10 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var capturePhotoOutput: AVCapturePhotoOutput?
     var orientation = "Portrait"
     var currentFlashMode = AVCaptureDevice.FlashMode.auto
+    
+    var locationManager: CLLocationManager!
+    var lastLocation: CLLocation!
+    
     
     var assetCollection: PHAssetCollection!
     var albumFound : Bool = false
@@ -59,8 +64,12 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         captureInnerButton.backgroundColor = UIColor.white
         captureInnerButton.layer.cornerRadius = 24
         captureButton.layer.cornerRadius = 35
-    
+        determineMyCurrentLocation()
     }
+    
+   
+    
+    
     //MARK: - Selecting new project
     @IBAction func onClickSelectedProjectButton(_ sender: ActivityIndicatorButton) {
          animateProjectsList(toogle: dropDownListProjectsTableView.isHidden)
@@ -68,7 +77,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     //MARK: - Click on UI buttons
     @IBAction func onClickMenu(_ sender: UIButton){
-    
+        determineMyCurrentLocation()
     }
    
     @IBAction func onClickFlashButton(_ sender: FlashStateButton) {
@@ -285,7 +294,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             print("User has denied the permission.")
         }
     }
-    //MARK: - SAving Taken Photo in ALBUM
+    //MARK: - Saving Taken Photo in ALBUM
     func createAlbumAndSave(image: UIImage!) {
         //Get PHFetch Options
         let fetchOptions = PHFetchOptions()
@@ -316,6 +325,9 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func saveImage(image: UIImage!){
         PHPhotoLibrary.shared().performChanges({
             let assetRequest = PHAssetChangeRequest.creationRequestForAsset(from: image)
+            if(self.lastLocation != nil){
+                assetRequest.location = self.lastLocation
+            }
             let assetPlaceholder = assetRequest.placeholderForCreatedAsset
             let albumChangeRequest = PHAssetCollectionChangeRequest(for: self.assetCollection)
             albumChangeRequest!.addAssets([assetPlaceholder!] as NSFastEnumeration)
@@ -426,6 +438,38 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
     }
 
+    //MARK: - getting current LOCATION - function delegate
+    func determineMyCurrentLocation() {
+    
+        locationManager = LocationManager()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestAlwaysAuthorization()
+        
+        if LocationManager.locationServicesEnabled() {
+            //locationManager.requestLocation()
+            locationManager.startUpdatingLocation()
+            //locationManager.startUpdatingHeading()
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let userLocation:CLLocation = locations[0] as CLLocation
+        lastLocation = userLocation
+        // Call stopUpdatingLocation() to stop listening for location updates,
+        // other wise this function will be called every time when user location changes.
+        
+        // manager.stopUpdatingLocation()
+        
+        print("user latitude = \(userLocation.coordinate.latitude)")
+        print("user longitude = \(userLocation.coordinate.longitude)")
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error)
+    {
+        print("Error \(error)")
+    }
+    
     /*
     // MARK: - Navigation
 
@@ -447,6 +491,7 @@ extension CameraViewController : AVCapturePhotoCaptureDelegate {
                      didFinishProcessingPhoto photo: AVCapturePhoto,
                      error: Error?) {
         let uiImage = UIImage(data: photo.fileDataRepresentation()!)
+        
         self.createAlbumAndSave(image: uiImage)
        // processingPopup.hideAndDestroy(from: view)
         guard error == nil else {
@@ -464,7 +509,13 @@ extension CameraViewController: AssetsPickerViewControllerDelegate {
         // do your job with selected assets
         
         for phAsset in assets {
+            
             print(phAsset.localIdentifier)
+            print(phAsset.creationDate!)
+            if(phAsset.location != nil) {
+                print(phAsset.location!)
+            }
+            
         }
     }
     func assetsPicker(controller: AssetsPickerViewController, shouldSelect asset: PHAsset, at indexPath: IndexPath) -> Bool {
