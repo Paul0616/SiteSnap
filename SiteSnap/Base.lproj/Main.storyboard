@@ -381,17 +381,20 @@
                                 <state key="normal" title="NEXT">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <connections>
+                                    <action selector="onClickNext:" destination="Rwy-LD-ICc" eventType="touchUpInside" id="9MO-5s-FYw"/>
+                                </connections>
                             </button>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="YsH-MA-Yj2">
-                                <rect key="frame" x="132" y="100" width="150" height="150"/>
+                                <rect key="frame" x="107" y="84" width="200" height="200"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="150" id="GBg-K9-CYS"/>
-                                    <constraint firstAttribute="height" constant="150" id="MOd-ie-oUh"/>
+                                    <constraint firstAttribute="width" constant="200" id="GBg-K9-CYS"/>
+                                    <constraint firstAttribute="height" constant="200" id="MOd-ie-oUh"/>
                                 </constraints>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OUY-Ra-jzg">
-                                <rect key="frame" x="0.0" y="258" width="414" height="32"/>
+                                <rect key="frame" x="0.0" y="292" width="414" height="32"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="32" id="ztB-8P-HLS"/>
@@ -409,7 +412,7 @@
                             <constraint firstItem="OUY-Ra-jzg" firstAttribute="top" secondItem="YsH-MA-Yj2" secondAttribute="bottom" constant="8" id="UcD-jB-BPv"/>
                             <constraint firstItem="bJ0-BA-ncj" firstAttribute="leading" secondItem="kgT-Ef-YBI" secondAttribute="centerX" constant="8" id="XGs-5n-eK0"/>
                             <constraint firstItem="SBI-lS-JcN" firstAttribute="leading" secondItem="kgT-Ef-YBI" secondAttribute="leading" constant="8" id="g7b-nJ-AzZ"/>
-                            <constraint firstItem="YsH-MA-Yj2" firstAttribute="top" secondItem="kgT-Ef-YBI" secondAttribute="top" constant="80" id="heF-Hh-5fN"/>
+                            <constraint firstItem="YsH-MA-Yj2" firstAttribute="top" secondItem="kgT-Ef-YBI" secondAttribute="top" constant="64" id="heF-Hh-5fN"/>
                             <constraint firstItem="OUY-Ra-jzg" firstAttribute="leading" secondItem="kgT-Ef-YBI" secondAttribute="leading" id="hyD-Pm-Krf"/>
                             <constraint firstItem="tQj-4k-gPN" firstAttribute="top" secondItem="SBI-lS-JcN" secondAttribute="bottom" constant="16" id="mcF-4y-ngY"/>
                             <constraint firstItem="kgT-Ef-YBI" firstAttribute="trailing" secondItem="bJ0-BA-ncj" secondAttribute="trailing" constant="8" id="nOd-PR-Htv"/>

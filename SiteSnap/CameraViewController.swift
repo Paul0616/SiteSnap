@@ -51,6 +51,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     var userProjects = [ProjectModel]()
     var projectId: Int = 0
+    var selectedFromGallery: Bool = false
     
     //MARK: - Loading Camera View Controller
     override func viewDidLoad() {
@@ -81,7 +82,12 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
     
-   
+    override func viewDidAppear(_ animated: Bool) {
+        if selectedFromGallery {
+            selectedFromGallery = false
+            performSegue(withIdentifier: "PhotsViewIdentifier", sender: nil)
+        }
+    }
     
     
     //MARK: - Selecting new project
@@ -579,6 +585,7 @@ extension CameraViewController: AssetsPickerViewControllerDelegate {
                 self.photosLocalIdentifierArray?.append(phAsset.localIdentifier)
             }
             print(self.photosLocalIdentifierArray as Any)
+            selectedFromGallery = true
         }
     }
     func assetsPicker(controller: AssetsPickerViewController, shouldSelect asset: PHAsset, at indexPath: IndexPath) -> Bool {

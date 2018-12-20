@@ -25,6 +25,7 @@
 		DAA2705E21C8FAB10058148A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DAA2705B21C8FAB10058148A /* Main.storyboard */; };
 		DAA2706021C922B80058148A /* ProcessingPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA2705F21C922B80058148A /* ProcessingPopup.swift */; };
 		DAA270A021CAC19D0058148A /* PhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA2709F21CAC19D0058148A /* PhotosViewController.swift */; };
+		DAA270A221CBD5AD0058148A /* ImageDotButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA270A121CBD5AD0058148A /* ImageDotButton.swift */; };
 		DAA5DC7421C655170000B966 /* ProjectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA5DC7321C655170000B966 /* ProjectModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -75,6 +76,7 @@
 		DAA2705C21C8FAB10058148A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Main.storyboard; sourceTree = "<group>"; };
 		DAA2705F21C922B80058148A /* ProcessingPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingPopup.swift; sourceTree = "<group>"; };
 		DAA2709F21CAC19D0058148A /* PhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosViewController.swift; sourceTree = "<group>"; };
+		DAA270A121CBD5AD0058148A /* ImageDotButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDotButton.swift; sourceTree = "<group>"; };
 		DAA5DC7321C655170000B966 /* ProjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectModel.swift; sourceTree = "<group>"; };
 		E2508CF1AC12C64EBAC4FE17 /* Pods_SiteSnapUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SiteSnapUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB4AC2D94214D4822AE7D8E3 /* Pods-SiteSnap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SiteSnap.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SiteSnap/Pods-SiteSnap.debug.xcconfig"; sourceTree = "<group>"; };
@@ -213,6 +215,7 @@
 				DA977F5921C4E38B00883640 /* ActivityIndicatorButton.swift */,
 				DAA2705F21C922B80058148A /* ProcessingPopup.swift */,
 				40B9656021CA7240004A383D /* LocationManager.swift */,
+				DAA270A121CBD5AD0058148A /* ImageDotButton.swift */,
 			);
 			path = subClasses;
 			sourceTree = "<group>";
@@ -462,6 +465,7 @@
 			files = (
 				DA977F1121C1460F00883640 /* SiteSnap.xcdatamodeld in Sources */,
 				DAA270A021CAC19D0058148A /* PhotosViewController.swift in Sources */,
+				DAA270A221CBD5AD0058148A /* ImageDotButton.swift in Sources */,
 				DA977F5521C2E91300883640 /* CameraViewController.swift in Sources */,
 				40B9656121CA7240004A383D /* LocationManager.swift in Sources */,
 				DA977F5A21C4E38B00883640 /* ActivityIndicatorButton.swift in Sources */,

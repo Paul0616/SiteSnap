@@ -12,6 +12,8 @@ import Photos
 class PhotosViewController: UIViewController {
 
     var photosLocalIdentifiers: [String]?
+    let stackView: UIStackView = UIStackView()
+    
     @IBOutlet weak var takePhotoButton: UIButton!
     @IBOutlet weak var addFromGalleryButton: UIButton!
     @IBOutlet weak var nextButton: UIButton!
@@ -28,10 +30,16 @@ class PhotosViewController: UIViewController {
         addFromGalleryButton.titleLabel?.numberOfLines = 2
         addFromGalleryButton.titleLabel?.textAlignment = .center
         nextButton.layer.cornerRadius = 6
-        if (photosLocalIdentifiers?.count)! > 0 {
-            print("PHOTOS: \(String(describing: photosLocalIdentifiers?.count)) - \(String(describing: photosLocalIdentifiers))")
-            showImages(localIdentifier: [(photosLocalIdentifiers?.first)!])
-        }
+//        if (photosLocalIdentifiers?.count)! > 0 {
+//            print("PHOTOS: \(String(describing: photosLocalIdentifiers?.count)) - \(String(describing: photosLocalIdentifiers))")
+//            showImages(localIdentifier: [(photosLocalIdentifiers?.first)!])
+//        }
+        //Stack View
+        stackView.axis  = NSLayoutConstraint.Axis.horizontal
+        stackView.distribution  = UIStackView.Distribution.equalSpacing
+        stackView.alignment = UIStackView.Alignment.center
+        stackView.spacing = 20.0
+        loadImageDots()
         
         // Do any additional setup after loading the view.
     }
@@ -40,9 +48,44 @@ class PhotosViewController: UIViewController {
         self.dismiss(animated: false, completion: nil)
     }
     
-    func showImages(localIdentifier: [String]) {
+    @IBAction func onClickNext(_ sender: Any) {
+        //addImageDot(selected: true)
+    }
+    
+    
+    func loadImageDots(){
+        for localIdentifier in photosLocalIdentifiers! {
+            if(localIdentifier == photosLocalIdentifiers!.last) {
+                addImageDot(selected: true, localIdentifier: localIdentifier)
+            } else {
+                addImageDot(selected: false, localIdentifier: localIdentifier)
+            }
+        }
+        
+        for view in stackView.subviews {
+            if let dot = view as? ImageDotButton, dot.selectedValue {
+                showImages(sender: dot)
+            }
+        }
+    }
+    
+    func addImageDot(selected: Bool, localIdentifier: String){
+        let dot = ImageDotButton()
+        dot.selectDot(selected: selected)
+        dot.localIdentifier = localIdentifier
+        dot.addTarget(self, action: #selector(showImages), for: .touchUpInside)
+        stackView.removeFromSuperview()
+        stackView.addArrangedSubview(dot)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        self.imagesDotsContainer.addSubview(stackView)
+        stackView.centerXAnchor.constraint(equalToSystemSpacingAfter: self.imagesDotsContainer.centerXAnchor, multiplier: 1).isActive = true
+        stackView.centerYAnchor.constraint(equalToSystemSpacingBelow: self.imagesDotsContainer.centerYAnchor, multiplier: 1).isActive = true
+        
+    }
+    
+    @objc func showImages(sender: ImageDotButton!) {
         //This will fetch all the assets in the collection
-        let assets : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: localIdentifier , options: nil)
+        let assets : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [sender!.localIdentifier] , options: nil)
         print(assets)
         
         let imageManager = PHCachingImageManager()
@@ -58,7 +101,7 @@ class PhotosViewController: UIViewController {
                 let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
                 
                 let options = PHImageRequestOptions()
-                options.deliveryMode = .fastFormat
+                options.deliveryMode = .opportunistic
                 
                 imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFill, options: options, resultHandler: {
                     (image, info) -> Void in
@@ -66,6 +109,15 @@ class PhotosViewController: UIViewController {
                     /* The image is now available to us */
                     
                 })
+            }
+        }
+        for view in stackView.subviews {
+            if let dot = view as? ImageDotButton {
+                if dot == sender {
+                    dot.selectDot(selected: true)
+                } else {
+                    dot.selectDot(selected: false)
+                }
             }
         }
     }
