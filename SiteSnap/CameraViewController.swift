@@ -336,6 +336,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func saveImage(image: UIImage!){
+        var localId:String?
         PHPhotoLibrary.shared().performChanges({
             let assetRequest = PHAssetChangeRequest.creationRequestForAsset(from: image)
             if(self.lastLocation != nil){
@@ -344,12 +345,16 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             let assetPlaceholder = assetRequest.placeholderForCreatedAsset
             let albumChangeRequest = PHAssetCollectionChangeRequest(for: self.assetCollection)
             albumChangeRequest!.addAssets([assetPlaceholder!] as NSFastEnumeration)
+            localId = assetRequest.placeholderForCreatedAsset!.localIdentifier
         }, completionHandler: { success, error in
             print("added image to album")
             print(error as Any)
+            print(localId!)
             
             DispatchQueue.main.async {
                 self.processingPopup.hideAndDestroy(from: self.view)
+                self.performSegue(withIdentifier: "PhotsViewIdentifier", sender: nil)
+                
             }
             //self.showImages()
         })
@@ -486,7 +491,6 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         print("Error \(error)")
     }
     
-    /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -494,7 +498,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
     }
-    */
+   
     // MARK: -
 }
 extension CameraViewController : AVCapturePhotoCaptureDelegate {

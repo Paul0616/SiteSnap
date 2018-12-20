@@ -217,7 +217,6 @@
                                 <state key="normal" backgroundImage="menu-24px"/>
                                 <connections>
                                     <action selector="onClickMenu:" destination="c4J-9c-Nyi" eventType="touchUpInside" id="249-mj-tdg"/>
-                                    <segue destination="Rwy-LD-ICc" kind="show" id="0g5-4Z-NCv"/>
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="APg-gK-bOu">
@@ -335,6 +334,7 @@
                         <outlet property="dropDownListProjectsTableView" destination="r0N-4q-P6E" id="HT4-9r-Ew7"/>
                         <outlet property="menuButton" destination="X3g-6a-Fel" id="Qg7-o6-5MP"/>
                         <outlet property="selectedProjectButton" destination="DrV-oQ-auP" id="Jiw-ru-SYM"/>
+                        <segue destination="Rwy-LD-ICc" kind="show" identifier="PhotsViewIdentifier" id="eCb-o1-Zmk"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OlZ-2b-ggJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -350,7 +350,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SBI-lS-JcN">
-                                <rect key="frame" x="8" y="660" width="191" height="60"/>
+                                <rect key="frame" x="8" y="592" width="191" height="60"/>
                                 <color key="backgroundColor" red="0.76078431372549016" green="0.396078431372549" blue="0.86274509803921573" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="dp6-i2-9kJ"/>
@@ -358,25 +358,75 @@
                                 <state key="normal" title="TAKE ANOTHER PHOTO" image="add_a_photo-24px"/>
                                 <connections>
                                     <action selector="onBack:" destination="Rwy-LD-ICc" eventType="touchUpInside" id="2XG-T6-GuO"/>
-                                    <segue destination="c4J-9c-Nyi" kind="show" id="FRR-vr-RVV"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bJ0-BA-ncj">
+                                <rect key="frame" x="215" y="592" width="191" height="60"/>
+                                <color key="backgroundColor" red="0.76089400053024292" green="0.39626625180244446" blue="0.86279779672622681" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="IfQ-9O-W8p"/>
+                                </constraints>
+                                <state key="normal" title="ADD PHOTO FROM GALLERY" image="gallery-24px">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tQj-4k-gPN">
+                                <rect key="frame" x="117" y="668" width="180" height="60"/>
+                                <color key="backgroundColor" red="0.7608940005" green="0.39626625180000002" blue="0.86279779670000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="180" id="dWO-9X-qqM"/>
+                                    <constraint firstAttribute="height" constant="60" id="ejO-Ci-ylj"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="37"/>
+                                <state key="normal" title="NEXT">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="YsH-MA-Yj2">
+                                <rect key="frame" x="132" y="100" width="150" height="150"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="150" id="GBg-K9-CYS"/>
+                                    <constraint firstAttribute="height" constant="150" id="MOd-ie-oUh"/>
+                                </constraints>
+                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OUY-Ra-jzg">
+                                <rect key="frame" x="0.0" y="258" width="414" height="32"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="32" id="ztB-8P-HLS"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.1019607843" green="0.1019607843" blue="0.1019607843" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="bJ0-BA-ncj" firstAttribute="bottom" secondItem="SBI-lS-JcN" secondAttribute="bottom" id="2wh-5B-Tc9"/>
+                            <constraint firstItem="kgT-Ef-YBI" firstAttribute="trailing" secondItem="OUY-Ra-jzg" secondAttribute="trailing" id="7Ix-oq-B2b"/>
+                            <constraint firstItem="YsH-MA-Yj2" firstAttribute="centerX" secondItem="kgT-Ef-YBI" secondAttribute="centerX" id="Iov-zF-rT9"/>
+                            <constraint firstItem="tQj-4k-gPN" firstAttribute="centerX" secondItem="kgT-Ef-YBI" secondAttribute="centerX" id="NvM-1g-Yn7"/>
+                            <constraint firstItem="OUY-Ra-jzg" firstAttribute="centerX" secondItem="kgT-Ef-YBI" secondAttribute="centerX" id="PYI-7h-GbQ"/>
+                            <constraint firstItem="kgT-Ef-YBI" firstAttribute="bottom" secondItem="tQj-4k-gPN" secondAttribute="bottom" constant="8" id="T0b-RU-O7z"/>
+                            <constraint firstItem="OUY-Ra-jzg" firstAttribute="top" secondItem="YsH-MA-Yj2" secondAttribute="bottom" constant="8" id="UcD-jB-BPv"/>
+                            <constraint firstItem="bJ0-BA-ncj" firstAttribute="leading" secondItem="kgT-Ef-YBI" secondAttribute="centerX" constant="8" id="XGs-5n-eK0"/>
                             <constraint firstItem="SBI-lS-JcN" firstAttribute="leading" secondItem="kgT-Ef-YBI" secondAttribute="leading" constant="8" id="g7b-nJ-AzZ"/>
-                            <constraint firstItem="kgT-Ef-YBI" firstAttribute="bottom" secondItem="SBI-lS-JcN" secondAttribute="bottom" constant="16" id="mcF-4y-ngY"/>
+                            <constraint firstItem="YsH-MA-Yj2" firstAttribute="top" secondItem="kgT-Ef-YBI" secondAttribute="top" constant="80" id="heF-Hh-5fN"/>
+                            <constraint firstItem="OUY-Ra-jzg" firstAttribute="leading" secondItem="kgT-Ef-YBI" secondAttribute="leading" id="hyD-Pm-Krf"/>
+                            <constraint firstItem="tQj-4k-gPN" firstAttribute="top" secondItem="SBI-lS-JcN" secondAttribute="bottom" constant="16" id="mcF-4y-ngY"/>
+                            <constraint firstItem="kgT-Ef-YBI" firstAttribute="trailing" secondItem="bJ0-BA-ncj" secondAttribute="trailing" constant="8" id="nOd-PR-Htv"/>
                             <constraint firstItem="kgT-Ef-YBI" firstAttribute="centerX" secondItem="SBI-lS-JcN" secondAttribute="trailing" constant="8" id="tUk-Jz-u8u"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="kgT-Ef-YBI"/>
                     </view>
                     <connections>
+                        <outlet property="addFromGalleryButton" destination="bJ0-BA-ncj" id="yIa-sg-l9W"/>
+                        <outlet property="imagesDotsContainer" destination="OUY-Ra-jzg" id="KHY-wC-rNh"/>
+                        <outlet property="nextButton" destination="tQj-4k-gPN" id="v9o-ON-sVG"/>
                         <outlet property="takePhotoButton" destination="SBI-lS-JcN" id="GGZ-uy-Zra"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vMM-XN-9dt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2049" y="44"/>
+            <point key="canvasLocation" x="2047.826086956522" y="43.206521739130437"/>
         </scene>
     </scenes>
     <resources>
@@ -388,7 +438,4 @@
         <image name="navigation-24px" width="40" height="40"/>
         <image name="report-24px" width="40" height="40"/>
     </resources>
-    <inferredMetricsTieBreakers>
-        <segue reference="FRR-vr-RVV"/>
-    </inferredMetricsTieBreakers>
 </document>
