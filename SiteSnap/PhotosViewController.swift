@@ -7,13 +7,16 @@
 //
 
 import UIKit
+import Photos
 
 class PhotosViewController: UIViewController {
 
+    var photosLocalIdentifiers: [String]?
     @IBOutlet weak var takePhotoButton: UIButton!
     @IBOutlet weak var addFromGalleryButton: UIButton!
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var imagesDotsContainer: UIView!
+    @IBOutlet weak var photoMainContainer: UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
         takePhotoButton.layer.cornerRadius = 6
@@ -25,6 +28,10 @@ class PhotosViewController: UIViewController {
         addFromGalleryButton.titleLabel?.numberOfLines = 2
         addFromGalleryButton.titleLabel?.textAlignment = .center
         nextButton.layer.cornerRadius = 6
+        if (photosLocalIdentifiers?.count)! > 0 {
+            print("PHOTOS: \(String(describing: photosLocalIdentifiers?.count)) - \(String(describing: photosLocalIdentifiers))")
+            showImages(localIdentifier: [(photosLocalIdentifiers?.first)!])
+        }
         
         // Do any additional setup after loading the view.
     }
@@ -33,6 +40,35 @@ class PhotosViewController: UIViewController {
         self.dismiss(animated: false, completion: nil)
     }
     
+    func showImages(localIdentifier: [String]) {
+        //This will fetch all the assets in the collection
+        let assets : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: localIdentifier , options: nil)
+        print(assets)
+        
+        let imageManager = PHCachingImageManager()
+        //Enumerating objects to get a chached image - This is to save loading time
+        assets.enumerateObjects{(object: AnyObject!,
+            count: Int,
+            stop: UnsafeMutablePointer<ObjCBool>) in
+            
+            if object is PHAsset {
+                let asset = object as! PHAsset
+                print(asset)
+                
+                let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
+                
+                let options = PHImageRequestOptions()
+                options.deliveryMode = .fastFormat
+                
+                imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFill, options: options, resultHandler: {
+                    (image, info) -> Void in
+                    self.photoMainContainer.image = image!
+                    /* The image is now available to us */
+                    
+                })
+            }
+        }
+    }
     /*
     // MARK: - Navigation
 

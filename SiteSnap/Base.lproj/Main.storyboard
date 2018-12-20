@@ -382,7 +382,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="YsH-MA-Yj2">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="YsH-MA-Yj2">
                                 <rect key="frame" x="132" y="100" width="150" height="150"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
                                 <constraints>
@@ -421,6 +421,7 @@
                         <outlet property="addFromGalleryButton" destination="bJ0-BA-ncj" id="yIa-sg-l9W"/>
                         <outlet property="imagesDotsContainer" destination="OUY-Ra-jzg" id="KHY-wC-rNh"/>
                         <outlet property="nextButton" destination="tQj-4k-gPN" id="v9o-ON-sVG"/>
+                        <outlet property="photoMainContainer" destination="YsH-MA-Yj2" id="1c1-DU-okC"/>
                         <outlet property="takePhotoButton" destination="SBI-lS-JcN" id="GGZ-uy-Zra"/>
                     </connections>
                 </viewController>

@@ -34,6 +34,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     //var photosAsset: PHFetchResult<AnyObject>!
     var currentPhoto: UIImage!
     var projectImages = [UIImage]()
+    var photosLocalIdentifierArray: [String]?
     
     var imagePicker = UIImagePickerController()
     var processingPopup = ProcessingPopup()
@@ -65,6 +66,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         captureInnerButton.layer.cornerRadius = 24
         captureButton.layer.cornerRadius = 35
         determineMyCurrentLocation()
+        photosLocalIdentifierArray = UserDefaults.standard.stringArray(forKey: "localIdentifiers")
+        
         //Photos
         let photos = PHPhotoLibrary.authorizationStatus()
         if photos == .notDetermined {
@@ -212,8 +215,13 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             // Get an instance of ACCapturePhotoOutput class
             capturePhotoOutput = AVCapturePhotoOutput()
             capturePhotoOutput?.isHighResolutionCaptureEnabled = true
+            
+            
+            
             // Set the output on the capture session
             captureSession?.addOutput(capturePhotoOutput!)
+            
+           
         } catch {
             print(error)
         }
@@ -240,6 +248,22 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         if orientation == "Landscape Left" {
             videoPreviewLayer?.connection?.videoOrientation = AVCaptureVideoOrientation.landscapeRight
         }
+        guard let connection = capturePhotoOutput!.connection(with: AVMediaType.video) else { return }
+        guard connection.isVideoOrientationSupported else { return }
+        // guard connection.isVideoMirroringSupported else { return }
+        if orientation == "Portrait" {
+            connection.videoOrientation = AVCaptureVideoOrientation.portrait
+        }
+        if orientation == "Portrait UpsideDown" {
+            connection.videoOrientation = AVCaptureVideoOrientation.portraitUpsideDown
+        }
+        if orientation == "Landscape Right" {
+            connection.videoOrientation = AVCaptureVideoOrientation.landscapeLeft
+        }
+        if orientation == "Landscape Left" {
+            connection.videoOrientation = AVCaptureVideoOrientation.landscapeRight
+        }
+    
     }
     
     //MARK: - changing PHONE ORIENTATION
@@ -349,7 +373,13 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }, completionHandler: { success, error in
             print("added image to album")
             print(error as Any)
-            print(localId!)
+            if (self.photosLocalIdentifierArray == nil){
+                self.photosLocalIdentifierArray = [localId!]
+            } else {
+                self.photosLocalIdentifierArray?.append(localId!)
+            }
+            print(self.photosLocalIdentifierArray as Any)
+            
             
             DispatchQueue.main.async {
                 self.processingPopup.hideAndDestroy(from: self.view)
@@ -408,6 +438,9 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         print("Began.x = \(touch!.location(in: self.view).x)")
         print("Began.y = \(touch!.location(in: self.view).y)")
+    }
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesCancelled(touches, with: event)
     }
     
     func animateCircle(point: CGPoint){
@@ -497,6 +530,11 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
+        if  segue.identifier == "PhotsViewIdentifier",
+            let destination = segue.destination as? PhotosViewController {
+            destination.photosLocalIdentifiers = self.photosLocalIdentifierArray
+            
+        }
     }
    
     // MARK: -
@@ -535,7 +573,12 @@ extension CameraViewController: AssetsPickerViewControllerDelegate {
             if(phAsset.location != nil) {
                 print(phAsset.location!)
             }
-            
+            if (self.photosLocalIdentifierArray == nil){
+                self.photosLocalIdentifierArray = [phAsset.localIdentifier]
+            } else {
+                self.photosLocalIdentifierArray?.append(phAsset.localIdentifier)
+            }
+            print(self.photosLocalIdentifierArray as Any)
         }
     }
     func assetsPicker(controller: AssetsPickerViewController, shouldSelect asset: PHAsset, at indexPath: IndexPath) -> Bool {
