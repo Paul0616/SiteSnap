@@ -49,7 +49,7 @@
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wXd-0A-LVz">
                                 <rect key="frame" x="67" y="550.66666666666663" width="289" height="57"/>
-                                <color key="backgroundColor" red="0.76092046499999999" green="0.39221301669999997" blue="0.86279797550000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="backgroundColor" red="0.76078431372549016" green="0.396078431372549" blue="0.86274509803921573" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="37"/>
                                 <state key="normal" title="LOGIN">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -217,6 +217,7 @@
                                 <state key="normal" backgroundImage="menu-24px"/>
                                 <connections>
                                     <action selector="onClickMenu:" destination="c4J-9c-Nyi" eventType="touchUpInside" id="249-mj-tdg"/>
+                                    <segue destination="Rwy-LD-ICc" kind="show" id="0g5-4Z-NCv"/>
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="APg-gK-bOu">
@@ -340,13 +341,54 @@
             </objects>
             <point key="canvasLocation" x="891.304347826087" y="44.021739130434788"/>
         </scene>
+        <!--Photos View Controller-->
+        <scene sceneID="u1N-sL-dIa">
+            <objects>
+                <viewController id="Rwy-LD-ICc" customClass="PhotosViewController" customModule="SiteSnap" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="UAS-nL-OlY">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SBI-lS-JcN">
+                                <rect key="frame" x="8" y="660" width="191" height="60"/>
+                                <color key="backgroundColor" red="0.76078431372549016" green="0.396078431372549" blue="0.86274509803921573" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="dp6-i2-9kJ"/>
+                                </constraints>
+                                <state key="normal" title="TAKE ANOTHER PHOTO" image="add_a_photo-24px"/>
+                                <connections>
+                                    <action selector="onBack:" destination="Rwy-LD-ICc" eventType="touchUpInside" id="2XG-T6-GuO"/>
+                                    <segue destination="c4J-9c-Nyi" kind="show" id="FRR-vr-RVV"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="0.1019607843" green="0.1019607843" blue="0.1019607843" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="SBI-lS-JcN" firstAttribute="leading" secondItem="kgT-Ef-YBI" secondAttribute="leading" constant="8" id="g7b-nJ-AzZ"/>
+                            <constraint firstItem="kgT-Ef-YBI" firstAttribute="bottom" secondItem="SBI-lS-JcN" secondAttribute="bottom" constant="16" id="mcF-4y-ngY"/>
+                            <constraint firstItem="kgT-Ef-YBI" firstAttribute="centerX" secondItem="SBI-lS-JcN" secondAttribute="trailing" constant="8" id="tUk-Jz-u8u"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="kgT-Ef-YBI"/>
+                    </view>
+                    <connections>
+                        <outlet property="takePhotoButton" destination="SBI-lS-JcN" id="GGZ-uy-Zra"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vMM-XN-9dt" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2049" y="44"/>
+        </scene>
     </scenes>
     <resources>
         <image name="SiteSnapLogo" width="445" height="221"/>
+        <image name="add_a_photo-24px" width="40" height="40"/>
         <image name="flash_auto-24px" width="40" height="40"/>
         <image name="gallery-24px" width="40" height="40"/>
         <image name="menu-24px" width="40" height="40"/>
         <image name="navigation-24px" width="40" height="40"/>
         <image name="report-24px" width="40" height="40"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="FRR-vr-RVV"/>
+    </inferredMetricsTieBreakers>
 </document>
