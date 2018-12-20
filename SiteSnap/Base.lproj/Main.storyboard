@@ -383,7 +383,7 @@
         <image name="SiteSnapLogo" width="445" height="221"/>
         <image name="add_a_photo-24px" width="80" height="80"/>
         <image name="flash_auto-24px" width="40" height="40"/>
-        <image name="gallery-24px" width="40" height="40"/>
+        <image name="gallery-24px" width="80" height="80"/>
         <image name="menu-24px" width="40" height="40"/>
         <image name="navigation-24px" width="40" height="40"/>
         <image name="report-24px" width="40" height="40"/>
