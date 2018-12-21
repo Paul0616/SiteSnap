@@ -36,7 +36,6 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var projectImages = [UIImage]()
     var photosLocalIdentifierArray: [String]?
     
-    var imagePicker = UIImagePickerController()
     var processingPopup = ProcessingPopup()
    
    
@@ -97,7 +96,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     //MARK: - Click on UI buttons
     @IBAction func onClickMenu(_ sender: UIButton){
-//        determineMyCurrentLocation()
+        performSegue(withIdentifier: "Photo1", sender: sender)
     }
    
     @IBAction func onClickFlashButton(_ sender: FlashStateButton) {
@@ -538,6 +537,11 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         // Pass the selected object to the new view controller.
         if  segue.identifier == "PhotsViewIdentifier",
             let destination = segue.destination as? PhotosViewController {
+            destination.photosLocalIdentifiers = self.photosLocalIdentifierArray
+            
+        }
+        if  segue.identifier == "Photo1",
+            let destination = segue.destination as? Photos1ViewController {
             destination.photosLocalIdentifiers = self.photosLocalIdentifierArray
             
         }

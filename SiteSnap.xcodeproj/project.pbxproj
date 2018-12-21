@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		40B296BA21CCD87300A3C487 /* Photos1ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B296B921CCD87300A3C487 /* Photos1ViewController.swift */; };
+		40B296BC21CCE5A000A3C487 /* Slide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B296BB21CCE5A000A3C487 /* Slide.swift */; };
+		40B296BF21CCE61B00A3C487 /* Slide.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40B296BE21CCE61B00A3C487 /* Slide.xib */; };
 		40B9656121CA7240004A383D /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B9656021CA7240004A383D /* LocationManager.swift */; };
 		803902112621DA84596AB896 /* Pods_SiteSnap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08D194FC8394711D1AE36F7F /* Pods_SiteSnap.framework */; };
 		986B5C30526579D6810F2F9D /* Pods_SiteSnapTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1CFB1EA0BFC2019A65CB46F /* Pods_SiteSnapTests.framework */; };
@@ -48,6 +51,9 @@
 /* Begin PBXFileReference section */
 		08D194FC8394711D1AE36F7F /* Pods_SiteSnap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SiteSnap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		405977E921C2455700AF9F4B /* MYRIADPRO-REGULAR.OTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MYRIADPRO-REGULAR.OTF"; sourceTree = "<group>"; };
+		40B296B921CCD87300A3C487 /* Photos1ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photos1ViewController.swift; sourceTree = "<group>"; };
+		40B296BB21CCE5A000A3C487 /* Slide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slide.swift; sourceTree = "<group>"; };
+		40B296BE21CCE61B00A3C487 /* Slide.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Slide.xib; sourceTree = "<group>"; };
 		40B9656021CA7240004A383D /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		6A73AA7E3AC6DD8718D48C21 /* Pods-SiteSnap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SiteSnap.release.xcconfig"; path = "Pods/Target Support Files/Pods-SiteSnap/Pods-SiteSnap.release.xcconfig"; sourceTree = "<group>"; };
 		8F546AE8E44AB36E527F9A39 /* Pods-SiteSnapUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SiteSnapUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SiteSnapUITests/Pods-SiteSnapUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -139,6 +145,14 @@
 			path = Fonts;
 			sourceTree = "<group>";
 		};
+		40B296BD21CCE5C100A3C487 /* views */ = {
+			isa = PBXGroup;
+			children = (
+				40B296BE21CCE61B00A3C487 /* Slide.xib */,
+			);
+			path = views;
+			sourceTree = "<group>";
+		};
 		DA977EFC21C1460F00883640 = {
 			isa = PBXGroup;
 			children = (
@@ -164,6 +178,7 @@
 		DA977F0721C1460F00883640 /* SiteSnap */ = {
 			isa = PBXGroup;
 			children = (
+				40B296BD21CCE5C100A3C487 /* views */,
 				DAA5DC7221C654EB0000B966 /* Models */,
 				DA977F5621C3F21C00883640 /* subClasses */,
 				405977E821C242BF00AF9F4B /* Fonts */,
@@ -171,6 +186,8 @@
 				DA977F0A21C1460F00883640 /* ViewController.swift */,
 				DA977F5421C2E91300883640 /* CameraViewController.swift */,
 				DAA2709F21CAC19D0058148A /* PhotosViewController.swift */,
+				40B296B921CCD87300A3C487 /* Photos1ViewController.swift */,
+				40B296BB21CCE5A000A3C487 /* Slide.swift */,
 				DA977F1221C1461100883640 /* Assets.xcassets */,
 				DA977F1721C1461100883640 /* Info.plist */,
 				DA977F0F21C1460F00883640 /* SiteSnap.xcdatamodeld */,
@@ -337,6 +354,7 @@
 				DAA2705E21C8FAB10058148A /* Main.storyboard in Resources */,
 				DA977F1621C1461100883640 /* LaunchScreen.storyboard in Resources */,
 				DA977F1321C1461100883640 /* Assets.xcassets in Resources */,
+				40B296BF21CCE61B00A3C487 /* Slide.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -463,6 +481,8 @@
 				DA977F0B21C1460F00883640 /* ViewController.swift in Sources */,
 				DAA5DC7421C655170000B966 /* ProjectModel.swift in Sources */,
 				DA977F0921C1460F00883640 /* AppDelegate.swift in Sources */,
+				40B296BA21CCD87300A3C487 /* Photos1ViewController.swift in Sources */,
+				40B296BC21CCE5A000A3C487 /* Slide.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
