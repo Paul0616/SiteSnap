@@ -18,7 +18,6 @@
 		DA977F1621C1461100883640 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DA977F1421C1461100883640 /* LaunchScreen.storyboard */; };
 		DA977F2121C1461100883640 /* SiteSnapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F2021C1461100883640 /* SiteSnapTests.swift */; };
 		DA977F2C21C1461100883640 /* SiteSnapUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F2B21C1461100883640 /* SiteSnapUITests.swift */; };
-		DA977F5321C2D07900883640 /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F5221C2D07900883640 /* CameraController.swift */; };
 		DA977F5521C2E91300883640 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F5421C2E91300883640 /* CameraViewController.swift */; };
 		DA977F5821C3F25200883640 /* FlashStateButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F5721C3F25200883640 /* FlashStateButton.swift */; };
 		DA977F5A21C4E38B00883640 /* ActivityIndicatorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F5921C4E38B00883640 /* ActivityIndicatorButton.swift */; };
@@ -69,7 +68,6 @@
 		DA977F2721C1461100883640 /* SiteSnapUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SiteSnapUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA977F2B21C1461100883640 /* SiteSnapUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiteSnapUITests.swift; sourceTree = "<group>"; };
 		DA977F2D21C1461100883640 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DA977F5221C2D07900883640 /* CameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		DA977F5421C2E91300883640 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		DA977F5721C3F25200883640 /* FlashStateButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashStateButton.swift; sourceTree = "<group>"; };
 		DA977F5921C4E38B00883640 /* ActivityIndicatorButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorButton.swift; sourceTree = "<group>"; };
@@ -168,7 +166,6 @@
 			children = (
 				DAA5DC7221C654EB0000B966 /* Models */,
 				DA977F5621C3F21C00883640 /* subClasses */,
-				DA977F5121C2CEA900883640 /* CameraUsage */,
 				405977E821C242BF00AF9F4B /* Fonts */,
 				DA977F0821C1460F00883640 /* AppDelegate.swift */,
 				DA977F0A21C1460F00883640 /* ViewController.swift */,
@@ -198,14 +195,6 @@
 				DA977F2D21C1461100883640 /* Info.plist */,
 			);
 			path = SiteSnapUITests;
-			sourceTree = "<group>";
-		};
-		DA977F5121C2CEA900883640 /* CameraUsage */ = {
-			isa = PBXGroup;
-			children = (
-				DA977F5221C2D07900883640 /* CameraController.swift */,
-			);
-			path = CameraUsage;
 			sourceTree = "<group>";
 		};
 		DA977F5621C3F21C00883640 /* subClasses */ = {
@@ -473,7 +462,6 @@
 				DA977F5821C3F25200883640 /* FlashStateButton.swift in Sources */,
 				DA977F0B21C1460F00883640 /* ViewController.swift in Sources */,
 				DAA5DC7421C655170000B966 /* ProjectModel.swift in Sources */,
-				DA977F5321C2D07900883640 /* CameraController.swift in Sources */,
 				DA977F0921C1460F00883640 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
