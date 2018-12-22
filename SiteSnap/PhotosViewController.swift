@@ -102,6 +102,7 @@ class PhotosViewController: UIViewController {
                 
                 let options = PHImageRequestOptions()
                 options.deliveryMode = .opportunistic
+                options.isSynchronous = true
                 
                 imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFill, options: options, resultHandler: {
                     (image, info) -> Void in
