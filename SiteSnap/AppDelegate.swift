@@ -59,6 +59,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         self.splashScreen()
+       
+//        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Photo")
+//        do {
+//            let photos = try persistentContainer.viewContext.fetch(fetchRequest)
+//            for photo in photos {
+//                if let localIdentifier = photo.value(forKeyPath: "localIdentifierString") as? String
+//                    , let createdDate = photo.value(forKeyPath: "createdDate") as? Date {
+//                    print("\(localIdentifier) --- \(createdDate.description)" )
+//                }
+//            }
+//        } catch let error as NSError {
+//            print("Could not fetch. \(error), \(error.userInfo)")
+//        }
         return true
     }
 
@@ -86,13 +99,42 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.saveContext()
     }
 
-    // MARK: - Core Data stack
-
+    // MARK: - CORE DATA stack
+    func deleteAllPhoto() {
+        // Create Fetch Request
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
+        
+        // Create Batch Delete Request
+        let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest )
+        
+        do {
+            try persistentContainer.viewContext.execute(batchDeleteRequest)
+            
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+    }
+    
+    func getAllPhotos() -> [Photo]{
+        let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
+        let sort = NSSortDescriptor(key:  #keyPath(Photo.createdDate), ascending: true)
+        fetchRequest.sortDescriptors = [sort]
+        do {
+            let photos = try persistentContainer.viewContext.fetch(fetchRequest)
+            return photos
+            
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        return [Photo]()
+    }
+    
+   
     lazy var persistentContainer: NSPersistentContainer = {
         /*
          The persistent container for the application. This implementation
          creates and returns a container, having loaded the store for the
-         application to it. This property is optional since there are legitimate
+         application to itemn. This property is optional since there are legitimate
          error conditions that could cause the creation of the store to fail.
         */
         let container = NSPersistentContainer(name: "SiteSnap")

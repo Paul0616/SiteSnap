@@ -17,19 +17,31 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="SM1-aA-9Ai">
-                    <rect key="frame" x="0.0" y="20" width="375" height="200"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="200" id="DIP-Hj-nNY"/>
                     </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="DIP-Hj-nNY"/>
+                        </mask>
+                    </variation>
                 </imageView>
             </subviews>
             <color key="backgroundColor" red="0.10196078431372549" green="0.10196078431372549" blue="0.10196078431372549" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
             <constraints>
-                <constraint firstItem="SM1-aA-9Ai" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="hbT-Li-Z46"/>
-                <constraint firstItem="SM1-aA-9Ai" firstAttribute="centerX" secondItem="vUN-kp-3ea" secondAttribute="centerX" id="uCQ-0L-95D"/>
+                <constraint firstItem="SM1-aA-9Ai" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" id="IkM-as-RWO"/>
+                <constraint firstItem="SM1-aA-9Ai" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="Oqa-YM-vDm"/>
+                <constraint firstItem="SM1-aA-9Ai" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="20" id="hbT-Li-Z46"/>
+                <constraint firstItem="SM1-aA-9Ai" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="uCQ-0L-95D"/>
                 <constraint firstItem="SM1-aA-9Ai" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="yqn-lP-j53"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="hbT-Li-Z46"/>
+                </mask>
+            </variation>
             <connections>
                 <outlet property="mainImage" destination="SM1-aA-9Ai" id="mIu-Is-JXu"/>
             </connections>

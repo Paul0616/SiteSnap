@@ -11,6 +11,7 @@ import AVFoundation
 import Photos
 import AssetsPickerViewController
 import CoreLocation
+import CoreData
 
 
 class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate {
@@ -37,7 +38,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var photosLocalIdentifierArray: [String]?
     
     var processingPopup = ProcessingPopup()
-   
+    var photoObjects = [Photo]()
+    var managedObjectContext: NSManagedObjectContext!
    
     @IBOutlet weak var menuButton: UIButton!
     @IBOutlet weak var buttonContainerView: UIView!
@@ -51,6 +53,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var userProjects = [ProjectModel]()
     var projectId: Int = 0
     var selectedFromGallery: Bool = false
+    
     
     //MARK: - Loading Camera View Controller
     override func viewDidLoad() {
@@ -66,8 +69,18 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         captureInnerButton.layer.cornerRadius = 24
         captureButton.layer.cornerRadius = 35
         determineMyCurrentLocation()
-        photosLocalIdentifierArray = UserDefaults.standard.stringArray(forKey: "localIdentifiers")
+        //photosLocalIdentifierArray = UserDefaults.standard.stringArray(forKey: "localIdentifiers")
+        //1
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+                return
+        }
+        managedObjectContext = appDelegate.persistentContainer.viewContext
+        appDelegate.deleteAllPhoto()
+        photoObjects = appDelegate.getAllPhotos()
         
+        for photo in photoObjects {
+            print("\(photo.localIdentifierString!) - \(String(describing: photo.createdDate!))")
+        }
         //Photos
         let photos = PHPhotoLibrary.authorizationStatus()
         if photos == .notDetermined {
@@ -135,6 +148,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         //-------------
         checkPermission()
     }
+   
     
     //MARK: - Loading and processing PROJECTS
     func showProjectLoadingIndicator(){
@@ -366,8 +380,10 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func saveImage(image: UIImage!){
         var localId:String?
+        var createdDate: Date?
         PHPhotoLibrary.shared().performChanges({
             let assetRequest = PHAssetChangeRequest.creationRequestForAsset(from: image)
+            assetRequest.creationDate = Date()
             if(self.lastLocation != nil){
                 assetRequest.location = self.lastLocation
             }
@@ -375,6 +391,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             let albumChangeRequest = PHAssetCollectionChangeRequest(for: self.assetCollection)
             albumChangeRequest!.addAssets([assetPlaceholder!] as NSFastEnumeration)
             localId = assetRequest.placeholderForCreatedAsset!.localIdentifier
+            
+            createdDate = assetRequest.creationDate
         }, completionHandler: { success, error in
             print("added image to album")
             print(error as Any)
@@ -383,9 +401,20 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             } else {
                 self.photosLocalIdentifierArray?.append(localId!)
             }
+            
             print(self.photosLocalIdentifierArray as Any)
-            
-            
+            let newPhoto = Photo(context: self.managedObjectContext!)
+            newPhoto.localIdentifierString = localId!
+            newPhoto.createdDate = createdDate as NSDate?
+            do {
+                try self.managedObjectContext.save()
+            } catch {
+                fatalError("Failure to save context: \(error)")
+            }
+            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+                return
+            }
+            self.photoObjects = appDelegate.getAllPhotos()
             DispatchQueue.main.async {
                 self.processingPopup.hideAndDestroy(from: self.view)
                 self.performSegue(withIdentifier: "PhotsViewIdentifier", sender: nil)
@@ -541,7 +570,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             
         }
         if  segue.identifier == "Photo1",
-            let destination = segue.destination as? Photos1ViewController {
+            let destination = segue.destination as? PhotosViewController {
             destination.photosLocalIdentifiers = self.photosLocalIdentifierArray
             
         }
@@ -590,6 +619,18 @@ extension CameraViewController: AssetsPickerViewControllerDelegate {
             }
             print(self.photosLocalIdentifierArray as Any)
             selectedFromGallery = true
+            let newPhoto = Photo(context: self.managedObjectContext!)
+            newPhoto.localIdentifierString = phAsset.localIdentifier
+            newPhoto.createdDate = phAsset.creationDate as NSDate?
+            do {
+                try self.managedObjectContext.save()
+            } catch {
+                fatalError("Failure to save context: \(error)")
+            }
+            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+                return
+            }
+            photoObjects = appDelegate.getAllPhotos()
         }
     }
     func assetsPicker(controller: AssetsPickerViewController, shouldSelect asset: PHAsset, at indexPath: IndexPath) -> Bool {

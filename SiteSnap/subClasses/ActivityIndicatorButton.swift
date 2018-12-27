@@ -86,24 +86,28 @@ class ActivityIndicatorButton: UIButton {
         
     }
     private func positioningImage() {
-        let xRightConstraint = NSLayoutConstraint(item: self, attribute: .rightMargin, relatedBy: .equal, toItem: image, attribute: .rightMargin, multiplier: 1, constant: 10)
-        self.addConstraint(xRightConstraint)
-        
-        let yCenterConstraint = NSLayoutConstraint(item: self, attribute: .centerY, relatedBy: .equal, toItem: image, attribute: .centerY, multiplier: 1, constant: 0)
-        self.addConstraint(yCenterConstraint)
-        
-        let height = NSLayoutConstraint(item: self.image, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 30)
-        let width = NSLayoutConstraint(item: self.image, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 30)
-        self.image.addConstraints([height, width])
-        
+        image.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 10).isActive = true
+//        let xRightConstraint = NSLayoutConstraint(item: self, attribute: .rightMargin, relatedBy: .equal, toItem: image, attribute: .rightMargin, multiplier: 1, constant: 10)
+//        self.addConstraint(xRightConstraint)
+        image.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 0).isActive = true
+//        let yCenterConstraint = NSLayoutConstraint(item: self, attribute: .centerY, relatedBy: .equal, toItem: image, attribute: .centerY, multiplier: 1, constant: 0)
+//        self.addConstraint(yCenterConstraint)
+        image.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        image.widthAnchor.constraint(equalToConstant: 30).isActive = true
+//        let height = NSLayoutConstraint(item: self.image, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 30)
+//        let width = NSLayoutConstraint(item: self.image, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 30)
+//        self.image.addConstraints([height, width])
+    
 //        self.image.isHidden = true
     }
     
     private func positioningActivityIndicatorInButton() {
-        let xRightConstraint = NSLayoutConstraint(item: self, attribute: .rightMargin, relatedBy: .equal, toItem: activityIndicator, attribute: .rightMargin, multiplier: 1, constant: 10)
-        self.addConstraint(xRightConstraint)
-        
-        let yCenterConstraint = NSLayoutConstraint(item: self, attribute: .centerY, relatedBy: .equal, toItem: activityIndicator, attribute: .centerY, multiplier: 1, constant: 0)
-        self.addConstraint(yCenterConstraint)
+        activityIndicator.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 10).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 0).isActive = true
+//        let xRightConstraint = NSLayoutConstraint(item: self, attribute: .rightMargin, relatedBy: .equal, toItem: activityIndicator, attribute: .rightMargin, multiplier: 1, constant: 10)
+//        self.addConstraint(xRightConstraint)
+//
+//        let yCenterConstraint = NSLayoutConstraint(item: self, attribute: .centerY, relatedBy: .equal, toItem: activityIndicator, attribute: .centerY, multiplier: 1, constant: 0)
+//        self.addConstraint(yCenterConstraint)
     }
 }

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		40B296BA21CCD87300A3C487 /* Photos1ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B296B921CCD87300A3C487 /* Photos1ViewController.swift */; };
+		40B296BA21CCD87300A3C487 /* PhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B296B921CCD87300A3C487 /* PhotosViewController.swift */; };
 		40B296BC21CCE5A000A3C487 /* Slide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B296BB21CCE5A000A3C487 /* Slide.swift */; };
 		40B296BF21CCE61B00A3C487 /* Slide.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40B296BE21CCE61B00A3C487 /* Slide.xib */; };
 		40B9656121CA7240004A383D /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B9656021CA7240004A383D /* LocationManager.swift */; };
@@ -26,9 +26,15 @@
 		DA977F5A21C4E38B00883640 /* ActivityIndicatorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F5921C4E38B00883640 /* ActivityIndicatorButton.swift */; };
 		DAA2705E21C8FAB10058148A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DAA2705B21C8FAB10058148A /* Main.storyboard */; };
 		DAA2706021C922B80058148A /* ProcessingPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA2705F21C922B80058148A /* ProcessingPopup.swift */; };
-		DAA270A021CAC19D0058148A /* PhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA2709F21CAC19D0058148A /* PhotosViewController.swift */; };
+		DAA270A021CAC19D0058148A /* Photos2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA2709F21CAC19D0058148A /* Photos2ViewController.swift */; };
 		DAA270A221CBD5AD0058148A /* ImageDotButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA270A121CBD5AD0058148A /* ImageDotButton.swift */; };
 		DAA5DC7421C655170000B966 /* ProjectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA5DC7321C655170000B966 /* ProjectModel.swift */; };
+		DABA66DD21D23F1D0036CEE7 /* Photo+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA66D721D23F1D0036CEE7 /* Photo+CoreDataClass.swift */; };
+		DABA66DE21D23F1D0036CEE7 /* Photo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA66D821D23F1D0036CEE7 /* Photo+CoreDataProperties.swift */; };
+		DABA66DF21D23F1D0036CEE7 /* Comment+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA66D921D23F1D0036CEE7 /* Comment+CoreDataClass.swift */; };
+		DABA66E021D23F1D0036CEE7 /* Comment+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA66DA21D23F1D0036CEE7 /* Comment+CoreDataProperties.swift */; };
+		DABA66E121D23F1D0036CEE7 /* Tag+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA66DB21D23F1D0036CEE7 /* Tag+CoreDataClass.swift */; };
+		DABA66E221D23F1D0036CEE7 /* Tag+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA66DC21D23F1D0036CEE7 /* Tag+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,7 +57,7 @@
 /* Begin PBXFileReference section */
 		08D194FC8394711D1AE36F7F /* Pods_SiteSnap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SiteSnap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		405977E921C2455700AF9F4B /* MYRIADPRO-REGULAR.OTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MYRIADPRO-REGULAR.OTF"; sourceTree = "<group>"; };
-		40B296B921CCD87300A3C487 /* Photos1ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photos1ViewController.swift; sourceTree = "<group>"; };
+		40B296B921CCD87300A3C487 /* PhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosViewController.swift; sourceTree = "<group>"; };
 		40B296BB21CCE5A000A3C487 /* Slide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slide.swift; sourceTree = "<group>"; };
 		40B296BE21CCE61B00A3C487 /* Slide.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Slide.xib; sourceTree = "<group>"; };
 		40B9656021CA7240004A383D /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
@@ -79,9 +85,15 @@
 		DA977F5921C4E38B00883640 /* ActivityIndicatorButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorButton.swift; sourceTree = "<group>"; };
 		DAA2705C21C8FAB10058148A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Main.storyboard; sourceTree = "<group>"; };
 		DAA2705F21C922B80058148A /* ProcessingPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingPopup.swift; sourceTree = "<group>"; };
-		DAA2709F21CAC19D0058148A /* PhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosViewController.swift; sourceTree = "<group>"; };
+		DAA2709F21CAC19D0058148A /* Photos2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photos2ViewController.swift; sourceTree = "<group>"; };
 		DAA270A121CBD5AD0058148A /* ImageDotButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDotButton.swift; sourceTree = "<group>"; };
 		DAA5DC7321C655170000B966 /* ProjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectModel.swift; sourceTree = "<group>"; };
+		DABA66D721D23F1D0036CEE7 /* Photo+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataClass.swift"; sourceTree = "<group>"; };
+		DABA66D821D23F1D0036CEE7 /* Photo+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		DABA66D921D23F1D0036CEE7 /* Comment+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Comment+CoreDataClass.swift"; sourceTree = "<group>"; };
+		DABA66DA21D23F1D0036CEE7 /* Comment+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Comment+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		DABA66DB21D23F1D0036CEE7 /* Tag+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tag+CoreDataClass.swift"; sourceTree = "<group>"; };
+		DABA66DC21D23F1D0036CEE7 /* Tag+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tag+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		E2508CF1AC12C64EBAC4FE17 /* Pods_SiteSnapUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SiteSnapUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB4AC2D94214D4822AE7D8E3 /* Pods-SiteSnap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SiteSnap.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SiteSnap/Pods-SiteSnap.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -178,6 +190,7 @@
 		DA977F0721C1460F00883640 /* SiteSnap */ = {
 			isa = PBXGroup;
 			children = (
+				DABA66CA21D23DE90036CEE7 /* dataModels */,
 				40B296BD21CCE5C100A3C487 /* views */,
 				DAA5DC7221C654EB0000B966 /* Models */,
 				DA977F5621C3F21C00883640 /* subClasses */,
@@ -185,8 +198,8 @@
 				DA977F0821C1460F00883640 /* AppDelegate.swift */,
 				DA977F0A21C1460F00883640 /* ViewController.swift */,
 				DA977F5421C2E91300883640 /* CameraViewController.swift */,
-				DAA2709F21CAC19D0058148A /* PhotosViewController.swift */,
-				40B296B921CCD87300A3C487 /* Photos1ViewController.swift */,
+				DAA2709F21CAC19D0058148A /* Photos2ViewController.swift */,
+				40B296B921CCD87300A3C487 /* PhotosViewController.swift */,
 				40B296BB21CCE5A000A3C487 /* Slide.swift */,
 				DA977F1221C1461100883640 /* Assets.xcassets */,
 				DA977F1721C1461100883640 /* Info.plist */,
@@ -241,6 +254,19 @@
 				DAA5DC7321C655170000B966 /* ProjectModel.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		DABA66CA21D23DE90036CEE7 /* dataModels */ = {
+			isa = PBXGroup;
+			children = (
+				DABA66D721D23F1D0036CEE7 /* Photo+CoreDataClass.swift */,
+				DABA66D821D23F1D0036CEE7 /* Photo+CoreDataProperties.swift */,
+				DABA66D921D23F1D0036CEE7 /* Comment+CoreDataClass.swift */,
+				DABA66DA21D23F1D0036CEE7 /* Comment+CoreDataProperties.swift */,
+				DABA66DB21D23F1D0036CEE7 /* Tag+CoreDataClass.swift */,
+				DABA66DC21D23F1D0036CEE7 /* Tag+CoreDataProperties.swift */,
+			);
+			path = dataModels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -471,17 +497,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA977F1121C1460F00883640 /* SiteSnap.xcdatamodeld in Sources */,
-				DAA270A021CAC19D0058148A /* PhotosViewController.swift in Sources */,
+				DABA66E021D23F1D0036CEE7 /* Comment+CoreDataProperties.swift in Sources */,
+				DABA66E221D23F1D0036CEE7 /* Tag+CoreDataProperties.swift in Sources */,
+				DAA270A021CAC19D0058148A /* Photos2ViewController.swift in Sources */,
 				DAA270A221CBD5AD0058148A /* ImageDotButton.swift in Sources */,
+				DABA66E121D23F1D0036CEE7 /* Tag+CoreDataClass.swift in Sources */,
+				DABA66DE21D23F1D0036CEE7 /* Photo+CoreDataProperties.swift in Sources */,
 				DA977F5521C2E91300883640 /* CameraViewController.swift in Sources */,
 				40B9656121CA7240004A383D /* LocationManager.swift in Sources */,
 				DA977F5A21C4E38B00883640 /* ActivityIndicatorButton.swift in Sources */,
 				DAA2706021C922B80058148A /* ProcessingPopup.swift in Sources */,
 				DA977F5821C3F25200883640 /* FlashStateButton.swift in Sources */,
+				DABA66DD21D23F1D0036CEE7 /* Photo+CoreDataClass.swift in Sources */,
 				DA977F0B21C1460F00883640 /* ViewController.swift in Sources */,
 				DAA5DC7421C655170000B966 /* ProjectModel.swift in Sources */,
 				DA977F0921C1460F00883640 /* AppDelegate.swift in Sources */,
-				40B296BA21CCD87300A3C487 /* Photos1ViewController.swift in Sources */,
+				DABA66DF21D23F1D0036CEE7 /* Comment+CoreDataClass.swift in Sources */,
+				40B296BA21CCD87300A3C487 /* PhotosViewController.swift in Sources */,
 				40B296BC21CCE5A000A3C487 /* Slide.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
