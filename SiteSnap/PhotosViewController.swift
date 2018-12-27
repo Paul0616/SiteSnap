@@ -281,7 +281,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
                 
                 imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFill, options: options, resultHandler: {
                     (image, info) -> Void in
-                    print(info!)
+                    //print(info!)
                     self.slides.append(self.createSlide(image: image!))
                     
                     /* The image is now available to us */
