@@ -36,7 +36,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
     let minImageAlpha: CGFloat = 0.2
     var firstTime: Bool = true
     
-    
+    //MARK: -
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -75,15 +75,13 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         for photo in photoObjects! {
             photosLocalIdentifiers?.append(photo.localIdentifierString!)
         }
-        scrollView.contentSize = CGSize(width: self.slidesContainer.frame.width, height: self.slidesContainer.frame.height)
-        loadImages(identifiers: photosLocalIdentifiers)
+       
     }
     
     override func viewDidLayoutSubviews() {
-        if slides.count > 0 && firstTime {
+        if firstTime {
             firstTime = false
-            setupSlideScrollView(slides: slides)
-            onPageChange(imageControl)
+            loadImages(identifiers: photosLocalIdentifiers)
         }
     }
     
@@ -105,7 +103,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         }
         
     }
-    
+    //MARK: - OPTONAL custom page Control
     func updatePageControl() {
         for (index, dot) in imageControl.subviews.enumerated() {
             if index == imageControl.currentPage {
@@ -120,7 +118,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
             //dot.transform = CGAffineTransform.init(scaleX: 1/2, y: 1/2)
         }
     }
-    
+    //MARK: - UI Buttons actions
     @IBAction func onClickAddFromGallery(_ sender: UIButton) {
         checkPermission()
     }
@@ -220,6 +218,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
+    //MARK: - Setting up Slides and ScrollView content
     func createSlide(image: UIImage) -> Slide {
         
         let slide:Slide = Bundle.main.loadNibNamed("Slide", owner: self, options: nil)?.first as! Slide
@@ -234,11 +233,11 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         scrollView.frame = CGRect(x: 0, y: 0, width: self.slidesContainer.frame.width, height: self.slidesContainer.frame.height)
         scrollView.contentSize = CGSize(width: self.slidesContainer.frame.width * (CGFloat(slides.count) / 2 + 0.5), height: self.slidesContainer.frame.height)
         //scrollView.isPagingEnabled = true
-        print("scrolView.frame=\(scrollView.frame)")
-        print("scrolView.contentSize=\(scrollView.contentSize)")
+        //print("scrolView.frame=\(scrollView.frame)")
+        //print("scrolView.contentSize=\(scrollView.contentSize)")
         for i in 0 ..< slides.count {
             slides[i].frame = CGRect(x: self.slidesContainer.frame.width * (CGFloat(2 * i + 1) * 0.25), y: 0, width: self.slidesContainer.frame.width / 2, height: self.slidesContainer.frame.height)
-            print("slide\(i).frame=\(slides[i].frame)")
+            //print("slide\(i).frame=\(slides[i].frame)")
             scrollView.addSubview(slides[i])
             if i > 0 {
                 slides[i].mainImage.transform = CGAffineTransform(scaleX: minImageScale, y: minImageScale)
@@ -252,6 +251,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         imagesDotsContainer.bringSubviewToFront(imageControl)
     }
     
+    //MARK: - Loading images into SLIDES
     func loadImages(identifiers: [String]!) {
         if photosLocalIdentifiers == nil {
             imageControl.numberOfPages = 0
@@ -295,6 +295,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         onPageChange(imageControl)
     }
     
+    //MARK: - Scroll View function from delegate
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>)
     {
         targetContentOffset.pointee = scrollView.contentOffset
@@ -398,7 +399,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         // Pass the selected object to the new view controller.
     }
     */
-
+    //MARK: -
 }
 extension PhotosViewController: AssetsPickerViewControllerDelegate {
     
