@@ -349,11 +349,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xax-sd-5Co">
-                                <rect key="frame" x="8" y="8" width="277" height="60"/>
+                                <rect key="frame" x="8" y="8" width="60" height="60"/>
                                 <color key="backgroundColor" red="0.76078431369999999" green="0.39607843139999999" blue="0.86274509799999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="7gp-Yv-axF"/>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="fG5-0s-njj"/>
+                                    <constraint firstAttribute="width" constant="60" id="fG5-0s-njj"/>
                                 </constraints>
                                 <state key="normal" title="TAKE ANOTHER PHOTO" image="add_a_photo-24px"/>
                                 <variation key="default">
@@ -371,10 +371,10 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="749" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tTJ-Bb-jKL">
-                                <rect key="frame" x="301" y="8" width="318" height="60"/>
+                                <rect key="frame" x="84" y="8" width="60" height="60"/>
                                 <color key="backgroundColor" red="0.7608940005" green="0.39626625180000002" blue="0.86279779670000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="92K-WX-Pbo"/>
+                                    <constraint firstAttribute="width" constant="60" id="92K-WX-Pbo"/>
                                     <constraint firstAttribute="height" constant="60" id="HlC-DL-g0h"/>
                                 </constraints>
                                 <state key="normal" title="ADD PHOTO FROM GALLERY" image="gallery-24px">
@@ -577,7 +577,7 @@
                                         <exclude reference="Jmu-yF-fLv"/>
                                     </mask>
                                 </variation>
-                                <variation key="heightClass=compact">
+                                <variation key="heightClass=compact" hidden="YES">
                                     <mask key="constraints">
                                         <include reference="Jmu-yF-fLv"/>
                                     </mask>
@@ -649,13 +649,13 @@
                             <mask key="constraints">
                                 <exclude reference="hue-aA-1Ii"/>
                                 <exclude reference="pbF-ri-bpB"/>
-                                <exclude reference="yMY-I1-zCH"/>
-                                <exclude reference="fZb-lX-gRL"/>
-                                <exclude reference="mgP-Za-Zmc"/>
-                                <exclude reference="5or-e7-7Wq"/>
                                 <exclude reference="3HJ-if-LL1"/>
                                 <exclude reference="uoW-Cm-PIL"/>
+                                <exclude reference="yMY-I1-zCH"/>
+                                <exclude reference="fZb-lX-gRL"/>
                                 <exclude reference="fNm-YB-c1k"/>
+                                <exclude reference="mgP-Za-Zmc"/>
+                                <exclude reference="5or-e7-7Wq"/>
                                 <exclude reference="Ctx-la-bpO"/>
                                 <exclude reference="d8N-dS-ymV"/>
                                 <exclude reference="qR2-k5-XMG"/>
@@ -668,22 +668,22 @@
                                 <include reference="hue-aA-1Ii"/>
                                 <exclude reference="jpA-qs-Lhs"/>
                                 <include reference="pbF-ri-bpB"/>
+                                <include reference="uoW-Cm-PIL"/>
                                 <exclude reference="CPG-t0-Ojn"/>
                                 <exclude reference="OR4-cr-Hpe"/>
                                 <include reference="yMY-I1-zCH"/>
                                 <exclude reference="G2b-Ck-ayY"/>
                                 <include reference="fZb-lX-gRL"/>
+                                <include reference="fNm-YB-c1k"/>
                                 <include reference="mgP-Za-Zmc"/>
                                 <include reference="5or-e7-7Wq"/>
                                 <exclude reference="K7p-fZ-ovg"/>
-                                <exclude reference="4uy-WB-yzK"/>
-                                <exclude reference="MWB-mA-8zc"/>
-                                <include reference="uoW-Cm-PIL"/>
-                                <include reference="fNm-YB-c1k"/>
                                 <include reference="d8N-dS-ymV"/>
                                 <exclude reference="lBU-C5-4qa"/>
                                 <exclude reference="mbj-In-QR1"/>
                                 <include reference="qR2-k5-XMG"/>
+                                <exclude reference="4uy-WB-yzK"/>
+                                <exclude reference="MWB-mA-8zc"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
@@ -718,7 +718,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZGt-Cr-JA3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1879.7101449275365" y="686.41304347826087"/>
+            <point key="canvasLocation" x="1748" y="44"/>
         </scene>
     </scenes>
     <resources>

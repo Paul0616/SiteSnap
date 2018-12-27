@@ -86,10 +86,10 @@ class ActivityIndicatorButton: UIButton {
         
     }
     private func positioningImage() {
-        image.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 10).isActive = true
+        self.rightAnchor.constraint(equalTo: image.rightAnchor, constant: 10).isActive = true
 //        let xRightConstraint = NSLayoutConstraint(item: self, attribute: .rightMargin, relatedBy: .equal, toItem: image, attribute: .rightMargin, multiplier: 1, constant: 10)
 //        self.addConstraint(xRightConstraint)
-        image.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 0).isActive = true
+        self.centerYAnchor.constraint(equalTo: image.centerYAnchor, constant: 0).isActive = true
 //        let yCenterConstraint = NSLayoutConstraint(item: self, attribute: .centerY, relatedBy: .equal, toItem: image, attribute: .centerY, multiplier: 1, constant: 0)
 //        self.addConstraint(yCenterConstraint)
         image.heightAnchor.constraint(equalToConstant: 30).isActive = true

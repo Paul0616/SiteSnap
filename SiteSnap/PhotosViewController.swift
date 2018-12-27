@@ -34,6 +34,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
     
     let minImageScale: CGFloat = 0.75
     let minImageAlpha: CGFloat = 0.2
+    var firstTime: Bool = true
     
     
     override func viewDidLoad() {
@@ -76,6 +77,14 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         }
         scrollView.contentSize = CGSize(width: self.slidesContainer.frame.width, height: self.slidesContainer.frame.height)
         loadImages(identifiers: photosLocalIdentifiers)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        if slides.count > 0 && firstTime {
+            firstTime = false
+            setupSlideScrollView(slides: slides)
+            onPageChange(imageControl)
+        }
     }
     
     override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
@@ -225,9 +234,11 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         scrollView.frame = CGRect(x: 0, y: 0, width: self.slidesContainer.frame.width, height: self.slidesContainer.frame.height)
         scrollView.contentSize = CGSize(width: self.slidesContainer.frame.width * (CGFloat(slides.count) / 2 + 0.5), height: self.slidesContainer.frame.height)
         //scrollView.isPagingEnabled = true
-        
+        print("scrolView.frame=\(scrollView.frame)")
+        print("scrolView.contentSize=\(scrollView.contentSize)")
         for i in 0 ..< slides.count {
             slides[i].frame = CGRect(x: self.slidesContainer.frame.width * (CGFloat(2 * i + 1) * 0.25), y: 0, width: self.slidesContainer.frame.width / 2, height: self.slidesContainer.frame.height)
+            print("slide\(i).frame=\(slides[i].frame)")
             scrollView.addSubview(slides[i])
             if i > 0 {
                 slides[i].mainImage.transform = CGAffineTransform(scaleX: minImageScale, y: minImageScale)
@@ -270,6 +281,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
                 
                 imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFill, options: options, resultHandler: {
                     (image, info) -> Void in
+                    print(info!)
                     self.slides.append(self.createSlide(image: image!))
                     
                     /* The image is now available to us */
@@ -345,7 +357,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print("offset \(scrollView.contentOffset.x) - framewidth \(self.slidesContainer.frame.width)")
+       // print("offset \(scrollView.contentOffset.x) - framewidth \(self.slidesContainer.frame.width)")
         let pageIndex = floor(scrollView.contentOffset.x * 2 / self.slidesContainer.frame.width)
         imageControl.currentPage = Int(pageIndex)
         //print(scrollView.contentOffset.x)
