@@ -26,7 +26,6 @@
 		DA977F5A21C4E38B00883640 /* ActivityIndicatorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F5921C4E38B00883640 /* ActivityIndicatorButton.swift */; };
 		DAA2705E21C8FAB10058148A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DAA2705B21C8FAB10058148A /* Main.storyboard */; };
 		DAA2706021C922B80058148A /* ProcessingPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA2705F21C922B80058148A /* ProcessingPopup.swift */; };
-		DAA270A021CAC19D0058148A /* Photos2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA2709F21CAC19D0058148A /* Photos2ViewController.swift */; };
 		DAA270A221CBD5AD0058148A /* ImageDotButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA270A121CBD5AD0058148A /* ImageDotButton.swift */; };
 		DAA5DC7421C655170000B966 /* ProjectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA5DC7321C655170000B966 /* ProjectModel.swift */; };
 		DABA66DD21D23F1D0036CEE7 /* Photo+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA66D721D23F1D0036CEE7 /* Photo+CoreDataClass.swift */; };
@@ -85,7 +84,6 @@
 		DA977F5921C4E38B00883640 /* ActivityIndicatorButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorButton.swift; sourceTree = "<group>"; };
 		DAA2705C21C8FAB10058148A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Main.storyboard; sourceTree = "<group>"; };
 		DAA2705F21C922B80058148A /* ProcessingPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingPopup.swift; sourceTree = "<group>"; };
-		DAA2709F21CAC19D0058148A /* Photos2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photos2ViewController.swift; sourceTree = "<group>"; };
 		DAA270A121CBD5AD0058148A /* ImageDotButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDotButton.swift; sourceTree = "<group>"; };
 		DAA5DC7321C655170000B966 /* ProjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectModel.swift; sourceTree = "<group>"; };
 		DABA66D721D23F1D0036CEE7 /* Photo+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -198,7 +196,6 @@
 				DA977F0821C1460F00883640 /* AppDelegate.swift */,
 				DA977F0A21C1460F00883640 /* ViewController.swift */,
 				DA977F5421C2E91300883640 /* CameraViewController.swift */,
-				DAA2709F21CAC19D0058148A /* Photos2ViewController.swift */,
 				40B296B921CCD87300A3C487 /* PhotosViewController.swift */,
 				40B296BB21CCE5A000A3C487 /* Slide.swift */,
 				DA977F1221C1461100883640 /* Assets.xcassets */,
@@ -499,7 +496,6 @@
 				DA977F1121C1460F00883640 /* SiteSnap.xcdatamodeld in Sources */,
 				DABA66E021D23F1D0036CEE7 /* Comment+CoreDataProperties.swift in Sources */,
 				DABA66E221D23F1D0036CEE7 /* Tag+CoreDataProperties.swift in Sources */,
-				DAA270A021CAC19D0058148A /* Photos2ViewController.swift in Sources */,
 				DAA270A221CBD5AD0058148A /* ImageDotButton.swift in Sources */,
 				DABA66E121D23F1D0036CEE7 /* Tag+CoreDataClass.swift in Sources */,
 				DABA66DE21D23F1D0036CEE7 /* Photo+CoreDataProperties.swift in Sources */,

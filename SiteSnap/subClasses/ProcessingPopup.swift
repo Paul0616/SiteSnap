@@ -32,7 +32,7 @@ class ProcessingPopup: UIVisualEffectView {
     
     
     func hideAndDestroy(from view: UIView){
-        print("HIDE")
+        //print("HIDE")
         guard let label = strLabel,
             let indicator = activityIndicator
         else {

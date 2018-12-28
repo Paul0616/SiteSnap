@@ -79,9 +79,9 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         appDelegate.deleteAllPhoto()
         photoObjects = appDelegate.getAllPhotos()
         
-        for photo in photoObjects {
-            print("\(photo.localIdentifierString!) - \(String(describing: photo.createdDate!))")
-        }
+//        for photo in photoObjects {
+//            print("\(photo.localIdentifierString!) - \(String(describing: photo.createdDate!))")
+//        }
         //Photos
         let photos = PHPhotoLibrary.authorizationStatus()
         if photos == .notDetermined {

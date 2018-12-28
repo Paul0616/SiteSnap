@@ -59,7 +59,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         tagNumberLabel.layer.borderColor = UIColor.white.cgColor
         tagNumberLabel.layer.borderWidth = 1
         deleteImageButton.layer.cornerRadius = 25
-        addCommentButton.layer.cornerRadius = 15
+        addCommentButton.layer.cornerRadius = 25
         stackViewAllComments.isHidden = true
         commentLabel.translatesAutoresizingMaskIntoConstraints = false
         commentLabel.bottomAnchor.constraint(equalTo: commentScrollView.bottomAnchor, constant: 0).isActive = true
@@ -142,26 +142,19 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
     
     
     @IBAction func onClickDeleteImageButton(_ sender: UIButton) {
-        let page = imageControl.currentPage
-        if imageControl.numberOfPages > 0 {
-            imageControl.numberOfPages = imageControl.numberOfPages - 1
-            if imageControl.numberOfPages > 0 {
-                if page > 0 {
-                    imageControl.currentPage = page - 1
-                }
-            } else {
-                // zero pages
-            }
-            photosLocalIdentifiers?.remove(at: page)
-            slides[page].removeFromSuperview()
-            slides.remove(at: page)
-            setupSlideScrollView(slides: self.slides)
-            if slides.count > 0 {
-                onPageChange(imageControl)
-            }
-        } else {
-            return
+        if self.imageControl.numberOfPages > 0 {
+            let alert = UIAlertController(title: "Please confirm choice", message: "Are you sure you want to remove this photo?", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+                  self.removePhoto()
+                })
+            )
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
+                print("cancel")
+                })
+            )
+            self.present(alert, animated: true, completion: nil)
         }
+    
     }
     
     @IBAction func onPageChange(_ sender: UIPageControl) {
@@ -187,6 +180,51 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
                 self.slides[self.imageControl.currentPage].mainImage.alpha = 1
                 self.scrollView.layoutIfNeeded()
         }, completion: nil)
+    }
+    //MARK: - REMOVE Photo
+    func removePhoto(){
+        let page = imageControl.currentPage
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        //#####################delete from core data
+        let fetchDeleteRequest = NSFetchRequest<Photo>(entityName: "Photo")
+        fetchDeleteRequest.predicate = NSPredicate.init(format: "localIdentifierString=='\(photosLocalIdentifiers![page])'")
+        //#########################
+        
+        imageControl.numberOfPages = imageControl.numberOfPages - 1
+        if imageControl.numberOfPages > 0 {
+            if page > 0 {
+                imageControl.currentPage = page - 1
+            }
+        } else {
+            // zero pages
+        }
+        photosLocalIdentifiers?.remove(at: page)
+        slides[page].removeFromSuperview()
+        slides.remove(at: page)
+        setupSlideScrollView(slides: self.slides)
+        if slides.count > 0 {
+            onPageChange(imageControl)
+        }
+        //#######################
+        do {
+            let objects = try appDelegate.persistentContainer.viewContext.fetch(fetchDeleteRequest)
+            for object in objects {
+                appDelegate.persistentContainer.viewContext.delete(object)
+            }
+            try appDelegate.persistentContainer.viewContext.save()
+            photoObjects?.removeAll()
+            photoObjects = appDelegate.getAllPhotos()
+        } catch _ {
+            // error handling
+        }
+        //##################
+        
+        for photo in photoObjects! {
+            print(photo.localIdentifierString!)
+        }
+       
     }
     
     //MARK: - Permission for viewing and saving photos in Custom Album

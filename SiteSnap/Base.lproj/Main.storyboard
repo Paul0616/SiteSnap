@@ -300,10 +300,10 @@
                                 <exclude reference="yqr-Ik-0FW"/>
                                 <exclude reference="62M-fY-82A"/>
                                 <exclude reference="nrQ-j0-nLU"/>
-                                <exclude reference="SiQ-en-cTz"/>
-                                <exclude reference="fjT-z2-Ofv"/>
                                 <exclude reference="J9q-JV-4k1"/>
                                 <exclude reference="h1h-Ep-mxh"/>
+                                <exclude reference="SiQ-en-cTz"/>
+                                <exclude reference="fjT-z2-Ofv"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=compact">
@@ -315,13 +315,13 @@
                                 <include reference="62M-fY-82A"/>
                                 <exclude reference="mRm-dL-dOF"/>
                                 <include reference="nrQ-j0-nLU"/>
-                                <exclude reference="BBT-s9-jdI"/>
-                                <include reference="SiQ-en-cTz"/>
-                                <include reference="fjT-z2-Ofv"/>
                                 <include reference="J9q-JV-4k1"/>
                                 <exclude reference="RwL-Kh-4E8"/>
                                 <exclude reference="bTr-11-cdE"/>
                                 <include reference="h1h-Ep-mxh"/>
+                                <exclude reference="BBT-s9-jdI"/>
+                                <include reference="SiQ-en-cTz"/>
+                                <include reference="fjT-z2-Ofv"/>
                             </mask>
                         </variation>
                     </view>
@@ -527,7 +527,7 @@
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Kgn-n3-fRv" userLabel="Stack View all comments">
-                                <rect key="frame" x="30.5" y="493" width="314" height="30"/>
+                                <rect key="frame" x="30.5" y="463" width="314" height="30"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="comment-24px" translatesAutoresizingMaskIntoConstraints="NO" id="eOJ-gR-5QA">
                                         <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
@@ -629,7 +629,7 @@
                             <constraint firstItem="DNz-zP-eO7" firstAttribute="leading" secondItem="BXJ-OE-9S7" secondAttribute="trailing" constant="4" id="Smu-h0-VAJ"/>
                             <constraint firstItem="NHP-4F-nwH" firstAttribute="width" secondItem="4TV-8u-2Ab" secondAttribute="width" id="UJX-1j-HkR"/>
                             <constraint firstItem="4TV-8u-2Ab" firstAttribute="bottom" secondItem="Kgn-n3-fRv" secondAttribute="bottom" constant="8" id="ULa-Hb-S4G"/>
-                            <constraint firstItem="xax-sd-5Co" firstAttribute="top" secondItem="Kgn-n3-fRv" secondAttribute="bottom" constant="8" id="Vln-ab-nps"/>
+                            <constraint firstItem="Kgn-n3-fRv" firstAttribute="top" secondItem="DNz-zP-eO7" secondAttribute="bottom" constant="16" id="Vln-ab-nps"/>
                             <constraint firstItem="4TV-8u-2Ab" firstAttribute="trailing" secondItem="Zzd-0H-Tgz" secondAttribute="trailing" constant="8" id="Vxr-3m-TzK"/>
                             <constraint firstItem="xax-sd-5Co" firstAttribute="leading" secondItem="4TV-8u-2Ab" secondAttribute="leading" constant="8" id="W6b-WU-3z2"/>
                             <constraint firstItem="Zzd-0H-Tgz" firstAttribute="top" secondItem="xax-sd-5Co" secondAttribute="bottom" constant="8" id="Wf7-fA-uXX"/>
