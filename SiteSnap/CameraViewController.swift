@@ -22,6 +22,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var rearCamera: AVCaptureDevice?
     var capturePhotoOutput: AVCapturePhotoOutput?
     var orientation = "Portrait"
+    var cameraHasFlash: Bool = true
     var currentFlashMode = AVCaptureDevice.FlashMode.auto
     
     var locationManager: CLLocationManager!
@@ -135,7 +136,9 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         // Set photo settings for our need
         photoSettings.isAutoStillImageStabilizationEnabled = true
         photoSettings.isHighResolutionPhotoEnabled = true
-        photoSettings.flashMode = currentFlashMode
+        if cameraHasFlash {
+            photoSettings.flashMode = currentFlashMode
+        } 
         // Call capturePhoto method by passing our photo settings and a
         // delegate implementing AVCapturePhotoCaptureDelegate
         
@@ -217,6 +220,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             captureSession = AVCaptureSession()
             let session = AVCaptureDevice.DiscoverySession.init(deviceTypes: [.builtInWideAngleCamera], mediaType: AVMediaType.video, position: .unspecified)
             let cameras = (session.devices.compactMap{ $0 })
+            
             for camera in cameras {
                 if camera.position == .front {
                     self.frontCamera = camera
@@ -226,6 +230,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                     
                     try camera.lockForConfiguration()
                     camera.focusMode = .continuousAutoFocus
+                    cameraHasFlash = camera.hasFlash
                     camera.unlockForConfiguration()
                     let input = try AVCaptureDeviceInput(device: camera)
                     captureSession?.addInput(input)
