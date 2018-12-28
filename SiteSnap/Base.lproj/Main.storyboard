@@ -697,9 +697,9 @@
                                 <exclude reference="Smu-h0-VAJ"/>
                                 <exclude reference="hWB-kT-OQI"/>
                                 <include reference="tJY-OU-k72"/>
+                                <exclude reference="Vln-ab-nps"/>
                                 <exclude reference="g3j-lh-JmP"/>
                                 <include reference="JY7-fr-aU7"/>
-                                <exclude reference="Vln-ab-nps"/>
                                 <include reference="u5k-9c-OhW"/>
                                 <include reference="61X-wG-vfY"/>
                                 <exclude reference="S8z-wx-HZa"/>
@@ -723,16 +723,63 @@
                         <outlet property="stackViewAllComments" destination="Kgn-n3-fRv" id="JCG-xE-6Ib"/>
                         <outlet property="tagNumberLabel" destination="Y3G-1o-9fE" id="ef2-14-Ao7"/>
                         <outlet property="takePhotoButton" destination="xax-sd-5Co" id="387-wP-iVl"/>
+                        <segue destination="ujF-w3-ccj" kind="show" identifier="AddCommentViewIdentifier" id="yVO-YD-uBd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZGt-Cr-JA3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2032" y="44"/>
+            <point key="canvasLocation" x="1996" y="44"/>
+        </scene>
+        <!--Add Comments View Controller-->
+        <scene sceneID="gI4-69-M9r">
+            <objects>
+                <viewController id="ujF-w3-ccj" customClass="AddCommentsViewController" customModule="SiteSnap" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="9eA-cG-Zqy">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="iFW-KR-DYO">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9KF-iw-282">
+                                <rect key="frame" x="16" y="36" width="40" height="40"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="DZK-qm-elX"/>
+                                    <constraint firstAttribute="height" constant="40" id="cr4-0u-ZlG"/>
+                                </constraints>
+                                <inset key="contentEdgeInsets" minX="5" minY="5" maxX="5" maxY="5"/>
+                                <state key="normal" image="arrow_back-40px"/>
+                                <connections>
+                                    <action selector="onBack:" destination="ujF-w3-ccj" eventType="touchUpInside" id="Wz0-29-4kN"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="9KF-iw-282" firstAttribute="top" secondItem="aDA-gh-fvI" secondAttribute="top" constant="16" id="22I-WW-b7F"/>
+                            <constraint firstItem="iFW-KR-DYO" firstAttribute="width" secondItem="9eA-cG-Zqy" secondAttribute="width" id="40d-pK-Pq6"/>
+                            <constraint firstItem="iFW-KR-DYO" firstAttribute="centerY" secondItem="9eA-cG-Zqy" secondAttribute="centerY" id="6y5-RN-TIv"/>
+                            <constraint firstItem="iFW-KR-DYO" firstAttribute="centerX" secondItem="9eA-cG-Zqy" secondAttribute="centerX" id="PHD-gD-QoR"/>
+                            <constraint firstItem="iFW-KR-DYO" firstAttribute="height" secondItem="9eA-cG-Zqy" secondAttribute="height" id="Scc-BP-puk"/>
+                            <constraint firstItem="9KF-iw-282" firstAttribute="leading" secondItem="aDA-gh-fvI" secondAttribute="leading" constant="16" id="t0u-3i-125"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="aDA-gh-fvI"/>
+                    </view>
+                    <connections>
+                        <outlet property="back" destination="9KF-iw-282" id="ngH-fW-cQL"/>
+                        <outlet property="currentImageView" destination="iFW-KR-DYO" id="iRo-Pp-a3O"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3CH-v1-lVd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3113" y="45"/>
         </scene>
     </scenes>
     <resources>
         <image name="SiteSnapLogo" width="445" height="221"/>
         <image name="add_a_photo-24px" width="80" height="80"/>
+        <image name="arrow_back-40px" width="40" height="40"/>
         <image name="cancel-80px" width="80" height="80"/>
         <image name="comment-24px" width="80" height="80"/>
         <image name="flash_auto-24px" width="40" height="40"/>

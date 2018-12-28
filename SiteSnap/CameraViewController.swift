@@ -569,16 +569,12 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
-        if  segue.identifier == "PhotsViewIdentifier",
-            let destination = segue.destination as? PhotosViewController {
-            destination.photosLocalIdentifiers = self.photosLocalIdentifierArray
-            
-        }
-        if  segue.identifier == "Photo1",
-            let destination = segue.destination as? PhotosViewController {
-            destination.photosLocalIdentifiers = self.photosLocalIdentifierArray
-            
-        }
+//        if  segue.identifier == "PhotsViewIdentifier",
+//            let destination = segue.destination as? PhotosViewController {
+//            destination.photosLocalIdentifiers = self.photosLocalIdentifierArray
+//            
+//        }
+       
     }
    
     // MARK: -
@@ -612,8 +608,8 @@ extension CameraViewController: AssetsPickerViewControllerDelegate {
         
         for phAsset in assets {
             
-            print(phAsset.localIdentifier)
-            print(phAsset.creationDate!)
+//            print(phAsset.localIdentifier)
+//            print(phAsset.creationDate!)
             if(phAsset.location != nil) {
                 print(phAsset.location!)
             }

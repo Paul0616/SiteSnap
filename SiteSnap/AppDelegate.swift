@@ -100,6 +100,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     // MARK: - CORE DATA stack
+    
     func deleteAllPhoto() {
         // Create Fetch Request
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")

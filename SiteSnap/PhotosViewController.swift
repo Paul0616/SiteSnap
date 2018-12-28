@@ -28,7 +28,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var addCommentButton: UIButton!
     @IBOutlet weak var stackViewAllComments: UIStackView!
     
-    var photosLocalIdentifiers: [String]?
+    //var photosLocalIdentifiers: [String]?
     var photoObjects: [Photo]?
     var slides:[Slide] = [];
     
@@ -71,17 +71,20 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         photoObjects = appDelegate.getAllPhotos()
         //imageControl.transform = CGAffineTransform(scaleX: 2, y: 2);
         //updatePageControl()
-        photosLocalIdentifiers?.removeAll()
-        for photo in photoObjects! {
-            photosLocalIdentifiers?.append(photo.localIdentifierString!)
-        }
+       // photosLocalIdentifiers?.removeAll()
+       
        
     }
     
     override func viewDidLayoutSubviews() {
+        
         if firstTime {
+            var identifiers = [String]()
+            for photo in photoObjects! {
+                identifiers.append(photo.localIdentifierString!)
+            }
             firstTime = false
-            loadImages(identifiers: photosLocalIdentifiers)
+            loadImages(identifiers: identifiers)
         }
     }
     
@@ -134,9 +137,12 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         if stackViewAllComments.isHidden {
         commentLabel.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin est lectus, ultricies quis nisi in, bibendum rhoncus justo. Duis suscipit molestie posuere. Quisque condimentum sem aliquet, mollis quam at, elementum neque. Donec sollicitudin tincidunt turpis. Ut feugiat mi nec aliquet varius. Nulla elementum consequat metus, et placerat enim sollicitudin eget. Nunc vel venenatis mi. Nulla luctus felis at ligula eleifend bibendum in vitae magna. Aenean vel purus finibus, consectetur lacus at, eleifend turpis. Quisque mattis id ex ut accumsan. Nunc leo dui, luctus vel massa in, sodales tempus magna. Integer tempus ante vitae sollicitudin elementum."
             stackViewAllComments.isHidden = false
+            performSegue(withIdentifier: "AddCommentViewIdentifier", sender: sender)
+            
         } else {
             commentLabel.text = "Tap here to add a comment"
             stackViewAllComments.isHidden = true
+            
         }
     }
     
@@ -189,7 +195,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         }
         //#####################delete from core data
         let fetchDeleteRequest = NSFetchRequest<Photo>(entityName: "Photo")
-        fetchDeleteRequest.predicate = NSPredicate.init(format: "localIdentifierString=='\(photosLocalIdentifiers![page])'")
+        fetchDeleteRequest.predicate = NSPredicate.init(format: "localIdentifierString=='\(slides[page].localIdentifier!)'")
         //#########################
         
         imageControl.numberOfPages = imageControl.numberOfPages - 1
@@ -200,7 +206,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         } else {
             // zero pages
         }
-        photosLocalIdentifiers?.remove(at: page)
+        //photosLocalIdentifiers?.remove(at: page)
         slides[page].removeFromSuperview()
         slides.remove(at: page)
         setupSlideScrollView(slides: self.slides)
@@ -257,10 +263,11 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
     }
     
     //MARK: - Setting up Slides and ScrollView content
-    func createSlide(image: UIImage) -> Slide {
+    func createSlide(image: UIImage, localIdentifier: String) -> Slide {
         
         let slide:Slide = Bundle.main.loadNibNamed("Slide", owner: self, options: nil)?.first as! Slide
         slide.mainImage.image = image
+        slide.localIdentifier = localIdentifier
         return slide
     }
 
@@ -291,10 +298,10 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
     
     //MARK: - Loading images into SLIDES
     func loadImages(identifiers: [String]!) {
-        if photosLocalIdentifiers == nil {
-            imageControl.numberOfPages = 0
-            return
-        }
+//        if slides.count == 0 {
+//            imageControl.numberOfPages = 0
+//            return
+//        }
         //This will fetch all the assets in the collection
         let assets : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: identifiers! , options: nil)
         //print(assets)
@@ -302,10 +309,11 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         let imageManager = PHCachingImageManager()
         //Enumerating objects to get a chached image - This is to save loading time
         print(assets.count)
+       // var needPhotosLocalIndetifiersReset: Bool = true
         assets.enumerateObjects{(object: AnyObject!,
             count: Int,
             stop: UnsafeMutablePointer<ObjCBool>) in
-            print(count)
+            
             if object is PHAsset {
                 let asset = object as! PHAsset
 //                print(asset)
@@ -319,14 +327,19 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
                 
                 imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFill, options: options, resultHandler: {
                     (image, info) -> Void in
-                    //print(info!)
-                    self.slides.append(self.createSlide(image: image!))
+//                    if needPhotosLocalIndetifiersReset {
+//                        self.photosLocalIdentifiers?.removeAll()
+//                        needPhotosLocalIndetifiersReset = false
+//                    }
+                    self.slides.append(self.createSlide(image: image!, localIdentifier: asset.localIdentifier))
+                   // self.slides?.append(asset.localIdentifier)
                     
                     /* The image is now available to us */
                     
                 })
             }
         }
+       // print(photosLocalIdentifiers!)
         if self.slides.count > 0 {
             setupSlideScrollView(slides: self.slides)
         }
@@ -428,15 +441,22 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
             }
         }
     }
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
+        if  segue.identifier == "AddCommentViewIdentifier",
+            let destination = segue.destination as? AddCommentsViewController {
+            
+            
+            destination.currentPhotoLocalIdentifier = self.slides[imageControl.currentPage].localIdentifier
+            
+        }
     }
-    */
+    
     //MARK: -
 }
 extension PhotosViewController: AssetsPickerViewControllerDelegate {
@@ -448,10 +468,21 @@ extension PhotosViewController: AssetsPickerViewControllerDelegate {
         var identifiers = [String]()
         for phAsset in assets {
             identifiers.append(phAsset.localIdentifier)
-            if (self.photosLocalIdentifiers == nil){
-                self.photosLocalIdentifiers = [phAsset.localIdentifier]
-            } else {
-                self.photosLocalIdentifiers?.append(phAsset.localIdentifier)
+//            if (self.photosLocalIdentifiers == nil){
+//                self.photosLocalIdentifiers = [phAsset.localIdentifier]
+//            } else {
+//                self.photosLocalIdentifiers?.append(phAsset.localIdentifier)
+//            }
+            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+                return
+            }
+            let newPhoto = Photo(context: appDelegate.persistentContainer.viewContext)
+            newPhoto.localIdentifierString = phAsset.localIdentifier
+            newPhoto.createdDate = phAsset.creationDate as NSDate?
+            do {
+                try appDelegate.persistentContainer.viewContext.save()
+            } catch {
+                fatalError("Failure to save context: \(error)")
             }
         }
         loadImages(identifiers: identifiers)
