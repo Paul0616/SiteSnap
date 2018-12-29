@@ -27,6 +27,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var commentLabel: UILabel!
     @IBOutlet weak var addCommentButton: UIButton!
     @IBOutlet weak var stackViewAllComments: UIStackView!
+    @IBOutlet weak var sameCommentsToAll: UISwitch!
     
     //var photosLocalIdentifiers: [String]?
     var photoObjects: [Photo]?
@@ -65,17 +66,18 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         commentLabel.bottomAnchor.constraint(equalTo: commentScrollView.bottomAnchor, constant: 0).isActive = true
         //commentScrollView.translatesAutoresizingMaskIntoConstraints = false
         //commentScrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: commentLabel.bottomAnchor).isActive = true
+        
+        
+    }
+    override func viewWillAppear(_ animated: Bool) {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
             return
         }
         photoObjects = appDelegate.getAllPhotos()
-        //imageControl.transform = CGAffineTransform(scaleX: 2, y: 2);
-        //updatePageControl()
-       // photosLocalIdentifiers?.removeAll()
-       
-       
+        if !firstTime {
+            updateCommentLabel()
+        }
     }
-    
     override func viewDidLayoutSubviews() {
         
         if firstTime {
@@ -86,6 +88,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
             firstTime = false
             loadImages(identifiers: identifiers)
         }
+        
     }
     
     override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
@@ -118,7 +121,6 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
             dot.layer.cornerRadius = dot.frame.size.height / 2;
             dot.layer.borderColor = UIColor.white.cgColor
             dot.layer.borderWidth = 1
-            //dot.transform = CGAffineTransform.init(scaleX: 1/2, y: 1/2)
         }
     }
     //MARK: - UI Buttons actions
@@ -134,16 +136,18 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @IBAction func onClickAddComment(_ sender: UIButton) {
-        if stackViewAllComments.isHidden {
-        commentLabel.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin est lectus, ultricies quis nisi in, bibendum rhoncus justo. Duis suscipit molestie posuere. Quisque condimentum sem aliquet, mollis quam at, elementum neque. Donec sollicitudin tincidunt turpis. Ut feugiat mi nec aliquet varius. Nulla elementum consequat metus, et placerat enim sollicitudin eget. Nunc vel venenatis mi. Nulla luctus felis at ligula eleifend bibendum in vitae magna. Aenean vel purus finibus, consectetur lacus at, eleifend turpis. Quisque mattis id ex ut accumsan. Nunc leo dui, luctus vel massa in, sodales tempus magna. Integer tempus ante vitae sollicitudin elementum."
-            stackViewAllComments.isHidden = false
+        
             performSegue(withIdentifier: "AddCommentViewIdentifier", sender: sender)
-            
-        } else {
-            commentLabel.text = "Tap here to add a comment"
-            stackViewAllComments.isHidden = true
-            
-        }
+//        if stackViewAllComments.isHidden {
+//        commentLabel.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin est lectus, ultricies quis nisi in, bibendum rhoncus justo. Duis suscipit molestie posuere. Quisque condimentum sem aliquet, mollis quam at, elementum neque. Donec sollicitudin tincidunt turpis. Ut feugiat mi nec aliquet varius. Nulla elementum consequat metus, et placerat enim sollicitudin eget. Nunc vel venenatis mi. Nulla luctus felis at ligula eleifend bibendum in vitae magna. Aenean vel purus finibus, consectetur lacus at, eleifend turpis. Quisque mattis id ex ut accumsan. Nunc leo dui, luctus vel massa in, sodales tempus magna. Integer tempus ante vitae sollicitudin elementum."
+//            stackViewAllComments.isHidden = false
+//            performSegue(withIdentifier: "AddCommentViewIdentifier", sender: sender)
+//
+//        } else {
+//            commentLabel.text = "Tap here to add a comment"
+//            stackViewAllComments.isHidden = true
+//
+//        }
     }
     
     
@@ -186,6 +190,58 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
                 self.slides[self.imageControl.currentPage].mainImage.alpha = 1
                 self.scrollView.layoutIfNeeded()
         }, completion: nil)
+        updateCommentLabel()
+    }
+    
+    @IBAction func onSwitchToAllComments(_ sender: UISwitch) {
+        if sender.isOn {
+            let alert = UIAlertController(title: "Please confirm choice", message: "Are you sure you want to apply this comment to all photos?", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+                self.applyCommentToAllPhotos()
+            })
+            )
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
+                print("cancel")
+            })
+            )
+            self.present(alert, animated: true, completion: nil)
+        } else {
+            self.resetCommentsToOriginalValues()
+        }
+    }
+    
+    //MARK: - Apply comment to all photos
+    func applyCommentToAllPhotos(){
+        if let comment = commentLabel.text {
+            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+                return
+            }
+            let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
+            do {
+                let objects = try appDelegate.persistentContainer.viewContext.fetch(fetchRequest)
+                for object in objects {
+                    object.allPhotosComment = comment
+                }
+                try appDelegate.persistentContainer.viewContext.save()
+            } catch _ {
+                // error handling
+            }
+        }
+    }
+    func resetCommentsToOriginalValues(){
+            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+                return
+            }
+            let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
+            do {
+                let objects = try appDelegate.persistentContainer.viewContext.fetch(fetchRequest)
+                for object in objects {
+                    object.allPhotosComment = nil
+                }
+                try appDelegate.persistentContainer.viewContext.save()
+            } catch _ {
+                // error handling
+            }
     }
     //MARK: - REMOVE Photo
     func removePhoto(){
@@ -295,28 +351,58 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         //updatePageControl()
         imagesDotsContainer.bringSubviewToFront(imageControl)
     }
+    func updateCommentLabel(){
+        let page = imageControl.currentPage
+        
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
+        fetchRequest.predicate = NSPredicate.init(format: "localIdentifierString=='\(slides[page].localIdentifier!)'")
+        do {
+            let objects = try appDelegate.persistentContainer.viewContext.fetch(fetchRequest)
+            for object in objects {
+                //print(object.individualComment as Any)
+                if let allComment = object.allPhotosComment {
+                    addCommentButton.setImage(UIImage(named:"edit-80px"), for: .normal)
+                    addCommentButton.backgroundColor = UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
+                    commentLabel.text = allComment
+                    stackViewAllComments.isHidden = false
+                } else {
+                    if let comment = object.individualComment {
+                        addCommentButton.setImage(UIImage(named:"edit-80px"), for: .normal)
+                        addCommentButton.backgroundColor = UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
+                        commentLabel.text = comment
+                        stackViewAllComments.isHidden = false
+                    } else {
+                        addCommentButton.setImage(UIImage(named:"one-comment-24px"), for: .normal)
+                        addCommentButton.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
+                        commentLabel.text = "Tap here to add a comment"
+                        stackViewAllComments.isHidden = true
+                    }
+                }
+                
+            
+            }
+        } catch _ {
+            // error handling
+        }
+    }
     
     //MARK: - Loading images into SLIDES
     func loadImages(identifiers: [String]!) {
-//        if slides.count == 0 {
-//            imageControl.numberOfPages = 0
-//            return
-//        }
         //This will fetch all the assets in the collection
         let assets : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: identifiers! , options: nil)
         //print(assets)
         
         let imageManager = PHCachingImageManager()
         //Enumerating objects to get a chached image - This is to save loading time
-        print(assets.count)
-       // var needPhotosLocalIndetifiersReset: Bool = true
         assets.enumerateObjects{(object: AnyObject!,
             count: Int,
             stop: UnsafeMutablePointer<ObjCBool>) in
             
             if object is PHAsset {
                 let asset = object as! PHAsset
-//                print(asset)
                 
                 let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
                 
@@ -327,19 +413,10 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
                 
                 imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFill, options: options, resultHandler: {
                     (image, info) -> Void in
-//                    if needPhotosLocalIndetifiersReset {
-//                        self.photosLocalIdentifiers?.removeAll()
-//                        needPhotosLocalIndetifiersReset = false
-//                    }
                     self.slides.append(self.createSlide(image: image!, localIdentifier: asset.localIdentifier))
-                   // self.slides?.append(asset.localIdentifier)
-                    
-                    /* The image is now available to us */
-                    
                 })
             }
         }
-       // print(photosLocalIdentifiers!)
         if self.slides.count > 0 {
             setupSlideScrollView(slides: self.slides)
         }
@@ -404,15 +481,16 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
                     }
                     self.slides[self.imageControl.currentPage].mainImage.alpha = 1
                     scrollView.layoutIfNeeded()
-            }, completion: nil)
+            }, completion: { (finished: Bool) in 
+                self.updateCommentLabel()
+            })
         }
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-       // print("offset \(scrollView.contentOffset.x) - framewidth \(self.slidesContainer.frame.width)")
         let pageIndex = floor(scrollView.contentOffset.x * 2 / self.slidesContainer.frame.width)
         imageControl.currentPage = Int(pageIndex)
-        //print(scrollView.contentOffset.x)
+        
         // horizontal
         let maximumHorizontalOffset: CGFloat = scrollView.contentSize.width - scrollView.frame.width
         let currentHorizontalOffset: CGFloat = scrollView.contentOffset.x
@@ -441,7 +519,9 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
             }
         }
     }
-    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        updateCommentLabel()
+    }
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -451,7 +531,9 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         if  segue.identifier == "AddCommentViewIdentifier",
             let destination = segue.destination as? AddCommentsViewController {
             
-            
+            if commentLabel.text != "Tap here to add a comment" {
+                destination.textForEdit = commentLabel.text!
+            }
             destination.currentPhotoLocalIdentifier = self.slides[imageControl.currentPage].localIdentifier
             
         }

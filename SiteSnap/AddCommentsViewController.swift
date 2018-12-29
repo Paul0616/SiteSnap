@@ -8,6 +8,7 @@
 
 import UIKit
 import Photos
+import CoreData
 
 class AddCommentsViewController: UIViewController {
 
@@ -16,7 +17,9 @@ class AddCommentsViewController: UIViewController {
     var keyboardHeight: CGFloat!
     let commentTextview = UITextView()
     var bottomConstratint: NSLayoutConstraint!
+    var textForEdit: String = ""
     
+    @IBOutlet weak var addCommentButton: UIButton!
     @IBOutlet weak var currentImageView: UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +30,7 @@ class AddCommentsViewController: UIViewController {
         }
         loadImage(identifier: identifier)
         
-        
+        addCommentButton.layer.cornerRadius = 25
         commentTextview.frame = CGRect(x: 0, y: 0, width: 200, height: 100)
         commentTextview.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
         currentImageView.addSubview(commentTextview)
@@ -35,6 +38,8 @@ class AddCommentsViewController: UIViewController {
         commentTextview.becomeFirstResponder()
         commentTextview.translatesAutoresizingMaskIntoConstraints = false
         [
+            addCommentButton.bottomAnchor.constraint(equalTo: commentTextview.topAnchor, constant: 5),
+            addCommentButton.trailingAnchor.constraint(equalTo: currentImageView.trailingAnchor, constant: -16),
             commentTextview.leadingAnchor.constraint(equalTo: currentImageView!.leadingAnchor),
             commentTextview.trailingAnchor.constraint(equalTo: currentImageView.trailingAnchor),
             commentTextview.heightAnchor.constraint(equalToConstant: 50)
@@ -45,7 +50,10 @@ class AddCommentsViewController: UIViewController {
         commentTextview.delegate = self
         commentTextview.isScrollEnabled = false
         commentTextview.textColor = UIColor.white
-       
+        if textForEdit != "" {
+            commentTextview.text = textForEdit
+            textViewDidChange(commentTextview)
+        }
         
     }
     
@@ -54,7 +62,7 @@ class AddCommentsViewController: UIViewController {
         addObserver()
         commentTextview.becomeFirstResponder()
     }
-    
+    //MARK: - Install observer for keyboard show/hide
     func addObserver(){
         //keyboard observers
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidAppear(notification:)), name: UIResponder.keyboardDidShowNotification, object: nil)
@@ -77,10 +85,33 @@ class AddCommentsViewController: UIViewController {
     @objc func keyboardWillHide(notification: NSNotification) {
         print("Keyboard hidden")
     }
-
+    //MARK: = UI Buttons actions
     @IBAction func onBack(_ sender: UIButton) {
         dismiss(animated: false, completion: nil)
     }
+    @IBAction func onAddComment(_ sender: Any) {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
+        fetchRequest.predicate = NSPredicate.init(format: "localIdentifierString=='\(currentPhotoLocalIdentifier!)'")
+        do {
+            let objects = try appDelegate.persistentContainer.viewContext.fetch(fetchRequest)
+            for object in objects {
+                if !commentTextview.text.isEmpty {
+                    object.individualComment = commentTextview.text
+                } else {
+                     object.individualComment = nil
+                }
+            }
+            try appDelegate.persistentContainer.viewContext.save()
+        
+        } catch _ {
+            // error handling
+        }
+        dismiss(animated: false, completion: nil)
+    }
+    
     //MARK: - Loading image
     func loadImage(identifier: String!) {
         

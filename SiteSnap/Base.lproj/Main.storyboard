@@ -398,7 +398,7 @@
                                 <rect key="frame" x="97.5" y="599" width="180" height="60"/>
                                 <color key="backgroundColor" red="0.7608940005" green="0.39626625180000002" blue="0.86279779670000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="180" id="CHN-qL-p0d"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="180" id="CHN-qL-p0d"/>
                                     <constraint firstAttribute="height" constant="60" id="or2-li-ZUN"/>
                                     <constraint firstAttribute="width" constant="100" id="ylO-os-fuX"/>
                                 </constraints>
@@ -547,6 +547,9 @@
                                         <rect key="frame" x="265" y="0.0" width="51" height="30"/>
                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="onTintColor" red="0.76078431369999999" green="0.39607843139999999" blue="0.86274509799999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <connections>
+                                            <action selector="onSwitchToAllComments:" destination="Ndu-GM-uKQ" eventType="valueChanged" id="cWM-k0-fim"/>
+                                        </connections>
                                     </switch>
                                 </subviews>
                                 <constraints>
@@ -666,13 +669,13 @@
                                 <exclude reference="ULa-Hb-S4G"/>
                                 <exclude reference="Vxr-3m-TzK"/>
                                 <exclude reference="gSC-ik-5xa"/>
-                                <exclude reference="fpd-0t-Pnx"/>
-                                <exclude reference="x2K-WD-Juy"/>
-                                <exclude reference="8LU-h4-eUs"/>
-                                <exclude reference="ZRE-bV-0tM"/>
-                                <exclude reference="tJY-OU-k72"/>
                                 <exclude reference="JY7-fr-aU7"/>
                                 <exclude reference="u5k-9c-OhW"/>
+                                <exclude reference="x2K-WD-Juy"/>
+                                <exclude reference="tJY-OU-k72"/>
+                                <exclude reference="fpd-0t-Pnx"/>
+                                <exclude reference="8LU-h4-eUs"/>
+                                <exclude reference="ZRE-bV-0tM"/>
                                 <exclude reference="61X-wG-vfY"/>
                             </mask>
                         </variation>
@@ -686,25 +689,25 @@
                                 <include reference="Vxr-3m-TzK"/>
                                 <include reference="gSC-ik-5xa"/>
                                 <exclude reference="ule-lI-zrw"/>
-                                <exclude reference="45H-7w-fwF"/>
-                                <include reference="fpd-0t-Pnx"/>
+                                <include reference="JY7-fr-aU7"/>
+                                <include reference="u5k-9c-OhW"/>
                                 <exclude reference="3Nw-DJ-xM3"/>
                                 <exclude reference="Djd-QQ-Rys"/>
                                 <include reference="x2K-WD-Juy"/>
-                                <include reference="8LU-h4-eUs"/>
-                                <exclude reference="Xct-n1-FBV"/>
-                                <include reference="ZRE-bV-0tM"/>
                                 <exclude reference="Smu-h0-VAJ"/>
                                 <exclude reference="hWB-kT-OQI"/>
                                 <include reference="tJY-OU-k72"/>
-                                <exclude reference="Vln-ab-nps"/>
-                                <exclude reference="g3j-lh-JmP"/>
-                                <include reference="JY7-fr-aU7"/>
-                                <include reference="u5k-9c-OhW"/>
+                                <exclude reference="45H-7w-fwF"/>
+                                <include reference="fpd-0t-Pnx"/>
+                                <include reference="8LU-h4-eUs"/>
+                                <exclude reference="Xct-n1-FBV"/>
+                                <include reference="ZRE-bV-0tM"/>
                                 <include reference="61X-wG-vfY"/>
                                 <exclude reference="S8z-wx-HZa"/>
                                 <exclude reference="Wf7-fA-uXX"/>
                                 <exclude reference="trs-KU-im3"/>
+                                <exclude reference="Vln-ab-nps"/>
+                                <exclude reference="g3j-lh-JmP"/>
                             </mask>
                         </variation>
                     </view>
@@ -718,6 +721,7 @@
                         <outlet property="imageControl" destination="1mC-k3-DlU" id="6hY-GD-9bH"/>
                         <outlet property="imagesDotsContainer" destination="NHP-4F-nwH" id="GtM-Js-CTg"/>
                         <outlet property="nextButton" destination="Zzd-0H-Tgz" id="w8P-Lf-LTg"/>
+                        <outlet property="sameCommentsToAll" destination="4R9-v5-Phk" id="8TF-5b-IXh"/>
                         <outlet property="scrollView" destination="PZv-Vp-0dg" id="EtO-M0-49E"/>
                         <outlet property="slidesContainer" destination="l27-6X-lih" id="C5y-fQ-KSb"/>
                         <outlet property="stackViewAllComments" destination="Kgn-n3-fRv" id="JCG-xE-6Ib"/>
@@ -754,6 +758,19 @@
                                     <action selector="onBack:" destination="ujF-w3-ccj" eventType="touchUpInside" id="Wz0-29-4kN"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VyQ-Iv-zPh">
+                                <rect key="frame" x="162.5" y="308.5" width="50" height="50"/>
+                                <color key="backgroundColor" red="0.7608940005" green="0.39626625180000002" blue="0.86279779670000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="UQL-J9-zJN"/>
+                                    <constraint firstAttribute="height" constant="50" id="hGj-rc-q1f"/>
+                                </constraints>
+                                <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
+                                <state key="normal" image="add_comment-80px"/>
+                                <connections>
+                                    <action selector="onAddComment:" destination="ujF-w3-ccj" eventType="touchUpInside" id="gWU-H1-WQY"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -762,11 +779,14 @@
                             <constraint firstItem="iFW-KR-DYO" firstAttribute="centerY" secondItem="9eA-cG-Zqy" secondAttribute="centerY" id="6y5-RN-TIv"/>
                             <constraint firstItem="iFW-KR-DYO" firstAttribute="centerX" secondItem="9eA-cG-Zqy" secondAttribute="centerX" id="PHD-gD-QoR"/>
                             <constraint firstItem="iFW-KR-DYO" firstAttribute="height" secondItem="9eA-cG-Zqy" secondAttribute="height" id="Scc-BP-puk"/>
+                            <constraint firstItem="VyQ-Iv-zPh" firstAttribute="centerY" secondItem="9eA-cG-Zqy" secondAttribute="centerY" placeholder="YES" id="iVK-PX-8fk"/>
                             <constraint firstItem="9KF-iw-282" firstAttribute="leading" secondItem="aDA-gh-fvI" secondAttribute="leading" constant="16" id="t0u-3i-125"/>
+                            <constraint firstItem="VyQ-Iv-zPh" firstAttribute="centerX" secondItem="9eA-cG-Zqy" secondAttribute="centerX" placeholder="YES" id="v3F-84-meW"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="aDA-gh-fvI"/>
                     </view>
                     <connections>
+                        <outlet property="addCommentButton" destination="VyQ-Iv-zPh" id="2Im-WA-Z8a"/>
                         <outlet property="back" destination="9KF-iw-282" id="ngH-fW-cQL"/>
                         <outlet property="currentImageView" destination="iFW-KR-DYO" id="iRo-Pp-a3O"/>
                     </connections>
@@ -779,6 +799,7 @@
     <resources>
         <image name="SiteSnapLogo" width="445" height="221"/>
         <image name="add_a_photo-24px" width="80" height="80"/>
+        <image name="add_comment-80px" width="80" height="80"/>
         <image name="arrow_back-40px" width="40" height="40"/>
         <image name="cancel-80px" width="80" height="80"/>
         <image name="comment-24px" width="80" height="80"/>
