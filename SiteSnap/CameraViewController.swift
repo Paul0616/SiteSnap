@@ -31,16 +31,13 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     var assetCollection: PHAssetCollection!
     var albumFound : Bool = false
-   // var collection: PHAssetCollection!
     var assetCollectionPlaceholder: PHObjectPlaceholder!
-    //var photosAsset: PHFetchResult<AnyObject>!
     var currentPhoto: UIImage!
     var projectImages = [UIImage]()
     var photosLocalIdentifierArray: [String]?
     
     var processingPopup = ProcessingPopup()
     var photoObjects = [Photo]()
-    var managedObjectContext: NSManagedObjectContext!
    
     @IBOutlet weak var menuButton: UIButton!
     @IBOutlet weak var buttonContainerView: UIView!
@@ -59,6 +56,33 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     //MARK: - Loading Camera View Controller
     override func viewDidLoad() {
         super.viewDidLoad()
+        //TagHandler.deleteAllTags()
+        if TagHandler.fetchObject()?.count == 0 {
+            if TagHandler.saveTag(text: "Bridge Superstructure", tagColor: "#478C27") {
+                print("Successfully added")
+            }
+            if TagHandler.saveTag(text: "Bridge ID 12345", tagColor: nil) {
+                 print("Successfully added")
+            }
+            if TagHandler.saveTag(text: "Bridge ID 7654", tagColor: nil) {
+                 print("Successfully added")
+            }
+            if TagHandler.saveTag(text: "Bridge Substructure", tagColor: "#428A98") {
+                 print("Successfully added")
+            }
+            if TagHandler.saveTag(text: "Bridge ID 21368", tagColor: nil) {
+                 print("Successfully added")
+            }
+            if TagHandler.saveTag(text: "Bridge ID 5253", tagColor: nil) {
+                 print("Successfully added")
+            }
+
+        }
+        let tags = TagHandler.fetchObject()
+        print(tags!.count)
+        for tag in tags! {
+            print("\(String(describing: tag.text)) -- \(String(describing: tag.tagColor))")
+        }
         dropDownListProjectsTableView.isHidden = true
         setupInputOutput()
         setupPreviewLayer()
@@ -70,19 +94,10 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         captureInnerButton.layer.cornerRadius = 24
         captureButton.layer.cornerRadius = 35
         determineMyCurrentLocation()
-        //photosLocalIdentifierArray = UserDefaults.standard.stringArray(forKey: "localIdentifiers")
-        //1
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-                return
+        if PhotoHandler.deleteAllPhotos() {
+            print("all photos deleted from Core Data")
         }
-        managedObjectContext = appDelegate.persistentContainer.viewContext
-        appDelegate.deleteAllPhoto()
-        photoObjects = appDelegate.getAllPhotos()
-        
-//        for photo in photoObjects {
-//            print("\(photo.localIdentifierString!) - \(String(describing: photo.createdDate!))")
-//        }
-        //Photos
+        photoObjects = PhotoHandler.fetchAllObjects()!
         let photos = PHPhotoLibrary.authorizationStatus()
         if photos == .notDetermined {
             PHPhotoLibrary.requestAuthorization({status in
@@ -146,9 +161,6 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     @IBAction func onClickGalerry(_ sender: UIButton) {
-        //-------------
-        //showImages()
-        //-------------
         checkPermission()
     }
    
@@ -198,7 +210,6 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             let selectedCell:UITableViewCell = tableView.cellForRow(at: indexPath)!
             selectedCell.contentView.backgroundColor = UIColor.black
             setProjectsSelected(projectId: projectId)
-            //UserDefaults.standard.setValuesForKeys([Constants.LOCATION_NAME_KEY + Constants.ID_KEY: locationId])
         }
     }
     
@@ -296,7 +307,6 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             captureSession?.stopRunning()
             capturePreviewView.layer.sublayers?.removeAll()
             orientation = "Portrait"
-            //    setupInputOutput()
             setupPreviewLayer()
             captureSession?.startRunning()
         }
@@ -304,7 +314,6 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             captureSession?.stopRunning()
             capturePreviewView.layer.sublayers?.removeAll()
             orientation = "Portrait UpsideDown"
-            // setupInputOutput()
             setupPreviewLayer()
             captureSession?.startRunning()
         }
@@ -313,7 +322,6 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             captureSession?.stopRunning()
             capturePreviewView.layer.sublayers?.removeAll()
             orientation = "Landscape Left"
-            // setupInputOutput()
             setupPreviewLayer()
             captureSession?.startRunning()
         }
@@ -321,7 +329,6 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             captureSession?.stopRunning()
             capturePreviewView.layer.sublayers?.removeAll()
             orientation = "Landscape Right"
-            //   setupInputOutput()
             setupPreviewLayer()
             captureSession?.startRunning()
         }
@@ -406,26 +413,15 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             } else {
                 self.photosLocalIdentifierArray?.append(localId!)
             }
-            
-            print(self.photosLocalIdentifierArray as Any)
-            let newPhoto = Photo(context: self.managedObjectContext!)
-            newPhoto.localIdentifierString = localId!
-            newPhoto.createdDate = createdDate as NSDate?
-            do {
-                try self.managedObjectContext.save()
-            } catch {
-                fatalError("Failure to save context: \(error)")
+            if PhotoHandler.savePhoto(localIdentifier: localId!, creationDate: createdDate!, latitude: self.lastLocation.coordinate.latitude, longitude: self.lastLocation.coordinate.longitude){
+                print("Photo added in core data")
             }
-            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-                return
-            }
-            self.photoObjects = appDelegate.getAllPhotos()
+            self.photoObjects = PhotoHandler.fetchAllObjects()!
             DispatchQueue.main.async {
                 self.processingPopup.hideAndDestroy(from: self.view)
                 self.performSegue(withIdentifier: "PhotsViewIdentifier", sender: nil)
                 
             }
-            //self.showImages()
         })
     }
     
@@ -554,8 +550,6 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         print("user latitude = \(userLocation.coordinate.latitude)")
         print("user longitude = \(userLocation.coordinate.longitude)")
-//        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-//        print(documentsURL)
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error)
@@ -569,11 +563,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
-//        if  segue.identifier == "PhotsViewIdentifier",
-//            let destination = segue.destination as? PhotosViewController {
-//            destination.photosLocalIdentifiers = self.photosLocalIdentifierArray
-//            
-//        }
+
        
     }
    
@@ -607,9 +597,7 @@ extension CameraViewController: AssetsPickerViewControllerDelegate {
         // do your job with selected assets
         
         for phAsset in assets {
-            
-//            print(phAsset.localIdentifier)
-//            print(phAsset.creationDate!)
+
             if(phAsset.location != nil) {
                 print(phAsset.location!)
             }
@@ -618,20 +606,11 @@ extension CameraViewController: AssetsPickerViewControllerDelegate {
             } else {
                 self.photosLocalIdentifierArray?.append(phAsset.localIdentifier)
             }
-            print(self.photosLocalIdentifierArray as Any)
             selectedFromGallery = true
-            let newPhoto = Photo(context: self.managedObjectContext!)
-            newPhoto.localIdentifierString = phAsset.localIdentifier
-            newPhoto.createdDate = phAsset.creationDate as NSDate?
-            do {
-                try self.managedObjectContext.save()
-            } catch {
-                fatalError("Failure to save context: \(error)")
+            if PhotoHandler.savePhoto(localIdentifier: phAsset.localIdentifier, creationDate: phAsset.creationDate!, latitude: phAsset.location?.coordinate.latitude, longitude: phAsset.location?.coordinate.longitude) {
+                print("photo saved in DataCore")
             }
-            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-                return
-            }
-            photoObjects = appDelegate.getAllPhotos()
+            photoObjects = PhotoHandler.fetchAllObjects()!
         }
     }
     func assetsPicker(controller: AssetsPickerViewController, shouldSelect asset: PHAsset, at indexPath: IndexPath) -> Bool {

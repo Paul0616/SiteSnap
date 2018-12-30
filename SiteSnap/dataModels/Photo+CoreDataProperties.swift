@@ -2,7 +2,7 @@
 //  Photo+CoreDataProperties.swift
 //  SiteSnap
 //
-//  Created by Paul Oprea on 28/12/2018.
+//  Created by Paul Oprea on 30/12/2018.
 //  Copyright © 2018 Paul Oprea. All rights reserved.
 //
 //
@@ -17,12 +17,12 @@ extension Photo {
         return NSFetchRequest<Photo>(entityName: "Photo")
     }
 
-    @NSManaged public var createdDate: NSDate?
-    @NSManaged public var latitude: Float
-    @NSManaged public var localIdentifierString: String?
-    @NSManaged public var longitude: Float
-    @NSManaged public var individualComment: String?
     @NSManaged public var allPhotosComment: String?
+    @NSManaged public var createdDate: NSDate?
+    @NSManaged public var individualComment: String?
+    @NSManaged public var latitude: Double
+    @NSManaged public var localIdentifierString: String?
+    @NSManaged public var longitude: Double
     @NSManaged public var comment: Comment?
     @NSManaged public var tags: NSSet?
 

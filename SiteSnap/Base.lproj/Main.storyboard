@@ -502,6 +502,9 @@
                                 </constraints>
                                 <inset key="contentEdgeInsets" minX="5" minY="5" maxX="5" maxY="5"/>
                                 <state key="normal" image="new_tag_80px"/>
+                                <connections>
+                                    <segue destination="HuH-zq-xfS" kind="presentation" identifier="SetTagSegue" id="6fd-KQ-78X"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y3G-1o-9fE">
                                 <rect key="frame" x="121.5" y="80" width="30" height="30"/>
@@ -669,13 +672,13 @@
                                 <exclude reference="ULa-Hb-S4G"/>
                                 <exclude reference="Vxr-3m-TzK"/>
                                 <exclude reference="gSC-ik-5xa"/>
-                                <exclude reference="JY7-fr-aU7"/>
-                                <exclude reference="u5k-9c-OhW"/>
-                                <exclude reference="x2K-WD-Juy"/>
-                                <exclude reference="tJY-OU-k72"/>
                                 <exclude reference="fpd-0t-Pnx"/>
+                                <exclude reference="x2K-WD-Juy"/>
                                 <exclude reference="8LU-h4-eUs"/>
                                 <exclude reference="ZRE-bV-0tM"/>
+                                <exclude reference="tJY-OU-k72"/>
+                                <exclude reference="JY7-fr-aU7"/>
+                                <exclude reference="u5k-9c-OhW"/>
                                 <exclude reference="61X-wG-vfY"/>
                             </mask>
                         </variation>
@@ -689,25 +692,25 @@
                                 <include reference="Vxr-3m-TzK"/>
                                 <include reference="gSC-ik-5xa"/>
                                 <exclude reference="ule-lI-zrw"/>
-                                <include reference="JY7-fr-aU7"/>
-                                <include reference="u5k-9c-OhW"/>
+                                <exclude reference="45H-7w-fwF"/>
+                                <include reference="fpd-0t-Pnx"/>
                                 <exclude reference="3Nw-DJ-xM3"/>
                                 <exclude reference="Djd-QQ-Rys"/>
                                 <include reference="x2K-WD-Juy"/>
-                                <exclude reference="Smu-h0-VAJ"/>
-                                <exclude reference="hWB-kT-OQI"/>
-                                <include reference="tJY-OU-k72"/>
-                                <exclude reference="45H-7w-fwF"/>
-                                <include reference="fpd-0t-Pnx"/>
                                 <include reference="8LU-h4-eUs"/>
                                 <exclude reference="Xct-n1-FBV"/>
                                 <include reference="ZRE-bV-0tM"/>
+                                <exclude reference="Smu-h0-VAJ"/>
+                                <exclude reference="hWB-kT-OQI"/>
+                                <include reference="tJY-OU-k72"/>
+                                <exclude reference="Vln-ab-nps"/>
+                                <exclude reference="g3j-lh-JmP"/>
+                                <include reference="JY7-fr-aU7"/>
+                                <include reference="u5k-9c-OhW"/>
                                 <include reference="61X-wG-vfY"/>
                                 <exclude reference="S8z-wx-HZa"/>
                                 <exclude reference="Wf7-fA-uXX"/>
                                 <exclude reference="trs-KU-im3"/>
-                                <exclude reference="Vln-ab-nps"/>
-                                <exclude reference="g3j-lh-JmP"/>
                             </mask>
                         </variation>
                     </view>
@@ -794,6 +797,51 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3CH-v1-lVd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3113" y="45"/>
+        </scene>
+        <!--Tags Modal View Controller-->
+        <scene sceneID="taS-vF-Hku">
+            <objects>
+                <viewController modalTransitionStyle="crossDissolve" modalPresentationStyle="overCurrentContext" id="HuH-zq-xfS" customClass="TagsModalViewController" customModule="SiteSnap" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="oUm-Xg-tdd">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Eus-lB-t0Z">
+                                <rect key="frame" x="40" y="70" width="295" height="497"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R7G-Ql-aRS">
+                                        <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
+                                        <state key="normal" title="X">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onClickClose:" destination="HuH-zq-xfS" eventType="touchUpInside" id="udS-sl-752"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="R7G-Ql-aRS" firstAttribute="top" secondItem="Eus-lB-t0Z" secondAttribute="top" id="Yzx-mb-HxO"/>
+                                    <constraint firstItem="R7G-Ql-aRS" firstAttribute="leading" secondItem="Eus-lB-t0Z" secondAttribute="leading" id="tcf-mz-lIf"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.60252568493150682" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Eus-lB-t0Z" firstAttribute="leading" secondItem="VTG-Xe-dCt" secondAttribute="leading" constant="40" id="Eu2-Rw-yYo"/>
+                            <constraint firstItem="VTG-Xe-dCt" firstAttribute="bottom" secondItem="Eus-lB-t0Z" secondAttribute="bottom" constant="100" id="NBv-GM-wUV"/>
+                            <constraint firstItem="Eus-lB-t0Z" firstAttribute="top" secondItem="VTG-Xe-dCt" secondAttribute="top" constant="50" id="Oyh-pZ-oNY"/>
+                            <constraint firstItem="VTG-Xe-dCt" firstAttribute="trailing" secondItem="Eus-lB-t0Z" secondAttribute="trailing" constant="40" id="hpW-4r-P6I"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="VTG-Xe-dCt"/>
+                    </view>
+                    <connections>
+                        <outlet property="windowView" destination="Eus-lB-t0Z" id="VNI-Xk-l8J"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="faU-0w-Qta" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3112.8000000000002" y="788.45577211394311"/>
         </scene>
     </scenes>
     <resources>

@@ -70,10 +70,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         
     }
     override func viewWillAppear(_ animated: Bool) {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            return
-        }
-        photoObjects = appDelegate.getAllPhotos()
+        photoObjects = PhotoHandler.fetchAllObjects()
         if !firstTime {
             updateCommentLabel()
         }
@@ -136,18 +133,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
     }
     
     @IBAction func onClickAddComment(_ sender: UIButton) {
-        
-            performSegue(withIdentifier: "AddCommentViewIdentifier", sender: sender)
-//        if stackViewAllComments.isHidden {
-//        commentLabel.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin est lectus, ultricies quis nisi in, bibendum rhoncus justo. Duis suscipit molestie posuere. Quisque condimentum sem aliquet, mollis quam at, elementum neque. Donec sollicitudin tincidunt turpis. Ut feugiat mi nec aliquet varius. Nulla elementum consequat metus, et placerat enim sollicitudin eget. Nunc vel venenatis mi. Nulla luctus felis at ligula eleifend bibendum in vitae magna. Aenean vel purus finibus, consectetur lacus at, eleifend turpis. Quisque mattis id ex ut accumsan. Nunc leo dui, luctus vel massa in, sodales tempus magna. Integer tempus ante vitae sollicitudin elementum."
-//            stackViewAllComments.isHidden = false
-//            performSegue(withIdentifier: "AddCommentViewIdentifier", sender: sender)
-//
-//        } else {
-//            commentLabel.text = "Tap here to add a comment"
-//            stackViewAllComments.isHidden = true
-//
-//        }
+        performSegue(withIdentifier: "AddCommentViewIdentifier", sender: sender)
     }
     
     
@@ -213,45 +199,21 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
     //MARK: - Apply comment to all photos
     func applyCommentToAllPhotos(){
         if let comment = commentLabel.text {
-            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-                return
-            }
-            let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
-            do {
-                let objects = try appDelegate.persistentContainer.viewContext.fetch(fetchRequest)
-                for object in objects {
-                    object.allPhotosComment = comment
-                }
-                try appDelegate.persistentContainer.viewContext.save()
-            } catch _ {
-                // error handling
+            if PhotoHandler.updateAllComments(comment: comment) {
+                print("All photos have same comment")
             }
         }
     }
     func resetCommentsToOriginalValues(){
-            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-                return
-            }
-            let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
-            do {
-                let objects = try appDelegate.persistentContainer.viewContext.fetch(fetchRequest)
-                for object in objects {
-                    object.allPhotosComment = nil
-                }
-                try appDelegate.persistentContainer.viewContext.save()
-            } catch _ {
-                // error handling
-            }
+        if PhotoHandler.resetComments() {
+            print("Now photos have original comments")
+        }
     }
     //MARK: - REMOVE Photo
     func removePhoto(){
         let page = imageControl.currentPage
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            return
-        }
         //#####################delete from core data
-        let fetchDeleteRequest = NSFetchRequest<Photo>(entityName: "Photo")
-        fetchDeleteRequest.predicate = NSPredicate.init(format: "localIdentifierString=='\(slides[page].localIdentifier!)'")
+        let localIdentifier = slides[page].localIdentifier!
         //#########################
         
         imageControl.numberOfPages = imageControl.numberOfPages - 1
@@ -262,7 +224,6 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         } else {
             // zero pages
         }
-        //photosLocalIdentifiers?.remove(at: page)
         slides[page].removeFromSuperview()
         slides.remove(at: page)
         setupSlideScrollView(slides: self.slides)
@@ -270,22 +231,12 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
             onPageChange(imageControl)
         }
         //#######################
-        do {
-            let objects = try appDelegate.persistentContainer.viewContext.fetch(fetchDeleteRequest)
-            for object in objects {
-                appDelegate.persistentContainer.viewContext.delete(object)
-            }
-            try appDelegate.persistentContainer.viewContext.save()
+        if PhotoHandler.removePhoto(localIdentifier: localIdentifier) {
             photoObjects?.removeAll()
-            photoObjects = appDelegate.getAllPhotos()
-        } catch _ {
-            // error handling
+            photoObjects = PhotoHandler.fetchAllObjects()
         }
         //##################
-        
-        for photo in photoObjects! {
-            print(photo.localIdentifierString!)
-        }
+  
        
     }
     
@@ -333,9 +284,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         }
         scrollView.frame = CGRect(x: 0, y: 0, width: self.slidesContainer.frame.width, height: self.slidesContainer.frame.height)
         scrollView.contentSize = CGSize(width: self.slidesContainer.frame.width * (CGFloat(slides.count) / 2 + 0.5), height: self.slidesContainer.frame.height)
-        //scrollView.isPagingEnabled = true
-        //print("scrolView.frame=\(scrollView.frame)")
-        //print("scrolView.contentSize=\(scrollView.contentSize)")
+    
         for i in 0 ..< slides.count {
             slides[i].frame = CGRect(x: self.slidesContainer.frame.width * (CGFloat(2 * i + 1) * 0.25), y: 0, width: self.slidesContainer.frame.width / 2, height: self.slidesContainer.frame.height)
             //print("slide\(i).frame=\(slides[i].frame)")
@@ -346,46 +295,30 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
             }
         }
         imageControl.numberOfPages = slides.count
-       
-//        imageControl.currentPage = 0
-        //updatePageControl()
         imagesDotsContainer.bringSubviewToFront(imageControl)
     }
     func updateCommentLabel(){
         let page = imageControl.currentPage
-        
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            return
-        }
-        let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
-        fetchRequest.predicate = NSPredicate.init(format: "localIdentifierString=='\(slides[page].localIdentifier!)'")
-        do {
-            let objects = try appDelegate.persistentContainer.viewContext.fetch(fetchRequest)
-            for object in objects {
-                //print(object.individualComment as Any)
-                if let allComment = object.allPhotosComment {
+        let localIdentifier = slides[page].localIdentifier!
+        if let photo = PhotoHandler.getSpecificPhoto(localIdentifier: localIdentifier){
+            if let allComment = photo.allPhotosComment {
+                addCommentButton.setImage(UIImage(named:"edit-80px"), for: .normal)
+                addCommentButton.backgroundColor = UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
+                commentLabel.text = allComment
+                stackViewAllComments.isHidden = false
+            } else {
+                if let comment = photo.individualComment {
                     addCommentButton.setImage(UIImage(named:"edit-80px"), for: .normal)
                     addCommentButton.backgroundColor = UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
-                    commentLabel.text = allComment
+                    commentLabel.text = comment
                     stackViewAllComments.isHidden = false
                 } else {
-                    if let comment = object.individualComment {
-                        addCommentButton.setImage(UIImage(named:"edit-80px"), for: .normal)
-                        addCommentButton.backgroundColor = UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
-                        commentLabel.text = comment
-                        stackViewAllComments.isHidden = false
-                    } else {
-                        addCommentButton.setImage(UIImage(named:"one-comment-24px"), for: .normal)
-                        addCommentButton.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
-                        commentLabel.text = "Tap here to add a comment"
-                        stackViewAllComments.isHidden = true
-                    }
+                    addCommentButton.setImage(UIImage(named:"one-comment-24px"), for: .normal)
+                    addCommentButton.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
+                    commentLabel.text = "Tap here to add a comment"
+                    stackViewAllComments.isHidden = true
                 }
-                
-            
             }
-        } catch _ {
-            // error handling
         }
     }
     
@@ -537,6 +470,10 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
             destination.currentPhotoLocalIdentifier = self.slides[imageControl.currentPage].localIdentifier
             
         }
+        if segue.identifier == "SetTagSegue",
+            let destination = segue.destination as? TagsModalViewController {
+            destination.currentPhotoLocalIdentifier = self.slides[imageControl.currentPage].localIdentifier
+        }
     }
     
     //MARK: -
@@ -555,16 +492,8 @@ extension PhotosViewController: AssetsPickerViewControllerDelegate {
 //            } else {
 //                self.photosLocalIdentifiers?.append(phAsset.localIdentifier)
 //            }
-            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-                return
-            }
-            let newPhoto = Photo(context: appDelegate.persistentContainer.viewContext)
-            newPhoto.localIdentifierString = phAsset.localIdentifier
-            newPhoto.createdDate = phAsset.creationDate as NSDate?
-            do {
-                try appDelegate.persistentContainer.viewContext.save()
-            } catch {
-                fatalError("Failure to save context: \(error)")
+            if PhotoHandler.savePhoto(localIdentifier: phAsset.localIdentifier, creationDate: phAsset.creationDate!, latitude: phAsset.location?.coordinate.latitude, longitude: phAsset.location?.coordinate.longitude) {
+                print("photo saved in DataCore")
             }
         }
         loadImages(identifiers: identifiers)
