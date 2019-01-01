@@ -73,7 +73,9 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         photoObjects = PhotoHandler.fetchAllObjects()
         if !firstTime {
             updateCommentLabel()
+            updateTagNumber()
         }
+        
     }
     override func viewDidLayoutSubviews() {
         
@@ -85,7 +87,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
             firstTime = false
             loadImages(identifiers: identifiers)
         }
-        
+         updateTagNumber()
     }
     
     override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
@@ -177,6 +179,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
                 self.scrollView.layoutIfNeeded()
         }, completion: nil)
         updateCommentLabel()
+        
     }
     
     @IBAction func onSwitchToAllComments(_ sender: UISwitch) {
@@ -321,6 +324,23 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
             }
         }
     }
+    func updateTagNumber(){
+        let page = imageControl.currentPage
+        var photo: Photo!
+        if slides.count > 0 {
+            let localIdentifier = slides[page].localIdentifier!
+            if PhotoHandler.allTagsWasSet(localIdentifier: localIdentifier) {
+                let identifier = PhotoHandler.getAllTagsPhotoIdentifier(localIdentifier: localIdentifier)
+                photo = PhotoHandler.getSpecificPhoto(localIdentifier: identifier!)
+            } else {
+                photo = PhotoHandler.getSpecificPhoto(localIdentifier: localIdentifier)
+            }
+            
+            if let selectedPhoto = photo {
+                tagNumberLabel.text = selectedPhoto.tags?.count.description
+            }
+        }
+    }
     
     //MARK: - Loading images into SLIDES
     func loadImages(identifiers: [String]!) {
@@ -416,6 +436,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
                     scrollView.layoutIfNeeded()
             }, completion: { (finished: Bool) in 
                 self.updateCommentLabel()
+                self.updateTagNumber()
             })
         }
     }
@@ -454,9 +475,15 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
     }
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         updateCommentLabel()
+        updateTagNumber()
     }
     // MARK: - Navigation
-
+    @IBAction func unwindFromTagModal(segue: UIStoryboardSegue) {
+        if let sourceViewController = segue.source as? TagsModalViewController {
+            print(sourceViewController.description)
+            updateTagNumber()
+        }
+    }
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
@@ -472,7 +499,13 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         }
         if segue.identifier == "SetTagSegue",
             let destination = segue.destination as? TagsModalViewController {
-            destination.currentPhotoLocalIdentifier = self.slides[imageControl.currentPage].localIdentifier
+            if PhotoHandler.allTagsWasSet(localIdentifier: self.slides[imageControl.currentPage].localIdentifier!)
+            {
+                let identifier = PhotoHandler.getAllTagsPhotoIdentifier(localIdentifier: self.slides[imageControl.currentPage].localIdentifier!)
+                destination.currentPhotoLocalIdentifier = identifier
+            } else {
+                destination.currentPhotoLocalIdentifier = self.slides[imageControl.currentPage].localIdentifier
+            }
         }
     }
     

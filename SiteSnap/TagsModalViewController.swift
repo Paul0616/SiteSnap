@@ -8,9 +8,16 @@
 
 import UIKit
 
-class TagsModalViewController: UIViewController {
+class TagsModalViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
 
     var currentPhotoLocalIdentifier: String?
+    var tags: [TagModel]!
+    var tagsWithSections: [[TagModel]]!
+    var searchTags: [[TagModel]]!
+    var searchFlag: Bool = false
+    
+    @IBOutlet weak var alltagsSwitch: UISwitch!
+    @IBOutlet weak var tblView: UITableView!
     @IBOutlet weak var windowView: UIView!
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,18 +27,54 @@ class TagsModalViewController: UIViewController {
   //      let tags = PhotoHandler.getTags(localIdentifier: currentPhotoLocalIdentifier!)
 //        print(tags?.count as Any)
 //        print(tags!)
-        let tags = TagHandler.fetchObject()
-        for tag in tags! {
-            print("\(String(describing: tag.text)) - \(String(describing: tag.tagColor))")
+        alltagsSwitch.isOn = PhotoHandler.allTagsWasSet(localIdentifier: currentPhotoLocalIdentifier!)
+        tags = PhotoHandler.getTags(localIdentifier: currentPhotoLocalIdentifier!)
+       
+        tags = self.tags.sorted(by: { $0.selected && !$1.selected})
+        var tagsSelected = [TagModel]()
+        var tagsUnselected = [TagModel]()
+        for tag in tags {
+            if tag.selected {
+                tagsSelected.append(tag)
+            } else {
+                tagsUnselected.append(tag)
+            }
         }
+       
+        tagsWithSections = [tagsSelected, tagsUnselected]
+       
         // Do any additional setup after loading the view.
     }
     
     @IBAction func onClickClose(_ sender: UIButton) {
 //        let color = UIColor(hexString: "#a6b012")
 //        windowView.backgroundColor = color
-        dismiss(animated: true, completion: nil)
-       
+//        dismiss(animated: true, completion: nil)
+       performSegue(withIdentifier: "unwindToPhotosViewController", sender: sender)
+    }
+    @IBAction func onSwitchAllTags(_ sender: UISwitch) {
+        if sender.isOn {
+            if PhotoHandler.addAllTags(currentLocalIdentifier: currentPhotoLocalIdentifier!) {
+                print("current tags was applied to all photos")
+            }
+        } else {
+            if PhotoHandler.removeAllTags() {
+                print("original tags for photos was restablished")
+                performSegue(withIdentifier: "unwindToPhotosViewController", sender: sender)
+            }
+        }
+    }
+    @IBAction func onSwitchTag(_ sender: UISwitch) {
+        let index = sender.tag
+        let tagText = tags[index].tag.text
+        let photo = PhotoHandler.getSpecificPhoto(localIdentifier: currentPhotoLocalIdentifier!)
+        let tag = TagHandler.getSpecificTag(text: tagText!)
+        if sender.isOn {
+            tag?.addToPhotos(photo!)
+        } else {
+            tag?.removeFromPhotos(photo!)
+        }
+        
     }
     
     /*
@@ -43,7 +86,90 @@ class TagsModalViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
-
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        if !searchFlag {
+            return tagsWithSections.count
+        } else {
+            return searchTags.count
+        }
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if !searchFlag{
+            return tagsWithSections[section].count
+        } else {
+            return searchTags[section].count
+        }
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "TagCell", for: indexPath) as! TagCellTableViewCell
+        if !searchFlag {
+            cell.tagText.text = tagsWithSections[indexPath.section][indexPath.row].tag.text
+            cell.tagSwitch.isOn = tagsWithSections[indexPath.section][indexPath.row].selected
+            if indexPath.section == 0 {
+                cell.tagSwitch.tag = indexPath.row
+            } else {
+                cell.tagSwitch.tag = indexPath.section * tagsWithSections[indexPath.section - 1].count + indexPath.row
+            }
+            
+            if tagsWithSections[indexPath.section][indexPath.row].tag.tagColor != nil {
+                cell.tagImage.backgroundColor = UIColor(hexString: tagsWithSections[indexPath.section][indexPath.row].tag.tagColor!)
+                cell.tagText.backgroundColor = UIColor(hexString: tagsWithSections[indexPath.section][indexPath.row].tag.tagColor!)
+            }
+        } else {
+            cell.tagText.text = searchTags[indexPath.section][indexPath.row].tag.text
+            cell.tagSwitch.isOn = searchTags[indexPath.section][indexPath.row].selected
+            if indexPath.section == 0 {
+                cell.tagSwitch.tag = indexPath.row
+            } else {
+                cell.tagSwitch.tag = indexPath.section * searchTags[indexPath.section - 1].count + indexPath.row
+            }
+            
+            if searchTags[indexPath.section][indexPath.row].tag.tagColor != nil {
+                cell.tagImage.backgroundColor = UIColor(hexString: searchTags[indexPath.section][indexPath.row].tag.tagColor!)
+                cell.tagText.backgroundColor = UIColor(hexString: searchTags[indexPath.section][indexPath.row].tag.tagColor!)
+            }
+        }
+        return cell
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 60
+    }
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 5
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        tags = PhotoHandler.getTags(localIdentifier: currentPhotoLocalIdentifier!)
+        
+        tags = self.tags.sorted(by: { $0.selected && !$1.selected})
+        if searchText != "" {
+            let searchValues = tags.filter { (dataArray:TagModel) -> Bool in
+                return ((dataArray.tag.text?.lowercased().contains(searchText.lowercased()))!
+                )}
+        
+            var tagsSelected = [TagModel]()
+            var tagsUnselected = [TagModel]()
+            for tag in searchValues {
+                if tag.selected {
+                    tagsSelected.append(tag)
+                } else {
+                    tagsUnselected.append(tag)
+                }
+            }
+            searchTags = [tagsSelected, tagsUnselected]
+            searchFlag = true
+        } else {
+            searchFlag = false
+        }
+        
+        tblView.reloadData()
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
+   
 }
 extension UIColor {
     convenience init(hexString: String) {

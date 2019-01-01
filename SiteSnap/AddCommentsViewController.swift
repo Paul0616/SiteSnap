@@ -85,7 +85,7 @@ class AddCommentsViewController: UIViewController {
     @objc func keyboardWillHide(notification: NSNotification) {
         print("Keyboard hidden")
     }
-    //MARK: = UI Buttons actions
+    //MARK: - UI Buttons actions
     @IBAction func onBack(_ sender: UIButton) {
         dismiss(animated: false, completion: nil)
     }

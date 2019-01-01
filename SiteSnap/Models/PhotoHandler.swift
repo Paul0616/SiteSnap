@@ -131,15 +131,85 @@ class PhotoHandler: NSObject {
             return false
         }
     }
-    class func getTags(localIdentifier: String) -> [Tag]! {
+    class func getTags(localIdentifier: String) -> [TagModel]! {
         let context = getContext()
         let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
         fetchRequest.predicate = NSPredicate.init(format: "localIdentifierString=='\(localIdentifier)'")
         do {
             let objects = try context.fetch(fetchRequest)
-            return objects.first?.tags?.allObjects as? [Tag]
+            let photo = objects.first!
+            var returnedTags = [TagModel]()
+            var tagModel: TagModel
+            for tag in TagHandler.fetchObject()! {
+                if (tag.photos?.contains(photo))! {
+                    tagModel = TagModel(tag: tag, selected: true)!
+                } else {
+                    tagModel = TagModel(tag: tag, selected: false)!
+                }
+                returnedTags.append(tagModel)
+            }
+            return returnedTags
         } catch _ {
             return nil
+        }
+    }
+    class func getAllTagsPhotoIdentifier(localIdentifier: String) -> String! {
+        let context = getContext()
+        let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
+        fetchRequest.predicate = NSPredicate.init(format: "localIdentifierString=='\(localIdentifier)'")
+        do {
+            let objects = try context.fetch(fetchRequest)
+            let photo = objects.first!
+            
+            return photo.localIdentifierForAllTags
+        } catch _ {
+            return nil
+        }
+    }
+    
+    class func allTagsWasSet(localIdentifier: String) -> Bool {
+        let context = getContext()
+        let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
+        fetchRequest.predicate = NSPredicate.init(format: "localIdentifierString=='\(localIdentifier)'")
+        do {
+            let objects = try context.fetch(fetchRequest)
+            let photo = objects.first!
+            
+            return photo.allTagsWasSet
+        } catch _ {
+            return false
+        }
+    }
+    
+    class func addAllTags(currentLocalIdentifier: String) -> Bool {
+        let context = getContext()
+        
+        let photos = fetchAllObjects()
+        do {
+            for photo in photos! {
+                photo.allTagsWasSet = true
+                photo.localIdentifierForAllTags = currentLocalIdentifier
+            }
+            try context.save()
+            return true
+        } catch _ {
+            return false
+        }
+    }
+    
+    class func removeAllTags() -> Bool {
+        let context = getContext()
+        
+        let photos = fetchAllObjects()
+        do {
+            for photo in photos! {
+                photo.allTagsWasSet = false
+                photo.localIdentifierForAllTags = nil
+            }
+            try context.save()
+            return true
+        } catch _ {
+            return false
         }
     }
     

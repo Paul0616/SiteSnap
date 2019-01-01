@@ -30,7 +30,7 @@ class TagHandler: NSObject {
             return false
         }
     }
-    
+   
     class func getSpecificTag(text: String) -> Tag! {
         let context = getContext()
         let fetchRequest = NSFetchRequest<Tag>(entityName: "Tag")
