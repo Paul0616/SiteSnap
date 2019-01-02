@@ -731,6 +731,7 @@
                         <outlet property="tagNumberLabel" destination="Y3G-1o-9fE" id="ef2-14-Ao7"/>
                         <outlet property="takePhotoButton" destination="xax-sd-5Co" id="387-wP-iVl"/>
                         <segue destination="ujF-w3-ccj" kind="show" identifier="AddCommentViewIdentifier" id="yVO-YD-uBd"/>
+                        <segue destination="Xby-a2-aAM" kind="show" identifier="PhotoInspectorSegue" id="AfI-jz-Vmt"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZGt-Cr-JA3" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -797,6 +798,52 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3CH-v1-lVd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3113" y="45"/>
+        </scene>
+        <!--Photo Inspector View Controller-->
+        <scene sceneID="nxn-j5-OQx">
+            <objects>
+                <viewController id="Xby-a2-aAM" customClass="PhotoInspectorViewController" customModule="SiteSnap" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="zTM-rQ-zFL">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ViT-fb-JD7">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </scrollView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="331-8h-HoJ">
+                                <rect key="frame" x="8" y="28" width="40" height="40"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="5Eb-2H-6Mt"/>
+                                    <constraint firstAttribute="width" constant="40" id="sBt-Tl-zK9"/>
+                                </constraints>
+                                <inset key="contentEdgeInsets" minX="5" minY="5" maxX="5" maxY="5"/>
+                                <state key="normal" image="arrow_back-40px"/>
+                                <connections>
+                                    <action selector="onBack:" destination="Xby-a2-aAM" eventType="touchUpInside" id="SKx-rW-Gwl"/>
+                                    <action selector="onBack:" destination="ujF-w3-ccj" eventType="touchUpInside" id="hzL-on-uHk"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="ViT-fb-JD7" firstAttribute="width" secondItem="zTM-rQ-zFL" secondAttribute="width" id="0CR-Nl-m9V"/>
+                            <constraint firstItem="331-8h-HoJ" firstAttribute="top" secondItem="ML7-ry-ci1" secondAttribute="top" constant="8" id="NeX-DM-ffo"/>
+                            <constraint firstItem="ViT-fb-JD7" firstAttribute="centerX" secondItem="zTM-rQ-zFL" secondAttribute="centerX" id="Qt4-XR-8I6"/>
+                            <constraint firstItem="ViT-fb-JD7" firstAttribute="centerY" secondItem="zTM-rQ-zFL" secondAttribute="centerY" id="VSY-nu-UbZ"/>
+                            <constraint firstItem="331-8h-HoJ" firstAttribute="leading" secondItem="ML7-ry-ci1" secondAttribute="leading" constant="8" id="rPD-m3-Hkn"/>
+                            <constraint firstItem="ViT-fb-JD7" firstAttribute="height" secondItem="zTM-rQ-zFL" secondAttribute="height" id="yD0-l5-6AM"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="ML7-ry-ci1"/>
+                    </view>
+                    <connections>
+                        <outlet property="backbutton" destination="331-8h-HoJ" id="WO9-lH-quG"/>
+                        <outlet property="scrollView" destination="ViT-fb-JD7" id="Dns-Ho-Mni"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8Qa-Fw-xAE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1999" y="823"/>
         </scene>
         <!--Tags Modal View Controller-->
         <scene sceneID="taS-vF-Hku">

@@ -117,6 +117,38 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
     
+    override func viewDidLayoutSubviews() {
+        
+        if UIDevice.current.orientation == UIDeviceOrientation.portrait { //UIDevice.current.orientation == .portrait {
+            captureSession?.stopRunning()
+            capturePreviewView.layer.sublayers?.removeAll()
+            orientation = "Portrait"
+            setupPreviewLayer()
+            captureSession?.startRunning()
+        }
+        if UIDevice.current.orientation == .portraitUpsideDown {
+            captureSession?.stopRunning()
+            capturePreviewView.layer.sublayers?.removeAll()
+            orientation = "Portrait UpsideDown"
+            setupPreviewLayer()
+            captureSession?.startRunning()
+        }
+        
+        if UIDevice.current.orientation == .landscapeLeft {
+            captureSession?.stopRunning()
+            capturePreviewView.layer.sublayers?.removeAll()
+            orientation = "Landscape Left"
+            setupPreviewLayer()
+            captureSession?.startRunning()
+        }
+        if UIDevice.current.orientation == .landscapeRight {
+            captureSession?.stopRunning()
+            capturePreviewView.layer.sublayers?.removeAll()
+            orientation = "Landscape Right"
+            setupPreviewLayer()
+            captureSession?.startRunning()
+        }
+    }
     
     //MARK: - Selecting new project
     @IBAction func onClickSelectedProjectButton(_ sender: ActivityIndicatorButton) {
@@ -301,38 +333,6 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     }
     
-    //MARK: - changing PHONE ORIENTATION
-    override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
-        if UIDevice.current.orientation == .portrait { //UIDevice.current.orientation == .portrait {
-            captureSession?.stopRunning()
-            capturePreviewView.layer.sublayers?.removeAll()
-            orientation = "Portrait"
-            setupPreviewLayer()
-            captureSession?.startRunning()
-        }
-        if UIDevice.current.orientation == .portraitUpsideDown {
-            captureSession?.stopRunning()
-            capturePreviewView.layer.sublayers?.removeAll()
-            orientation = "Portrait UpsideDown"
-            setupPreviewLayer()
-            captureSession?.startRunning()
-        }
-        
-        if UIDevice.current.orientation == .landscapeLeft {
-            captureSession?.stopRunning()
-            capturePreviewView.layer.sublayers?.removeAll()
-            orientation = "Landscape Left"
-            setupPreviewLayer()
-            captureSession?.startRunning()
-        }
-        if UIDevice.current.orientation == .landscapeRight {
-            captureSession?.stopRunning()
-            capturePreviewView.layer.sublayers?.removeAll()
-            orientation = "Landscape Right"
-            setupPreviewLayer()
-            captureSession?.startRunning()
-        }
-    }
     
     //MARK: - Permission for viewing and saving photos in Custom Album
     func checkPermission() {

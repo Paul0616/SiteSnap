@@ -57,11 +57,12 @@ class AddCommentsViewController: UIViewController {
         
     }
     
-    override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
+    override func viewDidLayoutSubviews() {
         commentTextview.resignFirstResponder()
         addObserver()
         commentTextview.becomeFirstResponder()
     }
+
     //MARK: - Install observer for keyboard show/hide
     func addObserver(){
         //keyboard observers

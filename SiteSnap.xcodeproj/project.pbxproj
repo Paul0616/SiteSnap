@@ -20,6 +20,7 @@
 		DA47324E21D96A1A003729BB /* TagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA47324D21D96A1A003729BB /* TagModel.swift */; };
 		DA47325021DA3109003729BB /* TagCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA47324F21DA3109003729BB /* TagCellTableViewCell.swift */; };
 		DA47325221DA4402003729BB /* PaddingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA47325121DA4402003729BB /* PaddingLabel.swift */; };
+		DA47325821DBB227003729BB /* PhotoInspectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA47325721DBB227003729BB /* PhotoInspectorViewController.swift */; };
 		DA977F0921C1460F00883640 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F0821C1460F00883640 /* AppDelegate.swift */; };
 		DA977F0B21C1460F00883640 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F0A21C1460F00883640 /* ViewController.swift */; };
 		DA977F1121C1460F00883640 /* SiteSnap.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DA977F0F21C1460F00883640 /* SiteSnap.xcdatamodeld */; };
@@ -77,6 +78,7 @@
 		DA47324D21D96A1A003729BB /* TagModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagModel.swift; sourceTree = "<group>"; };
 		DA47324F21DA3109003729BB /* TagCellTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCellTableViewCell.swift; sourceTree = "<group>"; };
 		DA47325121DA4402003729BB /* PaddingLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddingLabel.swift; sourceTree = "<group>"; };
+		DA47325721DBB227003729BB /* PhotoInspectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInspectorViewController.swift; sourceTree = "<group>"; };
 		DA977F0521C1460F00883640 /* SiteSnap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SiteSnap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA977F0821C1460F00883640 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DA977F0A21C1460F00883640 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -208,6 +210,7 @@
 				DA977F5421C2E91300883640 /* CameraViewController.swift */,
 				40B296B921CCD87300A3C487 /* PhotosViewController.swift */,
 				DABA66E321D65B620036CEE7 /* AddCommentsViewController.swift */,
+				DA47325721DBB227003729BB /* PhotoInspectorViewController.swift */,
 				DA47324721D8BF75003729BB /* TagsModalViewController.swift */,
 				DA47324F21DA3109003729BB /* TagCellTableViewCell.swift */,
 				40B296BB21CCE5A000A3C487 /* Slide.swift */,
@@ -509,6 +512,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DABA66E421D65B620036CEE7 /* AddCommentsViewController.swift in Sources */,
+				DA47325821DBB227003729BB /* PhotoInspectorViewController.swift in Sources */,
 				DA977F1121C1460F00883640 /* SiteSnap.xcdatamodeld in Sources */,
 				DABA66E221D23F1D0036CEE7 /* Tag+CoreDataProperties.swift in Sources */,
 				DAA270A221CBD5AD0058148A /* ImageDotButton.swift in Sources */,

@@ -88,26 +88,26 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
             loadImages(identifiers: identifiers)
         }
          updateTagNumber()
-    }
-    
-    override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
-        if fromInterfaceOrientation == .portrait {
-            takePhotoButton.setTitle("", for: .normal)
-            addFromGalleryButton.setTitle("", for: .normal)
-            takePhotoButton.layer.cornerRadius = 30
-            addFromGalleryButton.layer.cornerRadius = 30
-        } else {
-            takePhotoButton.setTitle("TAKE ANOTHER PHOTO", for: .normal)
-            addFromGalleryButton.setTitle("ADD PHOTO FROM GALLERY", for: .normal)
-            takePhotoButton.layer.cornerRadius = 6
-            addFromGalleryButton.layer.cornerRadius = 6
-        }
-        if slides.count > 0 {
-            setupSlideScrollView(slides: slides)
-            onPageChange(imageControl)
-        }
         
+        if self.view.safeAreaLayoutGuide.layoutFrame.size.width > self.view.safeAreaLayoutGuide.layoutFrame.size.height {
+            print("landscape")
+            self.takePhotoButton.setTitle("", for: .normal)
+            self.addFromGalleryButton.setTitle("", for: .normal)
+            self.takePhotoButton.layer.cornerRadius = 30
+            self.addFromGalleryButton.layer.cornerRadius = 30
+        } else {
+            print("portrait")
+            self.takePhotoButton.setTitle("TAKE ANOTHER PHOTO", for: .normal)
+            self.addFromGalleryButton.setTitle("ADD PHOTO FROM GALLERY", for: .normal)
+            self.takePhotoButton.layer.cornerRadius = 6
+            self.addFromGalleryButton.layer.cornerRadius = 6
+        }
+        if self.slides.count > 0 {
+            self.setupSlideScrollView(slides: self.slides)
+            self.onPageChange(self.imageControl)
+        }
     }
+
     //MARK: - OPTONAL custom page Control
     func updatePageControl() {
         for (index, dot) in imageControl.subviews.enumerated() {
@@ -285,12 +285,15 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         for i in 0 ..< slides.count {
             slides[i].removeFromSuperview()
         }
+       
         scrollView.frame = CGRect(x: 0, y: 0, width: self.slidesContainer.frame.width, height: self.slidesContainer.frame.height)
         scrollView.contentSize = CGSize(width: self.slidesContainer.frame.width * (CGFloat(slides.count) / 2 + 0.5), height: self.slidesContainer.frame.height)
     
         for i in 0 ..< slides.count {
             slides[i].frame = CGRect(x: self.slidesContainer.frame.width * (CGFloat(2 * i + 1) * 0.25), y: 0, width: self.slidesContainer.frame.width / 2, height: self.slidesContainer.frame.height)
             //print("slide\(i).frame=\(slides[i].frame)")
+            
+            
             scrollView.addSubview(slides[i])
             if i > 0 {
                 slides[i].mainImage.transform = CGAffineTransform(scaleX: minImageScale, y: minImageScale)
@@ -299,7 +302,16 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         }
         imageControl.numberOfPages = slides.count
         imagesDotsContainer.bringSubviewToFront(imageControl)
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(inspectPhoto(_:)))
+        tapGestureRecognizer.numberOfTapsRequired = 1
+        scrollView.addGestureRecognizer(tapGestureRecognizer)
     }
+    
+    @objc func inspectPhoto(_ sender: UITapGestureRecognizer){
+        let slide = slides[imageControl.currentPage]
+        performSegue(withIdentifier: "PhotoInspectorSegue", sender: slide)
+    }
+    
     func updateCommentLabel(){
         let page = imageControl.currentPage
         let localIdentifier = slides[page].localIdentifier!
@@ -477,6 +489,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         updateCommentLabel()
         updateTagNumber()
     }
+    
     // MARK: - Navigation
     @IBAction func unwindFromTagModal(segue: UIStoryboardSegue) {
         if let sourceViewController = segue.source as? TagsModalViewController {
@@ -506,6 +519,14 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
             } else {
                 destination.currentPhotoLocalIdentifier = self.slides[imageControl.currentPage].localIdentifier
             }
+        }
+        
+        if segue.identifier == "PhotoInspectorSegue",
+            let destination = segue.destination as? PhotoInspectorViewController,
+            let slide = sender! as? Slide {
+            
+            destination.localIdentifier = slide.localIdentifier
+            
         }
     }
     
