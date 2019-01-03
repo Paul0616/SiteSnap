@@ -419,6 +419,7 @@
                                 </variation>
                                 <connections>
                                     <action selector="onNext:" destination="Ndu-GM-uKQ" eventType="touchUpInside" id="dTZ-Yf-jC4"/>
+                                    <segue destination="3th-Zv-vt4" kind="show" identifier="ConfirmLocationSegue" id="VmZ-3Z-m88"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NHP-4F-nwH">
@@ -799,6 +800,53 @@
             </objects>
             <point key="canvasLocation" x="3113" y="45"/>
         </scene>
+        <!--Confirm Location View Controller-->
+        <scene sceneID="271-bE-UXf">
+            <objects>
+                <viewController id="3th-Zv-vt4" customClass="ConfirmLocationViewController" customModule="SiteSnap" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="VqZ-Fo-lVQ">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="Ubp-0E-1k3">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r4t-rr-cqW">
+                                <rect key="frame" x="8" y="28" width="40" height="40"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="5HM-bu-dei"/>
+                                    <constraint firstAttribute="height" constant="40" id="Rod-Ws-6ef"/>
+                                </constraints>
+                                <inset key="contentEdgeInsets" minX="5" minY="5" maxX="5" maxY="5"/>
+                                <state key="normal" image="arrow_back-40px"/>
+                                <connections>
+                                    <action selector="onBack:" destination="ujF-w3-ccj" eventType="touchUpInside" id="LfZ-GE-Mg4"/>
+                                    <action selector="onBack:" destination="3th-Zv-vt4" eventType="touchUpInside" id="oEB-yz-naA"/>
+                                    <action selector="onBack:" destination="Xby-a2-aAM" eventType="touchUpInside" id="t4o-7q-xAj"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="r4t-rr-cqW" firstAttribute="leading" secondItem="G5S-UM-ZT7" secondAttribute="leading" constant="8" id="1qG-ac-RNf"/>
+                            <constraint firstItem="Ubp-0E-1k3" firstAttribute="trailing" secondItem="G5S-UM-ZT7" secondAttribute="trailing" id="CZN-CP-s4r"/>
+                            <constraint firstItem="Ubp-0E-1k3" firstAttribute="top" secondItem="VqZ-Fo-lVQ" secondAttribute="top" id="Wue-g1-xGU"/>
+                            <constraint firstItem="r4t-rr-cqW" firstAttribute="top" secondItem="G5S-UM-ZT7" secondAttribute="top" constant="8" id="nJZ-J8-B53"/>
+                            <constraint firstItem="Ubp-0E-1k3" firstAttribute="leading" secondItem="G5S-UM-ZT7" secondAttribute="leading" id="phM-dG-HNG"/>
+                            <constraint firstItem="Ubp-0E-1k3" firstAttribute="bottom" secondItem="G5S-UM-ZT7" secondAttribute="bottom" id="ywl-Ed-s9C"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="G5S-UM-ZT7"/>
+                    </view>
+                    <connections>
+                        <outlet property="backButton" destination="r4t-rr-cqW" id="8rf-UN-bpn"/>
+                        <outlet property="map" destination="Ubp-0E-1k3" id="NaQ-jl-6Ws"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ofy-fY-yu6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1116" y="816.34182908545733"/>
+        </scene>
         <!--Photo Inspector View Controller-->
         <scene sceneID="nxn-j5-OQx">
             <objects>
@@ -903,7 +951,7 @@
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9pj-mR-agq" customClass="PaddingLabel" customModule="SiteSnap" customModuleProvider="target">
-                                                            <rect key="frame" x="38" y="0.0" width="59" height="40"/>
+                                                            <rect key="frame" x="38" y="0.0" width="42" height="40"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="40" id="0Ig-n5-jdC"/>
                                                             </constraints>
