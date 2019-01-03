@@ -10,17 +10,27 @@ import UIKit
 import MapKit
 import CoreData
 
-class ConfirmLocationViewController: UIViewController, MKMapViewDelegate {
+class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
 
     @IBOutlet weak var map: MKMapView!
+    @IBOutlet weak var uploadButton: UIButton!
+    @IBOutlet weak var confirmPhotoLocationButton: UIButton!
     @IBOutlet weak var backButton: UIButton!
     var photos: [Photo]!
+    var locationManager: CLLocationManager!
+    var lastLocation: CLLocation!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         backButton.layer.cornerRadius = 20
+        confirmPhotoLocationButton.layer.cornerRadius = 6
+        confirmPhotoLocationButton.isEnabled = false
+        confirmPhotoLocationButton.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        uploadButton.layer.cornerRadius = 6
         // Do any additional setup after loading the view.
         photos = PhotoHandler.fetchAllObjects()
         self.map.delegate = self
+        determineMyCurrentLocation()
         for photo in photos {
             print("lat:\(photo.latitude) - long:\(photo.longitude)")
         }
@@ -44,7 +54,39 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate {
     @IBAction func onBack(_ sender: UIButton) {
         dismiss(animated: true, completion: nil)
     }
+    @IBAction func onClickCurrentLocation(_ sender: UIButton) {
+        guard let location = lastLocation else {
+            return
+        }
+        map.setCenter(location.coordinate, animated: true)
+    }
     
+    @IBAction func onClickChangeMapType(_ sender: UIButton) {
+        switch map.mapType {
+        case .standard:
+            map.mapType = .hybrid
+        case .hybrid:
+            map.mapType = .standard
+        default:
+            map.mapType = .standard
+        }
+    }
+    
+    //MARK: - getting current LOCATION - function delegate
+    func determineMyCurrentLocation() {
+        
+        locationManager = LocationManager()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestAlwaysAuthorization()
+        
+        if LocationManager.locationServicesEnabled() {
+            //locationManager.requestLocation()
+            
+            locationManager.startUpdatingLocation()
+            //locationManager.startUpdatingHeading()
+        }
+    }
     /*
     // MARK: - Navigation
 
@@ -67,5 +109,22 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate {
         annotationView.image = resizedImage
         annotationView.canShowCallout = true
         return annotationView
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let userLocation:CLLocation = locations[0] as CLLocation
+        lastLocation = userLocation
+        // Call stopUpdatingLocation() to stop listening for location updates,
+        // other wise this function will be called every time when user location changes.
+        
+        manager.stopUpdatingLocation()
+        
+        print("user latitude = \(userLocation.coordinate.latitude)")
+        print("user longitude = \(userLocation.coordinate.longitude)")
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error)
+    {
+        print("Error \(error)")
     }
 }
