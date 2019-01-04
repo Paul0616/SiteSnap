@@ -9,6 +9,7 @@
 import UIKit
 import MapKit
 import CoreData
+import Photos
 
 class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
 
@@ -17,8 +18,10 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
     @IBOutlet weak var confirmPhotoLocationButton: UIButton!
     @IBOutlet weak var backButton: UIButton!
     var photos: [Photo]!
+    var clustersPhotos = [[Photo]]()
     var locationManager: CLLocationManager!
     var lastLocation: CLLocation!
+    var annotationsArray: [PhotoAnnotation] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,15 +43,31 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
 //        let lonDelta: CLLocationDegrees = 0.05
         //let span: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: lonDelta)
         let location: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-        let region1: MKCoordinateRegion = MKCoordinateRegion(center: location, latitudinalMeters: 200, longitudinalMeters: 200)
+        let region: MKCoordinateRegion = MKCoordinateRegion(center: location, latitudinalMeters: 200, longitudinalMeters: 200)
         //let region: MKCoordinateRegion = MKCoordinateRegion(center: location, span: span)
-        map.setRegion(region1, animated: true)
-        let annotation = PhotoAnnotation(coordinate: location, title: "xxx", subtitle: "test")
+        map.setRegion(region, animated: true)
+        
+       
 //        annotation.coordinate = location
 //        annotation.title = "First Photo"
 //        annotation.subtitle = "location:(\(location.latitude),\(location.longitude))"
+         setPhotoClusters()
         map.mapType = .hybrid
-        map.addAnnotation(annotation)
+//        map.register(PhotoAnnotationView.self,
+//                         forAnnotationViewWithReuseIdentifier: "photoAnnotation")
+        for cluster in clustersPhotos {
+            var annotation: PhotoAnnotation!
+             let loc: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: (cluster.first?.latitude)!, longitude: (cluster.first?.longitude)!)
+            if cluster.count > 1 {
+                annotation =  PhotoAnnotation(coordinate: loc, title: "xxx", subtitle: "test", isCluster: cluster.count > 1, numberOfPhotos: cluster.count, photoImage: nil)
+            } else {
+                let image = loadImage(identifier: cluster.first?.localIdentifierString)
+                annotation =  PhotoAnnotation(coordinate: loc, title: "xxx", subtitle: "test", isCluster: cluster.count > 1, numberOfPhotos: cluster.count, photoImage: image)
+            }
+           annotationsArray.append(annotation)
+        }
+        map.addAnnotations(annotationsArray)
+        map.showAnnotations(annotationsArray, animated: true)
     }
     
     @IBAction func onBack(_ sender: UIButton) {
@@ -71,7 +90,48 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
             map.mapType = .standard
         }
     }
+    func setPhotoClusters(){
+        
+        var uncheckedPhotos: [Photo]! = photos
+        var restPhotos: [Photo]! = photos
+        
+        for photo in photos!{
+            var cluster = [Photo]()
+            if !restPhotos.contains(photo) {
+                continue
+            }
+            restPhotos!.removeFirst()
+            uncheckedPhotos = restPhotos
+            cluster.append(photo)
+            
+            for element in uncheckedPhotos! {
+                if isLocationsNearby(firstLocation: photo, secondLocation: element) {
+                    cluster.append(element)
+                    var k: Int = 0
+                    for restPhoto in restPhotos {
+                        if element.localIdentifierString == restPhoto.localIdentifierString {
+                            restPhotos.remove(at: k)
+                            break
+                        }
+                        k = k + 1
+                    }
+                }
+            }
+            clustersPhotos.append(cluster)
+        }
+    }
     
+    func isLocationsNearby(firstLocation: Photo, secondLocation: Photo) -> Bool {
+        let first = CLLocation(latitude: firstLocation.latitude, longitude: firstLocation.longitude)
+        let second = CLLocation(latitude: secondLocation.latitude, longitude: secondLocation.longitude)
+        let dist = first.distance(from: second)
+        print("first:\(String(describing: firstLocation.localIdentifierString)) - second:\(String(describing: secondLocation.localIdentifierString)) - dist:\(dist)")
+        if  dist <= 50.0 {
+            return true
+        }
+        return false
+    }
+   
     //MARK: - getting current LOCATION - function delegate
     func determineMyCurrentLocation() {
         
@@ -96,19 +156,63 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
         // Pass the selected object to the new view controller.
     }
     */
+    //MARK: - Loading image
+    func loadImage(identifier: String!) -> UIImage! {
+        
+        var img: UIImage!
+        //This will fetch all the assets in the collection
+        let assets : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [identifier!] , options: nil)
+        //print(assets)
+        
+        let imageManager = PHCachingImageManager()
+        //Enumerating objects to get a chached image - This is to save loading time
+        
+        assets.enumerateObjects{(object: AnyObject!,
+            count: Int,
+            stop: UnsafeMutablePointer<ObjCBool>) in
+            print(count)
+            if object is PHAsset {
+                let asset = object as! PHAsset
+                //                print(asset)
+                
+                //let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
+                let imageSize = CGSize(width: 150, height: 150)
+                
+                let options = PHImageRequestOptions()
+                options.deliveryMode = .opportunistic
+                options.isSynchronous = true
+                options.isNetworkAccessAllowed = true
+                options.resizeMode = PHImageRequestOptionsResizeMode.exact
+                
+                imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFill, options: options, resultHandler: {
+                    (image, info) -> Void in
+                    //print(info!)
+                    //let loadedImage = image
+                    img = image
+                    /* The image is now available to us */
+                    
+                })
+            }
+        }
+        return img
+    }
+    
+    
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if annotation is MKUserLocation {
             return nil
         }
-        let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "photoAnnotation")
-        let pinImage = UIImage(named: "pin")
-        let size = CGSize(width: 150, height: 150)
-        UIGraphicsBeginImageContext(size)
-        pinImage!.draw(in: CGRect(x: 0, y: 0, width: size.width, height: size.height))
-        let resizedImage = UIGraphicsGetImageFromCurrentImageContext()
-        annotationView.image = resizedImage
-        annotationView.canShowCallout = true
+        var annotationView = self.map.dequeueReusableAnnotationView(withIdentifier: "photoAnnotation")
+        if annotationView == nil{
+            let currentAnnotation = annotation as! PhotoAnnotation
+            annotationView = PhotoAnnotationView.init(annotation: annotation, reuseIdentifier: "photoAnnotation", isCluster: currentAnnotation.isCluster!, numberOfPhotos: currentAnnotation.numberOfPhotos!, photoImage: currentAnnotation.photo)
+            annotationView?.canShowCallout = true
+        }else{
+            annotationView?.annotation = annotation
+        }
+
         return annotationView
+
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {

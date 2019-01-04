@@ -11,7 +11,6 @@
 		40B296BC21CCE5A000A3C487 /* Slide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B296BB21CCE5A000A3C487 /* Slide.swift */; };
 		40B296BF21CCE61B00A3C487 /* Slide.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40B296BE21CCE61B00A3C487 /* Slide.xib */; };
 		40B9656121CA7240004A383D /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B9656021CA7240004A383D /* LocationManager.swift */; };
-		40FA448A21DDF5C500C7EBBB /* subClasses in Resources */ = {isa = PBXBuildFile; fileRef = 40FA448921DDF5C500C7EBBB /* subClasses */; };
 		803902112621DA84596AB896 /* Pods_SiteSnap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08D194FC8394711D1AE36F7F /* Pods_SiteSnap.framework */; };
 		986B5C30526579D6810F2F9D /* Pods_SiteSnapTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1CFB1EA0BFC2019A65CB46F /* Pods_SiteSnapTests.framework */; };
 		BC38C8AAB78F9CDC091EF1E5 /* Pods_SiteSnapUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2508CF1AC12C64EBAC4FE17 /* Pods_SiteSnapUITests.framework */; };
@@ -38,6 +37,10 @@
 		DAA270A221CBD5AD0058148A /* ImageDotButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA270A121CBD5AD0058148A /* ImageDotButton.swift */; };
 		DAA5DC7421C655170000B966 /* ProjectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA5DC7321C655170000B966 /* ProjectModel.swift */; };
 		DAB7795C21DD60D400308543 /* PhotoAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB7795B21DD60D400308543 /* PhotoAnnotation.swift */; };
+		DAB7795E21DE7DF400308543 /* PhotoAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB7795D21DE7DF400308543 /* PhotoAnnotationView.swift */; };
+		DAB7796021DE868200308543 /* Annotation.xib in Resources */ = {isa = PBXBuildFile; fileRef = DAB7795F21DE868200308543 /* Annotation.xib */; };
+		DAB7796221DE8A3900308543 /* Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB7796121DE8A3900308543 /* Annotation.swift */; };
+		DAB7796821DFA26B00308543 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB7796721DFA26B00308543 /* PreviewView.swift */; };
 		DABA66DD21D23F1D0036CEE7 /* Photo+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA66D721D23F1D0036CEE7 /* Photo+CoreDataClass.swift */; };
 		DABA66DE21D23F1D0036CEE7 /* Photo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA66D821D23F1D0036CEE7 /* Photo+CoreDataProperties.swift */; };
 		DABA66E121D23F1D0036CEE7 /* Tag+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA66DB21D23F1D0036CEE7 /* Tag+CoreDataClass.swift */; };
@@ -69,7 +72,6 @@
 		40B296BB21CCE5A000A3C487 /* Slide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slide.swift; sourceTree = "<group>"; };
 		40B296BE21CCE61B00A3C487 /* Slide.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Slide.xib; sourceTree = "<group>"; };
 		40B9656021CA7240004A383D /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
-		40FA448921DDF5C500C7EBBB /* subClasses */ = {isa = PBXFileReference; lastKnownFileType = folder; name = subClasses; sourceTree = "<group>"; };
 		6A73AA7E3AC6DD8718D48C21 /* Pods-SiteSnap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SiteSnap.release.xcconfig"; path = "Pods/Target Support Files/Pods-SiteSnap/Pods-SiteSnap.release.xcconfig"; sourceTree = "<group>"; };
 		8F546AE8E44AB36E527F9A39 /* Pods-SiteSnapUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SiteSnapUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SiteSnapUITests/Pods-SiteSnapUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		A1CFB1EA0BFC2019A65CB46F /* Pods_SiteSnapTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SiteSnapTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -105,6 +107,10 @@
 		DAA270A121CBD5AD0058148A /* ImageDotButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDotButton.swift; sourceTree = "<group>"; };
 		DAA5DC7321C655170000B966 /* ProjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectModel.swift; sourceTree = "<group>"; };
 		DAB7795B21DD60D400308543 /* PhotoAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAnnotation.swift; sourceTree = "<group>"; };
+		DAB7795D21DE7DF400308543 /* PhotoAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAnnotationView.swift; sourceTree = "<group>"; };
+		DAB7795F21DE868200308543 /* Annotation.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Annotation.xib; sourceTree = "<group>"; };
+		DAB7796121DE8A3900308543 /* Annotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Annotation.swift; sourceTree = "<group>"; };
+		DAB7796721DFA26B00308543 /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		DABA66D721D23F1D0036CEE7 /* Photo+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataClass.swift"; sourceTree = "<group>"; };
 		DABA66D821D23F1D0036CEE7 /* Photo+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		DABA66DB21D23F1D0036CEE7 /* Tag+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tag+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -177,6 +183,7 @@
 			isa = PBXGroup;
 			children = (
 				40B296BE21CCE61B00A3C487 /* Slide.xib */,
+				DAB7795F21DE868200308543 /* Annotation.xib */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -221,6 +228,7 @@
 				DA47324721D8BF75003729BB /* TagsModalViewController.swift */,
 				DA47324F21DA3109003729BB /* TagCellTableViewCell.swift */,
 				40B296BB21CCE5A000A3C487 /* Slide.swift */,
+				DAB7796121DE8A3900308543 /* Annotation.swift */,
 				DA977F1221C1461100883640 /* Assets.xcassets */,
 				DA977F1721C1461100883640 /* Info.plist */,
 				DA977F0F21C1460F00883640 /* SiteSnap.xcdatamodeld */,
@@ -257,7 +265,8 @@
 				DAA270A121CBD5AD0058148A /* ImageDotButton.swift */,
 				DA47325121DA4402003729BB /* PaddingLabel.swift */,
 				DAB7795B21DD60D400308543 /* PhotoAnnotation.swift */,
-				40FA448921DDF5C500C7EBBB /* subClasses */,
+				DAB7795D21DE7DF400308543 /* PhotoAnnotationView.swift */,
+				DAB7796721DFA26B00308543 /* PreviewView.swift */,
 			);
 			path = subClasses;
 			sourceTree = "<group>";
@@ -404,8 +413,8 @@
 				DAA2705E21C8FAB10058148A /* Main.storyboard in Resources */,
 				DA977F1621C1461100883640 /* LaunchScreen.storyboard in Resources */,
 				DA977F1321C1461100883640 /* Assets.xcassets in Resources */,
-				40FA448A21DDF5C500C7EBBB /* subClasses in Resources */,
 				40B296BF21CCE61B00A3C487 /* Slide.xib in Resources */,
+				DAB7796021DE868200308543 /* Annotation.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -532,10 +541,12 @@
 				DA47324821D8BF75003729BB /* TagsModalViewController.swift in Sources */,
 				DA47325A21DCC26A003729BB /* ConfirmLocationViewController.swift in Sources */,
 				DA977F5521C2E91300883640 /* CameraViewController.swift in Sources */,
+				DAB7796821DFA26B00308543 /* PreviewView.swift in Sources */,
 				40B9656121CA7240004A383D /* LocationManager.swift in Sources */,
 				DA47325221DA4402003729BB /* PaddingLabel.swift in Sources */,
 				DA47324E21D96A1A003729BB /* TagModel.swift in Sources */,
 				DAB7795C21DD60D400308543 /* PhotoAnnotation.swift in Sources */,
+				DAB7795E21DE7DF400308543 /* PhotoAnnotationView.swift in Sources */,
 				DA47325021DA3109003729BB /* TagCellTableViewCell.swift in Sources */,
 				DA977F5A21C4E38B00883640 /* ActivityIndicatorButton.swift in Sources */,
 				DAA2706021C922B80058148A /* ProcessingPopup.swift in Sources */,
@@ -546,6 +557,7 @@
 				DAA5DC7421C655170000B966 /* ProjectModel.swift in Sources */,
 				DA977F0921C1460F00883640 /* AppDelegate.swift in Sources */,
 				40B296BA21CCD87300A3C487 /* PhotosViewController.swift in Sources */,
+				DAB7796221DE8A3900308543 /* Annotation.swift in Sources */,
 				40B296BC21CCE5A000A3C487 /* Slide.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

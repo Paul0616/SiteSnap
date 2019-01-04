@@ -369,12 +369,13 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
             if object is PHAsset {
                 let asset = object as! PHAsset
                 
-                let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
-                
+                //let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
+                let imageSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
                 let options = PHImageRequestOptions()
                 options.deliveryMode = .opportunistic
                 options.isSynchronous = true
                 options.isNetworkAccessAllowed = true
+                options.resizeMode = PHImageRequestOptionsResizeMode.exact
                 
                 imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFill, options: options, resultHandler: {
                     (image, info) -> Void in

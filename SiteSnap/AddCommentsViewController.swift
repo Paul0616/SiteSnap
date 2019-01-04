@@ -131,12 +131,14 @@ class AddCommentsViewController: UIViewController {
                 let asset = object as! PHAsset
                 //                print(asset)
                 
-                let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
+                //let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
+                let imageSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
                 
                 let options = PHImageRequestOptions()
                 options.deliveryMode = .opportunistic
                 options.isSynchronous = true
                 options.isNetworkAccessAllowed = true
+                options.resizeMode = PHImageRequestOptionsResizeMode.exact
                 
                 imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFill, options: options, resultHandler: {
                     (image, info) -> Void in

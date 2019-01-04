@@ -117,10 +117,12 @@ class PhotoInspectorViewController: UIViewController, UIScrollViewDelegate {
                 
                 let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
                 
+                
                 let options = PHImageRequestOptions()
                 options.deliveryMode = .opportunistic
                 options.isSynchronous = true
                 options.isNetworkAccessAllowed = true
+                options.resizeMode = PHImageRequestOptionsResizeMode.exact
                 
                 imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFill, options: options, resultHandler: {
                     (image, info) -> Void in

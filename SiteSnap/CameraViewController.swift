@@ -118,8 +118,45 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     override func viewDidLayoutSubviews() {
-        
-        if UIDevice.current.orientation == UIDeviceOrientation.portrait { //UIDevice.current.orientation == .portrait {
+//        
+//        if UIDevice.current.orientation == UIDeviceOrientation.portrait { //UIDevice.current.orientation == .portrait {
+//            captureSession?.stopRunning()
+//            capturePreviewView.layer.sublayers?.removeAll()
+//            orientation = "Portrait"
+//            setupPreviewLayer()
+//            captureSession?.startRunning()
+//            
+//        }
+//        if UIDevice.current.orientation == .portraitUpsideDown {
+//            captureSession?.stopRunning()
+//            capturePreviewView.layer.sublayers?.removeAll()
+//            orientation = "Portrait UpsideDown"
+//            setupPreviewLayer()
+//            captureSession?.startRunning()
+//        }
+//        
+//        if UIDevice.current.orientation == .landscapeLeft {
+//            captureSession?.stopRunning()
+//            capturePreviewView.layer.sublayers?.removeAll()
+//            orientation = "Landscape Left"
+//            setupPreviewLayer()
+//            captureSession?.startRunning()
+//        }
+//        if UIDevice.current.orientation == .landscapeRight {
+//            captureSession?.stopRunning()
+//            capturePreviewView.layer.sublayers?.removeAll()
+//            orientation = "Landscape Right"
+//            setupPreviewLayer()
+//            captureSession?.startRunning()
+//        }
+       // setupInputOutput()
+//        setupPreviewLayer()
+//        captureSession?.startRunning()
+    }
+    
+    //MARK: - changing PHONE ORIENTATION
+    override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
+        if UIDevice.current.orientation == .portrait { //UIDevice.current.orientation == .portrait {
             captureSession?.stopRunning()
             capturePreviewView.layer.sublayers?.removeAll()
             orientation = "Portrait"
@@ -149,7 +186,6 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             captureSession?.startRunning()
         }
     }
-    
     //MARK: - Selecting new project
     @IBAction func onClickSelectedProjectButton(_ sender: ActivityIndicatorButton) {
          animateProjectsList(toogle: dropDownListProjectsTableView.isHidden)
@@ -287,7 +323,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             
             // Set the output on the capture session
             captureSession?.addOutput(capturePhotoOutput!)
-            
+            captureSession?.commitConfiguration()
            
         } catch {
             print(error)
@@ -408,16 +444,18 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }, completionHandler: { success, error in
             print("added image to album")
             print(error as Any)
-            if (self.photosLocalIdentifierArray == nil){
-                self.photosLocalIdentifierArray = [localId!]
-            } else {
-                self.photosLocalIdentifierArray?.append(localId!)
-            }
-            if PhotoHandler.savePhoto(localIdentifier: localId!, creationDate: createdDate!, latitude: self.lastLocation.coordinate.latitude, longitude: self.lastLocation.coordinate.longitude){
-                print("Photo added in core data")
-            }
-            self.photoObjects = PhotoHandler.fetchAllObjects()!
-            DispatchQueue.main.async {
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                if (self.photosLocalIdentifierArray == nil){
+                    self.photosLocalIdentifierArray = [localId!]
+                } else {
+                    self.photosLocalIdentifierArray?.append(localId!)
+                }
+                if PhotoHandler.savePhoto(localIdentifier: localId!, creationDate: createdDate!, latitude: self.lastLocation.coordinate.latitude, longitude: self.lastLocation.coordinate.longitude){
+                    print("Photo added in core data")
+                }
+                self.photoObjects = PhotoHandler.fetchAllObjects()!
+                
                 self.processingPopup.hideAndDestroy(from: self.view)
                 self.performSegue(withIdentifier: "PhotsViewIdentifier", sender: nil)
                 
@@ -519,7 +557,9 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         UIView.animate(withDuration: 0.8, delay: 0.0, options: [.curveEaseOut], animations: {() -> Void in
             screenFlash.alpha = 0
         }, completion: {(finished: Bool) -> Void in
-            screenFlash.removeFromSuperview()
+            
+            //let test = self.capturePreviewView
+           // screenFlash.removeFromSuperview()
         })
         
     }
@@ -578,14 +618,15 @@ extension CameraViewController : AVCapturePhotoCaptureDelegate {
     func photoOutput(_ output: AVCapturePhotoOutput,
                      didFinishProcessingPhoto photo: AVCapturePhoto,
                      error: Error?) {
-        let uiImage = UIImage(data: photo.fileDataRepresentation()!)
-        
-        self.createAlbumAndSave(image: uiImage)
-       // processingPopup.hideAndDestroy(from: view)
         guard error == nil else {
             print("Error in capture process: \(String(describing: error))")
             return
         }
+        let uiImage = UIImage(data: photo.fileDataRepresentation()!)
+        
+        self.createAlbumAndSave(image: uiImage)
+       // processingPopup.hideAndDestroy(from: view)
+        
     }
  
 }
