@@ -233,9 +233,8 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
                 mapView.view(for: annotation)?.isHidden = true
             }
         }
-        
-        
-        //}
+      
+  
     }
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         if animated {
