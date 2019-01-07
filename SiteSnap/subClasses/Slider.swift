@@ -51,16 +51,22 @@ class Slider: UIView, UIScrollViewDelegate {
         }
     }
     //MARK: - Setting up Slides and ScrollView content
-    func createSlide(image: UIImage, localIdentifier: String) -> Slide {
+    private func createSlide(image: UIImage, localIdentifier: String) -> Slide {
         
         let slide:Slide = Bundle.main.loadNibNamed(kSLIDE_XIB_NAME, owner: self, options: nil)?.first as! Slide
+        slide.mainImage.image = nil
         slide.mainImage.image = image
         slide.localIdentifier = localIdentifier
         slide.backgroundColor = UIColor.clear
+        slide.mainImage.layer.borderColor = UIColor.white.cgColor
+        slide.mainImage.layer.borderWidth = 1
         return slide
     }
     
-    func setupSlideScrollView(slides : [Slide]) {
+    private func setupSlideScrollView(slides : [Slide]) {
+        if slides.count == 0 {
+            return
+        }
         for i in 0 ..< slides.count {
             slides[i].removeFromSuperview()
         }
@@ -79,6 +85,7 @@ class Slider: UIView, UIScrollViewDelegate {
             }
         }
         photosControl.numberOfPages = slides.count
+        
        // imagesDotsContainer.bringSubviewToFront(imageControl)
 //        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(inspectPhoto(_:)))
 //        tapGestureRecognizer.numberOfTapsRequired = 1
@@ -86,7 +93,11 @@ class Slider: UIView, UIScrollViewDelegate {
     }
     func setSlides(slides: [Slide]){
         self.slides.removeAll()
-        self.slides = slides
+        for slide in slides {
+            self.slides.append(slide)
+        }
+      //  scrollContainer.layoutIfNeeded()
+        photosControl.currentPage = 0
         if self.slides.count > 0 {
             setupSlideScrollView(slides: self.slides)
         }

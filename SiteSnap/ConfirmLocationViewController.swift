@@ -19,11 +19,13 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var slideContainer: Slider!
     var photos: [Photo]!
+   // var slideArray = [Slide]()
     var clustersPhotos = [[Photo]]()
     var locationManager: CLLocationManager!
     var lastLocation: CLLocation!
     var annotationsArray: [PhotoAnnotation] = []
     var firstTime: Bool = true
+   // var annotationWasSelected: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,15 +38,6 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
         photos = PhotoHandler.fetchAllObjects()
         self.map.delegate = self
         determineMyCurrentLocation()
-//        for photo in photos {
-//            print("lat:\(photo.latitude) - long:\(photo.longitude)")
-//        }
-       // let latitude: CLLocationDegrees = (photos!.first?.latitude)!
-       // let longitude: CLLocationDegrees = (photos!.first?.longitude)!
-       // let location: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-      //  let region: MKCoordinateRegion = MKCoordinateRegion(center: location, latitudinalMeters: 200, longitudinalMeters: 200)
-      //  map.setRegion(region, animated: true)
- 
         setPhotoClusters()
         map.mapType = .hybrid
 
@@ -52,10 +45,12 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
             var annotation: PhotoAnnotation!
              let loc: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: (cluster.first?.latitude)!, longitude: (cluster.first?.longitude)!)
             var image: UIImage! = nil
+            
             if cluster.count == 1 {
                 image = loadImage(identifier: cluster.first?.localIdentifierString)
             }
-            annotation =  PhotoAnnotation(coordinate: loc, title: "Image local identifier:", subtitle: (cluster.first?.localIdentifierString)!, isCluster: cluster.count > 1, numberOfPhotos: cluster.count, photoImage: image)
+            
+            annotation =  PhotoAnnotation(coordinate: loc, title: "Image local identifier:", subtitle: (cluster.first?.localIdentifierString)!, isCluster: cluster.count > 1, numberOfPhotos: cluster.count, photoImage: image, slides: nil)
            annotationsArray.append(annotation)
         }
         map.addAnnotations(annotationsArray)
@@ -76,6 +71,9 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
             firstTime = false
             slideContainer.loadImages(identifiers: identifiers)
             slideContainer.isHidden = true
+            //slideArray =  slideContainer.slides
+            
+            
         }
     }
     
@@ -228,26 +226,59 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
         mapView.setCenter((view.annotation?.coordinate)!, animated: true)
         let annotations = mapView.annotations
         let currentAnnotationIdentifier = view.annotation!.subtitle
+        print("SELECT")
+       // annotationWasSelected = true
         for annotation in annotations {
             if annotation.subtitle != currentAnnotationIdentifier {
                 mapView.view(for: annotation)?.isHidden = true
+            } else {
+                let currentAnnotation = annotation as? PhotoAnnotation
+                var identifiers = [String]()
+//                var slides = [Slide]()
+//                for cluster in clustersPhotos {
+//                    for item in cluster {
+//                        if currentAnnotation?.subtitle == item.localIdentifierString { // this cluster should be displayed in slider
+//                            for item1 in cluster {
+//                                for slide in slideArray {
+//                                    if slide.localIdentifier == item1.localIdentifierString {
+//                                        slides.append(slide)
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//
+//                }
+//                slideContainer.setSlides(slides: slides)
+                
+                for cluster in clustersPhotos {
+                    for item in cluster {
+                        if currentAnnotation?.subtitle == item.localIdentifierString { // this cluster should be displayed in slider
+                            for item1 in cluster {
+                                identifiers.append(item1.localIdentifierString!)
+                            }
+                        }
+                    }
+
+                }
+                slideContainer.slides.removeAll()
+                slideContainer.loadImages(identifiers: identifiers)
+                
             }
         }
-      
+       
   
     }
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         if animated {
             print("map changed ANIMATED - here carousel should appear")
             slideContainer.isHidden = false
-            let annotations = mapView.annotations
-            for annotation in annotations {
-                mapView.view(for: annotation)?.isHidden = false
-            }
+            print("test")
         }
     }
     func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
         print("DID DESELECT")
+     //   annotationWasSelected = false
     }
     func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
         if !animated {
@@ -255,10 +286,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
             for annotation in mapView.annotations {
                 mapView.deselectAnnotation(annotation, animated: false)
                 slideContainer.isHidden = true
-                let annotations = mapView.annotations
-                for annotation in annotations {
-                    mapView.view(for: annotation)?.isHidden = false
-                }
+                mapView.view(for: annotation)?.isHidden = false
             }
         }
     }

@@ -17,14 +17,16 @@ class PhotoAnnotation: NSObject, MKAnnotation {
     var isCluster: Bool?
     var numberOfPhotos: Int?
     var photo: UIImage?
+    var slides: [Slide]?
     
-    init(coordinate: CLLocationCoordinate2D, title: String, subtitle: String, isCluster: Bool, numberOfPhotos: Int, photoImage: UIImage?) {
+    init(coordinate: CLLocationCoordinate2D, title: String, subtitle: String, isCluster: Bool, numberOfPhotos: Int, photoImage: UIImage?, slides: [Slide]?) {
         self.coordinate = coordinate
         self.title = title
         self.subtitle = subtitle
         self.isCluster = isCluster
         self.numberOfPhotos = numberOfPhotos
         self.photo = photoImage
+        self.slides = slides
         super.init()
     }
 }

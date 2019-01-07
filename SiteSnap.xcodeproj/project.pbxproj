@@ -42,7 +42,6 @@
 		DAB7796221DE8A3900308543 /* Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB7796121DE8A3900308543 /* Annotation.swift */; };
 		DAB7796821DFA26B00308543 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB7796721DFA26B00308543 /* PreviewView.swift */; };
 		DAB7796A21E0F15A00308543 /* Slider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB7796921E0F15A00308543 /* Slider.swift */; };
-		DAB7796C21E0F1B900308543 /* SliderTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB7796B21E0F1B900308543 /* SliderTestViewController.swift */; };
 		DAB7797021E1146B00308543 /* Slider.xib in Resources */ = {isa = PBXBuildFile; fileRef = DAB7796F21E1146B00308543 /* Slider.xib */; };
 		DABA66DD21D23F1D0036CEE7 /* Photo+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA66D721D23F1D0036CEE7 /* Photo+CoreDataClass.swift */; };
 		DABA66DE21D23F1D0036CEE7 /* Photo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA66D821D23F1D0036CEE7 /* Photo+CoreDataProperties.swift */; };
@@ -115,7 +114,6 @@
 		DAB7796121DE8A3900308543 /* Annotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Annotation.swift; sourceTree = "<group>"; };
 		DAB7796721DFA26B00308543 /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		DAB7796921E0F15A00308543 /* Slider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slider.swift; sourceTree = "<group>"; };
-		DAB7796B21E0F1B900308543 /* SliderTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderTestViewController.swift; sourceTree = "<group>"; };
 		DAB7796F21E1146B00308543 /* Slider.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Slider.xib; sourceTree = "<group>"; };
 		DABA66D721D23F1D0036CEE7 /* Photo+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataClass.swift"; sourceTree = "<group>"; };
 		DABA66D821D23F1D0036CEE7 /* Photo+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -235,7 +233,6 @@
 				DA47324721D8BF75003729BB /* TagsModalViewController.swift */,
 				DA47324F21DA3109003729BB /* TagCellTableViewCell.swift */,
 				40B296BB21CCE5A000A3C487 /* Slide.swift */,
-				DAB7796B21E0F1B900308543 /* SliderTestViewController.swift */,
 				DAB7796121DE8A3900308543 /* Annotation.swift */,
 				DA977F1221C1461100883640 /* Assets.xcassets */,
 				DA977F1721C1461100883640 /* Info.plist */,
@@ -561,7 +558,6 @@
 				DA47325021DA3109003729BB /* TagCellTableViewCell.swift in Sources */,
 				DA977F5A21C4E38B00883640 /* ActivityIndicatorButton.swift in Sources */,
 				DAA2706021C922B80058148A /* ProcessingPopup.swift in Sources */,
-				DAB7796C21E0F1B900308543 /* SliderTestViewController.swift in Sources */,
 				DA977F5821C3F25200883640 /* FlashStateButton.swift in Sources */,
 				DABA66DD21D23F1D0036CEE7 /* Photo+CoreDataClass.swift in Sources */,
 				DA977F0B21C1460F00883640 /* ViewController.swift in Sources */,
