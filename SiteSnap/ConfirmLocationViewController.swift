@@ -17,11 +17,13 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
     @IBOutlet weak var uploadButton: UIButton!
     @IBOutlet weak var confirmPhotoLocationButton: UIButton!
     @IBOutlet weak var backButton: UIButton!
+    @IBOutlet weak var slideContainer: Slider!
     var photos: [Photo]!
     var clustersPhotos = [[Photo]]()
     var locationManager: CLLocationManager!
     var lastLocation: CLLocation!
     var annotationsArray: [PhotoAnnotation] = []
+    var firstTime: Bool = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,40 +36,47 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
         photos = PhotoHandler.fetchAllObjects()
         self.map.delegate = self
         determineMyCurrentLocation()
-        for photo in photos {
-            print("lat:\(photo.latitude) - long:\(photo.longitude)")
-        }
-        let latitude: CLLocationDegrees = (photos!.first?.latitude)!
-        let longitude: CLLocationDegrees = (photos!.first?.longitude)!
-//        let latDelta: CLLocationDegrees = 0.05
-//        let lonDelta: CLLocationDegrees = 0.05
-        //let span: MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: lonDelta)
-        let location: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-        let region: MKCoordinateRegion = MKCoordinateRegion(center: location, latitudinalMeters: 200, longitudinalMeters: 200)
-        //let region: MKCoordinateRegion = MKCoordinateRegion(center: location, span: span)
-        map.setRegion(region, animated: true)
-        
-       
-//        annotation.coordinate = location
-//        annotation.title = "First Photo"
-//        annotation.subtitle = "location:(\(location.latitude),\(location.longitude))"
-         setPhotoClusters()
+//        for photo in photos {
+//            print("lat:\(photo.latitude) - long:\(photo.longitude)")
+//        }
+       // let latitude: CLLocationDegrees = (photos!.first?.latitude)!
+       // let longitude: CLLocationDegrees = (photos!.first?.longitude)!
+       // let location: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+      //  let region: MKCoordinateRegion = MKCoordinateRegion(center: location, latitudinalMeters: 200, longitudinalMeters: 200)
+      //  map.setRegion(region, animated: true)
+ 
+        setPhotoClusters()
         map.mapType = .hybrid
-//        map.register(PhotoAnnotationView.self,
-//                         forAnnotationViewWithReuseIdentifier: "photoAnnotation")
+
         for cluster in clustersPhotos {
             var annotation: PhotoAnnotation!
              let loc: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: (cluster.first?.latitude)!, longitude: (cluster.first?.longitude)!)
-            if cluster.count > 1 {
-                annotation =  PhotoAnnotation(coordinate: loc, title: "xxx", subtitle: "test", isCluster: cluster.count > 1, numberOfPhotos: cluster.count, photoImage: nil)
-            } else {
-                let image = loadImage(identifier: cluster.first?.localIdentifierString)
-                annotation =  PhotoAnnotation(coordinate: loc, title: "xxx", subtitle: "test", isCluster: cluster.count > 1, numberOfPhotos: cluster.count, photoImage: image)
+            var image: UIImage! = nil
+            if cluster.count == 1 {
+                image = loadImage(identifier: cluster.first?.localIdentifierString)
             }
+            annotation =  PhotoAnnotation(coordinate: loc, title: "Image local identifier:", subtitle: (cluster.first?.localIdentifierString)!, isCluster: cluster.count > 1, numberOfPhotos: cluster.count, photoImage: image)
            annotationsArray.append(annotation)
         }
         map.addAnnotations(annotationsArray)
         map.showAnnotations(annotationsArray, animated: true)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        if firstTime {
+            for view in view.subviews {
+                if view is Slider {
+                    slideContainer = view as? Slider
+                }
+            }
+            var identifiers = [String]()
+            for photo in photos! {
+                identifiers.append(photo.localIdentifierString!)
+            }
+            firstTime = false
+            slideContainer.loadImages(identifiers: identifiers)
+            slideContainer.isHidden = true
+        }
     }
     
     @IBAction func onBack(_ sender: UIButton) {
@@ -206,7 +215,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
         if annotationView == nil{
             let currentAnnotation = annotation as! PhotoAnnotation
             annotationView = PhotoAnnotationView.init(annotation: annotation, reuseIdentifier: "photoAnnotation", isCluster: currentAnnotation.isCluster!, numberOfPhotos: currentAnnotation.numberOfPhotos!, photoImage: currentAnnotation.photo)
-            annotationView?.canShowCallout = true
+            annotationView?.canShowCallout = false
         }else{
             annotationView?.annotation = annotation
         }
@@ -214,6 +223,47 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
         return annotationView
 
     }
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        //if let annotation = view.annotation?.title {
+        mapView.setCenter((view.annotation?.coordinate)!, animated: true)
+        let annotations = mapView.annotations
+        let currentAnnotationIdentifier = view.annotation!.subtitle
+        for annotation in annotations {
+            if annotation.subtitle != currentAnnotationIdentifier {
+                mapView.view(for: annotation)?.isHidden = true
+            }
+        }
+        
+        
+        //}
+    }
+    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        if animated {
+            print("map changed ANIMATED - here carousel should appear")
+            slideContainer.isHidden = false
+            let annotations = mapView.annotations
+            for annotation in annotations {
+                mapView.view(for: annotation)?.isHidden = false
+            }
+        }
+    }
+    func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
+        print("DID DESELECT")
+    }
+    func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
+        if !animated {
+            print("USER CHANGE REGION - carousel should disappear")
+            for annotation in mapView.annotations {
+                mapView.deselectAnnotation(annotation, animated: false)
+                slideContainer.isHidden = true
+                let annotations = mapView.annotations
+                for annotation in annotations {
+                    mapView.view(for: annotation)?.isHidden = false
+                }
+            }
+        }
+    }
+    
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let userLocation:CLLocation = locations[0] as CLLocation
