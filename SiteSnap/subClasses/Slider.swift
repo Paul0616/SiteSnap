@@ -23,7 +23,7 @@ class Slider: UIView, UIScrollViewDelegate {
     let minImageScale: CGFloat = 0.75
     let minImageAlpha: CGFloat = 0.5
     
-    
+    //MARK: - init
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
@@ -62,7 +62,7 @@ class Slider: UIView, UIScrollViewDelegate {
         slide.mainImage.layer.borderWidth = 1
         return slide
     }
-    
+    //   MARK: - config slider
     private func setupSlideScrollView(slides : [Slide]) {
         if slides.count == 0 {
             return
@@ -73,8 +73,8 @@ class Slider: UIView, UIScrollViewDelegate {
         
         scrollView.frame = CGRect(x: 0, y: 0, width: scrollContainer.frame.width, height: scrollContainer.frame.height)
         scrollView.contentSize = CGSize(width: scrollContainer.frame.width * (CGFloat(slides.count) / 2 + 0.5), height: scrollContainer.frame.height)
-        print(scrollView.frame)
-        print(scrollView.contentSize)
+        //print(scrollView.frame)
+        //print(scrollView.contentSize)
         for i in 0 ..< slides.count {
             slides[i].frame = CGRect(x: scrollContainer.frame.width * (CGFloat(2 * i + 1) * 0.25), y: 0, width: scrollContainer.frame.width / 2, height: scrollContainer.frame.height)
            
@@ -93,10 +93,13 @@ class Slider: UIView, UIScrollViewDelegate {
     }
     func setSlides(slides: [Slide]){
         self.slides.removeAll()
+        for slideView in scrollView.subviews {
+            slideView.removeFromSuperview()
+        }
         for slide in slides {
             self.slides.append(slide)
         }
-      //  scrollContainer.layoutIfNeeded()
+      
         photosControl.currentPage = 0
         if self.slides.count > 0 {
             setupSlideScrollView(slides: self.slides)

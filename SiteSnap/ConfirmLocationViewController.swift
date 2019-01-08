@@ -18,14 +18,16 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
     @IBOutlet weak var confirmPhotoLocationButton: UIButton!
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var slideContainer: Slider!
+    @IBOutlet weak var editAllLocationButton: UIButton!
+    @IBOutlet weak var editLocationButton: UIButton!
     var photos: [Photo]!
-   // var slideArray = [Slide]()
+    var slideArray = [Slide]()
     var clustersPhotos = [[Photo]]()
     var locationManager: CLLocationManager!
     var lastLocation: CLLocation!
     var annotationsArray: [PhotoAnnotation] = []
     var firstTime: Bool = true
-   // var annotationWasSelected: Bool = false
+    var annotationIsMultiple: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,10 +72,8 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
             }
             firstTime = false
             slideContainer.loadImages(identifiers: identifiers)
-            slideContainer.isHidden = true
-            //slideArray =  slideContainer.slides
-            
-            
+            sliderVisibility(hidden: true)
+            slideArray =  slideContainer.slides
         }
     }
     
@@ -97,6 +97,19 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
             map.mapType = .standard
         }
     }
+    
+    //MARK: - show/hide slider
+    func sliderVisibility(hidden: Bool) {
+        
+        slideContainer.isHidden = hidden
+        editLocationButton.isHidden = hidden
+        if !hidden {
+            editAllLocationButton.isHidden = !annotationIsMultiple
+        } else {
+            editAllLocationButton.isHidden = hidden
+        }
+    }
+    
     func setPhotoClusters(){
         
         var uncheckedPhotos: [Photo]! = photos
@@ -227,42 +240,30 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
         let annotations = mapView.annotations
         let currentAnnotationIdentifier = view.annotation!.subtitle
         print("SELECT")
-       // annotationWasSelected = true
+        
         for annotation in annotations {
             if annotation.subtitle != currentAnnotationIdentifier {
                 mapView.view(for: annotation)?.isHidden = true
             } else {
                 let currentAnnotation = annotation as? PhotoAnnotation
-                var identifiers = [String]()
-//                var slides = [Slide]()
-//                for cluster in clustersPhotos {
-//                    for item in cluster {
-//                        if currentAnnotation?.subtitle == item.localIdentifierString { // this cluster should be displayed in slider
-//                            for item1 in cluster {
-//                                for slide in slideArray {
-//                                    if slide.localIdentifier == item1.localIdentifierString {
-//                                        slides.append(slide)
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//
-//                }
-//                slideContainer.setSlides(slides: slides)
-                
+                annotationIsMultiple = currentAnnotation!.numberOfPhotos! > 1
+                //var identifiers = [String]()
+                var slides = [Slide]()
                 for cluster in clustersPhotos {
                     for item in cluster {
                         if currentAnnotation?.subtitle == item.localIdentifierString { // this cluster should be displayed in slider
                             for item1 in cluster {
-                                identifiers.append(item1.localIdentifierString!)
+                                for slide in slideArray {
+                                    if slide.localIdentifier == item1.localIdentifierString {
+                                        slides.append(slide)
+                                    }
+                                }
                             }
                         }
                     }
 
                 }
-                slideContainer.slides.removeAll()
-                slideContainer.loadImages(identifiers: identifiers)
+                slideContainer.setSlides(slides: slides)
                 
             }
         }
@@ -272,8 +273,8 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         if animated {
             print("map changed ANIMATED - here carousel should appear")
-            slideContainer.isHidden = false
-            print("test")
+            sliderVisibility(hidden: false)
+           
         }
     }
     func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
@@ -285,7 +286,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
             print("USER CHANGE REGION - carousel should disappear")
             for annotation in mapView.annotations {
                 mapView.deselectAnnotation(annotation, animated: false)
-                slideContainer.isHidden = true
+                sliderVisibility(hidden: true)
                 mapView.view(for: annotation)?.isHidden = false
             }
         }

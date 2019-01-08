@@ -15,19 +15,19 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.01</string>
+	<string>1.2</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>For taking photos used with SiteSnap application</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>For saving photos from SiteSnap application</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>App need to know your current location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>App need to know your current location</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>For saving photos from SiteSnap application</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>MYRIADPRO-REGULAR.OTF</string>
