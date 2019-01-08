@@ -855,6 +855,9 @@
                                 <state key="disabled" title="Confirm photo location">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <connections>
+                                    <action selector="onTapSetPhotoLocation:" destination="3th-Zv-vt4" eventType="touchUpInside" id="SZl-g6-evR"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I5P-tR-6Dz">
                                 <rect key="frame" x="82.666666666666671" y="660" width="248.66666666666663" height="60"/>
@@ -928,7 +931,7 @@
                                 <state key="normal" image="cancel-80px"/>
                                 <connections>
                                     <action selector="onClickDeleteImageButton:" destination="Ndu-GM-uKQ" eventType="touchUpInside" id="JSo-RI-bIV"/>
-                                    <action selector="onTapCanceleditButton:" destination="3th-Zv-vt4" eventType="touchUpInside" id="tnM-md-UOw"/>
+                                    <action selector="onTapCancelEditButton:" destination="3th-Zv-vt4" eventType="touchUpInside" id="tnM-md-UOw"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -1101,7 +1104,7 @@
                                                             </userDefinedRuntimeAttributes>
                                                         </label>
                                                         <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="BSQ-gT-SQO">
-                                                            <rect key="frame" x="261" y="10" width="51" height="20"/>
+                                                            <rect key="frame" x="447" y="10" width="51" height="20"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="20" id="dGT-Sa-Eil"/>
                                                             </constraints>

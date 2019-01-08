@@ -145,9 +145,10 @@ class Slider: UIView, UIScrollViewDelegate {
         if photosControl.numberOfPages == 0 {
             return
         }
+        
         let page = sender.currentPage
         let scrollPoint = CGPoint(x: scrollContainer.frame.width * CGFloat(page) / 2, y: 0.0)
-        
+       
         UIView.animate(
             withDuration: 0.3, delay: 0,
             usingSpringWithDamping: 1,

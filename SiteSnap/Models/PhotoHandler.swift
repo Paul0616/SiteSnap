@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import CoreLocation
 
 class PhotoHandler: NSObject {
     private class func getContext() -> NSManagedObjectContext {
@@ -81,6 +82,22 @@ class PhotoHandler: NSObject {
             let objects = try context.fetch(fetchRequest)
             for object in objects {
                 object.allPhotosComment = comment
+            }
+            try context.save()
+            return true
+        } catch _ {
+            return false
+        }
+    }
+    class func updateLocations(localIdentifiers: [String]!, location: CLLocationCoordinate2D) -> Bool {
+        let context = getContext()
+        let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo") //connectionType IN %@", yourIntArray
+        fetchRequest.predicate = NSPredicate.init(format: "localIdentifierString IN %@", localIdentifiers)
+        do {
+            let objects = try context.fetch(fetchRequest)
+            for object in objects {
+                object.latitude = location.latitude as Double
+                object.longitude = location.longitude as Double
             }
             try context.save()
             return true
