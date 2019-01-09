@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		401B3F1B21E5FB8400509EF2 /* UploadsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401B3F1A21E5FB8400509EF2 /* UploadsViewController.swift */; };
 		40B296BA21CCD87300A3C487 /* PhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B296B921CCD87300A3C487 /* PhotosViewController.swift */; };
 		40B296BC21CCE5A000A3C487 /* Slide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B296BB21CCE5A000A3C487 /* Slide.swift */; };
 		40B296BF21CCE61B00A3C487 /* Slide.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40B296BE21CCE61B00A3C487 /* Slide.xib */; };
@@ -69,6 +70,7 @@
 
 /* Begin PBXFileReference section */
 		08D194FC8394711D1AE36F7F /* Pods_SiteSnap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SiteSnap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		401B3F1A21E5FB8400509EF2 /* UploadsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadsViewController.swift; sourceTree = "<group>"; };
 		405977E921C2455700AF9F4B /* MYRIADPRO-REGULAR.OTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MYRIADPRO-REGULAR.OTF"; sourceTree = "<group>"; };
 		40B296B921CCD87300A3C487 /* PhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosViewController.swift; sourceTree = "<group>"; };
 		40B296BB21CCE5A000A3C487 /* Slide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slide.swift; sourceTree = "<group>"; };
@@ -225,6 +227,7 @@
 				405977E821C242BF00AF9F4B /* Fonts */,
 				DA977F0821C1460F00883640 /* AppDelegate.swift */,
 				DA977F0A21C1460F00883640 /* ViewController.swift */,
+				401B3F1A21E5FB8400509EF2 /* UploadsViewController.swift */,
 				DA977F5421C2E91300883640 /* CameraViewController.swift */,
 				40B296B921CCD87300A3C487 /* PhotosViewController.swift */,
 				DABA66E321D65B620036CEE7 /* AddCommentsViewController.swift */,
@@ -554,6 +557,7 @@
 				DA47325221DA4402003729BB /* PaddingLabel.swift in Sources */,
 				DA47324E21D96A1A003729BB /* TagModel.swift in Sources */,
 				DAB7795C21DD60D400308543 /* PhotoAnnotation.swift in Sources */,
+				401B3F1B21E5FB8400509EF2 /* UploadsViewController.swift in Sources */,
 				DAB7795E21DE7DF400308543 /* PhotoAnnotationView.swift in Sources */,
 				DA47325021DA3109003729BB /* TagCellTableViewCell.swift in Sources */,
 				DA977F5A21C4E38B00883640 /* ActivityIndicatorButton.swift in Sources */,
