@@ -150,5 +150,16 @@ extension UIImage {
         }
 
     }
+    
+    func remove(imageName: String) -> Bool {
+        let imagePath: String = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/\(imageName).png"
+        do {
+            try FileManager.default.removeItem(atPath: imagePath)
+        } catch let error as NSError {
+            print(error.debugDescription)
+            return false
+        }
+        return true
+    }
 }
 
