@@ -15,6 +15,7 @@ class UploadsTableViewCell: UITableViewCell {
     @IBOutlet weak var projectNameAndTimeLabel: UILabel!
     @IBOutlet weak var sizeAndSpeedLabel: UILabel!
     @IBOutlet weak var progressView: UIProgressView!
+    @IBOutlet weak var buttonAccessory: UIButton!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Photos
 
 class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
@@ -14,6 +15,8 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
     let accesoryView = [UIImageView(image: UIImage(named: "cancel-80px")),
                         UIImageView(image: UIImage(named: "autorenew-80px")),
                         UIImageView(image: UIImage(named: "done-80px"))]
+    
+    
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var titleButton: UIButton!
     override func viewDidLoad() {
@@ -59,49 +62,93 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         cell.cellContainerView.layer.cornerRadius = 5
         //cell.textLabel?.textColor = UIColor.white
        
-        //cell.accessoryView = accesoryView[indexPath.row % 3]
+        cell.buttonAccessory.setImage(accesoryView[indexPath.row % 3].image, for: .normal)
         cell.sizeAndSpeedLabel.text = "\(converByteToHumanReadable(photos[indexPath.row].fileSize)) (345 kb/s)"
+        cell.photoImage.loadImage(identifier: photos[indexPath.row].localIdentifierString)
         return cell
     }
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 132
-    }
-   
+//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return 126
+//    }
+    
     
 //    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
 //        return 5
 //    }
     
+    
+    
+}
+extension UIImageView {
+    //MARK: - Loading image
+    func loadImage(identifier: String!) {
+        
+        //This will fetch all the assets in the collection
+        let assets : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [identifier!] , options: nil)
+        //print(assets)
+        
+        let imageManager = PHCachingImageManager()
+        //Enumerating objects to get a chached image - This is to save loading time
+        
+        assets.enumerateObjects{(object: AnyObject!,
+            count: Int,
+            stop: UnsafeMutablePointer<ObjCBool>) in
+            print(count)
+            if object is PHAsset {
+                let asset = object as! PHAsset
+                //                print(asset)
+                
+                //let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
+                let imageSize = CGSize(width: 100, height: 100)
+                
+                let options = PHImageRequestOptions()
+                options.deliveryMode = .opportunistic
+                options.isSynchronous = true
+                options.isNetworkAccessAllowed = true
+                options.resizeMode = PHImageRequestOptionsResizeMode.exact
+                
+                imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFit, options: options, resultHandler: {
+                    (image, info) -> Void in
+                    //print(info!)
+                    self.image = image
+                    //image?.save(image: image!, imageName: asset.localIdentifier)
+                    /* The image is now available to us */
+                    
+                })
+            }
+        }
+        
+    }
 }
 
 //MARK: - LOADING SAVING IMAGES in documentDirectory
-//extension UIImage {
-//    func load(image imageName: String) -> UIImage! {
-//        // declare image location
-//        let imagePath: String = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/\(imageName).png"
-//        let imageUrl: URL = URL(fileURLWithPath: imagePath)
-//
-//        // check if the image is stored already
-//        if FileManager.default.fileExists(atPath: imagePath),
-//            let imageData: Data = try? Data(contentsOf: imageUrl),
-//            let image: UIImage = UIImage(data: imageData, scale: UIScreen.main.scale) {
-//            return image
-//        } else {
-//            return nil
-//        }
-//    }
-//
-//    func save(image: UIImage, imageName: String) -> Bool {
-//        let imagePath: String = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/\(imageName).png"
-//        let imageUrl: URL = URL(fileURLWithPath: imagePath)
-//        // image has not been created yet: create it, store it, return it
-//
-//        if (try? image.pngData()?.write(to: imageUrl)) != nil {
-//            return true
-//        } else {
-//            return false
-//        }
-//
-//    }
-//}
+extension UIImage {
+    func load(image imageName: String) -> UIImage! {
+        // declare image location
+        let imagePath: String = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/\(imageName).png"
+        let imageUrl: URL = URL(fileURLWithPath: imagePath)
+
+        // check if the image is stored already
+        if FileManager.default.fileExists(atPath: imagePath),
+            let imageData: Data = try? Data(contentsOf: imageUrl),
+            let image: UIImage = UIImage(data: imageData, scale: UIScreen.main.scale) {
+            return image
+        } else {
+            return nil
+        }
+    }
+
+    func save(image: UIImage, imageName: String) -> Bool {
+        let imagePath: String = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/\(imageName).png"
+        let imageUrl: URL = URL(fileURLWithPath: imagePath)
+        // image has not been created yet: create it, store it, return it
+
+        if (try? image.pngData()?.write(to: imageUrl)) != nil {
+            return true
+        } else {
+            return false
+        }
+
+    }
+}
 
