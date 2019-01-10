@@ -11,6 +11,9 @@ import UIKit
 class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     var photos = [Photo]()
+    let accesoryView = [UIImageView(image: UIImage(named: "cancel-80px")),
+                        UIImageView(image: UIImage(named: "autorenew-80px")),
+                        UIImageView(image: UIImage(named: "done-80px"))]
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var titleButton: UIButton!
     override func viewDidLoad() {
@@ -55,9 +58,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let cell = tableView.dequeueReusableCell(withIdentifier: "PhotoUploadCellIdentifier", for: indexPath) as! UploadsTableViewCell
         cell.cellContainerView.layer.cornerRadius = 5
         //cell.textLabel?.textColor = UIColor.white
-        let accesoryView = [UIImageView(image: UIImage(named: "cancel-80px")),
-                            UIImageView(image: UIImage(named: "autorenew-80px")),
-                            UIImageView(image: UIImage(named: "done-80px"))]
+       
         //cell.accessoryView = accesoryView[indexPath.row % 3]
         cell.sizeAndSpeedLabel.text = "\(converByteToHumanReadable(photos[indexPath.row].fileSize)) (345 kb/s)"
         return cell
