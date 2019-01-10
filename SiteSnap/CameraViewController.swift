@@ -584,6 +584,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 }
             })
         }
+       
         saveImage(image: image)
     }
     
@@ -606,6 +607,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             print("added image to album")
             print(error as Any)
             
+           
+            
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 if (self.photosLocalIdentifierArray == nil){
                     self.photosLocalIdentifierArray = [localId!]
@@ -615,6 +618,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 if PhotoHandler.savePhoto(localIdentifier: localId!, creationDate: createdDate!, latitude: self.lastLocation.coordinate.latitude, longitude: self.lastLocation.coordinate.longitude){
                     print("Photo added in core data")
                 }
+                PhotoHandler.setFileSize(localIdentifiers: [localId!])
                 self.photoObjects = PhotoHandler.fetchAllObjects()!
                 
                 self.processingPopup.hideAndDestroy(from: self.view)
@@ -793,6 +797,7 @@ extension CameraViewController : AVCapturePhotoCaptureDelegate {
         }
         let uiImage = UIImage(data: photo.fileDataRepresentation()!)
         
+        
         self.createAlbumAndSave(image: uiImage)
        // processingPopup.hideAndDestroy(from: view)
         
@@ -817,9 +822,11 @@ extension CameraViewController: AssetsPickerViewControllerDelegate {
                 self.photosLocalIdentifierArray?.append(phAsset.localIdentifier)
             }
             selectedFromGallery = true
+            
             if PhotoHandler.savePhoto(localIdentifier: phAsset.localIdentifier, creationDate: phAsset.creationDate!, latitude: phAsset.location?.coordinate.latitude, longitude: phAsset.location?.coordinate.longitude) {
                 print("photo saved in DataCore")
             }
+            PhotoHandler.setFileSize(localIdentifiers: [phAsset.localIdentifier])
             photoObjects = PhotoHandler.fetchAllObjects()!
         }
     }

@@ -64,11 +64,8 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         stackViewAllComments.isHidden = true
         commentLabel.translatesAutoresizingMaskIntoConstraints = false
         commentLabel.bottomAnchor.constraint(equalTo: commentScrollView.bottomAnchor, constant: 0).isActive = true
-        //commentScrollView.translatesAutoresizingMaskIntoConstraints = false
-        //commentScrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: commentLabel.bottomAnchor).isActive = true
-        
-        
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         photoObjects = PhotoHandler.fetchAllObjects()
         if !firstTime {
@@ -354,6 +351,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
+    
     //MARK: - Loading images into SLIDES
     func loadImages(identifiers: [String]!) {
         //This will fetch all the assets in the collection
@@ -380,6 +378,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
                 imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFill, options: options, resultHandler: {
                     (image, info) -> Void in
                     self.slides.append(self.createSlide(image: image!, localIdentifier: asset.localIdentifier))
+                    
                 })
             }
         }
@@ -531,6 +530,9 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
         }
     }
     
+    
+    
+
     //MARK: -
 }
 extension PhotosViewController: AssetsPickerViewControllerDelegate {
@@ -552,6 +554,7 @@ extension PhotosViewController: AssetsPickerViewControllerDelegate {
             }
         }
         loadImages(identifiers: identifiers)
+        PhotoHandler.setFileSize(localIdentifiers: identifiers)
     }
     func assetsPicker(controller: AssetsPickerViewController, shouldSelect asset: PHAsset, at indexPath: IndexPath) -> Bool {
         return true

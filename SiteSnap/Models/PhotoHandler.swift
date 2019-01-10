@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 import CoreLocation
+import Photos
 
 class PhotoHandler: NSObject {
     private class func getContext() -> NSManagedObjectContext {
@@ -36,6 +37,39 @@ class PhotoHandler: NSObject {
         } catch  {
             return false
         }
+    }
+    
+    class func setFileSize(localIdentifiers: [String]!){
+        let context = getContext()
+        let assets : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: localIdentifiers! , options: nil)
+        assets.enumerateObjects{(object: AnyObject!,
+            count: Int,
+            stop: UnsafeMutablePointer<ObjCBool>) in
+            
+            if object is PHAsset {
+                let asset = object as! PHAsset
+                let resources = PHAssetResource.assetResources(for: asset) // your PHAsset
+                
+                var sizeOnDisk: Int64? = 0
+                
+                if let resource = resources.first {
+                    let unsignedInt64 = resource.value(forKey: "fileSize") as? CLong
+                    sizeOnDisk = Int64(bitPattern: UInt64(unsignedInt64!))
+                }
+                
+                let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
+                fetchRequest.predicate = NSPredicate.init(format: "localIdentifierString=='\(String(object.localIdentifier))'")
+                do {
+                    let objects = try context.fetch(fetchRequest)
+                    objects.first?.fileSize = sizeOnDisk!
+                    try context.save()
+                } catch _ {
+                   print("Error on save filesize")
+                }
+                //print(self.converByteToHumanReadable(sizeOnDisk!))
+            }
+        }
+    
     }
     
     class func fetchAllObjects() -> [Photo]? {

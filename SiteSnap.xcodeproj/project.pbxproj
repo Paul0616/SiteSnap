@@ -37,6 +37,7 @@
 		DAA2706021C922B80058148A /* ProcessingPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA2705F21C922B80058148A /* ProcessingPopup.swift */; };
 		DAA270A221CBD5AD0058148A /* ImageDotButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA270A121CBD5AD0058148A /* ImageDotButton.swift */; };
 		DAA5DC7421C655170000B966 /* ProjectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA5DC7321C655170000B966 /* ProjectModel.swift */; };
+		DAA615A121E663DF00B5B15E /* UploadsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA615A021E663DF00B5B15E /* UploadsTableViewCell.swift */; };
 		DAB7795C21DD60D400308543 /* PhotoAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB7795B21DD60D400308543 /* PhotoAnnotation.swift */; };
 		DAB7795E21DE7DF400308543 /* PhotoAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB7795D21DE7DF400308543 /* PhotoAnnotationView.swift */; };
 		DAB7796021DE868200308543 /* Annotation.xib in Resources */ = {isa = PBXBuildFile; fileRef = DAB7795F21DE868200308543 /* Annotation.xib */; };
@@ -110,6 +111,7 @@
 		DAA2705F21C922B80058148A /* ProcessingPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingPopup.swift; sourceTree = "<group>"; };
 		DAA270A121CBD5AD0058148A /* ImageDotButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDotButton.swift; sourceTree = "<group>"; };
 		DAA5DC7321C655170000B966 /* ProjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectModel.swift; sourceTree = "<group>"; };
+		DAA615A021E663DF00B5B15E /* UploadsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadsTableViewCell.swift; sourceTree = "<group>"; };
 		DAB7795B21DD60D400308543 /* PhotoAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAnnotation.swift; sourceTree = "<group>"; };
 		DAB7795D21DE7DF400308543 /* PhotoAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAnnotationView.swift; sourceTree = "<group>"; };
 		DAB7795F21DE868200308543 /* Annotation.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Annotation.xib; sourceTree = "<group>"; };
@@ -228,6 +230,7 @@
 				DA977F0821C1460F00883640 /* AppDelegate.swift */,
 				DA977F0A21C1460F00883640 /* ViewController.swift */,
 				401B3F1A21E5FB8400509EF2 /* UploadsViewController.swift */,
+				DAA615A021E663DF00B5B15E /* UploadsTableViewCell.swift */,
 				DA977F5421C2E91300883640 /* CameraViewController.swift */,
 				40B296B921CCD87300A3C487 /* PhotosViewController.swift */,
 				DABA66E321D65B620036CEE7 /* AddCommentsViewController.swift */,
@@ -556,6 +559,7 @@
 				40B9656121CA7240004A383D /* LocationManager.swift in Sources */,
 				DA47325221DA4402003729BB /* PaddingLabel.swift in Sources */,
 				DA47324E21D96A1A003729BB /* TagModel.swift in Sources */,
+				DAA615A121E663DF00B5B15E /* UploadsTableViewCell.swift in Sources */,
 				DAB7795C21DD60D400308543 /* PhotoAnnotation.swift in Sources */,
 				401B3F1B21E5FB8400509EF2 /* UploadsViewController.swift in Sources */,
 				DAB7795E21DE7DF400308543 /* PhotoAnnotationView.swift in Sources */,

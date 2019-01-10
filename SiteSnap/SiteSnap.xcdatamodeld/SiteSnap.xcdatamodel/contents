@@ -4,6 +4,7 @@
         <attribute name="allPhotosComment" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="allTagsWasSet" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="createdDate" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="fileSize" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="individualComment" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="localIdentifierForAllTags" optional="YES" attributeType="String" syncable="YES"/>
@@ -17,7 +18,7 @@
         <relationship name="photos" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Photo" inverseName="tags" inverseEntity="Photo" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Photo" positionX="-449.66015625" positionY="-27.453125" width="128" height="178"/>
+        <element name="Photo" positionX="-449.66015625" positionY="-27.453125" width="128" height="195"/>
         <element name="Tag" positionX="-772.796875" positionY="-17.54296875" width="128" height="88"/>
     </elements>
 </model>
