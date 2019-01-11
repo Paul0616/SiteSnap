@@ -38,6 +38,7 @@
 		DAA270A221CBD5AD0058148A /* ImageDotButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA270A121CBD5AD0058148A /* ImageDotButton.swift */; };
 		DAA5DC7421C655170000B966 /* ProjectModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA5DC7321C655170000B966 /* ProjectModel.swift */; };
 		DAA615A121E663DF00B5B15E /* UploadsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA615A021E663DF00B5B15E /* UploadsTableViewCell.swift */; };
+		DAA615A321E7B1D300B5B15E /* ImageForUpload.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA615A221E7B1D300B5B15E /* ImageForUpload.swift */; };
 		DAB7795C21DD60D400308543 /* PhotoAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB7795B21DD60D400308543 /* PhotoAnnotation.swift */; };
 		DAB7795E21DE7DF400308543 /* PhotoAnnotationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB7795D21DE7DF400308543 /* PhotoAnnotationView.swift */; };
 		DAB7796021DE868200308543 /* Annotation.xib in Resources */ = {isa = PBXBuildFile; fileRef = DAB7795F21DE868200308543 /* Annotation.xib */; };
@@ -112,6 +113,7 @@
 		DAA270A121CBD5AD0058148A /* ImageDotButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDotButton.swift; sourceTree = "<group>"; };
 		DAA5DC7321C655170000B966 /* ProjectModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectModel.swift; sourceTree = "<group>"; };
 		DAA615A021E663DF00B5B15E /* UploadsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadsTableViewCell.swift; sourceTree = "<group>"; };
+		DAA615A221E7B1D300B5B15E /* ImageForUpload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageForUpload.swift; sourceTree = "<group>"; };
 		DAB7795B21DD60D400308543 /* PhotoAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAnnotation.swift; sourceTree = "<group>"; };
 		DAB7795D21DE7DF400308543 /* PhotoAnnotationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAnnotationView.swift; sourceTree = "<group>"; };
 		DAB7795F21DE868200308543 /* Annotation.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Annotation.xib; sourceTree = "<group>"; };
@@ -299,6 +301,7 @@
 				DA47324921D8E62E003729BB /* TagHandler.swift */,
 				DA47324B21D8FA7D003729BB /* PhotoHandler.swift */,
 				DA47324D21D96A1A003729BB /* TagModel.swift */,
+				DAA615A221E7B1D300B5B15E /* ImageForUpload.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -551,6 +554,7 @@
 				DAA270A221CBD5AD0058148A /* ImageDotButton.swift in Sources */,
 				DABA66E121D23F1D0036CEE7 /* Tag+CoreDataClass.swift in Sources */,
 				DABA66DE21D23F1D0036CEE7 /* Photo+CoreDataProperties.swift in Sources */,
+				DAA615A321E7B1D300B5B15E /* ImageForUpload.swift in Sources */,
 				DA47324C21D8FA7D003729BB /* PhotoHandler.swift in Sources */,
 				DA47324821D8BF75003729BB /* TagsModalViewController.swift in Sources */,
 				DA47325A21DCC26A003729BB /* ConfirmLocationViewController.swift in Sources */,

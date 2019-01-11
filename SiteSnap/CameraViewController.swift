@@ -44,6 +44,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     var processingPopup = ProcessingPopup()
     var photoObjects = [Photo]()
+    var photoDatabaseShouldBeDeleted = false
    
     @IBOutlet weak var menuButton: UIButton!
     @IBOutlet weak var buttonContainerView: UIView!
@@ -135,8 +136,9 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         captureInnerButton.layer.cornerRadius = 24
         captureButton.layer.cornerRadius = 35
         determineMyCurrentLocation()
-        if PhotoHandler.deleteAllPhotos() {
+        if photoDatabaseShouldBeDeleted && PhotoHandler.deleteAllPhotos() {
             print("all photos was deleted from Core Data")
+            photoDatabaseShouldBeDeleted = false
         }
         photoObjects = PhotoHandler.fetchAllObjects()!
         let photos = PHPhotoLibrary.authorizationStatus()

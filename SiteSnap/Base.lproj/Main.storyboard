@@ -42,7 +42,7 @@
                                 <textInputTraits key="textInputTraits" returnKeyType="done" enablesReturnKeyAutomatically="YES" secureTextEntry="YES" textContentType="password"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="User/Email" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a2a-8P-L1h">
-                                <rect key="frame" x="32" y="320" width="359" height="16"/>
+                                <rect key="frame" x="32" y="317.33333333333331" width="359" height="18.666666666666686"/>
                                 <fontDescription key="fontDescription" name="MyriadPro-Regular" family="Myriad Pro" pointSize="16"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -59,19 +59,19 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wnm-xo-dX9">
-                                <rect key="frame" x="32" y="404" width="359" height="16"/>
+                                <rect key="frame" x="32" y="401.33333333333331" width="359" height="18.666666666666686"/>
                                 <fontDescription key="fontDescription" name="MyriadPro-Regular" family="Myriad Pro" pointSize="16"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Forgot your password?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i1K-zt-QJz">
-                                <rect key="frame" x="32" y="484" width="152" height="16"/>
+                                <rect key="frame" x="32" y="484" width="166" height="18.666666666666686"/>
                                 <fontDescription key="fontDescription" name="MyriadPro-Regular" family="Myriad Pro" pointSize="16"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4nM-Ry-DdE">
-                                <rect key="frame" x="185" y="478" width="58" height="28"/>
+                                <rect key="frame" x="199" y="478" width="62" height="31"/>
                                 <fontDescription key="fontDescription" name="MyriadPro-Regular" family="Myriad Pro" pointSize="16"/>
                                 <state key="normal" title="Tap here">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -949,6 +949,7 @@
                                     <action selector="onBack:" destination="ujF-w3-ccj" eventType="touchUpInside" id="jpL-Eu-Cah"/>
                                     <action selector="onBack:" destination="3th-Zv-vt4" eventType="touchUpInside" id="wIs-ym-MAn"/>
                                     <action selector="onBack:" destination="d3c-CP-8Yl" eventType="touchUpInside" id="xue-JG-1Ub"/>
+                                    <segue destination="c4J-9c-Nyi" kind="show" identifier="backToCameraSegue" id="opx-Tt-86q"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -968,12 +969,13 @@
                     </view>
                     <connections>
                         <outlet property="backButton" destination="2xY-Tr-Vkz" id="dyb-I6-qgV"/>
+                        <outlet property="tableView" destination="h4R-TM-LHq" id="Sb7-OS-YvT"/>
                         <outlet property="titleButton" destination="Nde-to-bpy" id="JNt-yZ-oss"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CvO-qz-s3t" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1114.4927536231885" y="1599.4565217391305"/>
+            <point key="canvasLocation" x="23" y="1029"/>
         </scene>
         <!--Confirm Location View Controller-->
         <scene sceneID="271-bE-UXf">
@@ -1245,7 +1247,7 @@
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9pj-mR-agq" customClass="PaddingLabel" customModule="SiteSnap" customModuleProvider="target">
-                                                            <rect key="frame" x="38" y="0.0" width="41.666666666666657" height="40"/>
+                                                            <rect key="frame" x="38" y="0.0" width="58.666666666666657" height="40"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="40" id="0Ig-n5-jdC"/>
                                                             </constraints>
@@ -1386,4 +1388,7 @@
         <image name="tag-30px" width="30" height="30"/>
         <image name="upload-24px" width="80" height="80"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="opx-Tt-86q"/>
+    </inferredMetricsTieBreakers>
 </document>
