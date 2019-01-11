@@ -42,7 +42,7 @@
                                 <textInputTraits key="textInputTraits" returnKeyType="done" enablesReturnKeyAutomatically="YES" secureTextEntry="YES" textContentType="password"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="User/Email" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a2a-8P-L1h">
-                                <rect key="frame" x="32" y="317.33333333333331" width="359" height="18.666666666666686"/>
+                                <rect key="frame" x="32" y="320" width="359" height="16"/>
                                 <fontDescription key="fontDescription" name="MyriadPro-Regular" family="Myriad Pro" pointSize="16"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -59,19 +59,19 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wnm-xo-dX9">
-                                <rect key="frame" x="32" y="401.33333333333331" width="359" height="18.666666666666686"/>
+                                <rect key="frame" x="32" y="404" width="359" height="16"/>
                                 <fontDescription key="fontDescription" name="MyriadPro-Regular" family="Myriad Pro" pointSize="16"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Forgot your password?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i1K-zt-QJz">
-                                <rect key="frame" x="32" y="484" width="166" height="18.666666666666686"/>
+                                <rect key="frame" x="32" y="484" width="152" height="16"/>
                                 <fontDescription key="fontDescription" name="MyriadPro-Regular" family="Myriad Pro" pointSize="16"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4nM-Ry-DdE">
-                                <rect key="frame" x="199" y="478" width="62" height="31"/>
+                                <rect key="frame" x="185" y="478" width="58" height="28"/>
                                 <fontDescription key="fontDescription" name="MyriadPro-Regular" family="Myriad Pro" pointSize="16"/>
                                 <state key="normal" title="Tap here">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -827,7 +827,7 @@
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="h4R-TM-LHq">
                                 <rect key="frame" x="8" y="78" width="398" height="650"/>
-                                <color key="backgroundColor" red="0.25882352941176467" green="0.25882352941176467" blue="0.25882352941176467" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.32941176470588235" green="0.32941176470588235" blue="0.32941176470588235" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="PhotoUploadCellIdentifier" rowHeight="168" id="Ixq-Ca-aLG" customClass="UploadsTableViewCell" customModule="SiteSnap" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="398" height="168"/>
@@ -859,20 +859,37 @@
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="m2f-5a-59X">
-                                                            <rect key="frame" x="124" y="64.666666666666671" width="150" height="2"/>
+                                                        <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progressViewStyle="bar" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="m2f-5a-59X">
+                                                            <rect key="frame" x="124" y="64.666666666666671" width="150" height="16"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="150" id="d1f-Zb-pWO"/>
+                                                                <constraint firstAttribute="height" constant="15" id="ld4-R3-bo7"/>
                                                             </constraints>
                                                             <color key="progressTintColor" red="0.76078431369999999" green="0.39607843139999999" blue="0.86274509799999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                            <color key="trackTintColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                         </progressView>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hss-3h-jKa">
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hss-3h-jKa">
                                                             <rect key="frame" x="350" y="38" width="40" height="40"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="40" id="gIc-DI-Xtk"/>
                                                                 <constraint firstAttribute="width" constant="40" id="xvh-DC-am7"/>
                                                             </constraints>
                                                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <state key="normal" image="autorenew-80px"/>
+                                                            <connections>
+                                                                <action selector="onClickAccesories:" destination="d3c-CP-8Yl" eventType="touchUpInside" id="TUg-hw-g7L"/>
+                                                            </connections>
+                                                        </button>
+                                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8cq-lY-iWa">
+                                                            <rect key="frame" x="302" y="38" width="40" height="40"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="40" id="MDg-nW-vx0"/>
+                                                                <constraint firstAttribute="width" constant="40" id="dxA-nW-mRC"/>
+                                                            </constraints>
+                                                            <state key="normal" image="cancel-80px"/>
+                                                            <connections>
+                                                                <action selector="onClickDeleteFromQueue:" destination="d3c-CP-8Yl" eventType="touchUpInside" id="5gh-W8-hkZ"/>
+                                                            </connections>
                                                         </button>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.18839182232467222" alpha="0.99898217429577463" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -880,6 +897,8 @@
                                                         <constraint firstItem="AYr-te-q9D" firstAttribute="leading" secondItem="Tqi-sH-OJR" secondAttribute="trailing" constant="16" id="1tG-qR-w08"/>
                                                         <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="m2f-5a-59X" secondAttribute="bottom" constant="8" id="Ba5-VM-8qL"/>
                                                         <constraint firstItem="Tqi-sH-OJR" firstAttribute="leading" secondItem="EXA-PP-dFo" secondAttribute="leading" constant="8" id="H53-QU-BaV"/>
+                                                        <constraint firstItem="hss-3h-jKa" firstAttribute="leading" secondItem="8cq-lY-iWa" secondAttribute="trailing" constant="8" id="H5j-xz-UOZ"/>
+                                                        <constraint firstItem="8cq-lY-iWa" firstAttribute="top" secondItem="hss-3h-jKa" secondAttribute="top" id="Lll-lJ-irS"/>
                                                         <constraint firstItem="m2f-5a-59X" firstAttribute="leading" secondItem="Tqi-sH-OJR" secondAttribute="trailing" constant="16" id="PGZ-HH-Xth"/>
                                                         <constraint firstItem="hss-3h-jKa" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="FE7-aN-k6X" secondAttribute="trailing" constant="8" id="RV7-Fx-c4y"/>
                                                         <constraint firstItem="hss-3h-jKa" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="AYr-te-q9D" secondAttribute="trailing" constant="8" id="UCD-vj-XzQ"/>
@@ -905,6 +924,7 @@
                                         <connections>
                                             <outlet property="buttonAccessory" destination="hss-3h-jKa" id="DE6-NI-tbj"/>
                                             <outlet property="cellContainerView" destination="EXA-PP-dFo" id="TdB-lV-FTw"/>
+                                            <outlet property="deleteFromQueueButton" destination="8cq-lY-iWa" id="7gN-wM-L2p"/>
                                             <outlet property="photoImage" destination="Tqi-sH-OJR" id="e1u-vi-5o3"/>
                                             <outlet property="progressView" destination="m2f-5a-59X" id="bzb-Ak-xhf"/>
                                             <outlet property="projectNameAndTimeLabel" destination="AYr-te-q9D" id="a4u-y8-3Em"/>
@@ -1247,7 +1267,7 @@
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9pj-mR-agq" customClass="PaddingLabel" customModule="SiteSnap" customModuleProvider="target">
-                                                            <rect key="frame" x="38" y="0.0" width="58.666666666666657" height="40"/>
+                                                            <rect key="frame" x="38" y="0.0" width="41.666666666666657" height="40"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="40" id="0Ig-n5-jdC"/>
                                                             </constraints>
@@ -1373,6 +1393,7 @@
         <image name="add_comment-80px" width="80" height="80"/>
         <image name="all_tags-30px" width="30" height="30"/>
         <image name="arrow_back-40px" width="40" height="40"/>
+        <image name="autorenew-80px" width="80" height="80"/>
         <image name="cancel-80px" width="80" height="80"/>
         <image name="comment-24px" width="80" height="80"/>
         <image name="flash_auto-24px" width="40" height="40"/>

@@ -18,6 +18,7 @@ class ImageForUpload: NSObject {
     var speed: Int
     var progress: CFloat
     var state: State = .waiting
+    var date: Date!
     
     enum State {
         case waiting

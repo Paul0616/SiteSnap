@@ -30,6 +30,11 @@ class ViewController: UIViewController, UITextFieldDelegate {
             self.logo.transform = CGAffineTransform(translationX: 0, y: -180)
             self.logo.alpha = 1
         }, completion: nil)
+//        for fontFamilyName in UIFont.familyNames {
+//            for fontName in UIFont.fontNames(forFamilyName: fontFamilyName) {
+//                print("Family: \(fontFamilyName)   Font: \(fontName)")
+//            }
+//        }
     }
 
     override func viewWillAppear(_ animated: Bool) {

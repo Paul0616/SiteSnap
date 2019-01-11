@@ -184,6 +184,7 @@ class PhotoHandler: NSObject {
             return false
         }
     }
+    
     class func getTags(localIdentifier: String) -> [TagModel]! {
         let context = getContext()
         let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
