@@ -36,7 +36,13 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         images.append(unprocessedImages)
         uploadingProcessRunning = true
-        testStartUpload()
+        testStartUpload(localIdentifier: images[0][0].localIdentifier)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        if images[0].count == 0 {
+                print("disapear")
+        }
     }
     
     @IBAction func onBack(_ sender: Any) {
@@ -44,34 +50,38 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     @IBAction func onClickDeleteFromQueue(_ sender: UIButton) {
-        if images[0][sender.tag].state == .fail {
-            showAlert(alertMsg: "Ask user if he want to remove photo", message: "Are you sure you want to permanently cancel the upload of this photo? (this cannot be undone)", state: .waiting, tag: sender.tag)
+        let localIdentifier = images[0][sender.tag].localIdentifier
+        let state = images[0][sender.tag].state
+        if state == .fail {
+            showAlert(alertMsg: "Ask user if he want to remove photo", message: "Are you sure you want to permanently cancel the upload of this photo? (this cannot be undone)", state: .waiting, localIdentifier: localIdentifier)
         }
     }
     @IBAction func onClickAccesories(_ sender: UIButton) {
+        let localIdentifier = images[0][sender.tag].localIdentifier
+        let state = images[0][sender.tag].state
         if sender.tag < images[0].count { //that means tapped button is in first section (.waiting, .inProgress or .fail)
-            if images[0][sender.tag].state == .inProgress {
-                showAlert(alertMsg: "Ask user if he want to cancel upload", message: "Are you sure you want to cancel the upload of this photo?", state: .inProgress, tag: sender.tag)
+            if state == .inProgress {
+                showAlert(alertMsg: "Ask user if he want to cancel upload", message: "Are you sure you want to cancel the upload of this photo?", state: .inProgress, localIdentifier: localIdentifier)
             }
-            if images[0][sender.tag].state == .waiting {
-                showAlert(alertMsg: "Ask user if he want to remove photo", message: "Are you sure you want to permanently cancel the upload of this photo? (this cannot be undone)", state: .waiting, tag: sender.tag)
+            if state == .waiting {
+                showAlert(alertMsg: "Ask user if he want to remove photo", message: "Are you sure you want to permanently cancel the upload of this photo? (this cannot be undone)", state: .waiting, localIdentifier: localIdentifier)
             }
-            if images[0][sender.tag].state == .fail {
-                showAlert(alertMsg: "Ask user if he want to remove photo", message: "Are you sure you want to permanently cancel the upload of this photo? (this cannot be undone)", state: .fail, tag: sender.tag)
+            if state == .fail {
+                cancelUpload(state: .fail, localIdentifier: localIdentifier)
             }
         }
     }
     
     
     //MARK: - Alert
-    private func showAlert(alertMsg: String, message: String, state: ImageForUpload.State, tag: Int){
+    private func showAlert(alertMsg: String, message: String, state: ImageForUpload.State, localIdentifier: String){
         let messageToShow = NSLocalizedString(message, comment: alertMsg)
         let alertController = UIAlertController(title: "Please confirm choice", message: messageToShow, preferredStyle: .alert)
         
         alertController.addAction(UIAlertAction(title: NSLocalizedString("Yes", comment: "Confirm cancel upload"),
                                                 style: .default,
                                                 handler: { action in
-                                                    self.cancelUpload(state: state, tag: tag)
+                                                    self.cancelUpload(state: state, localIdentifier: localIdentifier)
                                                 }))
         alertController.addAction(UIAlertAction(title: NSLocalizedString("No", comment: "Photo will continue to upload"),
                                                 style: .cancel,
@@ -80,23 +90,39 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.present(alertController, animated: true, completion: nil)
     }
     
-    private func cancelUpload(state: ImageForUpload.State, tag: Int) {
-        if state == .inProgress {
-            images[0][tag].state = .fail
+    private func cancelUpload(state: ImageForUpload.State, localIdentifier: String) {
+        var id: Int!
+        if images[0].count > 0 {
+            for i in 0...images[0].count-1 {
+                if images[0][i].localIdentifier == localIdentifier {
+                    id = i
+                    break
+                }
+            }
+        }
+        
+        if id != nil && state == .inProgress {
+            images[0][id].state = .fail
             currentTime = 0.0
         }
-        if state == .fail {
-            images[0][tag].state = .waiting
+        if id != nil && state == .fail {
+            images[0][id].state = .waiting
             currentTime = 0.0
+            if !uploadingProcessRunning {
+                testStartUpload(localIdentifier: localIdentifier)
+            }
         }
-        if state == .waiting {
-            if PhotoHandler.removePhoto(localIdentifier: images[0][tag].localIdentifier) {
-                images[0].remove(at: tag)
+        if id != nil && state == .waiting {
+            if PhotoHandler.removePhoto(localIdentifier: images[0][id].localIdentifier) {
+                images[0].remove(at: id)
             }
             if !uploadingProcessRunning {
-                tableView.reloadData()
+                testStartUpload(localIdentifier: localIdentifier)
             }
         }
+        
+       
+        
     }
     
     // MARK: - Navigation
@@ -210,8 +236,8 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
     let MAX: CFloat = 10.0
     var currentTime: CFloat = 0.0
     var delay: TimeInterval = 0.2
-    func testStartUpload() {
-        perform(#selector(updateProgress), with: images[0][0].localIdentifier, afterDelay: delay)
+    func testStartUpload(localIdentifier: String) {
+        perform(#selector(updateProgress), with: localIdentifier, afterDelay: delay)
     }
     
     @objc func updateProgress(localIdentifier: String){
