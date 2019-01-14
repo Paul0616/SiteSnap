@@ -397,7 +397,7 @@
                                 <rect key="frame" x="20" y="188" width="374" height="528"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="rMY-b9-K64">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="menuCell" id="rMY-b9-K64">
                                         <rect key="frame" x="0.0" y="28" width="374" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="rMY-b9-K64" id="Eci-MT-cqh">
@@ -407,6 +407,10 @@
                                     </tableViewCell>
                                 </prototypes>
                                 <sections/>
+                                <connections>
+                                    <outlet property="dataSource" destination="LKM-Bc-KM5" id="NxP-RM-Ey9"/>
+                                    <outlet property="delegate" destination="LKM-Bc-KM5" id="O3g-3r-K1H"/>
+                                </connections>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" red="0.10196078431372549" green="0.10196078431372549" blue="0.10196078431372549" alpha="1" colorSpace="calibratedRGB"/>
@@ -426,6 +430,7 @@
                     </view>
                     <connections>
                         <outlet property="backButton" destination="u1F-cs-dZm" id="kJx-hg-tWe"/>
+                        <outlet property="tableView" destination="rHp-HS-bAB" id="8Ta-LS-Sj6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="k4w-td-SVX" userLabel="First Responder" sceneMemberID="firstResponder"/>

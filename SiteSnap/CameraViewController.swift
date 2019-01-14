@@ -244,6 +244,9 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         self.user?.getDetails().continueOnSuccessWith { (task) -> AnyObject? in
             DispatchQueue.main.async {
                 self.response = task.result
+                print(self.user?.username! as Any)
+                print("\(self.pool?.getUser() as Any)")
+                print(self.pool?.token() as Any)
             }
             return nil
         }

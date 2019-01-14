@@ -62,7 +62,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-   //     self.splashScreen()
+       self.splashScreen()
         // setup logging
         AWSDDLog.sharedInstance.logLevel = .verbose
         
@@ -162,17 +162,7 @@ extension AppDelegate: AWSCognitoIdentityInteractiveAuthenticationDelegate {
         
        
         self.signInViewController = storyboard!.instantiateViewController(withIdentifier: "signInViewController") as? SignInViewController
-//        self.window?.rootViewController = rootVC
-//        self.window?.makeKeyAndVisible()
-        
-//        if let viewControllers = self.window?.rootViewController?.children {
-//            for viewController in viewControllers {
-//                if viewController.isKind(of: SignInViewController.self) {
-//                    self.signInViewController = viewController as? SignInViewController
-//                    print("Found the sign in view controller")
-//                }
-//            }
-//        }
+
 
         DispatchQueue.main.async {
             if (!self.signInViewController!.isViewLoaded || self.signInViewController!.view.window == nil) {
