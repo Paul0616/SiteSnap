@@ -15,6 +15,7 @@
 		803902112621DA84596AB896 /* Pods_SiteSnap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08D194FC8394711D1AE36F7F /* Pods_SiteSnap.framework */; };
 		986B5C30526579D6810F2F9D /* Pods_SiteSnapTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1CFB1EA0BFC2019A65CB46F /* Pods_SiteSnapTests.framework */; };
 		BC38C8AAB78F9CDC091EF1E5 /* Pods_SiteSnapUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2508CF1AC12C64EBAC4FE17 /* Pods_SiteSnapUITests.framework */; };
+		DA2D954F21EB6042005DE088 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA2D954E21EB6042005DE088 /* MenuViewController.swift */; };
 		DA47324821D8BF75003729BB /* TagsModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA47324721D8BF75003729BB /* TagsModalViewController.swift */; };
 		DA47324A21D8E62E003729BB /* TagHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA47324921D8E62E003729BB /* TagHandler.swift */; };
 		DA47324C21D8FA7D003729BB /* PhotoHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA47324B21D8FA7D003729BB /* PhotoHandler.swift */; };
@@ -84,6 +85,7 @@
 		A667BD70F929A9FE7CC99171 /* Pods-SiteSnapUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SiteSnapUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SiteSnapUITests/Pods-SiteSnapUITests.release.xcconfig"; sourceTree = "<group>"; };
 		AD448BB73B0722A794A046E3 /* Pods-SiteSnapTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SiteSnapTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SiteSnapTests/Pods-SiteSnapTests.debug.xcconfig"; sourceTree = "<group>"; };
 		B694197D45F977E7140AA1E8 /* Pods-SiteSnapTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SiteSnapTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SiteSnapTests/Pods-SiteSnapTests.release.xcconfig"; sourceTree = "<group>"; };
+		DA2D954E21EB6042005DE088 /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		DA47324721D8BF75003729BB /* TagsModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsModalViewController.swift; sourceTree = "<group>"; };
 		DA47324921D8E62E003729BB /* TagHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagHandler.swift; sourceTree = "<group>"; };
 		DA47324B21D8FA7D003729BB /* PhotoHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoHandler.swift; sourceTree = "<group>"; };
@@ -234,6 +236,7 @@
 				401B3F1A21E5FB8400509EF2 /* UploadsViewController.swift */,
 				DAA615A021E663DF00B5B15E /* UploadsTableViewCell.swift */,
 				DA977F5421C2E91300883640 /* CameraViewController.swift */,
+				DA2D954E21EB6042005DE088 /* MenuViewController.swift */,
 				40B296B921CCD87300A3C487 /* PhotosViewController.swift */,
 				DABA66E321D65B620036CEE7 /* AddCommentsViewController.swift */,
 				DA47325721DBB227003729BB /* PhotoInspectorViewController.swift */,
@@ -557,6 +560,7 @@
 				DAA615A321E7B1D300B5B15E /* ImageForUpload.swift in Sources */,
 				DA47324C21D8FA7D003729BB /* PhotoHandler.swift in Sources */,
 				DA47324821D8BF75003729BB /* TagsModalViewController.swift in Sources */,
+				DA2D954F21EB6042005DE088 /* MenuViewController.swift in Sources */,
 				DA47325A21DCC26A003729BB /* ConfirmLocationViewController.swift in Sources */,
 				DA977F5521C2E91300883640 /* CameraViewController.swift in Sources */,
 				DAB7796821DFA26B00308543 /* PreviewView.swift in Sources */,
