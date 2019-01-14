@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		401B3F1B21E5FB8400509EF2 /* UploadsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401B3F1A21E5FB8400509EF2 /* UploadsViewController.swift */; };
+		4047811621EC820C006987B4 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4047811521EC820C006987B4 /* Constants.swift */; };
 		40B296BA21CCD87300A3C487 /* PhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B296B921CCD87300A3C487 /* PhotosViewController.swift */; };
 		40B296BC21CCE5A000A3C487 /* Slide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B296BB21CCE5A000A3C487 /* Slide.swift */; };
 		40B296BF21CCE61B00A3C487 /* Slide.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40B296BE21CCE61B00A3C487 /* Slide.xib */; };
@@ -24,7 +25,7 @@
 		DA47325821DBB227003729BB /* PhotoInspectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA47325721DBB227003729BB /* PhotoInspectorViewController.swift */; };
 		DA47325A21DCC26A003729BB /* ConfirmLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA47325921DCC26A003729BB /* ConfirmLocationViewController.swift */; };
 		DA977F0921C1460F00883640 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F0821C1460F00883640 /* AppDelegate.swift */; };
-		DA977F0B21C1460F00883640 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F0A21C1460F00883640 /* ViewController.swift */; };
+		DA977F0B21C1460F00883640 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F0A21C1460F00883640 /* SignInViewController.swift */; };
 		DA977F1121C1460F00883640 /* SiteSnap.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DA977F0F21C1460F00883640 /* SiteSnap.xcdatamodeld */; };
 		DA977F1321C1461100883640 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DA977F1221C1461100883640 /* Assets.xcassets */; };
 		DA977F1621C1461100883640 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DA977F1421C1461100883640 /* LaunchScreen.storyboard */; };
@@ -73,6 +74,7 @@
 /* Begin PBXFileReference section */
 		08D194FC8394711D1AE36F7F /* Pods_SiteSnap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SiteSnap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		401B3F1A21E5FB8400509EF2 /* UploadsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadsViewController.swift; sourceTree = "<group>"; };
+		4047811521EC820C006987B4 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		405977E921C2455700AF9F4B /* MYRIADPRO-REGULAR.OTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MYRIADPRO-REGULAR.OTF"; sourceTree = "<group>"; };
 		40B296B921CCD87300A3C487 /* PhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosViewController.swift; sourceTree = "<group>"; };
 		40B296BB21CCE5A000A3C487 /* Slide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slide.swift; sourceTree = "<group>"; };
@@ -94,7 +96,7 @@
 		DA47325921DCC26A003729BB /* ConfirmLocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmLocationViewController.swift; sourceTree = "<group>"; };
 		DA977F0521C1460F00883640 /* SiteSnap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SiteSnap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA977F0821C1460F00883640 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		DA977F0A21C1460F00883640 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		DA977F0A21C1460F00883640 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		DA977F1021C1460F00883640 /* SiteSnap.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SiteSnap.xcdatamodel; sourceTree = "<group>"; };
 		DA977F1221C1461100883640 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DA977F1521C1461100883640 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -230,7 +232,8 @@
 				DA977F5621C3F21C00883640 /* subClasses */,
 				405977E821C242BF00AF9F4B /* Fonts */,
 				DA977F0821C1460F00883640 /* AppDelegate.swift */,
-				DA977F0A21C1460F00883640 /* ViewController.swift */,
+				4047811521EC820C006987B4 /* Constants.swift */,
+				DA977F0A21C1460F00883640 /* SignInViewController.swift */,
 				401B3F1A21E5FB8400509EF2 /* UploadsViewController.swift */,
 				DAA615A021E663DF00B5B15E /* UploadsTableViewCell.swift */,
 				DA977F5421C2E91300883640 /* CameraViewController.swift */,
@@ -512,6 +515,9 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-SiteSnap/Pods-SiteSnap-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AWSCognitoIdentityProvider/AWSCognitoIdentityProvider.framework",
+				"${BUILT_PRODUCTS_DIR}/AWSCognitoIdentityProviderASF/AWSCognitoIdentityProviderASF.framework",
+				"${BUILT_PRODUCTS_DIR}/AWSCore/AWSCore.framework",
 				"${BUILT_PRODUCTS_DIR}/AssetsPickerViewController/AssetsPickerViewController.framework",
 				"${BUILT_PRODUCTS_DIR}/Device/Device.framework",
 				"${BUILT_PRODUCTS_DIR}/Dimmer/Dimmer.framework",
@@ -524,6 +530,9 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSCognitoIdentityProvider.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSCognitoIdentityProviderASF.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSCore.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AssetsPickerViewController.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Device.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Dimmer.framework",
@@ -547,6 +556,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DABA66E421D65B620036CEE7 /* AddCommentsViewController.swift in Sources */,
+				4047811621EC820C006987B4 /* Constants.swift in Sources */,
 				DA47325821DBB227003729BB /* PhotoInspectorViewController.swift in Sources */,
 				DA977F1121C1460F00883640 /* SiteSnap.xcdatamodeld in Sources */,
 				DABA66E221D23F1D0036CEE7 /* Tag+CoreDataProperties.swift in Sources */,
@@ -572,7 +582,7 @@
 				DAA2706021C922B80058148A /* ProcessingPopup.swift in Sources */,
 				DA977F5821C3F25200883640 /* FlashStateButton.swift in Sources */,
 				DABA66DD21D23F1D0036CEE7 /* Photo+CoreDataClass.swift in Sources */,
-				DA977F0B21C1460F00883640 /* ViewController.swift in Sources */,
+				DA977F0B21C1460F00883640 /* SignInViewController.swift in Sources */,
 				DA47324A21D8E62E003729BB /* TagHandler.swift in Sources */,
 				DAA5DC7421C655170000B966 /* ProjectModel.swift in Sources */,
 				DA977F0921C1460F00883640 /* AppDelegate.swift in Sources */,

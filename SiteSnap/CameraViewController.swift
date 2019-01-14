@@ -12,6 +12,7 @@ import Photos
 import AssetsPickerViewController
 import CoreLocation
 import CoreData
+import AWSCognitoIdentityProvider
 
 
 class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate {
@@ -45,6 +46,10 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var processingPopup = ProcessingPopup()
     var photoObjects = [Photo]()
     var photoDatabaseShouldBeDeleted = false
+    
+    var response: AWSCognitoIdentityUserGetDetailsResponse?
+    var user: AWSCognitoIdentityUser?
+    var pool: AWSCognitoIdentityUserPool?
    
     @IBOutlet weak var menuButton: UIButton!
     @IBOutlet weak var buttonContainerView: UIView!
@@ -64,6 +69,12 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     //MARK: - Loading Camera View Controller
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.pool = AWSCognitoIdentityUserPool(forKey: AWSCognitoUserPoolsSignInProviderKey)
+        if (self.user == nil) {
+            self.user = self.pool?.currentUser()
+        }
+        self.refresh()
+        
         //TagHandler.deleteAllTags()
         if TagHandler.fetchObject()?.count == 0 {
             if TagHandler.saveTag(text: "Bridge Superstructure", tagColor: "#478C27") {
@@ -228,6 +239,16 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             videoPreviewLayerConnection.videoOrientation = newVideoOrientation
         }
     }
+    //MARK: - log in user
+    func refresh() {
+        self.user?.getDetails().continueOnSuccessWith { (task) -> AnyObject? in
+            DispatchQueue.main.async {
+                self.response = task.result
+            }
+            return nil
+        }
+    }
+    
     //MARK: - Observers
     private func addObservers() {
         let keyValueObservation = session.observe(\.isRunning, options: .new) {_ , change in

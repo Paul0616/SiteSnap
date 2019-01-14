@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="c4J-9c-Nyi">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -15,10 +15,10 @@
         </array>
     </customFonts>
     <scenes>
-        <!--View Controller-->
+        <!--Sign In View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="initController" id="BYZ-38-t0r" customClass="ViewController" customModule="SiteSnap" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="signInViewController" id="BYZ-38-t0r" customClass="SignInViewController" customModule="SiteSnap" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -55,7 +55,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
-                                    <segue destination="c4J-9c-Nyi" kind="show" id="dMy-Vt-NdW"/>
+                                    <action selector="signInPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qEL-a8-nGW"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wnm-xo-dX9">
@@ -127,7 +127,7 @@
         <!--Camera View Controller-->
         <scene sceneID="Ant-3a-3eV">
             <objects>
-                <viewController id="c4J-9c-Nyi" customClass="CameraViewController" customModule="SiteSnap" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="initController" id="c4J-9c-Nyi" customClass="CameraViewController" customModule="SiteSnap" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="UQ9-I7-Lg4">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1409,7 +1409,4 @@
         <image name="tag-30px" width="30" height="30"/>
         <image name="upload-24px" width="80" height="80"/>
     </resources>
-    <inferredMetricsTieBreakers>
-        <segue reference="opx-Tt-86q"/>
-    </inferredMetricsTieBreakers>
 </document>
