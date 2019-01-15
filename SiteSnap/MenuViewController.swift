@@ -69,37 +69,44 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "menuCell", for: indexPath)
-        cell.textLabel?.textColor = UIColor.black
-        cell.textLabel?.text = "Account \(user?.username)"
+        let cell = tableView.dequeueReusableCell(withIdentifier: "menuCell", for: indexPath) as! MenuTableViewCell
+        //cell.textLabel?.textColor = UIColor.black
+        //cell.textLabel?.text = "Account \(user?.username)"
         cell.tag = indexPath.row
-        
+        if indexPath.row == 0 {
+            cell.menuItemIcon.image = UIImage(named: "person-80px")
+            cell.menuItemTitle.text = "Account"
+            cell.menuItemDescription.text = self.user?.username
+        }
         return cell
     }
     
-    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80
+    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedCell:UITableViewCell = tableView.cellForRow(at: indexPath)!
         if selectedCell.tag == 0 {
+            let alertController = UIAlertController(title: "Please confirm choice",
+                                                    message: "Would you like to sign out and be taken to sign in page?",
+                                                    preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "ok", style: .default, handler: { action in
+                self.user?.signOut()
+                self.refresh()
+            })
+            alertController.addAction(okAction)
+            DispatchQueue.main.async {
+                self.present(alertController, animated: true, completion: nil)
+            }
             self.user?.signOut()
             self.refresh()
-//            let cameraViewController = storyboard!.instantiateViewController(withIdentifier: "initController") as? CameraViewController
-//
-//
-//            DispatchQueue.main.async {
-//                if (!cameraViewController!.isViewLoaded || cameraViewController!.view.window == nil) {
-//                    self.present(cameraViewController!, animated: true, completion: nil)
-//                }
-//            }
+
         }
-//        if tableView == dropDownListProjectsTableView {
-//            projectId = userProjects[indexPath.row].id
-//            selectedProjectButton.setTitle("\(userProjects[indexPath.row].projectName)", for: .normal)
-//            animateProjectsList(toogle: false)
-//            let selectedCell:UITableViewCell = tableView.cellForRow(at: indexPath)!
-//            selectedCell.contentView.backgroundColor = UIColor.black
-//            setProjectsSelected(projectId: projectId)
-//        }
+
     }
+//     "https://backend.sitesnap.com.au:443/api/session/getPhoneSessionInfo"
+    // Bearer eyJraWQiOiJEVkxHV1N4QlB4aXpLXC9STlRvXC84ckxSRFFRMUZ4dVo0azNvUDg4S1VIdFk9IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiI5Y2IxNTdhNS02ZTFiLTRkYzctOGIwZi1iYTVmMjVjNzM4N2EiLCJhdWQiOiI1NTMyZWhocTd1YmxvdmlhcmFzaG52dTc2byIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTU0NzU0NDc5MiwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLmFwLXNvdXRoZWFzdC0yLmFtYXpvbmF3cy5jb21cL2FwLXNvdXRoZWFzdC0yXzZKNUtDaDlMbiIsImNvZ25pdG86dXNlcm5hbWUiOiI5Y2IxNTdhNS02ZTFiLTRkYzctOGIwZi1iYTVmMjVjNzM4N2EiLCJleHAiOjE1NDc1NDgzOTIsImdpdmVuX25hbWUiOiJOaWNrIiwiaWF0IjoxNTQ3NTQ0NzkyLCJmYW1pbHlfbmFtZSI6IlRob3JuIiwiZW1haWwiOiJuaWNrQGF0b2xsb24uY29tLmF1In0.p1crQNfdBtHb0TWPtpJ0mNh4y5exhqFLIqofeMOup65CYMisaVvTAeRutvIrjBgUyWeBjvQWuC0P6yvXYkU3x9lHeuOto9EOjNuKlj1fJFRq1CdiNLdVzDEH_rF1MOYq6PrdIDHw79-M-0N8D4uMTm9cWBqHNmFvAOjFUCdW-c5QTwoU8NeGrtp5xa2ecL57SIn5XmA1iaac_dE2uhrIbOKHz6RDpWIACBe-XUQK2Iv2wOb7d0Gj-vfjfMMdMNDVanjXQWbAXdd2qsqw72SvHT2HlIXhxrjrPm693DJervVZ4pwkeuBi-32obhVrSGya6nYi2odbbjTscoNxbRB30Q
 }
+
+
