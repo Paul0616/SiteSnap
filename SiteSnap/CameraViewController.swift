@@ -246,7 +246,9 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 self.response = task.result
                 print(self.user?.username! as Any)
                 print("\(self.pool?.getUser() as Any)")
-                print(self.pool?.token() as Any)
+                if (self.pool?.token().isCompleted)! {
+                    print(self.pool?.token().result as Any)
+                }
             }
             return nil
         }

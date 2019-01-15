@@ -160,13 +160,18 @@ extension AppDelegate: AWSCognitoIdentityInteractiveAuthenticationDelegate {
     
     func startPasswordAuthentication() -> AWSCognitoIdentityPasswordAuthentication {
         
-       
-        self.signInViewController = storyboard!.instantiateViewController(withIdentifier: "signInViewController") as? SignInViewController
-
+        if self.signInViewController == nil {
+            self.signInViewController = storyboard!.instantiateViewController(withIdentifier: "signInViewController") as? SignInViewController
+        }
 
         DispatchQueue.main.async {
             if (!self.signInViewController!.isViewLoaded || self.signInViewController!.view.window == nil) {
+                
+                let initialViewController = self.storyboard!.instantiateInitialViewController() as! CameraViewController
+                self.window?.rootViewController = initialViewController
+            
                 self.window?.rootViewController?.present(self.signInViewController!, animated: true, completion: nil)
+            
             }
         }
         
