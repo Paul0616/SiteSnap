@@ -11,18 +11,24 @@ import UIKit
 class ProjectModel: NSObject {
     //MARK: - Propietati
     
-    var id: Int
+    var id: String
     var projectName: String
+    var latitudeCenterPosition: Double
+    var longitudeCenterPosition: Double
     var selected: Bool = false
     
     //MARK: - Initializare
     
-    init?(id: Int,
-          projectName: String
+    init?(id: String,
+          projectName: String,
+          latitudeCenterPosition: Double,
+          longitudeCenterPosition: Double
         ) {
         
         //Initializeaza proprietatile
         self.id = id
         self.projectName = projectName
+        self.latitudeCenterPosition = latitudeCenterPosition
+        self.longitudeCenterPosition = longitudeCenterPosition
     }
 }

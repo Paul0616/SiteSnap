@@ -28,7 +28,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     private var cameraSetupResult: SessionSetupResult = .success
     private var locationSetupResult: CLAuthorizationStatus = .authorizedWhenInUse
-    private var librarySetupResult: PHAuthorizationStatus = .authorized
+    private var librarySetupResult: PHAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
     @objc dynamic var videoDeviceInput: AVCaptureDeviceInput!
     var defaultVideoDevice: AVCaptureDevice?
     private let photoOutput = AVCapturePhotoOutput()
@@ -66,7 +66,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     @IBOutlet weak var dropDownListProjectsTableView: UITableView!
     
     var userProjects = [ProjectModel]()
-    var projectId: Int = 0
+    var projectId: String = ""
     var selectedFromGallery: Bool = false
     
     
@@ -175,58 +175,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 }
             }
         }
-        switch self.locationSetupResult {
-            case .restricted, .denied:
-                let changePrivacySetting = "SiteSnap doesn't have permission to accsess localization, please change privacy settings"
-                let message = NSLocalizedString(changePrivacySetting, comment: "Alert message when the user has denied access localization")
-                let alertController = UIAlertController(title: "SiteSnap", message: message, preferredStyle: .alert)
-                
-                alertController.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Alert Cancel button"),
-                                                        style: .cancel,
-                                                        handler: nil))
-                
-                alertController.addAction(UIAlertAction(title: NSLocalizedString("Settings", comment: "Alert button to open Settings"),
-                                                        style: .`default`,
-                                                        handler: { _ in
-                                                            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!,
-                                                                                      options: [:],
-                                                                                      completionHandler: nil)
-                }))
-                
-                self.present(alertController, animated: true, completion: nil)
-            break
-        case .notDetermined:
-            break
-        case .authorizedAlways:
-            break
-        case .authorizedWhenInUse:
-            break
-        }
-        switch self.librarySetupResult {
-        case .restricted, .denied:
-            let changePrivacySetting = "SiteSnap doesn't have permission to accsess photo library, please change privacy settings"
-            let message = NSLocalizedString(changePrivacySetting, comment: "Alert message when the user has denied access photo library")
-            let alertController = UIAlertController(title: "SiteSnap", message: message, preferredStyle: .alert)
-            
-            alertController.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Alert OK button"),
-                                                    style: .cancel,
-                                                    handler: nil))
-            
-            alertController.addAction(UIAlertAction(title: NSLocalizedString("Settings", comment: "Alert button to open Settings"),
-                                                    style: .`default`,
-                                                    handler: { _ in
-                                                        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!,
-                                                                                  options: [:],
-                                                                                  completionHandler: nil)
-            }))
-            
-            self.present(alertController, animated: true, completion: nil)
-            break
-        case .notDetermined:
-            break
-        case .authorized:
-            break
-        }
+        permissionLocationIfDenied()
+        permissionLibraryIfDenied()
         if selectedFromGallery {
             selectedFromGallery = false
             performSegue(withIdentifier: "PhotsViewIdentifier", sender: nil)
@@ -324,9 +274,24 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             do
             {
                 let json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
-                
+                let projects = json["projects"] as! NSArray
+                self.projectId = json["lastUsedProjectId"] as! String
+                self.userProjects.removeAll()
+                for item in projects {
+                    let project = item as! NSDictionary
+                    let coord = project["projectCenterPosition"] as! NSArray
+                    let tags = project["tagIds"] as! NSArray
+                    guard let projectModel = ProjectModel(id: project["id"]! as! String, projectName: project["name"]! as! String, latitudeCenterPosition: coord[0] as! Double, longitudeCenterPosition: coord[1] as! Double) else {
+                                            fatalError("Unable to instantiate ProductModel")
+                    }
+                    self.userProjects += [projectModel]
+                    //print("id=\(project["id"]!) name=\(project["name"]!) lat=\(coord[0]) long=\(coord[1]) tags=\(tags.count)")
+                    
+                }
+                //self.setProjectsSelected(projectId: self.projectId)
+                print(self.userProjects)
                 print(json)
-                
+                self.loadingProjectIntoList()
                 // login SUCCESSFUL -> close login prompt and go back to the screen requesting login (either take photo screen or settings screen)
             }
             catch let error as NSError
@@ -387,9 +352,34 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             })
         }
     }
-
+    func permissionLibraryIfDenied(){
+        switch self.librarySetupResult {
+        case .restricted, .denied:
+            let changePrivacySetting = "SiteSnap doesn't have permission to accsess photo library, please change privacy settings"
+            let message = NSLocalizedString(changePrivacySetting, comment: "Alert message when the user has denied access photo library")
+            let alertController = UIAlertController(title: "SiteSnap", message: message, preferredStyle: .alert)
+            
+            alertController.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Alert OK button"),
+                                                    style: .cancel,
+                                                    handler: nil))
+            
+            alertController.addAction(UIAlertAction(title: NSLocalizedString("Settings", comment: "Alert button to open Settings"),
+                                                    style: .`default`,
+                                                    handler: { _ in
+                                                        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!,
+                                                                                  options: [:],
+                                                                                  completionHandler: nil)
+            }))
+            
+            self.present(alertController, animated: true, completion: nil)
+            break
+        case .notDetermined:
+            break
+        case .authorized:
+            break
+        }
+    }
     func checkPermissionLibrary() {
-        
         switch librarySetupResult {
         case .authorized:
             print("Access was already granted.")
@@ -413,6 +403,36 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             print("User do not have access to photo album.")
         case .denied:
             print("User has denied the permission.")
+        }
+    }
+    
+    func permissionLocationIfDenied() {
+        switch self.locationSetupResult {
+        case .restricted, .denied:
+            let changePrivacySetting = "SiteSnap doesn't have permission to accsess localization, please change privacy settings"
+            let message = NSLocalizedString(changePrivacySetting, comment: "Alert message when the user has denied access localization")
+            let alertController = UIAlertController(title: "SiteSnap", message: message, preferredStyle: .alert)
+            
+            alertController.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Alert Cancel button"),
+                                                    style: .cancel,
+                                                    handler: nil))
+            
+            alertController.addAction(UIAlertAction(title: NSLocalizedString("Settings", comment: "Alert button to open Settings"),
+                                                    style: .`default`,
+                                                    handler: { _ in
+                                                        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!,
+                                                                                  options: [:],
+                                                                                  completionHandler: nil)
+            }))
+            
+            self.present(alertController, animated: true, completion: nil)
+            break
+        case .notDetermined:
+            break
+        case .authorizedAlways:
+            break
+        case .authorizedWhenInUse:
+            break
         }
     }
     
@@ -651,9 +671,11 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
         
         if locationSetupResult != .authorizedAlways && locationSetupResult != .authorizedWhenInUse {
+            permissionLocationIfDenied()
             return
         }
         if librarySetupResult != .authorized {
+            permissionLibraryIfDenied()
             return
         }
         determineMyCurrentLocation()
@@ -701,15 +723,12 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func loadingProjectIntoList(){
-        selectedProjectButton.hideLoading(buttonText: nil)
-        userProjects.removeAll()
-        for i in 0...3 {
-            guard let project = ProjectModel(id: i+1, projectName: "Project \(i+1)") else {
-                fatalError("Unable to instantiate ProductModel")
-            }
-            self.userProjects += [project]
+        DispatchQueue.main.async {
+            self.selectedProjectButton.hideLoading(buttonText: nil)
+            self.setProjectsSelected(projectId: self.projectId)
+            self.dropDownListProjectsTableView.reloadData()
         }
-        self.dropDownListProjectsTableView.reloadData()
+       
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -736,7 +755,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if tableView == dropDownListProjectsTableView {
             projectId = userProjects[indexPath.row].id
-            selectedProjectButton.setTitle("\(userProjects[indexPath.row].projectName)", for: .normal)
+            //selectedProjectButton.setTitle("\(userProjects[indexPath.row].projectName)", for: .normal)
             animateProjectsList(toogle: false)
             let selectedCell:UITableViewCell = tableView.cellForRow(at: indexPath)!
             selectedCell.contentView.backgroundColor = UIColor.black
@@ -744,9 +763,10 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
     
-    func setProjectsSelected(projectId: Int){
+    func setProjectsSelected(projectId: String){
         for i in 0...userProjects.count-1 {
             userProjects[i].selected = userProjects[i].id == projectId
+            selectedProjectButton.setTitle(userProjects[i].projectName, for: .normal)
         }
     }
     

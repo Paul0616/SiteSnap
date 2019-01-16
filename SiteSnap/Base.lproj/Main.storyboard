@@ -224,7 +224,7 @@
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="APg-gK-bOu">
-                                <rect key="frame" x="80" y="32" width="254" height="150"/>
+                                <rect key="frame" x="80" y="32" width="254" height="160"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DrV-oQ-auP" customClass="ActivityIndicatorButton" customModule="SiteSnap" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="254" height="50"/>
@@ -238,11 +238,11 @@
                                             <action selector="onClickSelectedProjectButton:" destination="c4J-9c-Nyi" eventType="touchUpInside" id="Xam-rs-CXW"/>
                                         </connections>
                                     </button>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="r0N-4q-P6E">
-                                        <rect key="frame" x="0.0" y="50" width="254" height="100"/>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" indicatorStyle="white" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="r0N-4q-P6E">
+                                        <rect key="frame" x="0.0" y="50" width="254" height="110"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="100" id="JiG-59-Qj0"/>
+                                            <constraint firstAttribute="height" constant="110" id="JiG-59-Qj0"/>
                                         </constraints>
                                         <prototypes>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellProject" id="esJ-li-yO1">
