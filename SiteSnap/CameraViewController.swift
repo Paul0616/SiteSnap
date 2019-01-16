@@ -527,6 +527,9 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     @IBAction func onClickCaptureButton(_ sender: UIButton) {
+        if cameraSetupResult != .success {
+            return
+        }
         determineMyCurrentLocation()
         /*
          Retrieve the video preview layer's video orientation on the main queue before
@@ -851,7 +854,9 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                        exposureMode: AVCaptureDevice.ExposureMode,
                        at devicePoint: CGPoint, locationPoint: CGPoint,
                        monitorSubjectAreaChange: Bool) {
-        
+        if cameraSetupResult != .success {
+            return
+        }
         let rect = CGRect(x: locationPoint.x - 30 , y: locationPoint.y - 30, width: 60, height: 60)
         let dot = UIView(frame: rect)
         dot.layer.cornerRadius = 30
