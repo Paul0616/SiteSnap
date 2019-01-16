@@ -102,7 +102,7 @@ class ActivityIndicatorButton: UIButton {
     }
     
     private func positioningActivityIndicatorInButton() {
-        activityIndicator.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 10).isActive = true
+        activityIndicator.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -10).isActive = true
         activityIndicator.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 0).isActive = true
 //        let xRightConstraint = NSLayoutConstraint(item: self, attribute: .rightMargin, relatedBy: .equal, toItem: activityIndicator, attribute: .rightMargin, multiplier: 1, constant: 10)
 //        self.addConstraint(xRightConstraint)

@@ -50,6 +50,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var response: AWSCognitoIdentityUserGetDetailsResponse?
     var user: AWSCognitoIdentityUser?
     var pool: AWSCognitoIdentityUserPool?
+    var userLogged: Bool = false
    
     @IBOutlet weak var menuButton: UIButton!
     @IBOutlet weak var buttonContainerView: UIView!
@@ -69,99 +70,58 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     //MARK: - Loading Camera View Controller
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //CHECK LAST LOG IN
         self.pool = AWSCognitoIdentityUserPool(forKey: AWSCognitoUserPoolsSignInProviderKey)
         if (self.user == nil) {
             self.user = self.pool?.currentUser()
+            print("USER = CURRENT USER = \(String(describing: self.user?.username))")
         }
         self.refresh()
         
-        //TagHandler.deleteAllTags()
-        if TagHandler.fetchObject()?.count == 0 {
-            if TagHandler.saveTag(text: "Bridge Superstructure", tagColor: "#478C27") {
-                print("Successfully added")
-            }
-            if TagHandler.saveTag(text: "Bridge ID 12345", tagColor: nil) {
-                 print("Successfully added")
-            }
-            if TagHandler.saveTag(text: "Bridge ID 7654", tagColor: nil) {
-                 print("Successfully added")
-            }
-            if TagHandler.saveTag(text: "Bridge Substructure", tagColor: "#428A98") {
-                 print("Successfully added")
-            }
-            if TagHandler.saveTag(text: "Bridge ID 21368", tagColor: nil) {
-                 print("Successfully added")
-            }
-            if TagHandler.saveTag(text: "Bridge ID 5253", tagColor: nil) {
-                 print("Successfully added")
-            }
-
+        if TagHandler.deleteAllTags() {
+            print("tags was deleted from internal database")
         }
-        let tags = TagHandler.fetchObject()
-        print(tags!.count)
-        for tag in tags! {
-            print("\(String(describing: tag.text)) -- \(String(describing: tag.tagColor))")
-        }
+//        if TagHandler.fetchObject()?.count == 0 {
+//            if TagHandler.saveTag(text: "Bridge Superstructure", tagColor: "#478C27") {
+//                print("Successfully added")
+//            }
+//            if TagHandler.saveTag(text: "Bridge ID 12345", tagColor: nil) {
+//                 print("Successfully added")
+//            }
+//            if TagHandler.saveTag(text: "Bridge ID 7654", tagColor: nil) {
+//                 print("Successfully added")
+//            }
+//            if TagHandler.saveTag(text: "Bridge Substructure", tagColor: "#428A98") {
+//                 print("Successfully added")
+//            }
+//            if TagHandler.saveTag(text: "Bridge ID 21368", tagColor: nil) {
+//                 print("Successfully added")
+//            }
+//            if TagHandler.saveTag(text: "Bridge ID 5253", tagColor: nil) {
+//                 print("Successfully added")
+//            }
+//
+//        }
+//        let tags = TagHandler.fetchObject()
+//        print(tags!.count)
+//        for tag in tags! {
+//            print("\(String(describing: tag.text)) -- \(String(describing: tag.tagColor))")
+//        }
         dropDownListProjectsTableView.isHidden = true
         capturePreviewView.session = session
-        /*
-         Check video authorization status. Video access is required and audio
-         access is optional. If the user denies audio access, AVCam won't
-         record audio during movie recording.
-         */
-        switch AVCaptureDevice.authorizationStatus(for: .video) {
-        case .authorized:
-            // The user has previously granted access to the camera.
-            break
-            
-        case .notDetermined:
-            /*
-             The user has not yet been presented with the option to grant
-             video access. We suspend the session queue to delay session
-             setup until the access request has completed.
-             
-             Note that audio access will be implicitly requested when we
-             create an AVCaptureDeviceInput for audio during session setup.
-             */
-            sessionQueue.suspend()
-            AVCaptureDevice.requestAccess(for: .video, completionHandler: { granted in
-                if !granted {
-                    self.setupResult = .notAuthorized
-                }
-                self.sessionQueue.resume()
-            })
-            
-        default:
-            // The user has previously denied access.
-            setupResult = .notAuthorized
-        }
-        sessionQueue.async {
-            self.configureSession()
-        }
-        
-        
         captureButton.layer.borderColor = UIColor.white.cgColor
         captureButton.layer.borderWidth = 5
         captureButton.backgroundColor = nil
         captureInnerButton.backgroundColor = UIColor.white
         captureInnerButton.layer.cornerRadius = 24
         captureButton.layer.cornerRadius = 35
-        determineMyCurrentLocation()
+        
         if photoDatabaseShouldBeDeleted && PhotoHandler.deleteAllPhotos() {
             print("all photos was deleted from Core Data")
             photoDatabaseShouldBeDeleted = false
         }
         photoObjects = PhotoHandler.fetchAllObjects()!
-        let photos = PHPhotoLibrary.authorizationStatus()
-        if photos == .notDetermined {
-            PHPhotoLibrary.requestAuthorization({status in
-                if status == .authorized{
-                    print(status)
-                } else {
-                    print(status)
-                }
-            })
-        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -239,19 +199,173 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             videoPreviewLayerConnection.videoOrientation = newVideoOrientation
         }
     }
+    //MARK: - Connect ti SITESnap Backend API
+    func attemptSignInToSiteSnapBackend()
+    {
+        let url = URL(string: siteSnapBackendHost + "session/getPhoneSessionInfo?")!
+        var request = URLRequest(url: url)
+        let tokenString = "Bearer " + (UserDefaults.standard.value(forKey: "token") as? String)!
+        request.setValue(tokenString, forHTTPHeaderField: "Authorization")
+        request.httpMethod = "GET"
+        let task = URLSession.shared.dataTask(with: request as URLRequest)
+        {(data,response,error) -> Void in
+            if error != nil {
+                print(error?.localizedDescription as Any)
+                if let err = error as? URLError {
+                    switch err.code {
+                    case .notConnectedToInternet:
+                        DispatchQueue.main.async(execute: {
+                            let alert = UIAlertController(
+                                title: "Failed to Login",
+                                message:"Not Connected To The Internet",
+                                preferredStyle: .alert)
+                            let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+                                // do something when user press OK button, like deleting text in both fields or do nothing
+                            }
+                            alert.addAction(OKAction)
+                            self.present(alert, animated: true, completion: nil)
+                            return
+                        })
+                    case .timedOut:
+                        DispatchQueue.main.async(execute: {
+                            let alert = UIAlertController(
+                                title: "Failed to Login",
+                                message:"Request Timed Out",
+                                preferredStyle: .alert)
+                            
+                            let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+                                // do something when user press OK button, like deleting text in both fields or do nothing
+                            }
+                            alert.addAction(OKAction)
+                            self.present(alert, animated: true, completion: nil)
+                            return
+                        })
+                    case .networkConnectionLost:
+                        DispatchQueue.main.async(execute: {
+                            let alert = UIAlertController(
+                                title: "Failed to Login",
+                                message:"Lost Connection to the Network",
+                                preferredStyle: .alert)
+                            
+                            let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+                                // do something when user press OK button, like deleting text in both fields or do nothing
+                            }
+                            alert.addAction(OKAction)
+                            self.present(alert, animated: true, completion: nil)
+                            return
+                        })
+                    default:
+                        print("Default Error")
+                        print(err)
+                    }
+                }
+                return
+            }
+            
+            do
+            {
+                let json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
+                
+                print(json)
+                
+                // login SUCCESSFUL -> close login prompt and go back to the screen requesting login (either take photo screen or settings screen)
+            }
+            catch let error as NSError
+            {
+                print(error.localizedDescription)
+            }
+        }
+        task.resume()
+    }
+    //MARK: - Configure video session
+    func videoAuthorization(){
+        /*
+         Check video authorization status. Video access is required and audio
+         access is optional. If the user denies audio access, AVCam won't
+         record audio during movie recording.
+         */
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized:
+            // The user has previously granted access to the camera.
+            break
+            
+        case .notDetermined:
+            /*
+             The user has not yet been presented with the option to grant
+             video access. We suspend the session queue to delay session
+             setup until the access request has completed.
+             
+             Note that audio access will be implicitly requested when we
+             create an AVCaptureDeviceInput for audio during session setup.
+             */
+            sessionQueue.suspend()
+            AVCaptureDevice.requestAccess(for: .video, completionHandler: { granted in
+                if !granted {
+                    self.setupResult = .notAuthorized
+                }
+                self.sessionQueue.resume()
+            })
+            
+        default:
+            // The user has previously denied access.
+            setupResult = .notAuthorized
+        }
+        sessionQueue.async {
+            self.configureSession()
+        }
+    }
+    //MARK: - Library access authorization
+    func libraryAuthorization() {
+        let photos = PHPhotoLibrary.authorizationStatus()
+        if photos == .notDetermined {
+            PHPhotoLibrary.requestAuthorization({status in
+                if status == .authorized{
+                    print(status)
+                } else {
+                    print(status)
+                }
+            })
+        }
+    }
+    
     //MARK: - log in user
     func refresh() {
         self.user?.getDetails().continueOnSuccessWith { (task) -> AnyObject? in
             DispatchQueue.main.async {
                 self.response = task.result
-                print(self.user?.username! as Any)
-                print("\(self.pool?.getUser() as Any)")
-                if (self.pool?.token().isCompleted)! {
-                    print(self.pool?.token().result as Any)
+               // UserDefaults.standard.set("Anand", forKey: "name")
+                //print(self.response?.userAttributes)
+                print("RESPONSE to refresh user")
+                for attribute in (self.response?.userAttributes)! {
+                    if attribute.name == "given_name" {
+                        UserDefaults.standard.set(attribute.value, forKey: "given_name")
+                    }
+                    if attribute.name == "family_name" {
+                        UserDefaults.standard.set(attribute.value, forKey: "family_name")
+                    }
+                    if attribute.name == "email" {
+                        UserDefaults.standard.set(attribute.value, forKey: "email")
+                    }
                 }
+
+//                print(self.user?.username! as Any)
+//                print("\(self.pool?.getUser() as Any)")
+                if (self.pool?.token().isCompleted)! {
+                    UserDefaults.standard.set(self.pool?.token().result, forKey: "token")
+                    //print(self.pool?.token().result as Any)
+                } else {
+                    UserDefaults.standard.removeObject(forKey: "token")
+                }
+                print("USER DEFAULTS SETTED")
+                    self.showProjectLoadingIndicator()
+                    self.videoAuthorization()
+                    self.determineMyCurrentLocation()
+                    self.libraryAuthorization()
+                    self.attemptSignInToSiteSnapBackend()
             }
             return nil
         }
+
     }
     
     //MARK: - Observers
@@ -426,6 +540,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func showProjectLoadingIndicator(){
         selectedProjectButton.showLoading()
     }
+    
     func loadingProjectIntoList(){
         selectedProjectButton.hideLoading(buttonText: nil)
         userProjects.removeAll()

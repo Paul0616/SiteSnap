@@ -17,6 +17,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
 
     var user: AWSCognitoIdentityUser?
     var pool: AWSCognitoIdentityUserPool?
+    var response: AWSCognitoIdentityUserGetDetailsResponse?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,6 +27,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.pool = AWSCognitoIdentityUserPool(forKey: AWSCognitoUserPoolsSignInProviderKey)
         if (self.user == nil) {
             self.user = self.pool?.currentUser()
+            
         }
     }
     
@@ -57,6 +59,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     func refresh() {
         self.user?.getDetails().continueOnSuccessWith { (task) -> AnyObject? in
             DispatchQueue.main.async(execute: {
+                self.response = task.result
                 self.dismiss(animated: false, completion: nil)
             })
             return nil
@@ -73,11 +76,23 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         //cell.textLabel?.textColor = UIColor.black
         //cell.textLabel?.text = "Account \(user?.username)"
         cell.tag = indexPath.row
-        if indexPath.row == 0 {
+        switch indexPath.row {
+        case 0:
             cell.menuItemIcon.image = UIImage(named: "person-80px")
             cell.menuItemTitle.text = "Account"
-            cell.menuItemDescription.text = self.user?.username
+            cell.menuItemDescription.text = (UserDefaults.standard.value(forKey: "given_name") as? String)! + " " + (UserDefaults.standard.value(forKey: "family_name") as? String)!
+        case 1:
+            cell.menuItemIcon.image = UIImage(named: "upload-80px")
+            cell.menuItemTitle.text = "Uploads"
+            cell.menuItemDescription.text = "0 photos uploading"
+        case 2:
+            cell.menuItemIcon.image = UIImage(named: "settings-80px")
+            cell.menuItemTitle.text = "Settings"
+            cell.menuItemDescription.text = ""
+        default:
+            print("default")
         }
+        
         return cell
     }
     
@@ -91,16 +106,17 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
             let alertController = UIAlertController(title: "Please confirm choice",
                                                     message: "Would you like to sign out and be taken to sign in page?",
                                                     preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "ok", style: .default, handler: { action in
+            alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
                 self.user?.signOut()
                 self.refresh()
             })
-            alertController.addAction(okAction)
-            DispatchQueue.main.async {
-                self.present(alertController, animated: true, completion: nil)
-            }
-            self.user?.signOut()
-            self.refresh()
+            )
+            alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
+                print("cancel")
+            })
+            )
+           
+            self.present(alertController, animated: true, completion: nil)
 
         }
 

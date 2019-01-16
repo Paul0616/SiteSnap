@@ -90,7 +90,8 @@ extension SignInViewController: AWSCognitoIdentityPasswordAuthentication {
         self.passwordAuthenticationCompletion = passwordAuthenticationCompletionSource
         DispatchQueue.main.async {
             if (self.usernameText == nil) {
-                self.usernameText = authenticationInput.lastKnownUsername
+                //self.usernameText = authenticationInput.lastKnownUsername
+                self.usernameText = UserDefaults.standard.value(forKey: "email") as? String
             }
         }
     }
@@ -101,7 +102,9 @@ extension SignInViewController: AWSCognitoIdentityPasswordAuthentication {
                 let alertController = UIAlertController(title: error.userInfo["__type"] as? String,
                                                         message: error.userInfo["message"] as? String,
                                                         preferredStyle: .alert)
-                let retryAction = UIAlertAction(title: "Retry", style: .default, handler: nil)
+                let retryAction = UIAlertAction(title: "Retry", style: .default, handler: { action in
+                    self.passwordTextField.text = nil
+                })
                 alertController.addAction(retryAction)
                 
                 self.present(alertController, animated: true, completion:  nil)
