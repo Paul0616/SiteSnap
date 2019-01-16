@@ -16,6 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var signInViewController: SignInViewController?
     var storyboard: UIStoryboard?
+    var userTappedLogOut: Bool = false
     
     //MARK: - Set Orientation
     /// set orientations you want to be allowed in this property by default
@@ -168,11 +169,11 @@ extension AppDelegate: AWSCognitoIdentityInteractiveAuthenticationDelegate {
             
             if (!self.signInViewController!.isViewLoaded || self.signInViewController!.view.window == nil) {
                  print("START PASSWORD AUTHENTICATION - signIn should appear")
-                let initialViewController = self.storyboard!.instantiateInitialViewController() as! CameraViewController
-                //initialViewController.sessionQueue.suspend()
+                if self.userTappedLogOut {
+                    let initialViewController = self.storyboard!.instantiateInitialViewController() as! CameraViewController
+                    self.window?.rootViewController = initialViewController
+                }
                
-                self.window?.rootViewController = initialViewController
-                //initialViewController.userLogged = false
                 self.window?.rootViewController?.present(self.signInViewController!, animated: true, completion: nil)
             
             }

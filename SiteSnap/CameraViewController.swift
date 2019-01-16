@@ -28,6 +28,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     private var cameraSetupResult: SessionSetupResult = .success
     private var locationSetupResult: CLAuthorizationStatus = .authorizedWhenInUse
+    private var librarySetupResult: PHAuthorizationStatus = .authorized
     @objc dynamic var videoDeviceInput: AVCaptureDeviceInput!
     var defaultVideoDevice: AVCaptureDevice?
     private let photoOutput = AVCapturePhotoOutput()
@@ -115,7 +116,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             photoDatabaseShouldBeDeleted = false
         }
         photoObjects = PhotoHandler.fetchAllObjects()!
-        videoAuthorization()
+       
         //CHECK LAST LOG IN
         // if !userLogged {
         
@@ -125,7 +126,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 print("USER = CURRENT USER = \(String(describing: self.user?.username))")
             }
             self.refresh()
-    
+             videoAuthorization()
        
     }
     
@@ -180,7 +181,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 let message = NSLocalizedString(changePrivacySetting, comment: "Alert message when the user has denied access localization")
                 let alertController = UIAlertController(title: "SiteSnap", message: message, preferredStyle: .alert)
                 
-                alertController.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Alert OK button"),
+                alertController.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Alert Cancel button"),
                                                         style: .cancel,
                                                         handler: nil))
                 
@@ -201,7 +202,31 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         case .authorizedWhenInUse:
             break
         }
-        
+        switch self.librarySetupResult {
+        case .restricted, .denied:
+            let changePrivacySetting = "SiteSnap doesn't have permission to accsess photo library, please change privacy settings"
+            let message = NSLocalizedString(changePrivacySetting, comment: "Alert message when the user has denied access photo library")
+            let alertController = UIAlertController(title: "SiteSnap", message: message, preferredStyle: .alert)
+            
+            alertController.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Alert OK button"),
+                                                    style: .cancel,
+                                                    handler: nil))
+            
+            alertController.addAction(UIAlertAction(title: NSLocalizedString("Settings", comment: "Alert button to open Settings"),
+                                                    style: .`default`,
+                                                    handler: { _ in
+                                                        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!,
+                                                                                  options: [:],
+                                                                                  completionHandler: nil)
+            }))
+            
+            self.present(alertController, animated: true, completion: nil)
+            break
+        case .notDetermined:
+            break
+        case .authorized:
+            break
+        }
         if selectedFromGallery {
             selectedFromGallery = false
             performSegue(withIdentifier: "PhotsViewIdentifier", sender: nil)
@@ -311,7 +336,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
         task.resume()
     }
-    //MARK: - Configure video session
+    //MARK: - PERMISSIONS / AUTHORIZATIONS
     func videoAuthorization(){
         
             
@@ -353,23 +378,106 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             self.configureSession()
         }
     }
-    //MARK: - Library access authorization
+    
     func libraryAuthorization() {
         let photos = PHPhotoLibrary.authorizationStatus()
         if photos == .notDetermined {
             PHPhotoLibrary.requestAuthorization({status in
-                if status == .authorized{
-                    print(status)
-                } else {
-                    print(status)
-                }
+                self.librarySetupResult = status
             })
         }
+    }
+
+    func checkPermissionLibrary() {
+        
+        switch librarySetupResult {
+        case .authorized:
+            print("Access was already granted.")
+            let picker = AssetsPickerViewController()
+            picker.pickerDelegate = self
+            picker.pickerConfig.albumIsShowEmptyAlbum = false
+            self.present(picker, animated: true, completion: nil)
+        case .notDetermined:
+            PHPhotoLibrary.requestAuthorization({
+                (newStatus) in print("status is \(newStatus)")
+                if newStatus == PHAuthorizationStatus.authorized {
+                    /* do stuff here */
+                    print("Success. Access was granted.")
+                    let picker = AssetsPickerViewController()
+                    picker.pickerDelegate = self
+                    picker.pickerConfig.albumIsShowEmptyAlbum = false
+                    self.present(picker, animated: true, completion: nil)
+                }
+            })
+        case .restricted:
+            print("User do not have access to photo album.")
+        case .denied:
+            print("User has denied the permission.")
+        }
+    }
+    
+    func determineMyCurrentLocation() {
+        
+        locationManager = LocationManager()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        
+        switch CLLocationManager.authorizationStatus() {
+        case .notDetermined:
+            // Request when-in-use authorization initially
+            locationManager.requestWhenInUseAuthorization()
+            break
+            
+        case .restricted, .denied:
+            // Disable location features
+            break
+            
+        case .authorizedWhenInUse:
+            // Enable basic location features
+            break
+            
+        case .authorizedAlways:
+            // Enable any of your app's location features
+            break
+        default:
+            locationSetupResult = .denied
+            
+        }
+        
+        if LocationManager.locationServicesEnabled() {
+            //locationManager.requestLocation()
+            
+            locationManager.startUpdatingLocation()
+            //locationManager.startUpdatingHeading()
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        locationSetupResult = status
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let userLocation:CLLocation = locations[0] as CLLocation
+        lastLocation = userLocation
+        // Call stopUpdatingLocation() to stop listening for location updates,
+        // other wise this function will be called every time when user location changes.
+        
+        manager.stopUpdatingLocation()
+        
+        print("user latitude = \(userLocation.coordinate.latitude)")
+        print("user longitude = \(userLocation.coordinate.longitude)")
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error)
+    {
+        
+        print("Error \(error)")
     }
     
     //MARK: - log in user
     func refresh() {
-       
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.userTappedLogOut = false
         self.user?.getDetails().continueOnSuccessWith { (task) -> AnyObject? in
             DispatchQueue.main.async {
                 self.response = task.result
@@ -541,10 +649,18 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         if cameraSetupResult != .success {
             return
         }
+        
+        if locationSetupResult != .authorizedAlways && locationSetupResult != .authorizedWhenInUse {
+            return
+        }
+        if librarySetupResult != .authorized {
+            return
+        }
         determineMyCurrentLocation()
+        
         /*
          Retrieve the video preview layer's video orientation on the main queue before
-         entering the session queue. We do this to ensure UI elements are accessed on
+         entering the session queue. We do this to ensu re UI elements are accessed on
          the main thread and session configuration is done on the session queue.
          */
         let videoPreviewLayerOrientation = capturePreviewView.videoPreviewLayer.connection?.videoOrientation
@@ -575,7 +691,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     @IBAction func onClickGalerry(_ sender: UIButton) {
-        checkPermission()
+        checkPermissionLibrary()
     }
    
     
@@ -717,34 +833,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
 
     
-    //MARK: - Permission for viewing and saving photos in Custom Album
-    func checkPermission() {
-        let photoAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
-        switch photoAuthorizationStatus {
-        case .authorized:
-            print("Access was already granted.")
-            let picker = AssetsPickerViewController()
-            picker.pickerDelegate = self
-            picker.pickerConfig.albumIsShowEmptyAlbum = false
-            self.present(picker, animated: true, completion: nil)
-        case .notDetermined:
-            PHPhotoLibrary.requestAuthorization({
-                (newStatus) in print("status is \(newStatus)")
-                if newStatus == PHAuthorizationStatus.authorized {
-                    /* do stuff here */
-                    print("Success. Access was granted.")
-                    let picker = AssetsPickerViewController()
-                    picker.pickerDelegate = self
-                    picker.pickerConfig.albumIsShowEmptyAlbum = false
-                    self.present(picker, animated: true, completion: nil)
-                }
-            })
-        case .restricted:
-            print("User do not have access to photo album.")
-        case .denied:
-            print("User has denied the permission.")
-        }
-    }
+    
     //MARK: - Saving Taken Photo in ALBUM
     func createAlbumAndSave(image: UIImage!) {
         //Get PHFetch Options
@@ -797,7 +886,9 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 if (self.photosLocalIdentifierArray == nil){
-                    self.photosLocalIdentifierArray = [localId!]
+        
+                   self.photosLocalIdentifierArray = [localId!]
+                   
                 } else {
                     self.photosLocalIdentifierArray?.append(localId!)
                 }
@@ -925,67 +1016,6 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
     }
 
-    //MARK: - getting current LOCATION - function delegate
-    func determineMyCurrentLocation() {
-    
-        locationManager = LocationManager()
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        
-        switch CLLocationManager.authorizationStatus() {
-        case .notDetermined:
-                // Request when-in-use authorization initially
-                locationManager.requestWhenInUseAuthorization()
-                break
-            
-            case .restricted, .denied:
-                // Disable location features
-                //disableMyLocationBasedFeatures()
-                break
-            
-            case .authorizedWhenInUse:
-                // Enable basic location features
-                //enableMyWhenInUseFeatures()
-                break
-            
-            case .authorizedAlways:
-                // Enable any of your app's location features
-                //enableMyAlwaysFeatures()
-                break
-           default:
-                locationSetupResult = .denied
-            
-        }
-    
-        if LocationManager.locationServicesEnabled() {
-            //locationManager.requestLocation()
-            
-            locationManager.startUpdatingLocation()
-            //locationManager.startUpdatingHeading()
-        }
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        locationSetupResult = status
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let userLocation:CLLocation = locations[0] as CLLocation
-        lastLocation = userLocation
-        // Call stopUpdatingLocation() to stop listening for location updates,
-        // other wise this function will be called every time when user location changes.
-        
-        manager.stopUpdatingLocation()
-        
-        print("user latitude = \(userLocation.coordinate.latitude)")
-        print("user longitude = \(userLocation.coordinate.longitude)")
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error)
-    {
-        
-        print("Error \(error)")
-    }
     
     // MARK: - Navigation
 

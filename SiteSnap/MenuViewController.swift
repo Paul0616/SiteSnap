@@ -108,6 +108,8 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
                                                     preferredStyle: .alert)
             alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
                 self.user?.signOut()
+                let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                appDelegate.userTappedLogOut = true
                 self.refresh()
             })
             )
