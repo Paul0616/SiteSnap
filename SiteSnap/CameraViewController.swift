@@ -20,6 +20,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     private let session = AVCaptureSession()
     private var isSessionRunning = false
     private let sessionQueue = DispatchQueue(label: "session queue") // Communicate with the session and other session objects on this queue.
+    private let sessionAPIQueue = DispatchQueue(label: "session API")
     private enum SessionSetupResult {
         case success
         case notAuthorized
@@ -71,15 +72,6 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     //MARK: - Loading Camera View Controller
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        //CHECK LAST LOG IN
-        self.pool = AWSCognitoIdentityUserPool(forKey: AWSCognitoUserPoolsSignInProviderKey)
-        if (self.user == nil) {
-            self.user = self.pool?.currentUser()
-            print("USER = CURRENT USER = \(String(describing: self.user?.username))")
-        }
-        self.refresh()
-        
         if TagHandler.deleteAllTags() {
             print("tags was deleted from internal database")
         }
@@ -124,6 +116,17 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
         photoObjects = PhotoHandler.fetchAllObjects()!
         videoAuthorization()
+        //CHECK LAST LOG IN
+        // if !userLogged {
+        
+            self.pool = AWSCognitoIdentityUserPool(forKey: AWSCognitoUserPoolsSignInProviderKey)
+            if (self.user == nil) {
+                self.user = self.pool?.currentUser()
+                print("USER = CURRENT USER = \(String(describing: self.user?.username))")
+            }
+            self.refresh()
+    
+       
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -204,6 +207,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             performSegue(withIdentifier: "PhotsViewIdentifier", sender: nil)
         }
         
+     //   }
     }
     override func viewWillDisappear(_ animated: Bool) {
         sessionQueue.async {
@@ -309,6 +313,9 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     //MARK: - Configure video session
     func videoAuthorization(){
+        
+            
+        
         /*
          Check video authorization status. Video access is required and audio
          access is optional. If the user denies audio access, AVCam won't
@@ -329,6 +336,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
              create an AVCaptureDeviceInput for audio during session setup.
              */
             sessionQueue.suspend()
+            
             AVCaptureDevice.requestAccess(for: .video, completionHandler: { granted in
                 if !granted {
                     self.cameraSetupResult = .notAuthorized
@@ -340,6 +348,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             // The user has previously denied access.
             cameraSetupResult = .notAuthorized
         }
+       
         sessionQueue.async {
             self.configureSession()
         }
@@ -360,6 +369,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     //MARK: - log in user
     func refresh() {
+       
         self.user?.getDetails().continueOnSuccessWith { (task) -> AnyObject? in
             DispatchQueue.main.async {
                 self.response = task.result

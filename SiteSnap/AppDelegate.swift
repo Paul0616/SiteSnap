@@ -165,11 +165,14 @@ extension AppDelegate: AWSCognitoIdentityInteractiveAuthenticationDelegate {
         }
 
         DispatchQueue.main.async {
+            
             if (!self.signInViewController!.isViewLoaded || self.signInViewController!.view.window == nil) {
                  print("START PASSWORD AUTHENTICATION - signIn should appear")
                 let initialViewController = self.storyboard!.instantiateInitialViewController() as! CameraViewController
+                //initialViewController.sessionQueue.suspend()
+               
                 self.window?.rootViewController = initialViewController
-                initialViewController.userLogged = false
+                //initialViewController.userLogged = false
                 self.window?.rootViewController?.present(self.signInViewController!, animated: true, completion: nil)
             
             }

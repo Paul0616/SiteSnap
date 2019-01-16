@@ -39,7 +39,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
 //            }
 //        }
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -110,7 +110,12 @@ extension SignInViewController: AWSCognitoIdentityPasswordAuthentication {
                 self.present(alertController, animated: true, completion:  nil)
             } else {
                 self.userNameTextField.text = nil
+               
+                //let initialViewController = self.storyboard!.instantiateInitialViewController() as! CameraViewController
+               // initialViewController.sessionQueue.resume()
+                //initialViewController.userLogged = true
                 self.dismiss(animated: true, completion: nil)
+                
             }
         }
     }
