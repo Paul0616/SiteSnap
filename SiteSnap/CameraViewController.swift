@@ -25,7 +25,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         case notAuthorized
         case configurationFailed
     }
-    private var setupResult: SessionSetupResult = .success
+    private var cameraSetupResult: SessionSetupResult = .success
+    private var locationSetupResult: CLAuthorizationStatus = .authorizedWhenInUse
     @objc dynamic var videoDeviceInput: AVCaptureDeviceInput!
     var defaultVideoDevice: AVCaptureDevice?
     private let photoOutput = AVCapturePhotoOutput()
@@ -127,7 +128,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     override func viewDidAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         sessionQueue.async {
-            switch self.setupResult {
+            switch self.cameraSetupResult {
             case .success:
                 // Only setup observers and start the session running if setup succeeded.
                 self.addObservers()
@@ -169,6 +170,34 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 }
             }
         }
+        switch self.locationSetupResult {
+            case .restricted, .denied:
+                let changePrivacySetting = "SiteSnap doesn't have permission to accsess localization, please change privacy settings"
+                let message = NSLocalizedString(changePrivacySetting, comment: "Alert message when the user has denied access localization")
+                let alertController = UIAlertController(title: "SiteSnap", message: message, preferredStyle: .alert)
+                
+                alertController.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Alert OK button"),
+                                                        style: .cancel,
+                                                        handler: nil))
+                
+                alertController.addAction(UIAlertAction(title: NSLocalizedString("Settings", comment: "Alert button to open Settings"),
+                                                        style: .`default`,
+                                                        handler: { _ in
+                                                            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!,
+                                                                                      options: [:],
+                                                                                      completionHandler: nil)
+                }))
+                
+                self.present(alertController, animated: true, completion: nil)
+            break
+        case .notDetermined:
+            break
+        case .authorizedAlways:
+            break
+        case .authorizedWhenInUse:
+            break
+        }
+        
         if selectedFromGallery {
             selectedFromGallery = false
             performSegue(withIdentifier: "PhotsViewIdentifier", sender: nil)
@@ -177,7 +206,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     override func viewWillDisappear(_ animated: Bool) {
         sessionQueue.async {
-            if self.setupResult == .success {
+            if self.cameraSetupResult == .success {
                 self.session.stopRunning()
                 self.isSessionRunning = self.session.isRunning
                 self.removeObservers()
@@ -199,7 +228,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             videoPreviewLayerConnection.videoOrientation = newVideoOrientation
         }
     }
-    //MARK: - Connect ti SITESnap Backend API
+    //MARK: - Connect to SITESnap Backend API
     func attemptSignInToSiteSnapBackend()
     {
         let url = URL(string: siteSnapBackendHost + "session/getPhoneSessionInfo?")!
@@ -301,14 +330,14 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             sessionQueue.suspend()
             AVCaptureDevice.requestAccess(for: .video, completionHandler: { granted in
                 if !granted {
-                    self.setupResult = .notAuthorized
+                    self.cameraSetupResult = .notAuthorized
                 }
                 self.sessionQueue.resume()
             })
             
         default:
             // The user has previously denied access.
-            setupResult = .notAuthorized
+            cameraSetupResult = .notAuthorized
         }
         sessionQueue.async {
             self.configureSession()
@@ -352,7 +381,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
 //                print("\(self.pool?.getUser() as Any)")
                 if (self.pool?.token().isCompleted)! {
                     UserDefaults.standard.set(self.pool?.token().result, forKey: "token")
-                    //print(self.pool?.token().result as Any)
+                    print(self.pool?.token().result as Any)
                 } else {
                     UserDefaults.standard.removeObject(forKey: "token")
                 }
@@ -599,7 +628,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     //MARK: - Setting for CAMERA device
     private func configureSession() {
-        if setupResult != .success {
+        if cameraSetupResult != .success {
             return
         }
         
@@ -621,7 +650,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             }
             guard let videoDevice = defaultVideoDevice else {
                 print("Default video device is unavailable.")
-                setupResult = .configurationFailed
+                cameraSetupResult = .configurationFailed
                 session.commitConfiguration()
                 return
             }
@@ -653,7 +682,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             }
         } catch {
             print("Couldn't create video device input: \(error)")
-            setupResult = .configurationFailed
+            cameraSetupResult = .configurationFailed
             session.commitConfiguration()
             return
         }
@@ -665,7 +694,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             photoOutput.isHighResolutionCaptureEnabled = true
         } else {
             print("Could not add photo output to the session")
-            setupResult = .configurationFailed
+            cameraSetupResult = .configurationFailed
             session.commitConfiguration()
             return
         }
@@ -886,14 +915,42 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         locationManager = LocationManager()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestAlwaysAuthorization()
         
+        switch CLLocationManager.authorizationStatus() {
+        case .notDetermined:
+                // Request when-in-use authorization initially
+                locationManager.requestWhenInUseAuthorization()
+                break
+            
+            case .restricted, .denied:
+                // Disable location features
+                //disableMyLocationBasedFeatures()
+                break
+            
+            case .authorizedWhenInUse:
+                // Enable basic location features
+                //enableMyWhenInUseFeatures()
+                break
+            
+            case .authorizedAlways:
+                // Enable any of your app's location features
+                //enableMyAlwaysFeatures()
+                break
+           default:
+                locationSetupResult = .denied
+            
+        }
+    
         if LocationManager.locationServicesEnabled() {
             //locationManager.requestLocation()
             
             locationManager.startUpdatingLocation()
             //locationManager.startUpdatingHeading()
         }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        locationSetupResult = status
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -910,6 +967,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error)
     {
+        
         print("Error \(error)")
     }
     
