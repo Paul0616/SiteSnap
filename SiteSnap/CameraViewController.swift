@@ -123,6 +123,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             photoDatabaseShouldBeDeleted = false
         }
         photoObjects = PhotoHandler.fetchAllObjects()!
+        videoAuthorization()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -387,7 +388,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 }
                 print("USER DEFAULTS SETTED")
                     self.showProjectLoadingIndicator()
-                    self.videoAuthorization()
+                    //self.videoAuthorization()
                     self.determineMyCurrentLocation()
                     self.libraryAuthorization()
                     self.attemptSignInToSiteSnapBackend()
