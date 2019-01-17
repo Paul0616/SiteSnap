@@ -18,3 +18,12 @@ let AWSCognitoUserPoolsSignInProviderKey = "UserPool"
 
 let siteSnapBackendHost: String = "https://backend.sitesnap.com.au:443/api/"
 
+/*
+ LIST OF UserDefaults used in app
+    email - current email for logged user
+    token - last token obtained from Amazon Cognito
+    given_name - first name for logged user
+    family_name - last name for logged user
+    currentProjectId - the id of the project that the user chooses
+ 
+ */

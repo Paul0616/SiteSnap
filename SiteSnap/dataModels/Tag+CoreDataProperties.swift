@@ -17,10 +17,11 @@ extension Tag {
         return NSFetchRequest<Tag>(entityName: "Tag")
     }
 
+    @NSManaged public var id: String?
     @NSManaged public var tagColor: String?
     @NSManaged public var text: String?
-    @NSManaged public var id: String?
     @NSManaged public var photos: NSSet?
+    @NSManaged public var projects: NSSet?
 
 }
 
@@ -38,5 +39,22 @@ extension Tag {
 
     @objc(removePhotos:)
     @NSManaged public func removeFromPhotos(_ values: NSSet)
+
+}
+
+// MARK: Generated accessors for projects
+extension Tag {
+
+    @objc(addProjectsObject:)
+    @NSManaged public func addToProjects(_ value: Project)
+
+    @objc(removeProjectsObject:)
+    @NSManaged public func removeFromProjects(_ value: Project)
+
+    @objc(addProjects:)
+    @NSManaged public func addToProjects(_ values: NSSet)
+
+    @objc(removeProjects:)
+    @NSManaged public func removeFromProjects(_ values: NSSet)
 
 }

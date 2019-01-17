@@ -28,6 +28,7 @@ class TagsModalViewController: UIViewController, UITableViewDelegate, UITableVie
 //        print(tags?.count as Any)
 //        print(tags!)
         alltagsSwitch.isOn = PhotoHandler.allTagsWasSet(localIdentifier: currentPhotoLocalIdentifier!)
+        
         tags = PhotoHandler.getTags(localIdentifier: currentPhotoLocalIdentifier!)
        
         tags = self.tags.sorted(by: { $0.selected && !$1.selected})
@@ -66,9 +67,9 @@ class TagsModalViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     @IBAction func onSwitchTag(_ sender: UISwitch) {
         let index = sender.tag
-        let tagText = tags[index].tag.text
+        let tagId = tags[index].tag.id
         let photo = PhotoHandler.getSpecificPhoto(localIdentifier: currentPhotoLocalIdentifier!)
-        let tag = TagHandler.getSpecificTag(text: tagText!)
+        let tag = TagHandler.getSpecificTag(id: tagId!)
         if sender.isOn {
             tag?.addToPhotos(photo!)
         } else {

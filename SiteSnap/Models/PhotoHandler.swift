@@ -194,7 +194,14 @@ class PhotoHandler: NSObject {
             let photo = objects.first!
             var returnedTags = [TagModel]()
             var tagModel: TagModel
-            for tag in TagHandler.fetchObject()! {
+            var tags = [Tag]()
+            if let currentProject = ProjectHandler.getCurrentProject() {
+                for item in currentProject.availableTags! {
+                    let tag = item as! Tag
+                    tags.append(tag)
+                }
+            }
+            for tag in tags {
                 if (tag.photos?.contains(photo))! {
                     tagModel = TagModel(tag: tag, selected: true)!
                 } else {

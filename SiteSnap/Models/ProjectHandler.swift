@@ -46,4 +46,28 @@ class ProjectHandler: NSObject {
             return false
         }
     }
+    class func getCurrentProject() -> Project? {
+        let context = getContext()
+        let currentProjectId = UserDefaults.standard.value(forKey: "currentProjectId") as? String
+        let fetchRequest = NSFetchRequest<Project>(entityName: "Project")
+        fetchRequest.predicate = NSPredicate.init(format: "id=='\(currentProjectId!)'")
+        do {
+            let objects = try context.fetch(fetchRequest)
+            
+            return objects.first
+        } catch _ {
+            return nil
+        }
+        
+    }
+    class func fetchAllProjects() -> [Project]? {
+        let context = getContext()
+        var projects: [Project]? = nil
+        do {
+            projects = try context.fetch(Project.fetchRequest())
+            return projects
+        } catch  {
+            return projects
+        }
+    }
 }

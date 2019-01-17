@@ -19,6 +19,7 @@ class TagHandler: NSObject {
         let context = getContext()
         let entity = NSEntityDescription.entity(forEntityName: "Tag", in: context)
         let managedObject = NSManagedObject(entity: entity!, insertInto: context)
+        managedObject.setValue(id, forKey: "id")
         managedObject.setValue(text, forKey: "text")
         if let color = tagColor {
             if color.prefix(1) == "#" {
@@ -34,11 +35,12 @@ class TagHandler: NSObject {
             return false
         }
     }
-   
-    class func getSpecificTag(text: String) -> Tag! {
+    
+    
+    class func getSpecificTag(id: String) -> Tag! {
         let context = getContext()
         let fetchRequest = NSFetchRequest<Tag>(entityName: "Tag")
-        fetchRequest.predicate = NSPredicate.init(format: "text=='\(text)'")
+        fetchRequest.predicate = NSPredicate.init(format: "id=='\(id)'")
         do {
             let objects = try context.fetch(fetchRequest)
             

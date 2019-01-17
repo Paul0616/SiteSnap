@@ -11,8 +11,10 @@ import Photos
 import AssetsPickerViewController
 import CoreData
 
-class PhotosViewController: UIViewController, UIScrollViewDelegate {
+class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableViewDelegate, UITableViewDataSource {
 
+    @IBOutlet weak var dropDownListProjectsTableView: UITableView!
+    @IBOutlet weak var selectedProjectButton: ActivityIndicatorButton!
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var takePhotoButton: UIButton!
     @IBOutlet weak var addFromGalleryButton: UIButton!
@@ -30,6 +32,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var sameCommentsToAll: UISwitch!
     
     //var photosLocalIdentifiers: [String]?
+    var userProjects = [ProjectModel]()
     var photoObjects: [Photo]?
     var slides:[Slide] = [];
     
@@ -72,6 +75,8 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
             updateCommentLabel()
             updateTagNumber()
         }
+        dropDownListProjectsTableView.isHidden = true
+        loadingProjectIntoList()
         
     }
     override func viewDidLayoutSubviews() {
@@ -118,6 +123,84 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate {
             dot.layer.borderColor = UIColor.white.cgColor
             dot.layer.borderWidth = 1
         }
+    }
+    
+    //MARK: - Loading and processing PROJECTS
+    func showProjectLoadingIndicator(){
+        selectedProjectButton.showLoading()
+    }
+    
+    func loadingProjectIntoList(){
+       
+        self.userProjects.removeAll()
+        let projects = ProjectHandler.fetchAllProjects()
+        for item in projects! {
+            var tagIds = [String]()
+            for tag in item.availableTags! {
+                let t = tag as! Tag
+                tagIds.append(t.id!)
+            }
+            guard let projectModel = ProjectModel(id: item.id!, projectName: item.name!, latitudeCenterPosition: item.latitude, longitudeCenterPosition: item.longitude, tagIds: tagIds) else {
+                fatalError("Unable to instantiate ProductModel")
+            }
+            self.userProjects += [projectModel]
+        }
+    
+        self.selectedProjectButton.hideLoading(buttonText: nil)
+        self.setProjectsSelected(projectId: (UserDefaults.standard.value(forKey: "currentProjectId") as? String)!)
+        self.dropDownListProjectsTableView.reloadData()
+     
+        
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return userProjects.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cellProject", for: indexPath)
+        cell.textLabel?.textColor = UIColor.white
+        cell.textLabel?.text = userProjects[indexPath.row].projectName
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let selected = tableView.indexPathForSelectedRow
+        if selected == indexPath {
+            cell.contentView.backgroundColor = UIColor.black
+        } else {
+            cell.contentView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if tableView == dropDownListProjectsTableView {
+            let projectId = userProjects[indexPath.row].id
+            UserDefaults.standard.set(projectId, forKey: "currentProjectId")
+            //selectedProjectButton.setTitle("\(userProjects[indexPath.row].projectName)", for: .normal)
+            animateProjectsList(toogle: false)
+            let selectedCell:UITableViewCell = tableView.cellForRow(at: indexPath)!
+            selectedCell.contentView.backgroundColor = UIColor.black
+            setProjectsSelected(projectId: projectId)
+        }
+    }
+    
+    func setProjectsSelected(projectId: String){
+        for i in 0...userProjects.count-1 {
+            userProjects[i].selected = userProjects[i].id == projectId
+            selectedProjectButton.setTitle(userProjects[i].projectName, for: .normal)
+        }
+    }
+    
+    func animateProjectsList(toogle: Bool){
+        UIView.animate(withDuration: 0.3, animations: {
+            self.dropDownListProjectsTableView.isHidden = !toogle
+        })
+    }
+    //MARK: - Selecting new project
+    @IBAction func onClickSelectedProjectButton(_ sender: ActivityIndicatorButton) {
+        animateProjectsList(toogle: dropDownListProjectsTableView.isHidden)
     }
     //MARK: - UI Buttons actions
     @IBAction func onClickAddFromGallery(_ sender: UIButton) {

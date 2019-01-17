@@ -1,10 +1,10 @@
 //
 //  Project+CoreDataProperties.swift
-//  
+//  SiteSnap
 //
 //  Created by Paul Oprea on 17/01/2019.
+//  Copyright © 2019 Paul Oprea. All rights reserved.
 //
-//  This file was automatically generated and should not be edited.
 //
 
 import Foundation

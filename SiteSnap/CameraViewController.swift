@@ -66,7 +66,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     @IBOutlet weak var dropDownListProjectsTableView: UITableView!
     
     var userProjects = [ProjectModel]()
-    var projectId: String = ""
+    //var projectId: String = ""
     var selectedFromGallery: Bool = false
     
     
@@ -76,6 +76,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         if TagHandler.deleteAllTags() {
             print("tags was deleted from internal database")
         }
+        UserDefaults.standard.removeObject(forKey: "currentProjectId")
 //        if TagHandler.fetchObject()?.count == 0 {
 //            if TagHandler.saveTag(text: "Bridge Superstructure", tagColor: "#478C27") {
 //                print("Successfully added")
@@ -274,51 +275,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             do
             {
                 let json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
-                let projects = json["projects"] as! NSArray
-                self.projectId = json["lastUsedProjectId"] as! String
-                let allTags = json["tags"] as! NSArray
-                self.userProjects.removeAll()
-                for item in projects {
-                    let project = item as! NSDictionary
-                    let coord = project["projectCenterPosition"] as! NSArray
-                    let tags = project["tagIds"] as! NSArray
-                    var tagIds = [String]()
-                    for tag in tags {
-                        tagIds += [tag as! String]
-                    }
-                    guard let projectModel = ProjectModel(id: project["id"]! as! String, projectName: project["name"]! as! String, latitudeCenterPosition: coord[0] as! Double, longitudeCenterPosition: coord[1] as! Double, tagIds: tagIds) else {
-                                            fatalError("Unable to instantiate ProductModel")
-                    }
-                    self.userProjects += [projectModel]
-                    //print("id=\(project["id"]!) name=\(project["name"]!) lat=\(coord[0]) long=\(coord[1]) tags=\(tags.count)")
-                    
-                    
-                }
-                DispatchQueue.main.async {
-                    for projectModel in self.userProjects {
-                        if ProjectHandler.deleteAllProjects() {
-                            if ProjectHandler.saveProject(id: projectModel.id, name: projectModel.projectName, latitude: projectModel.latitudeCenterPosition, longitude: projectModel.longitudeCenterPosition) {
-                                print("PROJECT: \(projectModel.projectName) added")
-                            }
-                        }
-                    }
-                    
-                    for item in allTags {
-                      //  if TagHandler.saveTag(text: "Bridge Superstructure", tagColor: "#478C27") {
-                            //                print("Successfully added")
-                            //            }
-                        let tag = item as! NSDictionary
-                        if TagHandler.saveTag(id: tag["id"] as! String, text: tag["name"] as! String, tagColor: tag["colour"] as! String?) {
-                            print("TAG \(tag["name"] as! String) with was added")
-                        }
-                    }
-                    
-                }
-                //self.setProjectsSelected(projectId: self.projectId)
-                print(self.userProjects)
-                print(json)
-                self.loadingProjectIntoList()
-                // login SUCCESSFUL -> close login prompt and go back to the screen requesting login (either take photo screen or settings screen)
+                self.setUpInternalTables(json: json)
+
             }
             catch let error as NSError
             {
@@ -326,6 +284,72 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             }
         }
         task.resume()
+    }
+    
+    func setUpInternalTables(json: NSDictionary){
+        let projects = json["projects"] as! NSArray
+        let projectId = json["lastUsedProjectId"] as! String
+        UserDefaults.standard.set(projectId, forKey: "currentProjectId")
+        let allTags = json["tags"] as! NSArray
+        self.userProjects.removeAll()
+        for item in projects {
+            let project = item as! NSDictionary
+            let coord = project["projectCenterPosition"] as! NSArray
+            let tags = project["tagIds"] as! NSArray
+            var tagIds = [String]()
+            for tag in tags {
+                tagIds += [tag as! String]
+            }
+            guard let projectModel = ProjectModel(id: project["id"]! as! String, projectName: project["name"]! as! String, latitudeCenterPosition: coord[0] as! Double, longitudeCenterPosition: coord[1] as! Double, tagIds: tagIds) else {
+                fatalError("Unable to instantiate ProductModel")
+            }
+            self.userProjects += [projectModel]
+        }
+        DispatchQueue.main.async {
+            for projectModel in self.userProjects {
+                if ProjectHandler.deleteAllProjects() {
+                    if ProjectHandler.saveProject(id: projectModel.id, name: projectModel.projectName, latitude: projectModel.latitudeCenterPosition, longitude: projectModel.longitudeCenterPosition) {
+                        print("PROJECT: \(projectModel.projectName) added")
+                    }
+                }
+            }
+            
+            for item in allTags {
+                let tag = item as! NSDictionary
+                if TagHandler.saveTag(id: tag["id"] as! String, text: tag["name"] as! String, tagColor: tag["colour"] as! String?) {
+                    print("TAG \(tag["name"] as! String) \(tag["id"] as! String) with was added")
+                }
+            }
+            if let projectsRecords = ProjectHandler.fetchAllProjects() {
+                for item in projectsRecords {
+                    for projectModel in self.userProjects {
+                        if projectModel.id == item.id {
+                            let currentProjectTagIds = projectModel.tagIds
+                            for tagId in currentProjectTagIds {
+                                if let tagRecord = TagHandler.getSpecificTag(id: tagId) {
+                                    item.addToAvailableTags(tagRecord)
+                                }
+                            }
+                        }
+                        break
+                    }
+                }
+            }
+            
+            for tagItem in TagHandler.fetchObject()! {
+                for projectItem in ProjectHandler.fetchAllProjects()! {
+                    for associatedTag in projectItem.availableTags! {
+                        let tag = associatedTag as! Tag
+                        if tag.id == tagItem.id {
+                            tagItem.addToProjects(projectItem)
+                        }
+                    }
+                }
+            }
+            
+        }
+        print(json)
+        self.loadingProjectIntoList()
     }
     //MARK: - PERMISSIONS / AUTHORIZATIONS
     func videoAuthorization(){
@@ -529,8 +553,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         self.user?.getDetails().continueOnSuccessWith { (task) -> AnyObject? in
             DispatchQueue.main.async {
                 self.response = task.result
-               // UserDefaults.standard.set("Anand", forKey: "name")
-                //print(self.response?.userAttributes)
+               
                 print("RESPONSE to refresh user")
                 for attribute in (self.response?.userAttributes)! {
                     if attribute.name == "given_name" {
@@ -753,7 +776,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func loadingProjectIntoList(){
         DispatchQueue.main.async {
             self.selectedProjectButton.hideLoading(buttonText: nil)
-            self.setProjectsSelected(projectId: self.projectId)
+            self.setProjectsSelected(projectId: (UserDefaults.standard.value(forKey: "currentProjectId") as? String)!)
             self.dropDownListProjectsTableView.reloadData()
         }
        
@@ -782,7 +805,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if tableView == dropDownListProjectsTableView {
-            projectId = userProjects[indexPath.row].id
+            let projectId = userProjects[indexPath.row].id
+            UserDefaults.standard.set(projectId, forKey: "currentProjectId")
             //selectedProjectButton.setTitle("\(userProjects[indexPath.row].projectName)", for: .normal)
             animateProjectsList(toogle: false)
             let selectedCell:UITableViewCell = tableView.cellForRow(at: indexPath)!
