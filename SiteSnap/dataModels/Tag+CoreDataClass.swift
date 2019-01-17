@@ -10,7 +10,7 @@
 import Foundation
 import CoreData
 
-@objc(Tag)
+//@objc(Tag)
 public class Tag: NSManagedObject {
 
 }

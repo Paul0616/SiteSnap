@@ -276,21 +276,43 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 let json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
                 let projects = json["projects"] as! NSArray
                 self.projectId = json["lastUsedProjectId"] as! String
+                let allTags = json["tags"] as! NSArray
                 self.userProjects.removeAll()
                 for item in projects {
                     let project = item as! NSDictionary
                     let coord = project["projectCenterPosition"] as! NSArray
                     let tags = project["tagIds"] as! NSArray
-                    guard let projectModel = ProjectModel(id: project["id"]! as! String, projectName: project["name"]! as! String, latitudeCenterPosition: coord[0] as! Double, longitudeCenterPosition: coord[1] as! Double) else {
+                    var tagIds = [String]()
+                    for tag in tags {
+                        tagIds += [tag as! String]
+                    }
+                    guard let projectModel = ProjectModel(id: project["id"]! as! String, projectName: project["name"]! as! String, latitudeCenterPosition: coord[0] as! Double, longitudeCenterPosition: coord[1] as! Double, tagIds: tagIds) else {
                                             fatalError("Unable to instantiate ProductModel")
                     }
                     self.userProjects += [projectModel]
                     //print("id=\(project["id"]!) name=\(project["name"]!) lat=\(coord[0]) long=\(coord[1]) tags=\(tags.count)")
-                    if ProjectHandler.deleteAllProjects() {
-                        if ProjectHandler.saveProject(id: projectModel.id, name: projectModel.projectName, latitude: projectModel.latitudeCenterPosition, longitude: projectModel.longitudeCenterPosition) {
-                            print("project: \(projectModel.projectName) added")
+                    
+                    
+                }
+                DispatchQueue.main.async {
+                    for projectModel in self.userProjects {
+                        if ProjectHandler.deleteAllProjects() {
+                            if ProjectHandler.saveProject(id: projectModel.id, name: projectModel.projectName, latitude: projectModel.latitudeCenterPosition, longitude: projectModel.longitudeCenterPosition) {
+                                print("PROJECT: \(projectModel.projectName) added")
+                            }
                         }
                     }
+                    
+                    for item in allTags {
+                      //  if TagHandler.saveTag(text: "Bridge Superstructure", tagColor: "#478C27") {
+                            //                print("Successfully added")
+                            //            }
+                        let tag = item as! NSDictionary
+                        if TagHandler.saveTag(id: tag["id"] as! String, text: tag["name"] as! String, tagColor: tag["colour"] as! String?) {
+                            print("TAG \(tag["name"] as! String) with was added")
+                        }
+                    }
+                    
                 }
                 //self.setProjectsSelected(projectId: self.projectId)
                 print(self.userProjects)

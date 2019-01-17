@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		401B3F1B21E5FB8400509EF2 /* UploadsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401B3F1A21E5FB8400509EF2 /* UploadsViewController.swift */; };
-		4033273921F0911A007EE9DF /* Project+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4095FBEE21F088BC008A39D4 /* Project+CoreDataClass.swift */; };
-		4033273A21F0911F007EE9DF /* Project+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4095FBEF21F088BC008A39D4 /* Project+CoreDataProperties.swift */; };
+		4033274621F0A00D007EE9DF /* Project+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4033274521F0A00D007EE9DF /* Project+CoreDataClass.swift */; };
+		4033274821F0A016007EE9DF /* Project+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4033274721F0A016007EE9DF /* Project+CoreDataProperties.swift */; };
 		4047811621EC820C006987B4 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4047811521EC820C006987B4 /* Constants.swift */; };
 		4095FBE921F071A7008A39D4 /* ProjectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4095FBE821F071A7008A39D4 /* ProjectHandler.swift */; };
 		40B296BA21CCD87300A3C487 /* PhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B296B921CCD87300A3C487 /* PhotosViewController.swift */; };
@@ -79,11 +79,11 @@
 /* Begin PBXFileReference section */
 		08D194FC8394711D1AE36F7F /* Pods_SiteSnap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SiteSnap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		401B3F1A21E5FB8400509EF2 /* UploadsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadsViewController.swift; sourceTree = "<group>"; };
+		4033274521F0A00D007EE9DF /* Project+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Project+CoreDataClass.swift"; sourceTree = "<group>"; };
+		4033274721F0A016007EE9DF /* Project+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Project+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		4047811521EC820C006987B4 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		405977E921C2455700AF9F4B /* MYRIADPRO-REGULAR.OTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MYRIADPRO-REGULAR.OTF"; sourceTree = "<group>"; };
 		4095FBE821F071A7008A39D4 /* ProjectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectHandler.swift; sourceTree = "<group>"; };
-		4095FBEE21F088BC008A39D4 /* Project+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Project+CoreDataClass.swift"; sourceTree = "<group>"; };
-		4095FBEF21F088BC008A39D4 /* Project+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Project+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		40B296B921CCD87300A3C487 /* PhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosViewController.swift; sourceTree = "<group>"; };
 		40B296BB21CCE5A000A3C487 /* Slide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slide.swift; sourceTree = "<group>"; };
 		40B296BE21CCE61B00A3C487 /* Slide.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Slide.xib; sourceTree = "<group>"; };
@@ -325,8 +325,8 @@
 		DABA66CA21D23DE90036CEE7 /* dataModels */ = {
 			isa = PBXGroup;
 			children = (
-				4095FBEE21F088BC008A39D4 /* Project+CoreDataClass.swift */,
-				4095FBEF21F088BC008A39D4 /* Project+CoreDataProperties.swift */,
+				4033274721F0A016007EE9DF /* Project+CoreDataProperties.swift */,
+				4033274521F0A00D007EE9DF /* Project+CoreDataClass.swift */,
 				DABA66D721D23F1D0036CEE7 /* Photo+CoreDataClass.swift */,
 				DABA66D821D23F1D0036CEE7 /* Photo+CoreDataProperties.swift */,
 				DABA66DB21D23F1D0036CEE7 /* Tag+CoreDataClass.swift */,
@@ -597,13 +597,13 @@
 				DAB7795E21DE7DF400308543 /* PhotoAnnotationView.swift in Sources */,
 				DA47325021DA3109003729BB /* TagCellTableViewCell.swift in Sources */,
 				DA977F5A21C4E38B00883640 /* ActivityIndicatorButton.swift in Sources */,
+				4033274621F0A00D007EE9DF /* Project+CoreDataClass.swift in Sources */,
+				4033274821F0A016007EE9DF /* Project+CoreDataProperties.swift in Sources */,
 				DAA2706021C922B80058148A /* ProcessingPopup.swift in Sources */,
-				4033273A21F0911F007EE9DF /* Project+CoreDataProperties.swift in Sources */,
 				DA977F5821C3F25200883640 /* FlashStateButton.swift in Sources */,
 				DABA66DD21D23F1D0036CEE7 /* Photo+CoreDataClass.swift in Sources */,
 				DA977F0B21C1460F00883640 /* SignInViewController.swift in Sources */,
 				DA47324A21D8E62E003729BB /* TagHandler.swift in Sources */,
-				4033273921F0911A007EE9DF /* Project+CoreDataClass.swift in Sources */,
 				DAA5DC7421C655170000B966 /* ProjectModel.swift in Sources */,
 				DA977F0921C1460F00883640 /* AppDelegate.swift in Sources */,
 				40B296BA21CCD87300A3C487 /* PhotosViewController.swift in Sources */,

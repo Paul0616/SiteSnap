@@ -10,7 +10,7 @@
 import Foundation
 import CoreData
 
-@objc(Photo)
+//@objc(Photo)
 public class Photo: NSManagedObject {
     
 }

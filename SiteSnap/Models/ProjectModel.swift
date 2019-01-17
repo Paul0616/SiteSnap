@@ -15,6 +15,7 @@ class ProjectModel: NSObject {
     var projectName: String
     var latitudeCenterPosition: Double
     var longitudeCenterPosition: Double
+    var tagIds: [String]
     var selected: Bool = false
     
     //MARK: - Initializare
@@ -22,7 +23,8 @@ class ProjectModel: NSObject {
     init?(id: String,
           projectName: String,
           latitudeCenterPosition: Double,
-          longitudeCenterPosition: Double
+          longitudeCenterPosition: Double,
+          tagIds: [String]
         ) {
         
         //Initializeaza proprietatile
@@ -30,5 +32,6 @@ class ProjectModel: NSObject {
         self.projectName = projectName
         self.latitudeCenterPosition = latitudeCenterPosition
         self.longitudeCenterPosition = longitudeCenterPosition
+        self.tagIds = tagIds
     }
 }
