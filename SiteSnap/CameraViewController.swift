@@ -119,7 +119,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
        
         //CHECK LAST LOG IN
         // if !userLogged {
-        
+            self.showProjectLoadingIndicator()
             self.pool = AWSCognitoIdentityUserPool(forKey: AWSCognitoUserPoolsSignInProviderKey)
             if (self.user == nil) {
                 self.user = self.pool?.currentUser()
@@ -525,7 +525,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                     UserDefaults.standard.removeObject(forKey: "token")
                 }
                 print("USER DEFAULTS SETTED")
-                    self.showProjectLoadingIndicator()
+                
                     //self.videoAuthorization()
                     self.determineMyCurrentLocation()
                     self.libraryAuthorization()
