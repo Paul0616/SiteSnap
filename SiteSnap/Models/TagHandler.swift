@@ -15,13 +15,17 @@ class TagHandler: NSObject {
         return appDelegate.persistentContainer.viewContext
     }
     
-    class func saveTag(text: String, tagColor: String?) -> Bool{
+    class func saveTag(id: String, text: String, tagColor: String?) -> Bool{
         let context = getContext()
         let entity = NSEntityDescription.entity(forEntityName: "Tag", in: context)
         let managedObject = NSManagedObject(entity: entity!, insertInto: context)
         managedObject.setValue(text, forKey: "text")
         if let color = tagColor {
-            managedObject.setValue(color, forKey: "tagColor")
+            if color.prefix(1) == "#" {
+                managedObject.setValue(color, forKey: "tagColor")
+            } else {
+                managedObject.setValue("#"+color, forKey: "tagColor")
+            }
         }
         do {
             try context.save()

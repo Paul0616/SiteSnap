@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14460.32" systemVersion="18C54" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Photo" representedClassName="Photo" syncable="YES">
+    <entity name="Photo" representedClassName=".Photo" syncable="YES">
         <attribute name="allPhotosComment" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="allTagsWasSet" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="createdDate" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
@@ -12,13 +12,22 @@
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
         <relationship name="tags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Tag" inverseName="photos" inverseEntity="Tag" syncable="YES"/>
     </entity>
-    <entity name="Tag" representedClassName="Tag" syncable="YES">
+    <entity name="Project" representedClassName=".Project" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="availableTags" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Tag" syncable="YES"/>
+    </entity>
+    <entity name="Tag" representedClassName=".Tag" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="tagColor" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="text" attributeType="String" syncable="YES"/>
         <relationship name="photos" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Photo" inverseName="tags" inverseEntity="Photo" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Photo" positionX="-449.66015625" positionY="-27.453125" width="128" height="195"/>
-        <element name="Tag" positionX="-772.796875" positionY="-17.54296875" width="128" height="88"/>
+        <element name="Photo" positionX="-449.66015625" positionY="-27.453125" width="128" height="193"/>
+        <element name="Project" positionX="-1039.6953125" positionY="89.3359375" width="128" height="118"/>
+        <element name="Tag" positionX="-889.71484375" positionY="287.21875" width="128" height="103"/>
     </elements>
 </model>

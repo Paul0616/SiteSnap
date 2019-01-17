@@ -2,7 +2,7 @@
 //  Tag+CoreDataProperties.swift
 //  SiteSnap
 //
-//  Created by Paul Oprea on 01/01/2019.
+//  Created by Paul Oprea on 17/01/2019.
 //  Copyright © 2019 Paul Oprea. All rights reserved.
 //
 //
@@ -19,6 +19,7 @@ extension Tag {
 
     @NSManaged public var tagColor: String?
     @NSManaged public var text: String?
+    @NSManaged public var id: String?
     @NSManaged public var photos: NSSet?
 
 }

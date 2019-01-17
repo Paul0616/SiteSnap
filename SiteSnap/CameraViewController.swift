@@ -27,7 +27,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         case configurationFailed
     }
     private var cameraSetupResult: SessionSetupResult = .success
-    private var locationSetupResult: CLAuthorizationStatus = .authorizedWhenInUse
+    private var locationSetupResult: CLAuthorizationStatus = CLLocationManager.authorizationStatus()
     private var librarySetupResult: PHAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
     @objc dynamic var videoDeviceInput: AVCaptureDeviceInput!
     var defaultVideoDevice: AVCaptureDevice?
@@ -286,7 +286,11 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                     }
                     self.userProjects += [projectModel]
                     //print("id=\(project["id"]!) name=\(project["name"]!) lat=\(coord[0]) long=\(coord[1]) tags=\(tags.count)")
-                    
+                    if ProjectHandler.deleteAllProjects() {
+                        if ProjectHandler.saveProject(id: projectModel.id, name: projectModel.projectName, latitude: projectModel.latitudeCenterPosition, longitude: projectModel.longitudeCenterPosition) {
+                            print("project: \(projectModel.projectName) added")
+                        }
+                    }
                 }
                 //self.setProjectsSelected(projectId: self.projectId)
                 print(self.userProjects)
@@ -345,13 +349,14 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func libraryAuthorization() {
-        let photos = PHPhotoLibrary.authorizationStatus()
+        let photos = librarySetupResult
         if photos == .notDetermined {
             PHPhotoLibrary.requestAuthorization({status in
                 self.librarySetupResult = status
             })
         }
     }
+    
     func permissionLibraryIfDenied(){
         switch self.librarySetupResult {
         case .restricted, .denied:
@@ -379,6 +384,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             break
         }
     }
+    
     func checkPermissionLibrary() {
         switch librarySetupResult {
         case .authorized:
@@ -442,7 +448,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         
-        switch CLLocationManager.authorizationStatus() {
+        switch locationSetupResult {
         case .notDetermined:
             // Request when-in-use authorization initially
             locationManager.requestWhenInUseAuthorization()
