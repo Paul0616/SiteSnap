@@ -214,6 +214,12 @@ class PhotoHandler: NSObject {
             return nil
         }
     }
+    class func getAvailableTagsForCurrentProject() -> Int {
+        if let currentProject = ProjectHandler.getCurrentProject() {
+            return (currentProject.availableTags?.count)!
+        }
+        return 0
+    }
     class func getAllTagsPhotoIdentifier(localIdentifier: String) -> String! {
         let context = getContext()
         let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")

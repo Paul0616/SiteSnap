@@ -601,7 +601,7 @@
                                 <inset key="contentEdgeInsets" minX="5" minY="5" maxX="5" maxY="5"/>
                                 <state key="normal" image="new_tag_80px"/>
                                 <connections>
-                                    <segue destination="HuH-zq-xfS" kind="presentation" identifier="SetTagSegue" id="6fd-KQ-78X"/>
+                                    <action selector="onClickAddTag:" destination="Ndu-GM-uKQ" eventType="touchUpInside" id="ZL2-2Q-mRc"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y3G-1o-9fE">
@@ -627,46 +627,6 @@
                                     <action selector="onClickDeleteImageButton:" destination="Ndu-GM-uKQ" eventType="touchUpInside" id="RrA-DE-ZBY"/>
                                 </connections>
                             </button>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="RQT-rx-BgI" userLabel="Stack View project">
-                                <rect key="frame" x="82.666666666666671" y="28" width="248.66666666666663" height="150"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LUk-Pq-gU7" customClass="ActivityIndicatorButton" customModule="SiteSnap" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="248.66666666666666" height="50"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="50" id="JwR-FW-rm4"/>
-                                        </constraints>
-                                        <inset key="contentEdgeInsets" minX="0.0" minY="0.0" maxX="25" maxY="0.0"/>
-                                        <state key="normal" title="Uploading to:"/>
-                                        <connections>
-                                            <action selector="onClickSelectedProjectButton:" destination="Ndu-GM-uKQ" eventType="touchUpInside" id="AWR-Ch-ik2"/>
-                                        </connections>
-                                    </button>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Bil-ri-fq4">
-                                        <rect key="frame" x="0.0" y="50" width="248.66666666666666" height="100"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="100" id="4bY-KP-u4U"/>
-                                        </constraints>
-                                        <prototypes>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellProject" id="ISV-ie-K0z">
-                                                <rect key="frame" x="0.0" y="28" width="248.66666666666666" height="44"/>
-                                                <autoresizingMask key="autoresizingMask"/>
-                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ISV-ie-K0z" id="smB-r3-RcR">
-                                                    <rect key="frame" x="0.0" y="0.0" width="248.66666666666666" height="44"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                </tableViewCellContentView>
-                                                <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
-                                            </tableViewCell>
-                                        </prototypes>
-                                        <connections>
-                                            <outlet property="dataSource" destination="Ndu-GM-uKQ" id="rV1-t5-WMi"/>
-                                            <outlet property="delegate" destination="Ndu-GM-uKQ" id="o93-zN-meo"/>
-                                        </connections>
-                                    </tableView>
-                                </subviews>
-                            </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Kgn-n3-fRv" userLabel="Stack View all comments">
                                 <rect key="frame" x="50" y="499.33333333333326" width="314" height="30"/>
                                 <subviews>
@@ -750,6 +710,46 @@
                                     <action selector="onClickAddComment:" destination="Ndu-GM-uKQ" eventType="touchUpInside" id="jIS-Jf-TPs"/>
                                 </connections>
                             </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="RQT-rx-BgI" userLabel="Stack View project">
+                                <rect key="frame" x="82.666666666666671" y="28" width="248.66666666666663" height="150"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LUk-Pq-gU7" customClass="ActivityIndicatorButton" customModule="SiteSnap" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="248.66666666666666" height="50"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="JwR-FW-rm4"/>
+                                        </constraints>
+                                        <inset key="contentEdgeInsets" minX="0.0" minY="0.0" maxX="25" maxY="0.0"/>
+                                        <state key="normal" title="Uploading to:"/>
+                                        <connections>
+                                            <action selector="onClickSelectedProjectButton:" destination="Ndu-GM-uKQ" eventType="touchUpInside" id="AWR-Ch-ik2"/>
+                                        </connections>
+                                    </button>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Bil-ri-fq4">
+                                        <rect key="frame" x="0.0" y="50" width="248.66666666666666" height="100"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="100" id="4bY-KP-u4U"/>
+                                        </constraints>
+                                        <prototypes>
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellProject" id="ISV-ie-K0z">
+                                                <rect key="frame" x="0.0" y="28" width="248.66666666666666" height="44"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ISV-ie-K0z" id="smB-r3-RcR">
+                                                    <rect key="frame" x="0.0" y="0.0" width="248.66666666666666" height="44"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </tableViewCellContentView>
+                                                <color key="backgroundColor" white="0.0" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <inset key="separatorInset" minX="15" minY="0.0" maxX="15" maxY="0.0"/>
+                                            </tableViewCell>
+                                        </prototypes>
+                                        <connections>
+                                            <outlet property="dataSource" destination="Ndu-GM-uKQ" id="rV1-t5-WMi"/>
+                                            <outlet property="delegate" destination="Ndu-GM-uKQ" id="o93-zN-meo"/>
+                                        </connections>
+                                    </tableView>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" red="0.1019607843" green="0.1019607843" blue="0.1019607843" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -872,6 +872,7 @@
                         <outlet property="takePhotoButton" destination="xax-sd-5Co" id="387-wP-iVl"/>
                         <segue destination="ujF-w3-ccj" kind="show" identifier="AddCommentViewIdentifier" id="yVO-YD-uBd"/>
                         <segue destination="Xby-a2-aAM" kind="show" identifier="PhotoInspectorSegue" id="AfI-jz-Vmt"/>
+                        <segue destination="HuH-zq-xfS" kind="presentation" identifier="SetTagSegue" id="dNi-G9-QYX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZGt-Cr-JA3" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -959,7 +960,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EXA-PP-dFo">
-                                                    <rect key="frame" x="0.0" y="5" width="398" height="158"/>
+                                                    <rect key="frame" x="0.0" y="5" width="720" height="158"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="WESTGATE TUNNEL - 25s" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AYr-te-q9D">
                                                             <rect key="frame" x="124.00000000000001" y="7.9999999999999982" width="203.33333333333337" height="20.333333333333329"/>
@@ -991,7 +992,7 @@
                                                             <color key="trackTintColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                         </progressView>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hss-3h-jKa">
-                                                            <rect key="frame" x="350" y="38" width="40" height="40"/>
+                                                            <rect key="frame" x="672" y="38" width="40" height="40"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="40" id="gIc-DI-Xtk"/>
                                                                 <constraint firstAttribute="width" constant="40" id="xvh-DC-am7"/>
@@ -1003,7 +1004,7 @@
                                                             </connections>
                                                         </button>
                                                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8cq-lY-iWa">
-                                                            <rect key="frame" x="302" y="38" width="40" height="40"/>
+                                                            <rect key="frame" x="624" y="38" width="40" height="40"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="40" id="MDg-nW-vx0"/>
                                                                 <constraint firstAttribute="width" constant="40" id="dxA-nW-mRC"/>
@@ -1329,7 +1330,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8Qa-Fw-xAE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1999" y="823"/>
+            <point key="canvasLocation" x="1925" y="850"/>
         </scene>
         <!--Tags Modal View Controller-->
         <scene sceneID="taS-vF-Hku">
@@ -1389,7 +1390,7 @@
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9pj-mR-agq" customClass="PaddingLabel" customModule="SiteSnap" customModuleProvider="target">
-                                                            <rect key="frame" x="38" y="0.0" width="41.666666666666657" height="40"/>
+                                                            <rect key="frame" x="38" y="0.0" width="58.666666666666657" height="40"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="40" id="0Ig-n5-jdC"/>
                                                             </constraints>
@@ -1409,7 +1410,7 @@
                                                             </userDefinedRuntimeAttributes>
                                                         </label>
                                                         <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="BSQ-gT-SQO">
-                                                            <rect key="frame" x="261" y="10" width="51" height="20"/>
+                                                            <rect key="frame" x="583" y="10" width="51" height="20"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="20" id="dGT-Sa-Eil"/>
                                                             </constraints>

@@ -177,12 +177,17 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if tableView == dropDownListProjectsTableView {
             let projectId = userProjects[indexPath.row].id
-            UserDefaults.standard.set(projectId, forKey: "currentProjectId")
+            let oldProjectId = UserDefaults.standard.value(forKey: "currentProjectId") as? String
+            
             //selectedProjectButton.setTitle("\(userProjects[indexPath.row].projectName)", for: .normal)
             animateProjectsList(toogle: false)
             let selectedCell:UITableViewCell = tableView.cellForRow(at: indexPath)!
             selectedCell.contentView.backgroundColor = UIColor.black
-            setProjectsSelected(projectId: projectId)
+            if projectId != oldProjectId {
+                UserDefaults.standard.set(projectId, forKey: "currentProjectId")
+                setProjectsSelected(projectId: projectId)
+                resetAllPhotosTags(oldProjectId: oldProjectId!)
+            }
         }
     }
     
@@ -203,6 +208,17 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         animateProjectsList(toogle: dropDownListProjectsTableView.isHidden)
     }
     //MARK: - UI Buttons actions
+    
+    @IBAction func onClickAddTag(_ sender: UIButton) {
+        if PhotoHandler.getAvailableTagsForCurrentProject() == 0 {
+            let alert = UIAlertController(title: "Site Snap", message: "There are no tags available for this project.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        } else {
+            performSegue(withIdentifier: "SetTagSegue", sender: sender)
+        }
+    }
+    
     @IBAction func onClickAddFromGallery(_ sender: UIButton) {
         checkPermission()
     }
@@ -277,6 +293,32 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         } else {
             self.resetCommentsToOriginalValues()
         }
+    }
+    //MARK: - reset all photos tags when user change the project
+    func resetAllPhotosTags(oldProjectId: String){
+        let alertController = UIAlertController(title: "Please confirm choice",
+                                                message: "If you change the project, all tags placed on the photos will be canceled because each project has its own set of available tags. Do you want that?",
+                                                preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+                                                let tags = TagHandler.fetchObject()
+                                                for tag in tags! {
+                                                    tag.photos = nil
+                                                }
+                                                if PhotoHandler.removeAllTags() {
+                                                    print("original tags for photos was restablished")
+                                                    self.tagNumberLabel.text = "0"
+                                                }
+                                            })
+        )
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
+            print("cancel")
+            UserDefaults.standard.set(oldProjectId, forKey: "currentProjectId")
+            self.setProjectsSelected(projectId: oldProjectId)
+        })
+        )
+        
+        self.present(alertController, animated: true, completion: nil)
+        
     }
     
     //MARK: - Apply comment to all photos

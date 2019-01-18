@@ -25,5 +25,5 @@ let siteSnapBackendHost: String = "https://backend.sitesnap.com.au:443/api/"
     given_name - first name for logged user
     family_name - last name for logged user
     currentProjectId - the id of the project that the user chooses
- 
+    deviceId - deviceId used like parameter in uploading process
  */

@@ -553,7 +553,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         self.user?.getDetails().continueOnSuccessWith { (task) -> AnyObject? in
             DispatchQueue.main.async {
                 self.response = task.result
-               
+                UserDefaults.standard.set(self.user?.deviceId, forKey: "deviceId")
                 print("RESPONSE to refresh user")
                 for attribute in (self.response?.userAttributes)! {
                     if attribute.name == "given_name" {
