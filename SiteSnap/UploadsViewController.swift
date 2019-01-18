@@ -9,7 +9,7 @@
 import UIKit
 import Photos
 
-class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate {
 
     var images = [[ImageForUpload]]()
     let accesoryView = [UIImageView(image: UIImage(named: "cancel-80px")),
@@ -124,10 +124,87 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
        
         
     }
-    
+    //MARK:- URLSessionTaskDelegate functions
+    public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?){
+        //display errors and set task to FAILED
+    }
+    //MARK:- URLSessionDelegate functions
+    public func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64){
+        //update progress view
+    }
+    //MARK:- URLSessionDataDelegate functions
+    public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void){
+        //receive response and go to NEXT TASK
+    }
+    //MARK: - POST request
+    func postRequest(image: UIImage) {
+        guard let mediaImage = Media(withImage: image, forKey: "file") else { return }
+        guard let url = URL(string: siteSnapBackendHost + "photo") else { return }
+        var request = URLRequest(url: url)
+        let boundary = generateBoundary()
+        request.httpMethod = "POST"
+        request.setValue("multipart/form-data;  boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        let tokenString = "Bearer " + (UserDefaults.standard.value(forKey: "token") as? String)!
+        request.addValue(tokenString, forHTTPHeaderField: "Authorization")
+        
+        let parameters = [
+            "file":"",
+            "forProject": "atollon-project",
+            "gpsLocation": "144.087,-33.646",
+            "isPrivate": "false",
+            "debug": "false",
+            "comment": "this is a test",
+            "photoDate": "2019-01-19 14:26:45",
+            "tags": "xxx",
+            "appVersion": "1.0",
+            "deviceId": "xxx,yyy",
+            "addDevice": "iOS",
+            ]
+        
+        let dataBody = createDataBody(withParameters: parameters, media: mediaImage, boundary: boundary)
+        request.httpBody = dataBody
+        let session = URLSession.shared
+        session.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
+            if let response = response {
+                print(response)
+            }
+            if let data = data {
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data, options: [])
+                    print(json)
+                } catch {
+                    print(error)
+                }
+            }
+        }).resume()
+    }
+    func generateBoundary() -> String {
+        return "Boundary-\(NSUUID().uuidString))"
+    }
+    typealias Parameters = [String: String]
+    func createDataBody(withParameters params: Parameters?, media: Media?, boundary: String) -> Data {
+        var body = Data()
+        let lineBreak = "\r\n"
+        if let parameters = params {
+            for (key, value) in parameters {
+                body.append("--\(boundary + lineBreak)")
+                body.append("Content-Disposition:form-data; name=\"\(key)\"\(lineBreak + lineBreak)")
+                body.append("\(value + lineBreak)")
+            }
+        }
+        if let media = media {
+            body.append("--\(boundary + lineBreak)")
+            body.append("Content-Disposition:form-data; name=\"\(media.key)\"; filename=\"\(media.filename)\"\(lineBreak)")
+            body.append("Content-Type: \(media.mimeType + lineBreak + lineBreak)")
+            body.append(media.data)
+            body.append(lineBreak)
+        }
+        
+        body.append("--\(boundary)--\(lineBreak)")
+        return body
+    }
     // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    // In a storyboard-based application, you will often want to do.a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
@@ -398,4 +475,10 @@ extension UIImage {
         return true
     }
 }
-
+extension Data {
+    mutating func append(_ string: String) {
+        if let data = string.data(using: .utf8) {
+            append(data)
+        }
+    }
+}

@@ -77,32 +77,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             print("tags was deleted from internal database")
         }
         UserDefaults.standard.removeObject(forKey: "currentProjectId")
-//        if TagHandler.fetchObject()?.count == 0 {
-//            if TagHandler.saveTag(text: "Bridge Superstructure", tagColor: "#478C27") {
-//                print("Successfully added")
-//            }
-//            if TagHandler.saveTag(text: "Bridge ID 12345", tagColor: nil) {
-//                 print("Successfully added")
-//            }
-//            if TagHandler.saveTag(text: "Bridge ID 7654", tagColor: nil) {
-//                 print("Successfully added")
-//            }
-//            if TagHandler.saveTag(text: "Bridge Substructure", tagColor: "#428A98") {
-//                 print("Successfully added")
-//            }
-//            if TagHandler.saveTag(text: "Bridge ID 21368", tagColor: nil) {
-//                 print("Successfully added")
-//            }
-//            if TagHandler.saveTag(text: "Bridge ID 5253", tagColor: nil) {
-//                 print("Successfully added")
-//            }
-//
-//        }
-//        let tags = TagHandler.fetchObject()
-//        print(tags!.count)
-//        for tag in tags! {
-//            print("\(String(describing: tag.text)) -- \(String(describing: tag.tagColor))")
-//        }
+
         dropDownListProjectsTableView.isHidden = true
         capturePreviewView.session = session
         captureButton.layer.borderColor = UIColor.white.cgColor
@@ -212,7 +187,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     //MARK: - Connect to SITESnap Backend API
     func attemptSignInToSiteSnapBackend()
     {
-        let url = URL(string: siteSnapBackendHost + "session/getPhoneSessionInfo?")!
+        let url = URL(string: siteSnapBackendHost + "session/getPhoneSessionInfo")!
         var request = URLRequest(url: url)
         let tokenString = "Bearer " + (UserDefaults.standard.value(forKey: "token") as? String)!
         request.setValue(tokenString, forHTTPHeaderField: "Authorization")
