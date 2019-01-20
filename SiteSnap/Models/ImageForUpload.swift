@@ -13,7 +13,7 @@ class ImageForUpload: NSObject {
     
     var localIdentifier: String
     var projectName: String
-    var estimatedTime: CFloat
+    var estimatedTime: Int
     var fileSize: Int64
     var speed: Int
     var progress: CFloat
@@ -25,12 +25,13 @@ class ImageForUpload: NSObject {
         case done
         case fail
         case inProgress
+        case unknown
     }
     //MARK: - Initializare
     
     init?(localIdentifier: String,
           projectName: String,
-          estimatedTime: CFloat,
+          estimatedTime: Int,
           fileSize: Int64,
           speed: Int,
           progress: CFloat,

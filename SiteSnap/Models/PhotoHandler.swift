@@ -170,17 +170,21 @@ class PhotoHandler: NSObject {
         }
     }
     class func deleteAllPhotos() -> Bool {
+        
         let context = getContext()
+        context.reset()
         // Create Fetch Request
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
+        let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
         
         // Create Batch Delete Request
-        let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest )
+        let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest as! NSFetchRequest<NSFetchRequestResult> )
         
         do {
             try context.execute(batchDeleteRequest)
+            try context.save()
             return true
         } catch {
+            print ("There is an error in deleting records")
             return false
         }
     }

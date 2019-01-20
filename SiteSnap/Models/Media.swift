@@ -16,7 +16,7 @@ struct Media {
     init?(withImage image: UIImage, forKey key: String ) {
         self.key = key
         self.mimeType = "image/jpeg"
-        self.filename = "\(arc4random()).jpeg"
+        self.filename = "\(arc4random()).jpg"
         guard let data = image.jpegData(compressionQuality: 1.0) else {return nil}
         self.data = data
     }

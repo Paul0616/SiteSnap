@@ -185,8 +185,9 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
             selectedCell.contentView.backgroundColor = UIColor.black
             if projectId != oldProjectId {
                 UserDefaults.standard.set(projectId, forKey: "currentProjectId")
+                UserDefaults.standard.set(userProjects[indexPath.row].projectName, forKey: "currentProjectName")
                 setProjectsSelected(projectId: projectId)
-                resetAllPhotosTags(oldProjectId: oldProjectId!)
+                resetAllPhotosTags(oldProjectId: oldProjectId!, oldProjectName: userProjects[indexPath.row].projectName)
             }
         }
     }
@@ -194,7 +195,9 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     func setProjectsSelected(projectId: String){
         for i in 0...userProjects.count-1 {
             userProjects[i].selected = userProjects[i].id == projectId
-            selectedProjectButton.setTitle(userProjects[i].projectName, for: .normal)
+            if userProjects[i].selected {
+                selectedProjectButton.setTitle(userProjects[i].projectName, for: .normal)
+            }
         }
     }
     
@@ -295,7 +298,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         }
     }
     //MARK: - reset all photos tags when user change the project
-    func resetAllPhotosTags(oldProjectId: String){
+    func resetAllPhotosTags(oldProjectId: String, oldProjectName: String){
         let alertController = UIAlertController(title: "Please confirm choice",
                                                 message: "If you change the project, all tags placed on the photos will be canceled because each project has its own set of available tags. Do you want that?",
                                                 preferredStyle: .alert)
@@ -313,6 +316,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
             print("cancel")
             UserDefaults.standard.set(oldProjectId, forKey: "currentProjectId")
+            UserDefaults.standard.set(oldProjectName, forKey: "currentProjectName")
             self.setProjectsSelected(projectId: oldProjectId)
         })
         )

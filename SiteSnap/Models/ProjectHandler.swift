@@ -17,6 +17,7 @@ class ProjectHandler: NSObject {
     
     class func deleteAllProjects() -> Bool {
         let context = getContext()
+        context.reset()
         // Create Fetch Request
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Project")
         
@@ -25,6 +26,7 @@ class ProjectHandler: NSObject {
         
         do {
             try context.execute(batchDeleteRequest)
+            try context.save()
             return true
         } catch {
             return false

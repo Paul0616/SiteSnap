@@ -61,6 +61,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     @IBOutlet weak var captureButton: UIButton!
     @IBOutlet weak var captureInnerButton: UIView!
     @IBOutlet weak var selectedProjectButton: ActivityIndicatorButton!
+    @IBOutlet weak var noValidLocationIcon: UIImageView!
     
     @IBOutlet weak var cameraUnavailableLabel: UILabel!
     @IBOutlet weak var dropDownListProjectsTableView: UITableView!
@@ -77,7 +78,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             print("tags was deleted from internal database")
         }
         UserDefaults.standard.removeObject(forKey: "currentProjectId")
-
+        UserDefaults.standard.removeObject(forKey: "currentProjectName")
         dropDownListProjectsTableView.isHidden = true
         capturePreviewView.session = session
         captureButton.layer.borderColor = UIColor.white.cgColor
@@ -86,13 +87,19 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         captureInnerButton.backgroundColor = UIColor.white
         captureInnerButton.layer.cornerRadius = 24
         captureButton.layer.cornerRadius = 35
-        
-        if photoDatabaseShouldBeDeleted && PhotoHandler.deleteAllPhotos() {
+        noValidLocationIcon.isHidden = true
+        if photoDatabaseShouldBeDeleted {
+            for tag in TagHandler.fetchObject()! {
+                tag.photos = nil
+            }
+            if PhotoHandler.deleteAllPhotos() {
             print("all photos was deleted from Core Data")
+            }
+            userProjects.removeAll()
             photoDatabaseShouldBeDeleted = false
         }
         photoObjects = PhotoHandler.fetchAllObjects()!
-       
+       print("there ARE \(photoObjects.count) photos")
         //CHECK LAST LOG IN
         // if !userLogged {
             self.showProjectLoadingIndicator()
@@ -264,11 +271,17 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func setUpInternalTables(json: NSDictionary){
         let projects = json["projects"] as! NSArray
         let projectId = json["lastUsedProjectId"] as! String
+        
         UserDefaults.standard.set(projectId, forKey: "currentProjectId")
+        
         let allTags = json["tags"] as! NSArray
         self.userProjects.removeAll()
         for item in projects {
             let project = item as! NSDictionary
+            let pID = project["id"]! as! String
+            if pID == projectId {
+               UserDefaults.standard.set(project["name"]! as! String, forKey: "currentProjectName")
+            }
             let coord = project["projectCenterPosition"] as! NSArray
             let tags = project["tagIds"] as! NSArray
             var tagIds = [String]()
@@ -281,18 +294,19 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             self.userProjects += [projectModel]
         }
         DispatchQueue.main.async {
-            for projectModel in self.userProjects {
-                if ProjectHandler.deleteAllProjects() {
+            if ProjectHandler.deleteAllProjects() {
+                for projectModel in self.userProjects {
                     if ProjectHandler.saveProject(id: projectModel.id, name: projectModel.projectName, latitude: projectModel.latitudeCenterPosition, longitude: projectModel.longitudeCenterPosition) {
                         print("PROJECT: \(projectModel.projectName) added")
                     }
                 }
             }
-            
-            for item in allTags {
-                let tag = item as! NSDictionary
-                if TagHandler.saveTag(id: tag["id"] as! String, text: tag["name"] as! String, tagColor: tag["colour"] as! String?) {
-                    print("TAG \(tag["name"] as! String) \(tag["id"] as! String) with was added")
+            if TagHandler.deleteAllTags() {
+                for item in allTags {
+                    let tag = item as! NSDictionary
+                    if TagHandler.saveTag(id: tag["id"] as! String, text: tag["name"] as! String, tagColor: tag["colour"] as! String?) {
+                        print("TAG \(tag["name"] as! String) \(tag["id"] as! String) with was added")
+                    }
                 }
             }
             if let projectsRecords = ProjectHandler.fetchAllProjects() {
@@ -472,18 +486,22 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         switch locationSetupResult {
         case .notDetermined:
             // Request when-in-use authorization initially
+            noValidLocationIcon.isHidden = false
             locationManager.requestWhenInUseAuthorization()
             break
             
         case .restricted, .denied:
+             noValidLocationIcon.isHidden = false
             // Disable location features
             break
             
         case .authorizedWhenInUse:
+             noValidLocationIcon.isHidden = true
             // Enable basic location features
             break
             
         case .authorizedAlways:
+             noValidLocationIcon.isHidden = true
             // Enable any of your app's location features
             break
         default:
@@ -501,6 +519,9 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         locationSetupResult = status
+        if status == .authorizedAlways || status == .authorizedWhenInUse {
+            noValidLocationIcon.isHidden = true
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -517,7 +538,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error)
     {
-        
+        noValidLocationIcon.isHidden = false
         print("Error \(error)")
     }
     
@@ -751,7 +772,13 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func loadingProjectIntoList(){
         DispatchQueue.main.async {
             self.selectedProjectButton.hideLoading(buttonText: nil)
-            self.setProjectsSelected(projectId: (UserDefaults.standard.value(forKey: "currentProjectId") as? String)!)
+           
+            if self.noValidLocationIcon.isHidden {
+                let projId = self.getCloserProject()
+                self.setProjectsSelected(projectId: projId!)
+            } else {
+                self.setProjectsSelected(projectId: (UserDefaults.standard.value(forKey: "currentProjectId") as? String)!)
+            }
             self.dropDownListProjectsTableView.reloadData()
         }
        
@@ -782,6 +809,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         if tableView == dropDownListProjectsTableView {
             let projectId = userProjects[indexPath.row].id
             UserDefaults.standard.set(projectId, forKey: "currentProjectId")
+            UserDefaults.standard.set(userProjects[indexPath.row].projectName, forKey: "currentProjectName")
             //selectedProjectButton.setTitle("\(userProjects[indexPath.row].projectName)", for: .normal)
             animateProjectsList(toogle: false)
             let selectedCell:UITableViewCell = tableView.cellForRow(at: indexPath)!
@@ -793,10 +821,27 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func setProjectsSelected(projectId: String){
         for i in 0...userProjects.count-1 {
             userProjects[i].selected = userProjects[i].id == projectId
-            selectedProjectButton.setTitle(userProjects[i].projectName, for: .normal)
+            if userProjects[i].selected {
+                selectedProjectButton.setTitle(userProjects[i].projectName, for: .normal)
+            }
         }
     }
-    
+    func getCloserProject() -> String! {
+        let projects = ProjectHandler.fetchAllProjects()
+        var closestProject = projects?.first?.id
+        let firstLocation = CLLocation(latitude: (projects?.first?.latitude)!, longitude: (projects?.first?.longitude)!)
+        var closestDistance = firstLocation.distance(from: lastLocation)
+        for project in projects! {
+            let location = CLLocation(latitude: project.latitude, longitude: project.longitude)
+            
+            let dist = location.distance(from: lastLocation)
+            if  dist < closestDistance {
+                closestDistance = dist
+                closestProject = project.id
+            }
+        }
+        return closestProject
+    }
     func animateProjectsList(toogle: Bool){
         UIView.animate(withDuration: 0.3, animations: {
             self.dropDownListProjectsTableView.isHidden = !toogle

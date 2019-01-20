@@ -8,6 +8,7 @@
 
 import UIKit
 import Photos
+import AWSCognitoIdentityProvider
 
 class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate {
 
@@ -21,7 +22,13 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
     @IBOutlet weak var titleButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
     var uploadingProcessRunning: Bool = false
-   
+    var user: AWSCognitoIdentityUser?
+    var pool: AWSCognitoIdentityUserPool?
+    var time: Date!
+    var currentUploadingLocalIdentifier: String!
+    
+    
+    //MARK: - view control load
     override func viewDidLoad() {
         super.viewDidLoad()
         backButton.layer.cornerRadius = 20
@@ -30,13 +37,24 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         // Do any additional setup after loading the view.
         let photos = PhotoHandler.fetchAllObjects()!
         var unprocessedImages = [ImageForUpload]()
+        let currentProjectName = UserDefaults.standard.value(forKey: "currentProjectName")
         for photo in photos {
-            let image = ImageForUpload(localIdentifier: photo.localIdentifierString!, projectName: "WESTGATE TUNNEL", estimatedTime: 25.0, fileSize: photo.fileSize, speed: 345, progress: 0, state: ImageForUpload.State.waiting)
+            let image = ImageForUpload(localIdentifier: photo.localIdentifierString!, projectName: currentProjectName as! String, estimatedTime: -1, fileSize: photo.fileSize, speed: 0, progress: 0, state: ImageForUpload.State.waiting)
             unprocessedImages.append(image!)
         }
         images.append(unprocessedImages)
         uploadingProcessRunning = true
-        testStartUpload(localIdentifier: images[0][0].localIdentifier)
+        //testStartUpload(localIdentifier: images[0][0].localIdentifier)
+        self.pool = AWSCognitoIdentityUserPool(forKey: AWSCognitoUserPoolsSignInProviderKey)
+        if (self.user == nil) {
+            self.user = self.pool?.currentUser()
+            print("USER = CURRENT USER = \(String(describing: self.user?.username))")
+        }
+        currentUploadingLocalIdentifier = images[0][0].localIdentifier
+        if images[0].count > 0  {
+            prepareUploadPhoto(localIdentifier: currentUploadingLocalIdentifier)
+        }
+        //
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -45,6 +63,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
+    //MARK: - UI Buttons click
     @IBAction func onBack(_ sender: Any) {
         
     }
@@ -67,11 +86,112 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 showAlert(alertMsg: "Ask user if he want to remove photo", message: "Are you sure you want to permanently cancel the upload of this photo? (this cannot be undone)", state: .waiting, localIdentifier: localIdentifier)
             }
             if state == .fail {
-                cancelUpload(state: .fail, localIdentifier: localIdentifier)
+                changeState(fromState: state, localIdentifier: localIdentifier)
             }
         }
     }
     
+    
+    //MARK: - get index of current image
+    private func getStateOfImage(withIdentifier identifier: String) -> ImageForUpload.State {
+    
+        if images[0].count > 0 {
+            for image in images[0] {
+                if image.localIdentifier == identifier {
+                    return image.state
+                }
+            }
+        }
+        return .unknown
+    }
+    private func setStateOfImage(withIdentifier identifier: String, state: ImageForUpload.State){
+        if images[0].count > 0 {
+            for image in images[0] {
+                if image.localIdentifier == identifier {
+                    image.state = state
+                }
+            }
+        }
+    }
+    private func removeImage(withIdentifier identifier: String) {
+        if images[0].count > 0 {
+            for index in 0...images[0].count-1 {
+                if images[0][index].localIdentifier == identifier {
+                    images[0].remove(at: index)
+                }
+            }
+        }
+    }
+    private func makeImageDone(localIdentifier: String){
+        var i: Int = 0
+        for imagesUnloaded in images[0] {
+            if imagesUnloaded.localIdentifier == localIdentifier {
+                imagesUnloaded.state = ImageForUpload.State.done
+                if images.count > 1 {
+                    images[0].remove(at: i)
+                    images[1].append(imagesUnloaded)
+                } else {
+                    images[0].remove(at: i)
+                    images.append([imagesUnloaded])
+                }
+                images[1].last!.date = Date()
+                
+                break
+            }
+            i = i + 1
+        }
+    }
+    
+    //MARK; - Prepare upload photo
+    func prepareUploadPhoto(localIdentifier: String) {
+        //let index = getIndexOfImage(withIdentifier: localIdentifier)
+        let currentProjectId = UserDefaults.standard.value(forKey: "currentProjectId") as! String
+        let latitude = PhotoHandler.getSpecificPhoto(localIdentifier: localIdentifier)?.latitude
+        let longitude = PhotoHandler.getSpecificPhoto(localIdentifier: localIdentifier)?.longitude
+        var comment: String = ""
+        if let individualComment = PhotoHandler.getSpecificPhoto(localIdentifier: localIdentifier)?.individualComment {
+            comment = individualComment
+        }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "YYYY-MM-dd HH:mm:ss"
+        var myDate: String = formatter.string(from: Date())
+        if let createdDate = PhotoHandler.getSpecificPhoto(localIdentifier: localIdentifier)?.createdDate {
+            myDate = formatter.string(from:  createdDate as Date)
+        }
+        var tagIds:String = ""
+        if let tags = PhotoHandler.getSpecificPhoto(localIdentifier: localIdentifier)?.tags {
+            for tag in tags {
+                let tag = tag as? Tag
+                if let tagId = tag!.id {
+                    if tagId != "" {
+                        tagIds += tagId + ","
+                    }
+                }
+            }
+        }
+        tagIds = String(tagIds.dropLast())
+        let gpsLocation: String = String("\(latitude!),\(longitude!)")
+        var deviceId: String = ""
+        if let devId = user?.deviceId {
+            deviceId = devId
+        }
+        let parameters = [
+            "forProject": currentProjectId,
+            "gpsLocation": gpsLocation,
+            "isPrivate": "false",
+            "debug": "true",
+            "comment": comment,
+            "photoDate": myDate,
+            "tags": tagIds,
+            "appVersion": "1.0",
+            "deviceId": deviceId,
+            "addDevice": "iOS",
+            ]
+        if let image = loadImage(identifier: localIdentifier) {
+            uploadingProcessRunning = true
+            postRequest(identifier: localIdentifier, image: image, parameters: parameters)
+        }
+    }
     
     //MARK: - Alert
     private func showAlert(alertMsg: String, message: String, state: ImageForUpload.State, localIdentifier: String){
@@ -81,7 +201,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         alertController.addAction(UIAlertAction(title: NSLocalizedString("Yes", comment: "Confirm cancel upload"),
                                                 style: .default,
                                                 handler: { action in
-                                                    self.cancelUpload(state: state, localIdentifier: localIdentifier)
+                                                    self.changeState(fromState: state, localIdentifier: localIdentifier)
                                                 }))
         alertController.addAction(UIAlertAction(title: NSLocalizedString("No", comment: "Photo will continue to upload"),
                                                 style: .cancel,
@@ -90,55 +210,58 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.present(alertController, animated: true, completion: nil)
     }
     
-    private func cancelUpload(state: ImageForUpload.State, localIdentifier: String) {
-        var id: Int!
-        if images[0].count > 0 {
-            for i in 0...images[0].count-1 {
-                if images[0][i].localIdentifier == localIdentifier {
-                    id = i
-                    break
+    //MARK: - change state of an image
+    private func changeState(fromState state: ImageForUpload.State, localIdentifier: String) {
+        
+        let state = getStateOfImage(withIdentifier: localIdentifier)
+        switch state {
+            case .inProgress:
+               setStateOfImage(withIdentifier: localIdentifier, state: .fail)
+            break
+            
+            case .waiting:
+                if PhotoHandler.removePhoto(localIdentifier: localIdentifier) {
+                    removeImage(withIdentifier: localIdentifier)
                 }
-            }
+                if !uploadingProcessRunning {
+                    prepareUploadPhoto(localIdentifier: localIdentifier)
+                }
+            break
+            
+            case .done:
+            break
+            
+            case .fail:
+                setStateOfImage(withIdentifier: localIdentifier, state: .waiting)
+                if !uploadingProcessRunning {
+                    prepareUploadPhoto(localIdentifier: localIdentifier)
+                }
+            break
+            
+            case .unknown:
+            break
         }
-        
-        if id != nil && state == .inProgress {
-            images[0][id].state = .fail
-            currentTime = 0.0
-        }
-        if id != nil && state == .fail {
-            images[0][id].state = .waiting
-            currentTime = 0.0
-            if !uploadingProcessRunning {
-                testStartUpload(localIdentifier: localIdentifier)
-            }
-        }
-        if id != nil && state == .waiting {
-            if PhotoHandler.removePhoto(localIdentifier: images[0][id].localIdentifier) {
-                images[0].remove(at: id)
-            }
-            if !uploadingProcessRunning {
-                testStartUpload(localIdentifier: localIdentifier)
-            }
-        }
-        
-       
-        
     }
-    //MARK:- URLSessionTaskDelegate functions
-    public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?){
-        //display errors and set task to FAILED
-    }
+    
     //MARK:- URLSessionDelegate functions
     public func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64){
         //update progress view
+        let elapsedtime = abs(time.timeIntervalSinceNow)
+        let estimatedSpeed = Int(Double(totalBytesSent) / (elapsedtime * 1024))
+        
+        let procent = CFloat(Double(totalBytesSent) / Double(totalBytesExpectedToSend))
+        let remainingTime = round(Double((totalBytesExpectedToSend - totalBytesSent)) / Double(estimatedSpeed * 1024))
+        updateProgress(localIdentifier: currentUploadingLocalIdentifier, progress: procent, speed: estimatedSpeed, estimatedTime: Int(remainingTime))
+//        print("\(estimatedSpeed) kb/
+//        print("\(procent)")
+//        print("\(remainingTime) s")
+//        print("\(bytesSent) - \(totalBytesSent) - \(totalBytesExpectedToSend)")
     }
-    //MARK:- URLSessionDataDelegate functions
-    public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void){
-        //receive response and go to NEXT TASK
-    }
+   
+
     //MARK: - POST request
-    func postRequest(image: UIImage) {
-        guard let mediaImage = Media(withImage: image, forKey: "file") else { return }
+    func postRequest(identifier: String, image: UIImage, parameters: Parameters) {
+        guard let mediaImage = Media(withImage: image, forKey: "image") else { return }
         guard let url = URL(string: siteSnapBackendHost + "photo") else { return }
         var request = URLRequest(url: url)
         let boundary = generateBoundary()
@@ -146,43 +269,40 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         request.setValue("multipart/form-data;  boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
         let tokenString = "Bearer " + (UserDefaults.standard.value(forKey: "token") as? String)!
         request.addValue(tokenString, forHTTPHeaderField: "Authorization")
+        request.addValue("Keep-Alive", forHTTPHeaderField: "Connection")
         
-        let parameters = [
-            "file":"",
-            "forProject": "atollon-project",
-            "gpsLocation": "144.087,-33.646",
-            "isPrivate": "false",
-            "debug": "false",
-            "comment": "this is a test",
-            "photoDate": "2019-01-19 14:26:45",
-            "tags": "xxx",
-            "appVersion": "1.0",
-            "deviceId": "xxx,yyy",
-            "addDevice": "iOS",
-            ]
+       
         
         let dataBody = createDataBody(withParameters: parameters, media: mediaImage, boundary: boundary)
         request.httpBody = dataBody
-        let session = URLSession.shared
+        let configuration = URLSessionConfiguration.default
+        let session = URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)//URLSession.shared
+        time = Date()
+       
         session.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
-            if let response = response {
-                print(response)
-            }
-            if let data = data {
-                do {
-                    let json = try JSONSerialization.jsonObject(with: data, options: [])
-                    print(json)
-                } catch {
-                    print(error)
+            if let httpResponse = response as? HTTPURLResponse {
+                print(httpResponse.statusCode)
+                self.uploadingProcessRunning = false
+                if httpResponse.statusCode != 200 || httpResponse.statusCode != 201 {
+                    let state = self.getStateOfImage(withIdentifier: identifier)
+                    self.changeState(fromState: state, localIdentifier: identifier)
+                    self.updateProgress(localIdentifier: identifier, progress: 0, speed: 0, estimatedTime: -1)
+                } else {
+                    self.makeImageDone(localIdentifier: self.images[0][0].localIdentifier)
                 }
+                
             }
+            
         }).resume()
     }
-    func generateBoundary() -> String {
+    private func generateBoundary() -> String {
         return "Boundary-\(NSUUID().uuidString))"
     }
+    
+    
     typealias Parameters = [String: String]
-    func createDataBody(withParameters params: Parameters?, media: Media?, boundary: String) -> Data {
+   
+    private func createDataBody(withParameters params: Parameters?, media: Media?, boundary: String) -> Data {
         var body = Data()
         let lineBreak = "\r\n"
         if let parameters = params {
@@ -190,6 +310,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 body.append("--\(boundary + lineBreak)")
                 body.append("Content-Disposition:form-data; name=\"\(key)\"\(lineBreak + lineBreak)")
                 body.append("\(value + lineBreak)")
+                //body.append("\(value)")
             }
         }
         if let media = media {
@@ -199,10 +320,11 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
             body.append(media.data)
             body.append(lineBreak)
         }
-        
+
         body.append("--\(boundary)--\(lineBreak)")
         return body
     }
+    
     // MARK: - Navigation
     // In a storyboard-based application, you will often want to do.a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -236,7 +358,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         //cell.textLabel?.textColor = UIColor.white
         if indexPath.section == 1 {
             cell.buttonAccessory.setImage(accesoryView[2].image, for: .normal)
-             cell.progressView.isHidden = true
+            cell.progressView.isHidden = true
             cell.deleteFromQueueButton.isHidden = true
             let formatter = DateFormatter()
             formatter.dateFormat = "dd/MM/YY"
@@ -248,24 +370,25 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
             cell.sizeAndSpeedLabel.text = "\(images[indexPath.section][indexPath.row].projectName)\n\(converByteToHumanReadable(images[indexPath.section][indexPath.row].fileSize))"
         } else
             if images[indexPath.section][indexPath.row].state == ImageForUpload.State.fail {
-            cell.buttonAccessory.setImage(accesoryView[1].image, for: .normal)
-            cell.buttonAccessory.tag = indexPath.row
-            cell.progressView.isHidden = true
-            cell.deleteFromQueueButton.isHidden = false
-            cell.projectNameAndTimeLabel.text = "\(images[indexPath.section][indexPath.row].projectName)"
-            cell.sizeAndSpeedLabel.text = "\(converByteToHumanReadable(images[indexPath.section][indexPath.row].fileSize)) - FAILED\n(Tap to retry)"
-        } else {
-            cell.buttonAccessory.setImage(accesoryView[0].image, for: .normal)
-            cell.buttonAccessory.tag = indexPath.row
-            cell.progressView.isHidden = false
-            cell.deleteFromQueueButton.isHidden = true
-            cell.projectNameAndTimeLabel.text = "\(images[indexPath.section][indexPath.row].projectName) - \(images[indexPath.section][indexPath.row].estimatedTime)s"
-            cell.sizeAndSpeedLabel.text = "\(converByteToHumanReadable(images[indexPath.section][indexPath.row].fileSize)) (\(images[indexPath.section][indexPath.row].speed) kb/s)"
-        }
+                cell.buttonAccessory.setImage(accesoryView[1].image, for: .normal)
+                cell.buttonAccessory.tag = indexPath.row
+                cell.progressView.isHidden = true
+                cell.deleteFromQueueButton.isHidden = false
+                cell.projectNameAndTimeLabel.text = "\(images[indexPath.section][indexPath.row].projectName)"
+                cell.sizeAndSpeedLabel.text = "\(converByteToHumanReadable(images[indexPath.section][indexPath.row].fileSize)) - FAILED\n(Tap to retry)"
+            } else {
+                cell.buttonAccessory.setImage(accesoryView[0].image, for: .normal)
+                cell.buttonAccessory.tag = indexPath.row
+                cell.progressView.isHidden = false
+                cell.deleteFromQueueButton.isHidden = true
+                cell.projectNameAndTimeLabel.text = "\(images[indexPath.section][indexPath.row].projectName) - \(images[indexPath.section][indexPath.row].estimatedTime)s"
+                cell.sizeAndSpeedLabel.text = "\(converByteToHumanReadable(images[indexPath.section][indexPath.row].fileSize)) (\(images[indexPath.section][indexPath.row].speed) kb/s)"
+            }
         
         
         cell.photoImage.loadImage(identifier: images[indexPath.section][indexPath.row].localIdentifier)
         cell.progressView.progress = images[indexPath.section][indexPath.row].progress
+        print(images[indexPath.section][indexPath.row].progress)
         return cell
     }
     
@@ -302,37 +425,26 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
             return 0
         }
     }
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return 126
-//    }
-    
-    
-//    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-//        return 5
-//    }
-    let MAX: CFloat = 10.0
-    var currentTime: CFloat = 0.0
-    var delay: TimeInterval = 0.2
-    func testStartUpload(localIdentifier: String) {
-        perform(#selector(updateProgress), with: localIdentifier, afterDelay: delay)
-    }
-    
-    @objc func updateProgress(localIdentifier: String){
-        currentTime = currentTime + 1
+
+    //MARK: - update uploading progress
+    @objc func updateProgress(localIdentifier: String, progress: CFloat, speed: Int, estimatedTime: Int){
+        //currentTime = currentTime + 1
         //var currentIdentifier = localIdentifier
         var shouldReturn = false
         for imagesUnloaded in images[0] {
-            
             if imagesUnloaded.localIdentifier == localIdentifier {
                 if imagesUnloaded.state != .fail {
-                    imagesUnloaded.progress = currentTime / MAX
+                    imagesUnloaded.progress = progress//currentTime / MAX
                     imagesUnloaded.state = ImageForUpload.State.inProgress
+                    imagesUnloaded.estimatedTime = estimatedTime
+                    imagesUnloaded.speed = speed
                     break
                 } else {
                     for image in images[0] {
                         if image.state != ImageForUpload.State.fail {
                             shouldReturn = true
-                            perform(#selector(updateProgress), with: image.localIdentifier, afterDelay: delay)
+                            currentUploadingLocalIdentifier = image.localIdentifier
+                            prepareUploadPhoto(localIdentifier: currentUploadingLocalIdentifier)
                             break
                         }
                     }
@@ -342,53 +454,55 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         
         
-        DispatchQueue.main.async {
+        //DispatchQueue.main.async {
             self.tableView.reloadData()
-        }
+        //}
         if shouldReturn {
             return
         }
-        
-        if currentTime < MAX {
-            perform(#selector(updateProgress), with: localIdentifier, afterDelay: delay)
-        } else {
-            makeImageDone(localIdentifier: localIdentifier)
-            if images[0].count > 0 {
-                var nextLocalIdentifier: String!
-                for image in images[0] {
-                    if image.state != ImageForUpload.State.fail {
-                        nextLocalIdentifier = image.localIdentifier
-                        currentTime = 0.0
-                        break
-                    }
-                }
-                if nextLocalIdentifier != nil {
-                    perform(#selector(updateProgress), with: nextLocalIdentifier, afterDelay: delay)
-                } else {
-                    uploadingProcessRunning = false
-                }
-            }
-        }
     }
     
-    private func makeImageDone(localIdentifier: String){
-        var i: Int = 0
-        for imagesUnloaded in images[0] {
-            if imagesUnloaded.localIdentifier == localIdentifier {
-                imagesUnloaded.state = ImageForUpload.State.done
-                if images.count > 1 {
-                    images[0].remove(at: i)
-                    images[1].append(imagesUnloaded)
-                } else {
-                    images[0].remove(at: i)
-                    images.append([imagesUnloaded])
-                }
-                images[1].last!.date = Date()
+    
+    
+    //MARK: load full image
+    func loadImage(identifier: String!) -> UIImage! {
+        
+        //This will fetch all the assets in the collection
+        let assets : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [identifier!] , options: nil)
+        //print(assets)
+        
+        let imageManager = PHCachingImageManager()
+        //Enumerating objects to get a chached image - This is to save loading time
+        var loadedImage : UIImage! = nil
+        assets.enumerateObjects{(object: AnyObject!,
+            count: Int,
+            stop: UnsafeMutablePointer<ObjCBool>) in
+            //print(count)
+        
+            if object is PHAsset {
+                let asset = object as! PHAsset
+                //                print(asset)
+               //asset.mediaType
+                //let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
+                let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
+                //PHAssetResource.assetResources(for: asset).first?.originalFilename
+                let options = PHImageRequestOptions()
+                options.deliveryMode = .opportunistic
+                options.isSynchronous = true
+                options.isNetworkAccessAllowed = true
+                options.resizeMode = PHImageRequestOptionsResizeMode.exact
                 
-                break
+                imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFit, options: options, resultHandler: {
+                    (image, info) -> Void in
+                    print(info!)
+                    loadedImage = image
+                    //image?.save(image: image!, imageName: asset.localIdentifier)
+                    /* The image is now available to us */
+                    
+                })
             }
-            i = i + 1
         }
+        return loadedImage
     }
     
 }
@@ -436,7 +550,8 @@ extension UIImageView {
 
 //MARK: - LOADING SAVING IMAGES in documentDirectory
 extension UIImage {
-    func load(image imageName: String) -> UIImage! {
+    
+    func loadFromDocumentDirectory(image imageName: String) -> UIImage! {
         // declare image location
         let imagePath: String = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/\(imageName).png"
         let imageUrl: URL = URL(fileURLWithPath: imagePath)
@@ -451,7 +566,7 @@ extension UIImage {
         }
     }
 
-    func save(image: UIImage, imageName: String) -> Bool {
+    func saveToDocumentDirectory(image: UIImage, imageName: String) -> Bool {
         let imagePath: String = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/\(imageName).png"
         let imageUrl: URL = URL(fileURLWithPath: imagePath)
         // image has not been created yet: create it, store it, return it

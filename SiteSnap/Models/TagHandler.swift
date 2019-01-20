@@ -63,6 +63,7 @@ class TagHandler: NSObject {
     
     class func deleteAllTags() -> Bool {
         let context = getContext()
+        context.reset()
         // Create Fetch Request
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Tag")
         
@@ -71,6 +72,7 @@ class TagHandler: NSObject {
         
         do {
             try context.execute(batchDeleteRequest)
+            try context.save()
             return true
         } catch {
             return false
