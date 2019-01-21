@@ -124,6 +124,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
         }
     }
+    
     private func makeImageDone(localIdentifier: String){
         var i: Int = 0
         for imagesUnloaded in images[0] {
