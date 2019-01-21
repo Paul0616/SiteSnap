@@ -1,4 +1,5 @@
 PODS:
+  - Alamofire (4.8.0)
   - AssetsPickerViewController (2.5.5):
     - Device
     - Dimmer
@@ -21,16 +22,20 @@ PODS:
   - PureLayout (3.1.4)
   - SnapKit (4.2.0)
   - SwiftARGB (2.0.0)
+  - SwiftyJSON (4.2.0)
   - TinyLog (2.0.7)
   - UIViewKVO (2.0.0)
 
 DEPENDENCIES:
+  - Alamofire (~> 4.0)
   - AssetsPickerViewController (~> 2.0)
   - AWSCognitoIdentityProvider (~> 2.8.0)
   - AWSCore (~> 2.8.0)
+  - SwiftyJSON
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - Alamofire
     - AssetsPickerViewController
     - AWSCognitoIdentityProvider
     - AWSCognitoIdentityProviderASF
@@ -41,10 +46,12 @@ SPEC REPOS:
     - PureLayout
     - SnapKit
     - SwiftARGB
+    - SwiftyJSON
     - TinyLog
     - UIViewKVO
 
 SPEC CHECKSUMS:
+  Alamofire: 3ec537f71edc9804815215393ae2b1a8ea33a844
   AssetsPickerViewController: 3be5ccae49ef429d31de33fbdc2fd1e6cd63babe
   AWSCognitoIdentityProvider: 31885b28f77955ed30b29b57bc658f170bdc44da
   AWSCognitoIdentityProviderASF: f94f1a502e72ef3d0a1de93e10bf7a79c8698118
@@ -55,9 +62,10 @@ SPEC CHECKSUMS:
   PureLayout: f08c01b8dec00bb14a1fefa3de4c7d9c265df85e
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   SwiftARGB: 8727cfcdcfe8709e707a2391f1d5802a7c40dcad
+  SwiftyJSON: c4bcba26dd9ec7a027fc8eade48e2c911f229e96
   TinyLog: 073a9abfd44a944886d5d07aa49cbba5ef192335
   UIViewKVO: 091f9e020d69e73c4bf5e5ef61cde7bff1c24bbf
 
-PODFILE CHECKSUM: ad8eebebce70b5f8f3166221d53622016552fd02
+PODFILE CHECKSUM: 9edaf2ecfbc3403e775097b9a05ea02c27c5830b
 
 COCOAPODS: 1.5.3
