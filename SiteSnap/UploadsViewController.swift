@@ -9,6 +9,8 @@
 import UIKit
 import Photos
 import AWSCognitoIdentityProvider
+import Alamofire
+import SwiftyJSON
 
 class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate {
 
@@ -26,7 +28,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
     var pool: AWSCognitoIdentityUserPool?
     var time: Date!
     var currentUploadingLocalIdentifier: String!
-    
+    var sessionManager: SessionManager!
     
     //MARK: - view control load
     override func viewDidLoad() {
@@ -189,7 +191,8 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
             ]
         if let image = loadImage(identifier: localIdentifier) {
             uploadingProcessRunning = true
-            postRequest(identifier: localIdentifier, image: image, parameters: parameters)
+            //postRequest(identifier: localIdentifier, image: image, parameters: parameters)
+            postRequestWith(identifier: localIdentifier, image: image, parameters: parameters)
         }
     }
     
@@ -216,6 +219,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let state = getStateOfImage(withIdentifier: localIdentifier)
         switch state {
             case .inProgress:
+               cancelUploadRequest(request: .UploadTask)
                setStateOfImage(withIdentifier: localIdentifier, state: .fail)
             break
             
@@ -244,86 +248,183 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     //MARK:- URLSessionDelegate functions
-    public func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64){
-        //update progress view
-        let elapsedtime = abs(time.timeIntervalSinceNow)
-        let estimatedSpeed = Int(Double(totalBytesSent) / (elapsedtime * 1024))
-        
-        let procent = CFloat(Double(totalBytesSent) / Double(totalBytesExpectedToSend))
-        let remainingTime = round(Double((totalBytesExpectedToSend - totalBytesSent)) / Double(estimatedSpeed * 1024))
-        updateProgress(localIdentifier: currentUploadingLocalIdentifier, progress: procent, speed: estimatedSpeed, estimatedTime: Int(remainingTime))
+//    public func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64){
+//        //update progress view
+//        let elapsedtime = abs(time.timeIntervalSinceNow)
+//        let estimatedSpeed = Int(Double(totalBytesSent) / (elapsedtime * 1024))
+//
+//        let procent = CFloat(Double(totalBytesSent) / Double(totalBytesExpectedToSend))
+//        let remainingTime = round(Double((totalBytesExpectedToSend - totalBytesSent)) / Double(estimatedSpeed * 1024))
+//        updateProgress(localIdentifier: currentUploadingLocalIdentifier, progress: procent, speed: estimatedSpeed, estimatedTime: Int(remainingTime))
 //        print("\(estimatedSpeed) kb/
 //        print("\(procent)")
 //        print("\(remainingTime) s")
 //        print("\(bytesSent) - \(totalBytesSent) - \(totalBytesExpectedToSend)")
-    }
+//    }
    
 
     //MARK: - POST request
-    func postRequest(identifier: String, image: UIImage, parameters: Parameters) {
-        guard let mediaImage = Media(withImage: image, forKey: "image") else { return }
+//    func postRequest(identifier: String, image: UIImage, parameters: Parameters) {
+//        guard let mediaImage = Media(withImage: image, forKey: "image") else { return }
+//        guard let url = URL(string: siteSnapBackendHost + "photo") else { return }
+//        var request = URLRequest(url: url)
+//        let boundary = generateBoundary()
+//        request.httpMethod = "POST"
+//        request.setValue("multipart/form-data;  boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+//        let tokenString = "Bearer " + (UserDefaults.standard.value(forKey: "token") as? String)!
+//        request.addValue(tokenString, forHTTPHeaderField: "Authorization")
+//        request.addValue("Keep-Alive", forHTTPHeaderField: "Connection")
+//
+//
+//
+//        let dataBody = createDataBody(withParameters: parameters, media: mediaImage, boundary: boundary)
+//        request.httpBody = dataBody
+//        let configuration = URLSessionConfiguration.default
+//        let session = URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)//URLSession.shared
+//        time = Date()
+//
+//        session.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
+//            if let httpResponse = response as? HTTPURLResponse {
+//                print(httpResponse.statusCode)
+//                self.uploadingProcessRunning = false
+//                if httpResponse.statusCode != 200 || httpResponse.statusCode != 201 {
+//                    let state = self.getStateOfImage(withIdentifier: identifier)
+//                    self.changeState(fromState: state, localIdentifier: identifier)
+//                    self.updateProgress(localIdentifier: identifier, progress: 0, speed: 0, estimatedTime: -1)
+//                } else {
+//                    self.makeImageDone(localIdentifier: identifier)
+//                }
+//
+//            }
+//
+//        }).resume()
+//    }
+    
+    func postRequestWith(identifier: String, image: UIImage?, parameters: Parameters, onCompletion: ((JSON?) -> Void)? = nil, onError: ((Error?) -> Void)? = nil){
+        var data: Data!
+        var fileName: String = "image.jpg"
+        var mimeType: String = "image/jpg"
         guard let url = URL(string: siteSnapBackendHost + "photo") else { return }
-        var request = URLRequest(url: url)
-        let boundary = generateBoundary()
-        request.httpMethod = "POST"
-        request.setValue("multipart/form-data;  boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        if let image = image {
+            guard let mediaImage = Media(withImage: image, forKey: "image") else { return }
+            data = mediaImage.data
+            fileName = mediaImage.filename
+            mimeType = mediaImage.mimeType
+        }
+        
         let tokenString = "Bearer " + (UserDefaults.standard.value(forKey: "token") as? String)!
-        request.addValue(tokenString, forHTTPHeaderField: "Authorization")
-        request.addValue("Keep-Alive", forHTTPHeaderField: "Connection")
-        
-       
-        
-        let dataBody = createDataBody(withParameters: parameters, media: mediaImage, boundary: boundary)
-        request.httpBody = dataBody
-        let configuration = URLSessionConfiguration.default
-        let session = URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)//URLSession.shared
+        let headers: HTTPHeaders = [
+            "Authorization": tokenString,
+            "Content-type": "multipart/form-data"
+        ]
         time = Date()
-       
-        session.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
-            if let httpResponse = response as? HTTPURLResponse {
-                print(httpResponse.statusCode)
-                self.uploadingProcessRunning = false
-                if httpResponse.statusCode != 200 || httpResponse.statusCode != 201 {
-                    let state = self.getStateOfImage(withIdentifier: identifier)
-                    self.changeState(fromState: state, localIdentifier: identifier)
-                    self.updateProgress(localIdentifier: identifier, progress: 0, speed: 0, estimatedTime: -1)
-                } else {
-                    self.makeImageDone(localIdentifier: self.images[0][0].localIdentifier)
-                }
-                
+        
+        let configuration = URLSessionConfiguration.default
+        configuration.timeoutIntervalForResource = TimeInterval(15.0)
+        configuration.timeoutIntervalForRequest = TimeInterval(15.0)
+        
+        sessionManager = Alamofire.SessionManager(configuration: configuration)
+        sessionManager.upload(multipartFormData: { (multipartFormData) in
+            for (key, value) in parameters {
+                multipartFormData.append("\(value)".data(using: String.Encoding.utf8)!, withName: key as String)
             }
             
-        }).resume()
+            if let data = data{
+                multipartFormData.append(data, withName: "image", fileName: fileName, mimeType: mimeType)
+            }
+            
+        }, usingThreshold: UInt64.init(), to: url, method: .post, headers: headers) { (result) in
+            switch result{
+            case .success(let upload, _, _):
+                upload
+                    .validate(statusCode: 200 ..< 300)
+                    .response { response in
+                        self.uploadingProcessRunning = false
+                        if let error = response.error {
+                            print(error.localizedDescription)
+                            let state = self.getStateOfImage(withIdentifier: identifier)
+                            self.changeState(fromState: state, localIdentifier: identifier)
+                            self.updateProgress(localIdentifier: identifier, progress: 0, speed: 0, estimatedTime: -1)
+                        } else {
+                            print(response.response?.statusCode as Any)
+                            self.makeImageDone(localIdentifier: identifier)
+                            self.tableView.reloadData()
+                        }
+                    }
+                    .uploadProgress { progress in
+                        print(progress.estimatedTimeRemaining ?? 0)
+                        print(progress.fractionCompleted)
+                        print("\(progress.completedUnitCount) - \(progress.totalUnitCount)")
+                        let elapsedtime = abs(self.time.timeIntervalSinceNow)
+                        let estimatedSpeed = Int(Double(progress.completedUnitCount) / (elapsedtime * 1024))
+                        
+                        let remainingTime = round(Double((progress.totalUnitCount - progress.completedUnitCount)) / Double(estimatedSpeed * 1024))
+                        self.updateProgress(localIdentifier: identifier, progress: CFloat(progress.fractionCompleted), speed: estimatedSpeed, estimatedTime: Int(remainingTime))
+                    }
+            case .failure(let error):
+                print("Error in upload: \(error.localizedDescription)")
+                let state = self.getStateOfImage(withIdentifier: identifier)
+                self.changeState(fromState: state, localIdentifier: identifier)
+                self.updateProgress(localIdentifier: identifier, progress: 0, speed: 0, estimatedTime: -1)
+                //onError?(error)
+            }
+        }
     }
-    private func generateBoundary() -> String {
-        return "Boundary-\(NSUUID().uuidString))"
+    
+    enum CancelRequestType: String {
+        case DownloadTask = "DownloadTask"
+        case DataTask = "DataTask"
+        case UploadTask = "UploadTask"
+        case ZeroTask = "Zero"
     }
+    
+    func cancelUploadRequest(request: CancelRequestType) {
+        sessionManager.session.getTasksWithCompletionHandler { (dataTasks, uploadTasks, downloadTasks) in
+            switch request {
+            case .DataTask:
+                dataTasks.forEach { $0.cancel() }
+                print("- - - Data task was canceled!")
+            case .UploadTask:
+                uploadTasks.forEach { $0.cancel() }
+                print("- - - Upload task was canceled!")
+            case .DownloadTask:
+                downloadTasks.forEach { $0.cancel() }
+                print("- - - Download task was canceled!")
+            case .ZeroTask:
+                print("- - - Zero tasks was found!")
+            }
+        }
+    }
+    
+//    private func generateBoundary() -> String {
+//        return "Boundary-\(NSUUID().uuidString))"
+//    }
     
     
     typealias Parameters = [String: String]
    
-    private func createDataBody(withParameters params: Parameters?, media: Media?, boundary: String) -> Data {
-        var body = Data()
-        let lineBreak = "\r\n"
-        if let parameters = params {
-            for (key, value) in parameters {
-                body.append("--\(boundary + lineBreak)")
-                body.append("Content-Disposition:form-data; name=\"\(key)\"\(lineBreak + lineBreak)")
-                body.append("\(value + lineBreak)")
-                //body.append("\(value)")
-            }
-        }
-        if let media = media {
-            body.append("--\(boundary + lineBreak)")
-            body.append("Content-Disposition:form-data; name=\"\(media.key)\"; filename=\"\(media.filename)\"\(lineBreak)")
-            body.append("Content-Type: \(media.mimeType + lineBreak + lineBreak)")
-            body.append(media.data)
-            body.append(lineBreak)
-        }
-
-        body.append("--\(boundary)--\(lineBreak)")
-        return body
-    }
+//    private func createDataBody(withParameters params: Parameters?, media: Media?, boundary: String) -> Data {
+//        var body = Data()
+//        let lineBreak = "\r\n"
+//        if let parameters = params {
+//            for (key, value) in parameters {
+//                body.append("--\(boundary + lineBreak)")
+//                body.append("Content-Disposition:form-data; name=\"\(key)\"\(lineBreak + lineBreak)")
+//                body.append("\(value + lineBreak)")
+//                //body.append("\(value)")
+//            }
+//        }
+//        if let media = media {
+//            body.append("--\(boundary + lineBreak)")
+//            body.append("Content-Disposition:form-data; name=\"\(media.key)\"; filename=\"\(media.filename)\"\(lineBreak)")
+//            body.append("Content-Type: \(media.mimeType + lineBreak + lineBreak)")
+//            body.append(media.data)
+//            body.append(lineBreak)
+//        }
+//
+//        body.append("--\(boundary)--\(lineBreak)")
+//        return body
+//    }
     
     // MARK: - Navigation
     // In a storyboard-based application, you will often want to do.a little preparation before navigation
@@ -505,6 +606,8 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         return loadedImage
     }
     
+   
+    
 }
 extension UIImageView {
     //MARK: - Loading image
@@ -549,11 +652,33 @@ extension UIImageView {
 }
 
 //MARK: - LOADING SAVING IMAGES in documentDirectory
+extension UploadsViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        //obtaining saving path
+        let fileManager = FileManager.default
+        let documentsPath = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
+        let imagePath = documentsPath?.appendingPathComponent("image.jpg")
+        print(imagePath ?? "N0 imagePath found")
+        // extract image from the picker and save it
+        if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            
+            let imageData = pickedImage.jpegData(compressionQuality: 0.75)
+            try! imageData?.write(to: imagePath!)
+        }
+        
+        let identifier = (info[UIImagePickerController.InfoKey.phAsset] as? PHAsset)?.localIdentifier
+        print(identifier!)
+        self.dismiss(animated: true, completion: nil)
+    }
+}
+
 extension UIImage {
     
     func loadFromDocumentDirectory(image imageName: String) -> UIImage! {
         // declare image location
-        let imagePath: String = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/\(imageName).png"
+        let imagePath: String = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/\(imageName).jpg"
         let imageUrl: URL = URL(fileURLWithPath: imagePath)
 
         // check if the image is stored already
@@ -567,11 +692,12 @@ extension UIImage {
     }
 
     func saveToDocumentDirectory(image: UIImage, imageName: String) -> Bool {
-        let imagePath: String = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/\(imageName).png"
+        let imagePath: String = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/\(imageName).jpg"
         let imageUrl: URL = URL(fileURLWithPath: imagePath)
         // image has not been created yet: create it, store it, return it
 
-        if (try? image.pngData()?.write(to: imageUrl)) != nil {
+        if (try? image.jpegData(compressionQuality: 1.0)?.write(to: imageUrl)) != nil {
+            
             return true
         } else {
             return false

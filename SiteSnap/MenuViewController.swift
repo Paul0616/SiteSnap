@@ -121,6 +121,9 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
             self.present(alertController, animated: true, completion: nil)
 
         }
+        if selectedCell.tag == 2 {
+            performSegue(withIdentifier: "SettingSegue", sender: nil)
+        }
 
     }
 //     "https://backend.sitesnap.com.au:443/api/session/getPhoneSessionInfo"

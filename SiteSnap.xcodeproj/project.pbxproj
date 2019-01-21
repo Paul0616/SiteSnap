@@ -10,6 +10,8 @@
 		401B3F1B21E5FB8400509EF2 /* UploadsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401B3F1A21E5FB8400509EF2 /* UploadsViewController.swift */; };
 		4033274621F0A00D007EE9DF /* Project+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4033274521F0A00D007EE9DF /* Project+CoreDataClass.swift */; };
 		4033274821F0A016007EE9DF /* Project+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4033274721F0A016007EE9DF /* Project+CoreDataProperties.swift */; };
+		4033274A21F5B52D007EE9DF /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4033274921F5B52D007EE9DF /* SettingsViewController.swift */; };
+		4033274C21F5BE87007EE9DF /* SettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4033274B21F5BE87007EE9DF /* SettingsTableViewCell.swift */; };
 		4047811621EC820C006987B4 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4047811521EC820C006987B4 /* Constants.swift */; };
 		4095FBE921F071A7008A39D4 /* ProjectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4095FBE821F071A7008A39D4 /* ProjectHandler.swift */; };
 		40B296BA21CCD87300A3C487 /* PhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B296B921CCD87300A3C487 /* PhotosViewController.swift */; };
@@ -84,6 +86,8 @@
 		401B3F1A21E5FB8400509EF2 /* UploadsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadsViewController.swift; sourceTree = "<group>"; };
 		4033274521F0A00D007EE9DF /* Project+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Project+CoreDataClass.swift"; sourceTree = "<group>"; };
 		4033274721F0A016007EE9DF /* Project+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Project+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		4033274921F5B52D007EE9DF /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		4033274B21F5BE87007EE9DF /* SettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewCell.swift; sourceTree = "<group>"; };
 		4047811521EC820C006987B4 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		405977E921C2455700AF9F4B /* MYRIADPRO-REGULAR.OTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MYRIADPRO-REGULAR.OTF"; sourceTree = "<group>"; };
 		4095FBE821F071A7008A39D4 /* ProjectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectHandler.swift; sourceTree = "<group>"; };
@@ -256,6 +260,8 @@
 				DAA615A021E663DF00B5B15E /* UploadsTableViewCell.swift */,
 				DA977F5421C2E91300883640 /* CameraViewController.swift */,
 				DA2D954E21EB6042005DE088 /* MenuViewController.swift */,
+				4033274921F5B52D007EE9DF /* SettingsViewController.swift */,
+				4033274B21F5BE87007EE9DF /* SettingsTableViewCell.swift */,
 				DA2D955021ED0389005DE088 /* MenuTableViewCell.swift */,
 				40B296B921CCD87300A3C487 /* PhotosViewController.swift */,
 				DABA66E321D65B620036CEE7 /* AddCommentsViewController.swift */,
@@ -542,6 +548,7 @@
 				"${BUILT_PRODUCTS_DIR}/AWSCognitoIdentityProvider/AWSCognitoIdentityProvider.framework",
 				"${BUILT_PRODUCTS_DIR}/AWSCognitoIdentityProviderASF/AWSCognitoIdentityProviderASF.framework",
 				"${BUILT_PRODUCTS_DIR}/AWSCore/AWSCore.framework",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/AssetsPickerViewController/AssetsPickerViewController.framework",
 				"${BUILT_PRODUCTS_DIR}/Device/Device.framework",
 				"${BUILT_PRODUCTS_DIR}/Dimmer/Dimmer.framework",
@@ -549,6 +556,7 @@
 				"${BUILT_PRODUCTS_DIR}/PureLayout/PureLayout.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftARGB/SwiftARGB.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 				"${BUILT_PRODUCTS_DIR}/TinyLog/TinyLog.framework",
 				"${BUILT_PRODUCTS_DIR}/UIViewKVO/UIViewKVO.framework",
 			);
@@ -557,6 +565,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSCognitoIdentityProvider.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSCognitoIdentityProviderASF.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AWSCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AssetsPickerViewController.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Device.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Dimmer.framework",
@@ -564,6 +573,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PureLayout.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftARGB.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TinyLog.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/UIViewKVO.framework",
 			);
@@ -585,6 +595,7 @@
 				DA977F1121C1460F00883640 /* SiteSnap.xcdatamodeld in Sources */,
 				DABA66E221D23F1D0036CEE7 /* Tag+CoreDataProperties.swift in Sources */,
 				4095FBE921F071A7008A39D4 /* ProjectHandler.swift in Sources */,
+				4033274C21F5BE87007EE9DF /* SettingsTableViewCell.swift in Sources */,
 				DAB7796A21E0F15A00308543 /* Slider.swift in Sources */,
 				DAA270A221CBD5AD0058148A /* ImageDotButton.swift in Sources */,
 				DABA66E121D23F1D0036CEE7 /* Tag+CoreDataClass.swift in Sources */,
@@ -612,6 +623,7 @@
 				4033274621F0A00D007EE9DF /* Project+CoreDataClass.swift in Sources */,
 				4033274821F0A016007EE9DF /* Project+CoreDataProperties.swift in Sources */,
 				DAA2706021C922B80058148A /* ProcessingPopup.swift in Sources */,
+				4033274A21F5B52D007EE9DF /* SettingsViewController.swift in Sources */,
 				DA977F5821C3F25200883640 /* FlashStateButton.swift in Sources */,
 				DABA66DD21D23F1D0036CEE7 /* Photo+CoreDataClass.swift in Sources */,
 				DA977F0B21C1460F00883640 /* SignInViewController.swift in Sources */,

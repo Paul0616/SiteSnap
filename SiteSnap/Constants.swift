@@ -27,4 +27,5 @@ let siteSnapBackendHost: String = "https://backend.sitesnap.com.au:443/api/"
     currentProjectId - the id of the project that the user chooses
     currentProjectName - the name of the project that the user chooses
     deviceId - deviceId used like parameter in uploading process
+    saveToGallery - settings
  */
