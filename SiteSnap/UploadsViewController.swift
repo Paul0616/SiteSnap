@@ -250,43 +250,6 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
    
    
-
-    //MARK: - POST request
-//    func postRequest(identifier: String, image: UIImage, parameters: Parameters) {
-//        guard let mediaImage = Media(withImage: image, forKey: "image") else { return }
-//        guard let url = URL(string: siteSnapBackendHost + "photo") else { return }
-//        var request = URLRequest(url: url)
-//        let boundary = generateBoundary()
-//        request.httpMethod = "POST"
-//        request.setValue("multipart/form-data;  boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-//        let tokenString = "Bearer " + (UserDefaults.standard.value(forKey: "token") as? String)!
-//        request.addValue(tokenString, forHTTPHeaderField: "Authorization")
-//        request.addValue("Keep-Alive", forHTTPHeaderField: "Connection")
-//
-//
-//
-//        let dataBody = createDataBody(withParameters: parameters, media: mediaImage, boundary: boundary)
-//        request.httpBody = dataBody
-//        let configuration = URLSessionConfiguration.default
-//        let session = URLSession(configuration: configuration, delegate: self, delegateQueue: OperationQueue.main)//URLSession.shared
-//        time = Date()
-//
-//        session.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
-//            if let httpResponse = response as? HTTPURLResponse {
-//                print(httpResponse.statusCode)
-//                self.uploadingProcessRunning = false
-//                if httpResponse.statusCode != 200 || httpResponse.statusCode != 201 {
-//                    let state = self.getStateOfImage(withIdentifier: identifier)
-//                    self.changeState(fromState: state, localIdentifier: identifier)
-//                    self.updateProgress(localIdentifier: identifier, progress: 0, speed: 0, estimatedTime: -1)
-//                } else {
-//                    self.makeImageDone(localIdentifier: identifier)
-//                }
-//
-//            }
-//
-//        }).resume()
-//    }
     
     func postRequestWith(identifier: String, image: UIImage?, parameters: Parameters, onCompletion: ((JSON?) -> Void)? = nil, onError: ((Error?) -> Void)? = nil){
         var data: Data!
@@ -383,36 +346,9 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
         }
     }
-    
-//    private func generateBoundary() -> String {
-//        return "Boundary-\(NSUUID().uuidString))"
-//    }
-    
-    
+
     typealias Parameters = [String: String]
-   
-//    private func createDataBody(withParameters params: Parameters?, media: Media?, boundary: String) -> Data {
-//        var body = Data()
-//        let lineBreak = "\r\n"
-//        if let parameters = params {
-//            for (key, value) in parameters {
-//                body.append("--\(boundary + lineBreak)")
-//                body.append("Content-Disposition:form-data; name=\"\(key)\"\(lineBreak + lineBreak)")
-//                body.append("\(value + lineBreak)")
-//                //body.append("\(value)")
-//            }
-//        }
-//        if let media = media {
-//            body.append("--\(boundary + lineBreak)")
-//            body.append("Content-Disposition:form-data; name=\"\(media.key)\"; filename=\"\(media.filename)\"\(lineBreak)")
-//            body.append("Content-Type: \(media.mimeType + lineBreak + lineBreak)")
-//            body.append(media.data)
-//            body.append(lineBreak)
-//        }
-//
-//        body.append("--\(boundary)--\(lineBreak)")
-//        return body
-//    }
+ 
     
     // MARK: - Navigation
     // In a storyboard-based application, you will often want to do.a little preparation before navigation
