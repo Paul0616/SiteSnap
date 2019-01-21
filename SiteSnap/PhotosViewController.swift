@@ -678,7 +678,7 @@ extension PhotosViewController: AssetsPickerViewControllerDelegate {
 //            } else {
 //                self.photosLocalIdentifiers?.append(phAsset.localIdentifier)
 //            }
-            if PhotoHandler.savePhoto(localIdentifier: phAsset.localIdentifier, creationDate: phAsset.creationDate!, latitude: phAsset.location?.coordinate.latitude, longitude: phAsset.location?.coordinate.longitude) {
+            if PhotoHandler.savePhotoInMyDatabase(localIdentifier: phAsset.localIdentifier, creationDate: phAsset.creationDate!, latitude: phAsset.location?.coordinate.latitude, longitude: phAsset.location?.coordinate.longitude) {
                 print("photo saved in DataCore")
             }
         }

@@ -17,7 +17,7 @@ class PhotoHandler: NSObject {
             return appDelegate.persistentContainer.viewContext
     }
     
-    class func savePhoto(localIdentifier: String, creationDate: Date, latitude: Double?, longitude: Double?) -> Bool{
+    class func savePhotoInMyDatabase(localIdentifier: String, creationDate: Date, latitude: Double?, longitude: Double?) -> Bool{
         
         let context = getContext()
      

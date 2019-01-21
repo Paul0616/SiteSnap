@@ -984,7 +984,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 } else {
                     self.photosLocalIdentifierArray?.append(localId!)
                 }
-                if PhotoHandler.savePhoto(localIdentifier: localId!, creationDate: createdDate!, latitude: self.lastLocation.coordinate.latitude, longitude: self.lastLocation.coordinate.longitude){
+                if PhotoHandler.savePhotoInMyDatabase(localIdentifier: localId!, creationDate: createdDate!, latitude: self.lastLocation.coordinate.latitude, longitude: self.lastLocation.coordinate.longitude){
                     print("Photo added in core data")
                 }
                 PhotoHandler.setFileSize(localIdentifiers: [localId!])
@@ -1162,7 +1162,7 @@ extension CameraViewController: AssetsPickerViewControllerDelegate {
             }
             selectedFromGallery = true
             
-            if PhotoHandler.savePhoto(localIdentifier: phAsset.localIdentifier, creationDate: phAsset.creationDate!, latitude: phAsset.location?.coordinate.latitude, longitude: phAsset.location?.coordinate.longitude) {
+            if PhotoHandler.savePhotoInMyDatabase(localIdentifier: phAsset.localIdentifier, creationDate: phAsset.creationDate!, latitude: phAsset.location?.coordinate.latitude, longitude: phAsset.location?.coordinate.longitude) {
                 print("photo saved in DataCore")
             }
             PhotoHandler.setFileSize(localIdentifiers: [phAsset.localIdentifier])
