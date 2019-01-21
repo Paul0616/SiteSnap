@@ -247,20 +247,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
-    //MARK:- URLSessionDelegate functions
-//    public func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64){
-//        //update progress view
-//        let elapsedtime = abs(time.timeIntervalSinceNow)
-//        let estimatedSpeed = Int(Double(totalBytesSent) / (elapsedtime * 1024))
-//
-//        let procent = CFloat(Double(totalBytesSent) / Double(totalBytesExpectedToSend))
-//        let remainingTime = round(Double((totalBytesExpectedToSend - totalBytesSent)) / Double(estimatedSpeed * 1024))
-//        updateProgress(localIdentifier: currentUploadingLocalIdentifier, progress: procent, speed: estimatedSpeed, estimatedTime: Int(remainingTime))
-//        print("\(estimatedSpeed) kb/
-//        print("\(procent)")
-//        print("\(remainingTime) s")
-//        print("\(bytesSent) - \(totalBytesSent) - \(totalBytesExpectedToSend)")
-//    }
+   
    
 
     //MARK: - POST request
