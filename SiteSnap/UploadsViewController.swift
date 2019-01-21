@@ -149,11 +149,17 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
     func prepareUploadPhoto(localIdentifier: String) {
         //let index = getIndexOfImage(withIdentifier: localIdentifier)
         let currentProjectId = UserDefaults.standard.value(forKey: "currentProjectId") as! String
-        let latitude = PhotoHandler.getSpecificPhoto(localIdentifier: localIdentifier)?.latitude
-        let longitude = PhotoHandler.getSpecificPhoto(localIdentifier: localIdentifier)?.longitude
+        let photo = PhotoHandler.getSpecificPhoto(localIdentifier: localIdentifier)
+        let latitude = photo?.latitude
+        let longitude = photo?.longitude
+        
         var comment: String = ""
-        if let individualComment = PhotoHandler.getSpecificPhoto(localIdentifier: localIdentifier)?.individualComment {
-            comment = individualComment
+        if let allComment = photo?.allPhotosComment {
+            comment = allComment
+        } else {
+            if let individualComment = photo?.individualComment {
+                comment = individualComment
+            }
         }
         let formatter = DateFormatter()
         formatter.dateFormat = "YYYY-MM-dd HH:mm:ss"
@@ -162,7 +168,13 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
             myDate = formatter.string(from:  createdDate as Date)
         }
         var tagIds:String = ""
-        if let tags = PhotoHandler.getSpecificPhoto(localIdentifier: localIdentifier)?.tags {
+        
+        let tagsForAllPictures = photo?.allTagsWasSet ?? false
+        var identifierUserForGetTags = localIdentifier
+        if tagsForAllPictures {
+            identifierUserForGetTags = photo?.localIdentifierForAllTags ?? localIdentifier
+        }
+        if let tags = PhotoHandler.getSpecificPhoto(localIdentifier: identifierUserForGetTags)?.tags {
             for tag in tags {
                 let tag = tag as? Tag
                 if let tagId = tag!.id {
@@ -172,6 +184,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 }
             }
         }
+       
         tagIds = String(tagIds.dropLast())
         let gpsLocation: String = String("\(latitude!),\(longitude!)")
         var deviceId: String = ""
