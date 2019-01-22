@@ -1001,8 +1001,11 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 } else {
                     self.photosLocalIdentifierArray?.append(localId!)
                 }
-                let isVisible = UserDefaults.standard.value(forKey: "saveToGallery") as? Bool
-                if PhotoHandler.savePhotoInMyDatabase(localIdentifier: localId!, creationDate: createdDate!, latitude: self.lastLocation.coordinate.latitude, longitude: self.lastLocation.coordinate.longitude, isHidden: !isVisible!){
+                var isVisible: Bool = true
+                if let visible = UserDefaults.standard.value(forKey: "saveToGallery") as? Bool {
+                    isVisible = visible
+                }
+                if PhotoHandler.savePhotoInMyDatabase(localIdentifier: localId!, creationDate: createdDate!, latitude: self.lastLocation.coordinate.latitude, longitude: self.lastLocation.coordinate.longitude, isHidden: !isVisible){
                     print("Photo added in core data")
                 }
                 PhotoHandler.setFileSize(localIdentifiers: [localId!])
