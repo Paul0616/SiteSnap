@@ -129,6 +129,7 @@ class PhotoHandler: NSObject {
             return false
         }
     }
+    
     class func updateLocations(localIdentifiers: [String]!, location: CLLocationCoordinate2D) -> Bool {
         let context = getContext()
         let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo") //connectionType IN %@", yourIntArray
@@ -145,6 +146,7 @@ class PhotoHandler: NSObject {
             return false
         }
     }
+    
     class func resetComments() -> Bool {
         let context = getContext()
         
@@ -175,8 +177,8 @@ class PhotoHandler: NSObject {
             return false
         }
     }
+    
     class func deleteAllPhotos() -> Bool {
-        
         let context = getContext()
         context.reset()
         // Create Fetch Request

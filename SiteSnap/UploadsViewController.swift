@@ -80,7 +80,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let localIdentifier = images[0][sender.tag].localIdentifier
         let state = images[0][sender.tag].state
         if state == .fail {
-            showAlert(alertMsg: "Ask user if he want to remove photo", message: "Are you sure you want to permanently cancel the upload of this photo? (this cannot be undone)", state: .waiting, localIdentifier: localIdentifier)
+            showAlert(alertMsg: "Ask user if he want to remove photo", message: "Are you sure you want to permanently cancel the upload of this photo? (this cannot be undone)", state: .waiting, localIdentifier: localIdentifier, parameter: images[0].count)
         }
     }
     @IBAction func onClickAccesories(_ sender: UIButton) {
@@ -88,10 +88,12 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let state = images[0][sender.tag].state
         if sender.tag < images[0].count { //that means tapped button is in first section (.waiting, .inProgress or .fail)
             if state == .inProgress {
-                showAlert(alertMsg: "Ask user if he want to cancel upload", message: "Are you sure you want to cancel the upload of this photo?", state: .inProgress, localIdentifier: localIdentifier)
+                showAlert(alertMsg: "Ask user if he want to cancel upload", message: "Are you sure you want to cancel the upload of this photo?", state: .inProgress, localIdentifier: localIdentifier, parameter: images[0].count)
             }
             if state == .waiting {
-                showAlert(alertMsg: "Ask user if he want to remove photo", message: "Are you sure you want to permanently cancel the upload of this photo? (this cannot be undone)", state: .waiting, localIdentifier: localIdentifier)
+                showAlert(alertMsg: "Ask user if he want to remove photo", message: "Are you sure you want to permanently cancel the upload of this photo? (this cannot be undone)", state: .waiting, localIdentifier: localIdentifier, parameter: images[0].count)
+                print(images[0].count)
+                
             }
             if state == .fail {
                 changeState(fromState: state, localIdentifier: localIdentifier)
@@ -123,9 +125,12 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     private func removeImage(withIdentifier identifier: String) {
         if images[0].count > 0 {
+            print(identifier)
+            print(images[0].count)
             for index in 0...images[0].count-1 {
                 if images[0][index].localIdentifier == identifier {
                     images[0].remove(at: index)
+                    break
                 }
             }
         }
@@ -224,18 +229,21 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     //MARK: - Alert
-    private func showAlert(alertMsg: String, message: String, state: ImageForUpload.State, localIdentifier: String){
+    private func showAlert(alertMsg: String, message: String, state: ImageForUpload.State, localIdentifier: String, parameter: Int?){
         let messageToShow = NSLocalizedString(message, comment: alertMsg)
         let alertController = UIAlertController(title: "Please confirm choice", message: messageToShow, preferredStyle: .alert)
         
         alertController.addAction(UIAlertAction(title: NSLocalizedString("Yes", comment: "Confirm cancel upload"),
                                                 style: .default,
                                                 handler: { action in
-                                                    
-                                                    if state == .waiting  {
-                                                        //remove
+                                                    if let parameter = parameter {
+                                                        if parameter == self.images[0].count && state == .waiting {
+                                                            self.changeState(fromState: state, localIdentifier: localIdentifier)
+                                                        }
+                                                        if parameter == self.images[0].count && state == .inProgress {
+                                                            self.cancelUploadRequest(request: .UploadTask)
+                                                        }
                                                     }
-                                                    self.changeState(fromState: state, localIdentifier: localIdentifier)
                                                 }))
         alertController.addAction(UIAlertAction(title: NSLocalizedString("No", comment: "Photo will continue to upload"),
                                                 style: .cancel,
@@ -258,16 +266,16 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
             case .waiting:
                 
                
-                if !uploadingProcessRunning {
-                    setStateOfImage(withIdentifier: localIdentifier, state: .inProgress)
-                    prepareUploadPhoto(localIdentifier: localIdentifier)
-                } else {
+//                if !uploadingProcessRunning {
+//                    setStateOfImage(withIdentifier: localIdentifier, state: .inProgress)
+//                    prepareUploadPhoto(localIdentifier: localIdentifier)
+//                } else {
                     if PhotoHandler.removePhoto(localIdentifier: localIdentifier) {
                         removeImage(withIdentifier: localIdentifier)
                         tableView.reloadData()
                     }
                     
-                }
+//                }
             break
             
             case .done:
@@ -308,12 +316,12 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         ]
         time = Date()
         
-//        let configuration = URLSessionConfiguration.default
-//        configuration.timeoutIntervalForResource = TimeInterval(15.0)
-//        configuration.timeoutIntervalForRequest = TimeInterval(15.0)
+        let configuration = URLSessionConfiguration.default
+        //configuration.timeoutIntervalForResource = TimeInterval(10.0)
+        configuration.timeoutIntervalForRequest = TimeInterval(20.0)
         
-        //sessionManager = Alamofire.SessionManager(configuration: configuration)
-        Alamofire.upload(multipartFormData: { (multipartFormData) in
+        sessionManager = Alamofire.SessionManager(configuration: configuration)
+        sessionManager.upload(multipartFormData: { (multipartFormData) in
             for (key, value) in parameters {
                 multipartFormData.append("\(value)".data(using: String.Encoding.utf8)!, withName: key as String)
             }
@@ -357,8 +365,8 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
             case .failure(let error):
                 self.uploadingProcessRunning = false
                 print("Error in upload: \(error.localizedDescription)")
-//                let state = self.getStateOfImage(withIdentifier: identifier)
-//                self.changeState(fromState: state, localIdentifier: identifier)
+                let state = self.getStateOfImage(withIdentifier: identifier)
+                self.changeState(fromState: state, localIdentifier: identifier)
 //                self.updateProgressAndReloadData(localIdentifier: identifier, progress: 0, speed: 0, estimatedTime: -1)
                 //onError?(error)
             }

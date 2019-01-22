@@ -226,7 +226,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         checkPermission()
     }
     @IBAction func onNext(_ sender: UIButton) {
-         print("photos: \(photoObjects?.count) = slides: \(slidesObjects.count)")
+         print("photos: \(photoObjects?.count ?? 0) = slides: \(slidesObjects.count)")
     }
     
     @IBAction func onClickTakePhoto(_ sender: UIButton) {
