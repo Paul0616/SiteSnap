@@ -19,7 +19,7 @@ class PhotoHandler: NSObject {
             return ctx
     }
     
-    class func savePhotoInMyDatabase(localIdentifier: String, creationDate: Date, latitude: Double?, longitude: Double?) -> Bool{
+    class func savePhotoInMyDatabase(localIdentifier: String, creationDate: Date, latitude: Double?, longitude: Double?, isHidden: Bool) -> Bool{
         let photos = fetchAllObjects()
         let context = getContext()
         for photo in photos! {
@@ -31,6 +31,7 @@ class PhotoHandler: NSObject {
         let managedObject = NSManagedObject(entity: entity!, insertInto: context)
         managedObject.setValue(localIdentifier, forKey: "localIdentifierString")
         managedObject.setValue(creationDate, forKey: "createdDate")
+        managedObject.setValue(isHidden, forKey: "isHidden")
         if let lat = latitude {
             managedObject.setValue(lat, forKey: "latitude")
         }
@@ -103,6 +104,23 @@ class PhotoHandler: NSObject {
             return false
         }
     }
+    
+    class func updateSuccessfulyUploaded(localIdentifier: String, succsessfuly: Bool) -> Bool {
+        let context = getContext()
+        let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
+        fetchRequest.predicate = NSPredicate.init(format: "localIdentifierString=='\(localIdentifier)'")
+        do {
+            let objects = try context.fetch(fetchRequest)
+            for object in objects {
+                object.successfulUploaded = succsessfuly
+            }
+            try context.save()
+            return true
+        } catch _ {
+            return false
+        }
+    }
+    
     class func getSpecificPhoto(localIdentifier: String) -> Photo! {
         let context = getContext()
         let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
@@ -178,22 +196,70 @@ class PhotoHandler: NSObject {
         }
     }
     
-    class func deleteAllPhotos() -> Bool {
+    class func photosDeleteBatch(identifiers: [String]) -> Bool {
         let context = getContext()
-        context.reset()
-        // Create Fetch Request
-        let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
-        
+        //context.reset()
+    
         // Create Batch Delete Request
-        let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest as! NSFetchRequest<NSFetchRequestResult> )
-        
+        let fetchDeleteRequest = NSFetchRequest<Photo>(entityName: "Photo")
+        fetchDeleteRequest.predicate = NSPredicate.init(format: "localIdentifierString IN %@", identifiers)
         do {
-            try context.execute(batchDeleteRequest)
+            let objects = try context.fetch(fetchDeleteRequest)
+            for object in objects {
+                context.delete(object)
+            }
             try context.save()
             return true
-        } catch {
-            print ("There is an error in deleting records")
+        } catch _ {
             return false
+        }
+    }
+    
+    class func getFailedUploadPhotosNumber() -> Int {
+        let context = getContext()
+        let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
+        fetchRequest.predicate = NSPredicate.init(format: "successfulUploaded = false")
+        do {
+            let objects = try context.fetch(fetchRequest)
+            
+            
+            return objects.count
+        } catch _ {
+            return 0
+        }
+    }
+    
+    class func getUploadedPhotosForDelelete() -> [String]! {
+        var identifiers = [String]()
+        let context = getContext()
+        let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
+        fetchRequest.predicate = NSPredicate.init(format: "successfulUploaded = true")
+        do {
+            let objects = try context.fetch(fetchRequest)
+            for object in objects {
+                identifiers.append(object.localIdentifierString!)
+            }
+        
+            return identifiers
+        } catch _ {
+            return nil
+        }
+    }
+    
+    class func getHiddenAndUploadedPhotosForDelelete() -> [String]! {
+        var identifiers = [String]()
+        let context = getContext()
+        let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
+        fetchRequest.predicate = NSPredicate.init(format: "isHidden = true AND successfulUploaded = true")
+        do {
+            let objects = try context.fetch(fetchRequest)
+            for object in objects {
+                identifiers.append(object.localIdentifierString!)
+            }
+            
+            return identifiers
+        } catch _ {
+            return nil
         }
     }
     

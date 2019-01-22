@@ -92,12 +92,24 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             for tag in TagHandler.fetchObjects()! {
                 tag.photos = nil
             }
-            if PhotoHandler.deleteAllPhotos() {
-            print("all photos was deleted from Core Data")
+            if let saveToGallery = UserDefaults.standard.value(forKey: "saveToGallery") as? Bool {
+                if !saveToGallery {
+                    if let hiddenPhotoIds = PhotoHandler.getHiddenAndUploadedPhotosForDelelete() {
+                        deleteAssets(withIdentifiers: hiddenPhotoIds)
+                    }
+                }
             }
+            if let uploadedPhotoIds = PhotoHandler.getUploadedPhotosForDelelete() {
+                if PhotoHandler.photosDeleteBatch(identifiers: uploadedPhotoIds) {
+                    print("all uploaded photos was deleted from Core Data")
+                }
+            }
+            
             userProjects.removeAll()
             photoDatabaseShouldBeDeleted = false
         }
+        
+        
         photoObjects = PhotoHandler.fetchAllObjects()!
        print("there ARE \(photoObjects.count) photos")
         //CHECK LAST LOG IN
@@ -960,6 +972,11 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         var createdDate: Date?
         PHPhotoLibrary.shared().performChanges({
             let assetRequest = PHAssetChangeRequest.creationRequestForAsset(from: image)
+            if let saveToGallery = UserDefaults.standard.value(forKey: "saveToGallery") as? Bool {
+                assetRequest.isHidden = !saveToGallery
+            } else {
+                assetRequest.isHidden = false
+            }
             assetRequest.creationDate = Date()
             if(self.lastLocation != nil){
                 assetRequest.location = self.lastLocation
@@ -984,7 +1001,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 } else {
                     self.photosLocalIdentifierArray?.append(localId!)
                 }
-                if PhotoHandler.savePhotoInMyDatabase(localIdentifier: localId!, creationDate: createdDate!, latitude: self.lastLocation.coordinate.latitude, longitude: self.lastLocation.coordinate.longitude){
+                let isVisible = UserDefaults.standard.value(forKey: "saveToGallery") as? Bool
+                if PhotoHandler.savePhotoInMyDatabase(localIdentifier: localId!, creationDate: createdDate!, latitude: self.lastLocation.coordinate.latitude, longitude: self.lastLocation.coordinate.longitude, isHidden: !isVisible!){
                     print("Photo added in core data")
                 }
                 PhotoHandler.setFileSize(localIdentifiers: [localId!])
@@ -1118,7 +1136,25 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
        
     }
-   
+    //MARK: - delete hidden assets
+    func deleteAssets(withIdentifiers identifiers: [String]) {
+        let assetsToDelete : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: identifiers , options: nil)
+        var validation: Bool = true
+        assetsToDelete.enumerateObjects{(object: AnyObject!,
+            count: Int,
+            stop: UnsafeMutablePointer<ObjCBool>) in
+            //print(count)
+            if object is PHAsset {
+                let asset = object as! PHAsset
+                validation = validation && asset.isHidden
+            }
+        }
+        if validation {
+            PHPhotoLibrary.shared().performChanges({
+                PHAssetChangeRequest.deleteAssets(assetsToDelete)
+            })
+        }
+    }
     // MARK: -
 }
 extension CameraViewController : AVCapturePhotoCaptureDelegate {
@@ -1162,7 +1198,7 @@ extension CameraViewController: AssetsPickerViewControllerDelegate {
             }
             selectedFromGallery = true
             
-            if PhotoHandler.savePhotoInMyDatabase(localIdentifier: phAsset.localIdentifier, creationDate: phAsset.creationDate!, latitude: phAsset.location?.coordinate.latitude, longitude: phAsset.location?.coordinate.longitude) {
+            if PhotoHandler.savePhotoInMyDatabase(localIdentifier: phAsset.localIdentifier, creationDate: phAsset.creationDate!, latitude: phAsset.location?.coordinate.latitude, longitude: phAsset.location?.coordinate.longitude, isHidden: false) {
                 print("photo saved in DataCore")
                 PhotoHandler.setFileSize(localIdentifiers: [phAsset.localIdentifier])
                 photoObjects = PhotoHandler.fetchAllObjects()!

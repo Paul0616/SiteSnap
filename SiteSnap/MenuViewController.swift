@@ -18,12 +18,15 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     var user: AWSCognitoIdentityUser?
     var pool: AWSCognitoIdentityUserPool?
     var response: AWSCognitoIdentityUserGetDetailsResponse?
+    var failedPhotosNumber: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         backButton.layer.cornerRadius = 20
         // Do any additional setup after loading the view.
         tableView.delegate = self
+        failedPhotosNumber = PhotoHandler.getFailedUploadPhotosNumber()
+        
         self.pool = AWSCognitoIdentityUserPool(forKey: AWSCognitoUserPoolsSignInProviderKey)
         if (self.user == nil) {
             self.user = self.pool?.currentUser()
@@ -84,7 +87,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         case 1:
             cell.menuItemIcon.image = UIImage(named: "upload-80px")
             cell.menuItemTitle.text = "Uploads"
-            cell.menuItemDescription.text = "0 photos uploading"
+            cell.menuItemDescription.text = "\(failedPhotosNumber) photos failed to upload"
         case 2:
             cell.menuItemIcon.image = UIImage(named: "settings-80px")
             cell.menuItemTitle.text = "Settings"
@@ -108,6 +111,8 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
                                                     preferredStyle: .alert)
             alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
                 self.user?.signOut()
+                UserDefaults.standard.removeObject(forKey: "given_name")
+                UserDefaults.standard.removeObject(forKey: "family_name")
                 let appDelegate = UIApplication.shared.delegate as! AppDelegate
                 appDelegate.userTappedLogOut = true
                 self.refresh()
@@ -126,8 +131,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
 
     }
-//     "https://backend.sitesnap.com.au:443/api/session/getPhoneSessionInfo"
-    // Bearer eyJraWQiOiJEVkxHV1N4QlB4aXpLXC9STlRvXC84ckxSRFFRMUZ4dVo0azNvUDg4S1VIdFk9IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiI5Y2IxNTdhNS02ZTFiLTRkYzctOGIwZi1iYTVmMjVjNzM4N2EiLCJhdWQiOiI1NTMyZWhocTd1YmxvdmlhcmFzaG52dTc2byIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTU0NzU0NDc5MiwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLmFwLXNvdXRoZWFzdC0yLmFtYXpvbmF3cy5jb21cL2FwLXNvdXRoZWFzdC0yXzZKNUtDaDlMbiIsImNvZ25pdG86dXNlcm5hbWUiOiI5Y2IxNTdhNS02ZTFiLTRkYzctOGIwZi1iYTVmMjVjNzM4N2EiLCJleHAiOjE1NDc1NDgzOTIsImdpdmVuX25hbWUiOiJOaWNrIiwiaWF0IjoxNTQ3NTQ0NzkyLCJmYW1pbHlfbmFtZSI6IlRob3JuIiwiZW1haWwiOiJuaWNrQGF0b2xsb24uY29tLmF1In0.p1crQNfdBtHb0TWPtpJ0mNh4y5exhqFLIqofeMOup65CYMisaVvTAeRutvIrjBgUyWeBjvQWuC0P6yvXYkU3x9lHeuOto9EOjNuKlj1fJFRq1CdiNLdVzDEH_rF1MOYq6PrdIDHw79-M-0N8D4uMTm9cWBqHNmFvAOjFUCdW-c5QTwoU8NeGrtp5xa2ecL57SIn5XmA1iaac_dE2uhrIbOKHz6RDpWIACBe-XUQK2Iv2wOb7d0Gj-vfjfMMdMNDVanjXQWbAXdd2qsqw72SvHT2HlIXhxrjrPm693DJervVZ4pwkeuBi-32obhVrSGya6nYi2odbbjTscoNxbRB30Q
+
 }
 
 

@@ -362,6 +362,11 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         //#######################
         if PhotoHandler.removePhoto(localIdentifier: localIdentifier) {
             photoObjects?.removeAll()
+            if let saveToGallery = UserDefaults.standard.value(forKey: "saveToGallery") as? Bool {
+                if !saveToGallery {
+                   deleteAssets(withIdentifiers: [localIdentifier])
+                }
+            }
             photoObjects = PhotoHandler.fetchAllObjects()
         }
         //##################
@@ -673,7 +678,25 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     }
     
     
-    
+    //MARK: - delete hidden assets
+    func deleteAssets(withIdentifiers identifiers: [String]) {
+        let assetsToDelete : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: identifiers , options: nil)
+        var validation: Bool = true
+        assetsToDelete.enumerateObjects{(object: AnyObject!,
+            count: Int,
+            stop: UnsafeMutablePointer<ObjCBool>) in
+            //print(count)
+            if object is PHAsset {
+                let asset = object as! PHAsset
+                validation = validation && asset.isHidden
+            }
+        }
+        if validation {
+            PHPhotoLibrary.shared().performChanges({
+                PHAssetChangeRequest.deleteAssets(assetsToDelete)
+            })
+        }
+    }
 
     //MARK: -
 }
@@ -691,7 +714,7 @@ extension PhotosViewController: AssetsPickerViewControllerDelegate {
 //            } else {
 //                self.photosLocalIdentifiers?.append(phAsset.localIdentifier)
 //            }
-            if PhotoHandler.savePhotoInMyDatabase(localIdentifier: phAsset.localIdentifier, creationDate: phAsset.creationDate!, latitude: phAsset.location?.coordinate.latitude, longitude: phAsset.location?.coordinate.longitude) {
+            if PhotoHandler.savePhotoInMyDatabase(localIdentifier: phAsset.localIdentifier, creationDate: phAsset.creationDate!, latitude: phAsset.location?.coordinate.latitude, longitude: phAsset.location?.coordinate.longitude, isHidden: false) {
                 print("photo saved in DataCore")
                 loadImages(identifiers: identifiers)
                 PhotoHandler.setFileSize(localIdentifiers: identifiers)

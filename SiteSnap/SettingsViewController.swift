@@ -28,20 +28,36 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     //MARK: - TABLE view delegate
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return 2
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "settingsCell", for: indexPath) as! SettingsTableViewCell
-        cell.settingLabel?.textColor = UIColor.white
-        cell.settingLabel?.text = "Save photos to gallery automatically"
-        cell.settingSwitch.tag = indexPath.row
-        if let status = UserDefaults.standard.value(forKey: "saveToGallery") as? Bool {
-            cell.settingSwitch.isOn = status
-        } else {
-            cell.settingSwitch.isOn = true
-        }//== nil ? true : UserDefaults.standard.bool(forKey: "saveToGallery")
         
+        cell.settingLabel?.textColor = UIColor.white
+        switch indexPath.row {
+        case 0:
+            cell.settingLabel?.text = "Save photos to gallery automatically"
+            cell.settingSwitch.tag = indexPath.row
+            
+            if let status = UserDefaults.standard.value(forKey: "saveToGallery") as? Bool {
+                cell.settingSwitch.isOn = status
+            } else {
+                cell.settingSwitch.isOn = true
+            }
+            break
+        case 1:
+            cell.settingLabel?.text = "Enable debub mode (photos will not be uploaded to server)"
+            cell.settingSwitch.tag = indexPath.row
+            if let status = UserDefaults.standard.value(forKey: "debugMode") as? Bool {
+                cell.settingSwitch.isOn = status
+            } else {
+                cell.settingSwitch.isOn = true
+            }
+            break
+        default:
+            print(indexPath.row)
+        }
         
         return cell
     }
@@ -51,8 +67,13 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     @IBAction func onSwitchSetting(_ sender: UISwitch) {
-        if sender.tag == 0 {
+        switch sender.tag {
+        case 0:
             UserDefaults.standard.set(sender.isOn, forKey: "saveToGallery")
+        case 1:
+            UserDefaults.standard.set(sender.isOn, forKey: "debugMode")
+        default:
+             print(sender.tag)
         }
     }
     /*

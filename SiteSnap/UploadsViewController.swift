@@ -11,6 +11,7 @@ import Photos
 import AWSCognitoIdentityProvider
 import Alamofire
 import SwiftyJSON
+
 enum CancelRequestType: String {
     case DownloadTask = "DownloadTask"
     case DataTask = "DataTask"
@@ -45,7 +46,9 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let photos = PhotoHandler.fetchAllObjects()!
         var unprocessedImages = [ImageForUpload]()
         let currentProjectName = UserDefaults.standard.value(forKey: "currentProjectName")
+        
         for photo in photos {
+           
             let image = ImageForUpload(localIdentifier: photo.localIdentifierString!, projectName: currentProjectName as! String, estimatedTime: -1, fileSize: photo.fileSize, speed: 0, progress: 0, state: ImageForUpload.State.waiting)
             unprocessedImages.append(image!)
         }
@@ -123,6 +126,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
         }
     }
+    
     private func removeImage(withIdentifier identifier: String) {
         if images[0].count > 0 {
             print(identifier)
@@ -154,6 +158,10 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
             i = i + 1
         }
+        if PhotoHandler.updateSuccessfulyUploaded(localIdentifier: localIdentifier, succsessfuly: true) {
+            print("was signaled upload in database")
+        }
+        
         if images[0].count > 0 {
             currentUploadingLocalIdentifier = images[0][0].localIdentifier
             updateProgressAndReloadData(localIdentifier: currentUploadingLocalIdentifier, progress: 0, speed: 0, estimatedTime: -1)
@@ -209,11 +217,15 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         if let devId = user?.deviceId {
             deviceId = devId
         }
+        var debug: String = "true"
+        if let statusDebug = UserDefaults.standard.value(forKey: "debugMode") as? Bool {
+            debug = "\(statusDebug)"
+        }
         let parameters = [
             "forProject": currentProjectId,
             "gpsLocation": gpsLocation,
             "isPrivate": "false",
-            "debug": "true",
+            "debug": debug,
             "comment": comment,
             "photoDate": myDate,
             "tags": tagIds,
@@ -571,7 +583,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         return loadedImage
     }
     
-   
+    
     
 }
 extension UIImageView {
@@ -681,10 +693,4 @@ extension UIImage {
         return true
     }
 }
-//extension Data {
-//    mutating func append(_ string: String) {
-//        if let data = string.data(using: .utf8) {
-//            append(data)
-//        }
-//    }
-//}
+

@@ -2,7 +2,7 @@
 //  Photo+CoreDataProperties.swift
 //  SiteSnap
 //
-//  Created by Paul Oprea on 17/01/2019.
+//  Created by Paul Oprea on 22/01/2019.
 //  Copyright © 2019 Paul Oprea. All rights reserved.
 //
 //
@@ -26,6 +26,8 @@ extension Photo {
     @NSManaged public var localIdentifierForAllTags: String?
     @NSManaged public var localIdentifierString: String?
     @NSManaged public var longitude: Double
+    @NSManaged public var successfulUploaded: Bool
+    @NSManaged public var isHidden: Bool
     @NSManaged public var tags: NSSet?
 
 }
