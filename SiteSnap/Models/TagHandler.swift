@@ -12,7 +12,9 @@ import CoreData
 class TagHandler: NSObject {
     private class func getContext() -> NSManagedObjectContext {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        return appDelegate.persistentContainer.viewContext
+        let ctx = appDelegate.persistentContainer.viewContext
+        //ctx.reset()
+        return ctx
     }
     
     class func saveTag(id: String, text: String, tagColor: String?) -> Bool{
@@ -50,7 +52,7 @@ class TagHandler: NSObject {
         }
     }
     
-    class func fetchObject() -> [Tag]? {
+    class func fetchObjects() -> [Tag]? {
         let context = getContext()
         var tags: [Tag]? = nil
         do {
@@ -63,7 +65,7 @@ class TagHandler: NSObject {
     
     class func deleteAllTags() -> Bool {
         let context = getContext()
-        context.reset()
+       context.reset()
         // Create Fetch Request
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Tag")
         

@@ -12,7 +12,9 @@ import CoreData
 class ProjectHandler: NSObject {
     private class func getContext() -> NSManagedObjectContext {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        return appDelegate.persistentContainer.viewContext
+        let ctx = appDelegate.persistentContainer.viewContext
+        //ctx.reset()
+        return ctx
     }
     
     class func deleteAllProjects() -> Bool {

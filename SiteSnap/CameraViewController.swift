@@ -89,7 +89,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         captureButton.layer.cornerRadius = 35
         noValidLocationIcon.isHidden = true
         if photoDatabaseShouldBeDeleted {
-            for tag in TagHandler.fetchObject()! {
+            for tag in TagHandler.fetchObjects()! {
                 tag.photos = nil
             }
             if PhotoHandler.deleteAllPhotos() {
@@ -325,7 +325,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 }
             }
             
-            for tagItem in TagHandler.fetchObject()! {
+            for tagItem in TagHandler.fetchObjects()! {
                 for projectItem in ProjectHandler.fetchAllProjects()! {
                     for associatedTag in projectItem.availableTags! {
                         let tag = associatedTag as! Tag
@@ -1164,9 +1164,10 @@ extension CameraViewController: AssetsPickerViewControllerDelegate {
             
             if PhotoHandler.savePhotoInMyDatabase(localIdentifier: phAsset.localIdentifier, creationDate: phAsset.creationDate!, latitude: phAsset.location?.coordinate.latitude, longitude: phAsset.location?.coordinate.longitude) {
                 print("photo saved in DataCore")
+                PhotoHandler.setFileSize(localIdentifiers: [phAsset.localIdentifier])
+                photoObjects = PhotoHandler.fetchAllObjects()!
             }
-            PhotoHandler.setFileSize(localIdentifiers: [phAsset.localIdentifier])
-            photoObjects = PhotoHandler.fetchAllObjects()!
+            
         }
     }
     func assetsPicker(controller: AssetsPickerViewController, shouldSelect asset: PHAsset, at indexPath: IndexPath) -> Bool {

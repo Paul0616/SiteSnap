@@ -11,7 +11,12 @@ import Photos
 import AWSCognitoIdentityProvider
 import Alamofire
 import SwiftyJSON
-
+enum CancelRequestType: String {
+    case DownloadTask = "DownloadTask"
+    case DataTask = "DataTask"
+    case UploadTask = "UploadTask"
+    case ZeroTask = "Zero"
+}
 class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate {
 
     var images = [[ImageForUpload]]()
@@ -54,6 +59,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         currentUploadingLocalIdentifier = images[0][0].localIdentifier
         if images[0].count > 0  {
+            setStateOfImage(withIdentifier: currentUploadingLocalIdentifier, state: .inProgress)
             prepareUploadPhoto(localIdentifier: currentUploadingLocalIdentifier)
         }
         //
@@ -143,6 +149,13 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
             i = i + 1
         }
+        if images[0].count > 0 {
+            currentUploadingLocalIdentifier = images[0][0].localIdentifier
+            updateProgressAndReloadData(localIdentifier: currentUploadingLocalIdentifier, progress: 0, speed: 0, estimatedTime: -1)
+        } else {
+            tableView.reloadData()
+        }
+        
     }
     
     //MARK; - Prepare upload photo
@@ -169,12 +182,12 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         var tagIds:String = ""
         
-        let tagsForAllPictures = photo?.allTagsWasSet ?? false
-        var identifierUserForGetTags = localIdentifier
-        if tagsForAllPictures {
-            identifierUserForGetTags = photo?.localIdentifierForAllTags ?? localIdentifier
+        let tagsForAllPicturesFlag = photo?.allTagsWasSet ?? false
+        var identifierUsedForGetTags = localIdentifier
+        if tagsForAllPicturesFlag {
+            identifierUsedForGetTags = photo?.localIdentifierForAllTags ?? localIdentifier
         }
-        if let tags = PhotoHandler.getSpecificPhoto(localIdentifier: identifierUserForGetTags)?.tags {
+        if let tags = PhotoHandler.getSpecificPhoto(localIdentifier: identifierUsedForGetTags)?.tags {
             for tag in tags {
                 let tag = tag as? Tag
                 if let tagId = tag!.id {
@@ -218,6 +231,10 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         alertController.addAction(UIAlertAction(title: NSLocalizedString("Yes", comment: "Confirm cancel upload"),
                                                 style: .default,
                                                 handler: { action in
+                                                    
+                                                    if state == .waiting  {
+                                                        //remove
+                                                    }
                                                     self.changeState(fromState: state, localIdentifier: localIdentifier)
                                                 }))
         alertController.addAction(UIAlertAction(title: NSLocalizedString("No", comment: "Photo will continue to upload"),
@@ -233,16 +250,23 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let state = getStateOfImage(withIdentifier: localIdentifier)
         switch state {
             case .inProgress:
-               cancelUploadRequest(request: .UploadTask)
+              // cancelUploadRequest(request: .UploadTask)
                setStateOfImage(withIdentifier: localIdentifier, state: .fail)
+               updateProgressAndReloadData(localIdentifier: localIdentifier, progress: 0, speed: 0, estimatedTime: -1)
             break
             
             case .waiting:
-                if PhotoHandler.removePhoto(localIdentifier: localIdentifier) {
-                    removeImage(withIdentifier: localIdentifier)
-                }
+                
+               
                 if !uploadingProcessRunning {
+                    setStateOfImage(withIdentifier: localIdentifier, state: .inProgress)
                     prepareUploadPhoto(localIdentifier: localIdentifier)
+                } else {
+                    if PhotoHandler.removePhoto(localIdentifier: localIdentifier) {
+                        removeImage(withIdentifier: localIdentifier)
+                        tableView.reloadData()
+                    }
+                    
                 }
             break
             
@@ -252,6 +276,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
             case .fail:
                 setStateOfImage(withIdentifier: localIdentifier, state: .waiting)
                 if !uploadingProcessRunning {
+                    setStateOfImage(withIdentifier: localIdentifier, state: .inProgress)
                     prepareUploadPhoto(localIdentifier: localIdentifier)
                 }
             break
@@ -283,12 +308,12 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         ]
         time = Date()
         
-        let configuration = URLSessionConfiguration.default
-        configuration.timeoutIntervalForResource = TimeInterval(15.0)
-        configuration.timeoutIntervalForRequest = TimeInterval(15.0)
+//        let configuration = URLSessionConfiguration.default
+//        configuration.timeoutIntervalForResource = TimeInterval(15.0)
+//        configuration.timeoutIntervalForRequest = TimeInterval(15.0)
         
-        sessionManager = Alamofire.SessionManager(configuration: configuration)
-        sessionManager.upload(multipartFormData: { (multipartFormData) in
+        //sessionManager = Alamofire.SessionManager(configuration: configuration)
+        Alamofire.upload(multipartFormData: { (multipartFormData) in
             for (key, value) in parameters {
                 multipartFormData.append("\(value)".data(using: String.Encoding.utf8)!, withName: key as String)
             }
@@ -303,44 +328,44 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 upload
                     .validate(statusCode: 200 ..< 300)
                     .response { response in
-                        self.uploadingProcessRunning = false
                         if let error = response.error {
+                            self.uploadingProcessRunning = false
                             print(error.localizedDescription)
                             let state = self.getStateOfImage(withIdentifier: identifier)
                             self.changeState(fromState: state, localIdentifier: identifier)
-                            self.updateProgress(localIdentifier: identifier, progress: 0, speed: 0, estimatedTime: -1)
+                           
                         } else {
+                            self.uploadingProcessRunning = false
                             print(response.response?.statusCode as Any)
                             self.makeImageDone(localIdentifier: identifier)
-                            self.tableView.reloadData()
+//                            self.updateProgressAndReloadData(localIdentifier: identifier, progress: 0, speed: 0, estimatedTime: -1)
                         }
+                       
+                        
+                       
                     }
                     .uploadProgress { progress in
-                        print(progress.estimatedTimeRemaining ?? 0)
+                       
                         print(progress.fractionCompleted)
                         print("\(progress.completedUnitCount) - \(progress.totalUnitCount)")
                         let elapsedtime = abs(self.time.timeIntervalSinceNow)
                         let estimatedSpeed = Int(Double(progress.completedUnitCount) / (elapsedtime * 1024))
                         
                         let remainingTime = round(Double((progress.totalUnitCount - progress.completedUnitCount)) / Double(estimatedSpeed * 1024))
-                        self.updateProgress(localIdentifier: identifier, progress: CFloat(progress.fractionCompleted), speed: estimatedSpeed, estimatedTime: Int(remainingTime))
+                        self.updateProgressAndReloadData(localIdentifier: identifier, progress: CFloat(progress.fractionCompleted), speed: estimatedSpeed, estimatedTime: Int(remainingTime))
                     }
             case .failure(let error):
+                self.uploadingProcessRunning = false
                 print("Error in upload: \(error.localizedDescription)")
-                let state = self.getStateOfImage(withIdentifier: identifier)
-                self.changeState(fromState: state, localIdentifier: identifier)
-                self.updateProgress(localIdentifier: identifier, progress: 0, speed: 0, estimatedTime: -1)
+//                let state = self.getStateOfImage(withIdentifier: identifier)
+//                self.changeState(fromState: state, localIdentifier: identifier)
+//                self.updateProgressAndReloadData(localIdentifier: identifier, progress: 0, speed: 0, estimatedTime: -1)
                 //onError?(error)
             }
         }
     }
     
-    enum CancelRequestType: String {
-        case DownloadTask = "DownloadTask"
-        case DataTask = "DataTask"
-        case UploadTask = "UploadTask"
-        case ZeroTask = "Zero"
-    }
+    
     
     func cancelUploadRequest(request: CancelRequestType) {
         sessionManager.session.getTasksWithCompletionHandler { (dataTasks, uploadTasks, downloadTasks) in
@@ -419,14 +444,17 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 cell.buttonAccessory.tag = indexPath.row
                 cell.progressView.isHidden = false
                 cell.deleteFromQueueButton.isHidden = true
-                cell.projectNameAndTimeLabel.text = "\(images[indexPath.section][indexPath.row].projectName) - \(images[indexPath.section][indexPath.row].estimatedTime)s"
+                cell.projectNameAndTimeLabel.text = "\(images[indexPath.section][indexPath.row].projectName)"
+                if images[indexPath.section][indexPath.row].estimatedTime != -1 {
+                   cell.projectNameAndTimeLabel.text = "\(images[indexPath.section][indexPath.row].projectName) - \(images[indexPath.section][indexPath.row].estimatedTime)s"
+                }
                 cell.sizeAndSpeedLabel.text = "\(converByteToHumanReadable(images[indexPath.section][indexPath.row].fileSize)) (\(images[indexPath.section][indexPath.row].speed) kb/s)"
             }
         
         
         cell.photoImage.loadImage(identifier: images[indexPath.section][indexPath.row].localIdentifier)
         cell.progressView.progress = images[indexPath.section][indexPath.row].progress
-        print(images[indexPath.section][indexPath.row].progress)
+        //print(images[indexPath.section][indexPath.row].progress)
         return cell
     }
     
@@ -465,13 +493,11 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
 
     //MARK: - update uploading progress
-    @objc func updateProgress(localIdentifier: String, progress: CFloat, speed: Int, estimatedTime: Int){
-        //currentTime = currentTime + 1
-        //var currentIdentifier = localIdentifier
-        var shouldReturn = false
+    @objc func updateProgressAndReloadData(localIdentifier: String, progress: CFloat, speed: Int, estimatedTime: Int){
+        //IF localIdentifier is in progresss update progress else find next localidentifier and start uploading
         for imagesUnloaded in images[0] {
             if imagesUnloaded.localIdentifier == localIdentifier {
-                if imagesUnloaded.state != .fail {
+                if imagesUnloaded.state == .inProgress{
                     imagesUnloaded.progress = progress//currentTime / MAX
                     imagesUnloaded.state = ImageForUpload.State.inProgress
                     imagesUnloaded.estimatedTime = estimatedTime
@@ -479,9 +505,9 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     break
                 } else {
                     for image in images[0] {
-                        if image.state != ImageForUpload.State.fail {
-                            shouldReturn = true
+                        if image.state == ImageForUpload.State.waiting {
                             currentUploadingLocalIdentifier = image.localIdentifier
+                            setStateOfImage(withIdentifier: currentUploadingLocalIdentifier, state: .inProgress)
                             prepareUploadPhoto(localIdentifier: currentUploadingLocalIdentifier)
                             break
                         }
@@ -490,14 +516,8 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 }
             }
         }
-        
-        
-        //DispatchQueue.main.async {
-            self.tableView.reloadData()
-        //}
-        if shouldReturn {
-            return
-        }
+        self.tableView.reloadData()
+      
     }
     
     
@@ -653,10 +673,10 @@ extension UIImage {
         return true
     }
 }
-extension Data {
-    mutating func append(_ string: String) {
-        if let data = string.data(using: .utf8) {
-            append(data)
-        }
-    }
-}
+//extension Data {
+//    mutating func append(_ string: String) {
+//        if let data = string.data(using: .utf8) {
+//            append(data)
+//        }
+//    }
+//}

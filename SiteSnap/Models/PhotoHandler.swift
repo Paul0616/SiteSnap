@@ -14,13 +14,19 @@ import Photos
 class PhotoHandler: NSObject {
     private class func getContext() -> NSManagedObjectContext {
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
-            return appDelegate.persistentContainer.viewContext
+            let ctx = appDelegate.persistentContainer.viewContext
+            //ctx.reset()
+            return ctx
     }
     
     class func savePhotoInMyDatabase(localIdentifier: String, creationDate: Date, latitude: Double?, longitude: Double?) -> Bool{
-        
+        let photos = fetchAllObjects()
         let context = getContext()
-     
+        for photo in photos! {
+            if photo.localIdentifierString == localIdentifier { //this identifier already exist
+                return false
+            }
+        }
         let entity = NSEntityDescription.entity(forEntityName: "Photo", in: context)
         let managedObject = NSManagedObject(entity: entity!, insertInto: context)
         managedObject.setValue(localIdentifier, forKey: "localIdentifierString")

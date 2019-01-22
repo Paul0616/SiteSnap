@@ -34,7 +34,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     //var photosLocalIdentifiers: [String]?
     var userProjects = [ProjectModel]()
     var photoObjects: [Photo]?
-    var slides:[Slide] = [];
+    var slidesObjects:[Slide] = [];
     
     let minImageScale: CGFloat = 0.75
     let minImageAlpha: CGFloat = 0.2
@@ -77,7 +77,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         }
         dropDownListProjectsTableView.isHidden = true
         loadingProjectIntoList()
-        
+        print("photos: \(photoObjects?.count as Any) = slides: \(slidesObjects.count)")
     }
     override func viewDidLayoutSubviews() {
         
@@ -104,8 +104,8 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
             self.takePhotoButton.layer.cornerRadius = 6
             self.addFromGalleryButton.layer.cornerRadius = 6
         }
-        if self.slides.count > 0 {
-            self.setupSlideScrollView(slides: self.slides)
+        if self.slidesObjects.count > 0 {
+            self.setupSlideScrollView(slides: self.slidesObjects)
             self.onPageChange(self.imageControl)
         }
     }
@@ -226,7 +226,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         checkPermission()
     }
     @IBAction func onNext(_ sender: UIButton) {
-    
+         print("photos: \(photoObjects?.count) = slides: \(slidesObjects.count)")
     }
     
     @IBAction func onClickTakePhoto(_ sender: UIButton) {
@@ -265,16 +265,16 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
             options: .allowUserInteraction,
             animations: {
                 self.scrollView.contentOffset = scrollPoint
-                self.slides[self.imageControl.currentPage].mainImage.transform = CGAffineTransform(scaleX: 1, y: 1)
-                if(self.imageControl.currentPage < self.slides.count - 1) {
-                    self.slides[self.imageControl.currentPage + 1].mainImage.transform = CGAffineTransform(scaleX: self.minImageScale, y: self.minImageScale)
-                    self.slides[self.imageControl.currentPage + 1].mainImage.alpha = self.minImageAlpha
+                self.slidesObjects[self.imageControl.currentPage].mainImage.transform = CGAffineTransform(scaleX: 1, y: 1)
+                if(self.imageControl.currentPage < self.slidesObjects.count - 1) {
+                    self.slidesObjects[self.imageControl.currentPage + 1].mainImage.transform = CGAffineTransform(scaleX: self.minImageScale, y: self.minImageScale)
+                    self.slidesObjects[self.imageControl.currentPage + 1].mainImage.alpha = self.minImageAlpha
                 }
                 if(self.imageControl.currentPage > 0) {
-                    self.slides[self.imageControl.currentPage - 1].mainImage.transform = CGAffineTransform(scaleX: self.minImageScale, y: self.minImageScale)
-                    self.slides[self.imageControl.currentPage - 1].mainImage.alpha = self.minImageAlpha
+                    self.slidesObjects[self.imageControl.currentPage - 1].mainImage.transform = CGAffineTransform(scaleX: self.minImageScale, y: self.minImageScale)
+                    self.slidesObjects[self.imageControl.currentPage - 1].mainImage.alpha = self.minImageAlpha
                 }
-                self.slides[self.imageControl.currentPage].mainImage.alpha = 1
+                self.slidesObjects[self.imageControl.currentPage].mainImage.alpha = 1
                 self.scrollView.layoutIfNeeded()
         }, completion: nil)
         updateCommentLabel()
@@ -303,7 +303,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
                                                 message: "If you change the project, all tags placed on the photos will be canceled because each project has its own set of available tags. Do you want that?",
                                                 preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
-                                                let tags = TagHandler.fetchObject()
+                                                let tags = TagHandler.fetchObjects()
                                                 for tag in tags! {
                                                     tag.photos = nil
                                                 }
@@ -342,7 +342,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     func removePhoto(){
         let page = imageControl.currentPage
         //#####################delete from core data
-        let localIdentifier = slides[page].localIdentifier!
+        let localIdentifier = slidesObjects[page].localIdentifier!
         //#########################
         
         imageControl.numberOfPages = imageControl.numberOfPages - 1
@@ -353,10 +353,10 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         } else {
             // zero pages
         }
-        slides[page].removeFromSuperview()
-        slides.remove(at: page)
-        setupSlideScrollView(slides: self.slides)
-        if slides.count > 0 {
+        slidesObjects[page].removeFromSuperview()
+        slidesObjects.remove(at: page)
+        setupSlideScrollView(slides: self.slidesObjects)
+        if slidesObjects.count > 0 {
             onPageChange(imageControl)
         }
         //#######################
@@ -431,16 +431,20 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(inspectPhoto(_:)))
         tapGestureRecognizer.numberOfTapsRequired = 1
         scrollView.addGestureRecognizer(tapGestureRecognizer)
+//        for photo in photoObjects! {
+//            print("\(photo.localIdentifierString)")
+//        }
+        print("photos: \(photoObjects?.count as Any) = slides: \(slides.count) in SETUP SCROLL VIEW")
     }
     
     @objc func inspectPhoto(_ sender: UITapGestureRecognizer){
-        let slide = slides[imageControl.currentPage]
+        let slide = slidesObjects[imageControl.currentPage]
         performSegue(withIdentifier: "PhotoInspectorSegue", sender: slide)
     }
     
     func updateCommentLabel(){
         let page = imageControl.currentPage
-        let localIdentifier = slides[page].localIdentifier!
+        let localIdentifier = slidesObjects[page].localIdentifier!
         if let photo = PhotoHandler.getSpecificPhoto(localIdentifier: localIdentifier){
             if let allComment = photo.allPhotosComment {
                 addCommentButton.setImage(UIImage(named:"edit-80px"), for: .normal)
@@ -465,8 +469,8 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     func updateTagNumber(){
         let page = imageControl.currentPage
         var photo: Photo!
-        if slides.count > 0 {
-            let localIdentifier = slides[page].localIdentifier!
+        if slidesObjects.count > 0 {
+            let localIdentifier = slidesObjects[page].localIdentifier!
             if PhotoHandler.allTagsWasSet(localIdentifier: localIdentifier) {
                 let identifier = PhotoHandler.getAllTagsPhotoIdentifier(localIdentifier: localIdentifier)
                 photo = PhotoHandler.getSpecificPhoto(localIdentifier: identifier!)
@@ -506,13 +510,22 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
                 
                 imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFill, options: options, resultHandler: {
                     (image, info) -> Void in
-                    self.slides.append(self.createSlide(image: image!, localIdentifier: asset.localIdentifier))
+                    var assetAlreadyExist: Bool = false
+                    for slide in self.slidesObjects{
+                        if slide.localIdentifier == asset.localIdentifier {
+                            assetAlreadyExist = true
+                            break
+                        }
+                    }
+                    if !assetAlreadyExist {
+                        self.slidesObjects.append(self.createSlide(image: image!, localIdentifier: asset.localIdentifier))
+                    }
                     
                 })
             }
         }
-        if self.slides.count > 0 {
-            setupSlideScrollView(slides: self.slides)
+        if self.slidesObjects.count > 0 {
+            setupSlideScrollView(slides: self.slidesObjects)
         }
         onPageChange(imageControl)
     }
@@ -523,7 +536,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         targetContentOffset.pointee = scrollView.contentOffset
        
         if scrollView == scrollView {
-            let maxIndex = slides.count - 1
+            let maxIndex = slidesObjects.count - 1
             //print("velocity:\(velocity)")
             let targetX: CGFloat = scrollView.contentOffset.x + velocity.x * 200.0
             //print("targetX:\(targetX)")
@@ -564,16 +577,16 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
                 animations: {
                     //print("\(scrollView.contentSize) ->\(self.slidesContainer.frame.width)")
                     scrollView.contentOffset = newOffset
-                    self.slides[self.imageControl.currentPage].mainImage.transform = CGAffineTransform(scaleX: 1, y: 1)
-                    if(self.imageControl.currentPage < self.slides.count - 1) {
-                        self.slides[self.imageControl.currentPage + 1].mainImage.transform = CGAffineTransform(scaleX: self.minImageScale, y: self.minImageScale)
-                        self.slides[self.imageControl.currentPage + 1].mainImage.alpha = self.minImageAlpha
+                    self.slidesObjects[self.imageControl.currentPage].mainImage.transform = CGAffineTransform(scaleX: 1, y: 1)
+                    if(self.imageControl.currentPage < self.slidesObjects.count - 1) {
+                        self.slidesObjects[self.imageControl.currentPage + 1].mainImage.transform = CGAffineTransform(scaleX: self.minImageScale, y: self.minImageScale)
+                        self.slidesObjects[self.imageControl.currentPage + 1].mainImage.alpha = self.minImageAlpha
                     }
                     if(self.imageControl.currentPage > 0) {
-                        self.slides[self.imageControl.currentPage - 1].mainImage.transform = CGAffineTransform(scaleX: self.minImageScale, y: self.minImageScale)
-                        self.slides[self.imageControl.currentPage - 1].mainImage.alpha = self.minImageAlpha
+                        self.slidesObjects[self.imageControl.currentPage - 1].mainImage.transform = CGAffineTransform(scaleX: self.minImageScale, y: self.minImageScale)
+                        self.slidesObjects[self.imageControl.currentPage - 1].mainImage.alpha = self.minImageAlpha
                     }
-                    self.slides[self.imageControl.currentPage].mainImage.alpha = 1
+                    self.slidesObjects[self.imageControl.currentPage].mainImage.alpha = 1
                     scrollView.layoutIfNeeded()
             }, completion: { (finished: Bool) in 
                 self.updateCommentLabel()
@@ -602,15 +615,15 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
          * below code scales the imageview on paging the scrollview
          */
         let percentOffset: CGPoint = CGPoint(x: percentageHorizontalOffset, y: 0)
-        let valueMin = CGFloat(imageControl.currentPage) / CGFloat(slides.count - 1)
-        let valueMax = CGFloat(imageControl.currentPage + 1) / CGFloat(slides.count - 1)
+        let valueMin = CGFloat(imageControl.currentPage) / CGFloat(slidesObjects.count - 1)
+        let valueMax = CGFloat(imageControl.currentPage + 1) / CGFloat(slidesObjects.count - 1)
         //print("\(valueMin) - \(valueMax) - percentage : \(percentageHorizontalOffset)")
         if(percentOffset.x > valueMin && percentOffset.x <= valueMax) {
-            slides[imageControl.currentPage].mainImage.transform = CGAffineTransform(scaleX: 1 - (1 - self.minImageScale) * (percentOffset.x - valueMin) / (valueMax - valueMin), y: 1 - (1 - self.minImageScale) * (percentOffset.x - valueMin) / (valueMax - valueMin))
-            slides[imageControl.currentPage].mainImage.alpha = 1 - (1 - self.minImageAlpha) * (percentOffset.x - valueMin) / (valueMax - valueMin)
-            if imageControl.currentPage < slides.count - 1 {
-                slides[imageControl.currentPage+1].mainImage.transform = CGAffineTransform(scaleX: self.minImageScale + (1 - self.minImageScale) * (percentOffset.x - valueMin) / (valueMax - valueMin) , y: self.minImageScale + (1 - self.minImageScale) * (percentOffset.x - valueMin) / (valueMax - valueMin))
-                 slides[imageControl.currentPage + 1].mainImage.alpha = self.minImageAlpha + (1 - self.minImageAlpha) * (percentOffset.x - valueMin) / (valueMax - valueMin)
+            slidesObjects[imageControl.currentPage].mainImage.transform = CGAffineTransform(scaleX: 1 - (1 - self.minImageScale) * (percentOffset.x - valueMin) / (valueMax - valueMin), y: 1 - (1 - self.minImageScale) * (percentOffset.x - valueMin) / (valueMax - valueMin))
+            slidesObjects[imageControl.currentPage].mainImage.alpha = 1 - (1 - self.minImageAlpha) * (percentOffset.x - valueMin) / (valueMax - valueMin)
+            if imageControl.currentPage < slidesObjects.count - 1 {
+                slidesObjects[imageControl.currentPage+1].mainImage.transform = CGAffineTransform(scaleX: self.minImageScale + (1 - self.minImageScale) * (percentOffset.x - valueMin) / (valueMax - valueMin) , y: self.minImageScale + (1 - self.minImageScale) * (percentOffset.x - valueMin) / (valueMax - valueMin))
+                 slidesObjects[imageControl.currentPage + 1].mainImage.alpha = self.minImageAlpha + (1 - self.minImageAlpha) * (percentOffset.x - valueMin) / (valueMax - valueMin)
             }
         }
     }
@@ -636,17 +649,17 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
             if commentLabel.text != "Tap here to add a comment" {
                 destination.textForEdit = commentLabel.text!
             }
-            destination.currentPhotoLocalIdentifier = self.slides[imageControl.currentPage].localIdentifier
+            destination.currentPhotoLocalIdentifier = self.slidesObjects[imageControl.currentPage].localIdentifier
             
         }
         if segue.identifier == "SetTagSegue",
             let destination = segue.destination as? TagsModalViewController {
-            if PhotoHandler.allTagsWasSet(localIdentifier: self.slides[imageControl.currentPage].localIdentifier!)
+            if PhotoHandler.allTagsWasSet(localIdentifier: self.slidesObjects[imageControl.currentPage].localIdentifier!)
             {
-                let identifier = PhotoHandler.getAllTagsPhotoIdentifier(localIdentifier: self.slides[imageControl.currentPage].localIdentifier!)
+                let identifier = PhotoHandler.getAllTagsPhotoIdentifier(localIdentifier: self.slidesObjects[imageControl.currentPage].localIdentifier!)
                 destination.currentPhotoLocalIdentifier = identifier
             } else {
-                destination.currentPhotoLocalIdentifier = self.slides[imageControl.currentPage].localIdentifier
+                destination.currentPhotoLocalIdentifier = self.slidesObjects[imageControl.currentPage].localIdentifier
             }
         }
         
@@ -680,10 +693,11 @@ extension PhotosViewController: AssetsPickerViewControllerDelegate {
 //            }
             if PhotoHandler.savePhotoInMyDatabase(localIdentifier: phAsset.localIdentifier, creationDate: phAsset.creationDate!, latitude: phAsset.location?.coordinate.latitude, longitude: phAsset.location?.coordinate.longitude) {
                 print("photo saved in DataCore")
+                loadImages(identifiers: identifiers)
+                PhotoHandler.setFileSize(localIdentifiers: identifiers)
             }
         }
-        loadImages(identifiers: identifiers)
-        PhotoHandler.setFileSize(localIdentifiers: identifiers)
+        
     }
     func assetsPicker(controller: AssetsPickerViewController, shouldSelect asset: PHAsset, at indexPath: IndexPath) -> Bool {
         return true
