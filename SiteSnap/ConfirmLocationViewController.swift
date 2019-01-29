@@ -223,6 +223,12 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
             }
             restPhotos!.removeFirst()
             uncheckedPhotos = restPhotos
+            if photo.latitude == 0 && photo.longitude == 0 {
+                if let currentProject  = ProjectHandler.getCurrentProject() {
+                    photo.latitude = currentProject.latitude
+                    photo.longitude = currentProject.longitude
+                }
+            }
             cluster.append(photo)
             
             for element in uncheckedPhotos! {

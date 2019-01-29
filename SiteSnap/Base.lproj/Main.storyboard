@@ -651,6 +651,7 @@
                                     <constraint firstAttribute="height" constant="60" id="30c-va-pDg"/>
                                     <constraint firstAttribute="width" constant="60" id="PaA-Cj-O1V"/>
                                 </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <state key="normal" title="TAKE ANOTHER PHOTO" image="add_a_photo-24px"/>
                                 <variation key="default">
                                     <mask key="constraints">
@@ -673,6 +674,7 @@
                                     <constraint firstAttribute="height" constant="60" id="AOV-oM-epV"/>
                                     <constraint firstAttribute="width" constant="60" id="XXW-FU-5GP"/>
                                 </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <state key="normal" title="ADD PHOTO FROM GALLERY" image="gallery-24px">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
@@ -698,7 +700,7 @@
                                     <constraint firstAttribute="height" constant="60" id="or2-li-ZUN"/>
                                     <constraint firstAttribute="width" constant="100" id="ylO-os-fuX"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="37"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 <state key="normal" title="NEXT">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
