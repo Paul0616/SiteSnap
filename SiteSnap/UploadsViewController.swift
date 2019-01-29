@@ -117,6 +117,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         return .unknown
     }
+    
     private func setStateOfImage(withIdentifier identifier: String, state: ImageForUpload.State){
         if images[0].count > 0 {
             for image in images[0] {
