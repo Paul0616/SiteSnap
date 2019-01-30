@@ -367,8 +367,8 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     }
                     .uploadProgress { progress in
                        
-                        print(progress.fractionCompleted)
-                        print("\(progress.completedUnitCount) - \(progress.totalUnitCount)")
+                        //print(progress.fractionCompleted)
+                        //print("\(progress.completedUnitCount) - \(progress.totalUnitCount)")
                         let elapsedtime = abs(self.time.timeIntervalSinceNow)
                         let estimatedSpeed = Int(Double(progress.completedUnitCount) / (elapsedtime * 1024))
                         

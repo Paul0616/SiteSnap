@@ -709,12 +709,15 @@ extension PhotosViewController: AssetsPickerViewControllerDelegate {
         var identifiers = [String]()
         for phAsset in assets {
             identifiers.append(phAsset.localIdentifier)
-//            if (self.photosLocalIdentifiers == nil){
-//                self.photosLocalIdentifiers = [phAsset.localIdentifier]
-//            } else {
-//                self.photosLocalIdentifiers?.append(phAsset.localIdentifier)
-//            }
-            if PhotoHandler.savePhotoInMyDatabase(localIdentifier: phAsset.localIdentifier, creationDate: phAsset.creationDate!, latitude: phAsset.location?.coordinate.latitude, longitude: phAsset.location?.coordinate.longitude, isHidden: false) {
+            var coordinates: CLLocationCoordinate2D!
+            if let photoLocationCoordinate = phAsset.location?.coordinate {
+                coordinates = photoLocationCoordinate
+            } else {
+                if let currentProject  = ProjectHandler.getCurrentProject() {
+                    coordinates = CLLocationCoordinate2D(latitude: currentProject.latitude, longitude: currentProject.longitude)
+                }
+            }
+            if PhotoHandler.savePhotoInMyDatabase(localIdentifier: phAsset.localIdentifier, creationDate: phAsset.creationDate!, latitude: coordinates.latitude, longitude: coordinates.longitude, isHidden: false) {
                 print("photo saved in DataCore")
                 loadImages(identifiers: identifiers)
                 PhotoHandler.setFileSize(localIdentifiers: identifiers)

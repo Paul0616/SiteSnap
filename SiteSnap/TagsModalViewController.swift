@@ -21,12 +21,7 @@ class TagsModalViewController: UIViewController, UITableViewDelegate, UITableVie
     @IBOutlet weak var windowView: UIView!
     override func viewDidLoad() {
         super.viewDidLoad()
-//        let tag = TagHandler.getSpecificTag(text: "Bridge Superstructure")
-//        let photo = PhotoHandler.getSpecificPhoto(localIdentifier: currentPhotoLocalIdentifier!)
-//        tag?.addToPhotos(photo!)
-  //      let tags = PhotoHandler.getTags(localIdentifier: currentPhotoLocalIdentifier!)
-//        print(tags?.count as Any)
-//        print(tags!)
+
         alltagsSwitch.isOn = PhotoHandler.allTagsWasSet(localIdentifier: currentPhotoLocalIdentifier!)
         
         tags = PhotoHandler.getTags(localIdentifier: currentPhotoLocalIdentifier!)
@@ -105,6 +100,7 @@ class TagsModalViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TagCell", for: indexPath) as! TagCellTableViewCell
+        cell.tagContainer.layer.cornerRadius = 10
         if !searchFlag {
             cell.tagText.text = tagsWithSections[indexPath.section][indexPath.row].tag.text
             cell.tagSwitch.isOn = tagsWithSections[indexPath.section][indexPath.row].selected
@@ -115,8 +111,11 @@ class TagsModalViewController: UIViewController, UITableViewDelegate, UITableVie
             }
             
             if tagsWithSections[indexPath.section][indexPath.row].tag.tagColor != nil {
-                cell.tagImage.backgroundColor = UIColor(hexString: tagsWithSections[indexPath.section][indexPath.row].tag.tagColor!)
-                cell.tagText.backgroundColor = UIColor(hexString: tagsWithSections[indexPath.section][indexPath.row].tag.tagColor!)
+                cell.tagContainer.backgroundColor = UIColor(hexString: tagsWithSections[indexPath.section][indexPath.row].tag.tagColor!)
+                //cell.tagImage.backgroundColor = UIColor(hexString: tagsWithSections[indexPath.section][indexPath.row].tag.tagColor!)
+                //cell.tagText.backgroundColor = UIColor(hexString: tagsWithSections[indexPath.section][indexPath.row].tag.tagColor!)
+                //cell.tagText.roundCorners(corners: [.topLeft, .bottomLeft], radius: 6.0)
+                //cell.tagText.roundCorners(corners: [.topRight, .bottomRight], radius: 6.0)
             }
         } else {
             cell.tagText.text = searchTags[indexPath.section][indexPath.row].tag.text
@@ -128,8 +127,10 @@ class TagsModalViewController: UIViewController, UITableViewDelegate, UITableVie
             }
             
             if searchTags[indexPath.section][indexPath.row].tag.tagColor != nil {
-                cell.tagImage.backgroundColor = UIColor(hexString: searchTags[indexPath.section][indexPath.row].tag.tagColor!)
-                cell.tagText.backgroundColor = UIColor(hexString: searchTags[indexPath.section][indexPath.row].tag.tagColor!)
+                cell.tagContainer.backgroundColor = UIColor(hexString: searchTags[indexPath.section][indexPath.row].tag.tagColor!)
+               // cell.tagImage.backgroundColor = UIColor(hexString: searchTags[indexPath.section][indexPath.row].tag.tagColor!)
+               // cell.tagText.backgroundColor = UIColor(hexString: searchTags[indexPath.section][indexPath.row].tag.tagColor!)
+                
             }
         }
         return cell
@@ -190,5 +191,13 @@ extension UIColor {
             (a, r, g, b) = (255, 0, 0, 0)
         }
         self.init(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: CGFloat(a) / 255)
+    }
+}
+extension UIView {
+    func roundCorners(corners: UIRectCorner, radius: CGFloat) {
+        let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        let mask = CAShapeLayer()
+        mask.path = path.cgPath
+        layer.mask = mask
     }
 }

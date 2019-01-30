@@ -10,6 +10,8 @@ import UIKit
 
 class TagCellTableViewCell: UITableViewCell {
 
+    @IBOutlet weak var tagStackView: UIStackView!
+    @IBOutlet weak var tagContainer: UIView!
     @IBOutlet weak var tagText: UILabel!
     @IBOutlet weak var tagImage: UIView!
     @IBOutlet weak var tagSwitch: UISwitch!

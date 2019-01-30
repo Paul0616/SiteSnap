@@ -62,6 +62,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     @IBOutlet weak var captureInnerButton: UIView!
     @IBOutlet weak var selectedProjectButton: ActivityIndicatorButton!
     @IBOutlet weak var noValidLocationIcon: UIImageView!
+    @IBOutlet weak var galleryButton: UIButton!
     
     @IBOutlet weak var cameraUnavailableLabel: UILabel!
     @IBOutlet weak var dropDownListProjectsTableView: UITableView!
@@ -87,6 +88,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         captureInnerButton.backgroundColor = UIColor.white
         captureInnerButton.layer.cornerRadius = 24
         captureButton.layer.cornerRadius = 35
+        galleryButton.isEnabled = false
         noValidLocationIcon.isHidden = true
         if photoDatabaseShouldBeDeleted {
             for tag in TagHandler.fetchObjects()! {
@@ -224,7 +226,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                                 message:"Not Connected To The Internet",
                                 preferredStyle: .alert)
                             let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
-                                // do something when user press OK button, like deleting text in both fields or do nothing
+                                // do something when user press OK button
                             }
                             alert.addAction(OKAction)
                             self.present(alert, animated: true, completion: nil)
@@ -238,7 +240,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                                 preferredStyle: .alert)
                             
                             let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
-                                // do something when user press OK button, like deleting text in both fields or do nothing
+                                // do something when user press OK button
                             }
                             alert.addAction(OKAction)
                             self.present(alert, animated: true, completion: nil)
@@ -252,7 +254,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                                 preferredStyle: .alert)
                             
                             let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
-                                // do something when user press OK button, like deleting text in both fields or do nothing
+                                // do something when user press OK button
                             }
                             alert.addAction(OKAction)
                             self.present(alert, animated: true, completion: nil)
@@ -601,6 +603,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             guard let isSessionRunning = change.newValue else { return }
             DispatchQueue.main.async {
                 self.captureButton.isEnabled = isSessionRunning
+                
             }
         }
         keyValueObservations.append(keyValueObservation)
@@ -784,7 +787,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func loadingProjectIntoList(){
         DispatchQueue.main.async {
             self.selectedProjectButton.hideLoading(buttonText: nil)
-           
+            self.galleryButton.isEnabled = true
             if self.noValidLocationIcon.isHidden {
                 let projId = self.getCloserProject()
                 self.setProjectsSelected(projectId: projId!)
@@ -1200,8 +1203,16 @@ extension CameraViewController: AssetsPickerViewControllerDelegate {
                 self.photosLocalIdentifierArray?.append(phAsset.localIdentifier)
             }
             selectedFromGallery = true
+            var coordinates: CLLocationCoordinate2D!
+            if let photoLocationCoordinate = phAsset.location?.coordinate {
+                coordinates = photoLocationCoordinate
+            } else {
+                if let currentProject  = ProjectHandler.getCurrentProject() {
+                    coordinates = CLLocationCoordinate2D(latitude: currentProject.latitude, longitude: currentProject.longitude)
+                }
+            }
             
-            if PhotoHandler.savePhotoInMyDatabase(localIdentifier: phAsset.localIdentifier, creationDate: phAsset.creationDate!, latitude: phAsset.location?.coordinate.latitude, longitude: phAsset.location?.coordinate.longitude, isHidden: false) {
+            if PhotoHandler.savePhotoInMyDatabase(localIdentifier: phAsset.localIdentifier, creationDate: phAsset.creationDate!, latitude: coordinates.latitude, longitude: coordinates.longitude, isHidden: false) {
                 print("photo saved in DataCore")
                 PhotoHandler.setFileSize(localIdentifiers: [phAsset.localIdentifier])
                 photoObjects = PhotoHandler.fetchAllObjects()!

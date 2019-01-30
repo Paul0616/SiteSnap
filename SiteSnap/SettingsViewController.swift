@@ -47,12 +47,12 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             }
             break
         case 1:
-            cell.settingLabel?.text = "Enable debub mode (photos will not be uploaded to server)"
+            cell.settingLabel?.text = "Enable debug mode (photos will not be uploaded to server)"
             cell.settingSwitch.tag = indexPath.row
             if let status = UserDefaults.standard.value(forKey: "debugMode") as? Bool {
                 cell.settingSwitch.isOn = status
             } else {
-                cell.settingSwitch.isOn = true
+                cell.settingSwitch.isOn = false
             }
             break
         default:
