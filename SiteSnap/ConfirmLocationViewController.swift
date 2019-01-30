@@ -104,6 +104,8 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
         confirmPhotoLocationButton.backgroundColor = UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
         cancelEditButton.isHidden = false
         currentLocationButton.isHidden = false
+        uploadButton.isHidden = true
+        backButton.isHidden = true
         editLocationMode = true
         for annotation in annotationsArray {
             map.view(for: annotation)?.isHidden = true
@@ -123,6 +125,8 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
         confirmPhotoLocationButton.backgroundColor = UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
         cancelEditButton.isHidden = false
         currentLocationButton.isHidden = false
+        uploadButton.isHidden = true
+        backButton.isHidden = true
         editLocationMode = true
         for annotation in annotationsArray {
             map.view(for: annotation)?.isHidden = true
@@ -186,6 +190,8 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
         confirmPhotoLocationButton.isEnabled = false
         confirmPhotoLocationButton.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
         cancelEditButton.isHidden = true
+        uploadButton.isHidden = false
+        backButton.isHidden = false
         editLocationMode = false
         dummy.photoImage.image = nil
         dummy.removeFromSuperview()

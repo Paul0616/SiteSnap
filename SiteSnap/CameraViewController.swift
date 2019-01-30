@@ -870,7 +870,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
         
         session.beginConfiguration()
-       // session.sessionPreset = .photo
+        session.sessionPreset = .hd4K3840x2160
+        
         
         // Add video input.
         do {
