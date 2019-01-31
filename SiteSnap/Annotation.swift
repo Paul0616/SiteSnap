@@ -19,7 +19,7 @@ class Annotation: UIView {
     override func draw(_ rect: CGRect) {
         // Drawing code
         numberOfPhotos.layer.cornerRadius = 20
-        numberOfPhotos.layer.backgroundColor = UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0).cgColor
+        numberOfPhotos.layer.backgroundColor = UIColor(red:0.19, green:0.44, blue:0.90, alpha:1.0).cgColor //UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0).cgColor
         numberOfPhotos.layer.borderColor = UIColor.white.cgColor
         numberOfPhotos.layer.borderWidth = 1
     }

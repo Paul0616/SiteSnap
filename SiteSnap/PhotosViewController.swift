@@ -58,7 +58,8 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         nextButton.layer.cornerRadius = 6
         addTagButton.layer.cornerRadius = 25
         tagNumberLabel.layer.cornerRadius = 15
-        tagNumberLabel.layer.backgroundColor = UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0).cgColor
+        tagNumberLabel.layer.backgroundColor = UIColor(red:0.19, green:0.44, blue:0.90, alpha:1.0).cgColor // blue
+        //tagNumberLabel.layer.backgroundColor = UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0).cgColor // light purple
         tagNumberLabel.layer.borderColor = UIColor.white.cgColor
         tagNumberLabel.layer.borderWidth = 1
         deleteImageButton.layer.cornerRadius = 25
@@ -457,13 +458,13 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         if let photo = PhotoHandler.getSpecificPhoto(localIdentifier: localIdentifier){
             if let allComment = photo.allPhotosComment {
                 addCommentButton.setImage(UIImage(named:"edit-80px"), for: .normal)
-                addCommentButton.backgroundColor = UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
+                addCommentButton.backgroundColor = UIColor(red:0.19, green:0.44, blue:0.90, alpha:1.0) //UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
                 commentLabel.text = allComment
                 stackViewAllComments.isHidden = false
             } else {
                 if let comment = photo.individualComment {
                     addCommentButton.setImage(UIImage(named:"edit-80px"), for: .normal)
-                    addCommentButton.backgroundColor = UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
+                    addCommentButton.backgroundColor = UIColor(red:0.19, green:0.44, blue:0.90, alpha:1.0) //UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
                     commentLabel.text = comment
                     stackViewAllComments.isHidden = false
                 } else {

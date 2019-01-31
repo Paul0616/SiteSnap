@@ -101,7 +101,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
     }
     @IBAction func onTapEditLocation(_ sender: UIButton) {
         confirmPhotoLocationButton.isEnabled = true
-        confirmPhotoLocationButton.backgroundColor = UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
+        confirmPhotoLocationButton.backgroundColor = UIColor(red:0.19, green:0.44, blue:0.90, alpha:1.0) //UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
         cancelEditButton.isHidden = false
         currentLocationButton.isHidden = false
         uploadButton.isHidden = true
@@ -122,7 +122,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
     
     @IBAction func onTapEditAllClusterLocation(_ sender: UIButton) {
         confirmPhotoLocationButton.isEnabled = true
-        confirmPhotoLocationButton.backgroundColor = UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
+        confirmPhotoLocationButton.backgroundColor = UIColor(red:0.19, green:0.44, blue:0.90, alpha:1.0) //UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
         cancelEditButton.isHidden = false
         currentLocationButton.isHidden = false
         uploadButton.isHidden = true
