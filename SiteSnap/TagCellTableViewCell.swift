@@ -14,7 +14,8 @@ class TagCellTableViewCell: UITableViewCell {
     @IBOutlet weak var tagContainer: UIView!
     @IBOutlet weak var tagText: UILabel!
     @IBOutlet weak var tagImage: UIView!
-    @IBOutlet weak var tagSwitch: UISwitch!
+   
+    @IBOutlet weak var tagCheckBox: CheckBox!
     
     override func awakeFromNib() {
         super.awakeFromNib()

@@ -44,6 +44,7 @@
 		DA977F5821C3F25200883640 /* FlashStateButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F5721C3F25200883640 /* FlashStateButton.swift */; };
 		DA977F5A21C4E38B00883640 /* ActivityIndicatorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F5921C4E38B00883640 /* ActivityIndicatorButton.swift */; };
 		DA9DFA3021F2656800CB68E2 /* Media.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9DFA2F21F2656800CB68E2 /* Media.swift */; };
+		DA9F69FD22020474006436F6 /* CheckBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9F69FC22020474006436F6 /* CheckBox.swift */; };
 		DAA2705E21C8FAB10058148A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DAA2705B21C8FAB10058148A /* Main.storyboard */; };
 		DAA2706021C922B80058148A /* ProcessingPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA2705F21C922B80058148A /* ProcessingPopup.swift */; };
 		DAA270A221CBD5AD0058148A /* ImageDotButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAA270A121CBD5AD0058148A /* ImageDotButton.swift */; };
@@ -130,6 +131,7 @@
 		DA977F5721C3F25200883640 /* FlashStateButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashStateButton.swift; sourceTree = "<group>"; };
 		DA977F5921C4E38B00883640 /* ActivityIndicatorButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorButton.swift; sourceTree = "<group>"; };
 		DA9DFA2F21F2656800CB68E2 /* Media.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Media.swift; sourceTree = "<group>"; };
+		DA9F69FC22020474006436F6 /* CheckBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckBox.swift; sourceTree = "<group>"; };
 		DAA2705C21C8FAB10058148A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Main.storyboard; sourceTree = "<group>"; };
 		DAA2705F21C922B80058148A /* ProcessingPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingPopup.swift; sourceTree = "<group>"; };
 		DAA270A121CBD5AD0058148A /* ImageDotButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDotButton.swift; sourceTree = "<group>"; };
@@ -310,6 +312,7 @@
 				DAB7795D21DE7DF400308543 /* PhotoAnnotationView.swift */,
 				DAB7796721DFA26B00308543 /* PreviewView.swift */,
 				DAB7796921E0F15A00308543 /* Slider.swift */,
+				DA9F69FC22020474006436F6 /* CheckBox.swift */,
 			);
 			path = subClasses;
 			sourceTree = "<group>";
@@ -618,6 +621,7 @@
 				DAB7795C21DD60D400308543 /* PhotoAnnotation.swift in Sources */,
 				401B3F1B21E5FB8400509EF2 /* UploadsViewController.swift in Sources */,
 				DAB7795E21DE7DF400308543 /* PhotoAnnotationView.swift in Sources */,
+				DA9F69FD22020474006436F6 /* CheckBox.swift in Sources */,
 				DA47325021DA3109003729BB /* TagCellTableViewCell.swift in Sources */,
 				DA977F5A21C4E38B00883640 /* ActivityIndicatorButton.swift in Sources */,
 				4033274621F0A00D007EE9DF /* Project+CoreDataClass.swift in Sources */,

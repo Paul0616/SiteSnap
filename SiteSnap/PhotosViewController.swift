@@ -29,7 +29,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     @IBOutlet weak var commentLabel: UILabel!
     @IBOutlet weak var addCommentButton: UIButton!
     @IBOutlet weak var stackViewAllComments: UIStackView!
-    @IBOutlet weak var sameCommentsToAll: UISwitch!
+    @IBOutlet weak var sameCommentsToAll: CheckBox!
     
     //var photosLocalIdentifiers: [String]?
     var userProjects = [ProjectModel]()
@@ -43,7 +43,6 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     //MARK: -
     override func viewDidLoad() {
         super.viewDidLoad()
-
         // Do any additional setup after loading the view.
         scrollView.delegate = self
         scrollView.showsHorizontalScrollIndicator = false
@@ -68,6 +67,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         commentLabel.translatesAutoresizingMaskIntoConstraints = false
         commentLabel.bottomAnchor.constraint(equalTo: commentScrollView.bottomAnchor, constant: 0).isActive = true
     }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         photoObjects = PhotoHandler.fetchAllObjects()
@@ -280,8 +280,9 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         updateCommentLabel()
         
     }
-    
-    @IBAction func onSwitchToAllComments(_ sender: UISwitch) {
+   
+    @IBAction func onSwitchToAllComments(_ sender: CheckBox) {
+        print(sender.isOn)
         if sender.isOn {
             let alert = UIAlertController(title: "Please confirm choice", message: "Are you sure you want to apply this comment to all photos?", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
@@ -290,6 +291,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
             )
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
                 print("cancel")
+                self.sameCommentsToAll.isOn = false
             })
             )
             self.present(alert, animated: true, completion: nil)
@@ -297,6 +299,8 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
             self.resetCommentsToOriginalValues()
         }
     }
+    
+   
     //MARK: - reset all photos tags when user change the project
     func resetAllPhotosTags(oldProjectId: String, oldProjectName: String){
         let alertController = UIAlertController(title: "Please confirm choice",

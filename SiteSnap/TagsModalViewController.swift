@@ -16,14 +16,14 @@ class TagsModalViewController: UIViewController, UITableViewDelegate, UITableVie
     var searchTags: [[TagModel]]!
     var searchFlag: Bool = false
     
-    @IBOutlet weak var alltagsSwitch: UISwitch!
+    @IBOutlet weak var alltagsCheck: CheckBox!
+   
     @IBOutlet weak var tblView: UITableView!
     @IBOutlet weak var windowView: UIView!
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        alltagsSwitch.isOn = PhotoHandler.allTagsWasSet(localIdentifier: currentPhotoLocalIdentifier!)
-        
+        alltagsCheck.isOn = PhotoHandler.allTagsWasSet(localIdentifier: currentPhotoLocalIdentifier!)
         tags = PhotoHandler.getTags(localIdentifier: currentPhotoLocalIdentifier!)
        
         tags = self.tags.sorted(by: { $0.selected && !$1.selected})
@@ -48,7 +48,7 @@ class TagsModalViewController: UIViewController, UITableViewDelegate, UITableVie
 //        dismiss(animated: true, completion: nil)
        performSegue(withIdentifier: "unwindToPhotosViewController", sender: sender)
     }
-    @IBAction func onSwitchAllTags(_ sender: UISwitch) {
+    @IBAction func onCheckAllTags(_ sender: CheckBox) {
         if sender.isOn {
             if PhotoHandler.addAllTags(currentLocalIdentifier: currentPhotoLocalIdentifier!) {
                 print("current tags was applied to all photos")
@@ -60,7 +60,9 @@ class TagsModalViewController: UIViewController, UITableViewDelegate, UITableVie
             }
         }
     }
-    @IBAction func onSwitchTag(_ sender: UISwitch) {
+  
+    
+    @IBAction func onCheckTag(_ sender: CheckBox) {
         let index = sender.tag
         let tagId = tags[index].tag.id
         let photo = PhotoHandler.getSpecificPhoto(localIdentifier: currentPhotoLocalIdentifier!)
@@ -70,8 +72,8 @@ class TagsModalViewController: UIViewController, UITableViewDelegate, UITableVie
         } else {
             tag?.removeFromPhotos(photo!)
         }
-        
     }
+   
     
     
     /*
@@ -103,11 +105,14 @@ class TagsModalViewController: UIViewController, UITableViewDelegate, UITableVie
         cell.tagContainer.layer.cornerRadius = 10
         if !searchFlag {
             cell.tagText.text = tagsWithSections[indexPath.section][indexPath.row].tag.text
-            cell.tagSwitch.isOn = tagsWithSections[indexPath.section][indexPath.row].selected
+            //cell.tagSwitch.isOn = tagsWithSections[indexPath.section][indexPath.row].selected
+            cell.tagCheckBox.isOn = tagsWithSections[indexPath.section][indexPath.row].selected
             if indexPath.section == 0 {
-                cell.tagSwitch.tag = indexPath.row
+               // cell.tagSwitch.tag = indexPath.row
+                cell.tagCheckBox.tag = indexPath.row
             } else {
-                cell.tagSwitch.tag = indexPath.section * tagsWithSections[indexPath.section - 1].count + indexPath.row
+                //cell.tagSwitch.tag = indexPath.section * tagsWithSections[indexPath.section - 1].count + indexPath.row
+                cell.tagCheckBox.tag = indexPath.section * tagsWithSections[indexPath.section - 1].count + indexPath.row
             }
             
             if tagsWithSections[indexPath.section][indexPath.row].tag.tagColor != nil {
@@ -119,11 +124,14 @@ class TagsModalViewController: UIViewController, UITableViewDelegate, UITableVie
             }
         } else {
             cell.tagText.text = searchTags[indexPath.section][indexPath.row].tag.text
-            cell.tagSwitch.isOn = searchTags[indexPath.section][indexPath.row].selected
+           // cell.tagSwitch.isOn = searchTags[indexPath.section][indexPath.row].selected
+            cell.tagCheckBox.isOn = searchTags[indexPath.section][indexPath.row].selected
             if indexPath.section == 0 {
-                cell.tagSwitch.tag = indexPath.row
+                //cell.tagSwitch.tag = indexPath.row
+                cell.tagCheckBox.tag = indexPath.row
             } else {
-                cell.tagSwitch.tag = indexPath.section * searchTags[indexPath.section - 1].count + indexPath.row
+               // cell.tagSwitch.tag = indexPath.section * searchTags[indexPath.section - 1].count + indexPath.row
+                cell.tagCheckBox.tag = indexPath.section * searchTags[indexPath.section - 1].count + indexPath.row
             }
             
             if searchTags[indexPath.section][indexPath.row].tag.tagColor != nil {
