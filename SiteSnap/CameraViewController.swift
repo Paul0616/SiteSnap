@@ -89,6 +89,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         captureInnerButton.layer.cornerRadius = 24
         captureButton.layer.cornerRadius = 35
         galleryButton.isEnabled = false
+        
         noValidLocationIcon.isHidden = true
         if photoDatabaseShouldBeDeleted {
             for tag in TagHandler.fetchObjects()! {
@@ -606,7 +607,6 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             guard let isSessionRunning = change.newValue else { return }
             DispatchQueue.main.async {
                 self.captureButton.isEnabled = isSessionRunning
-                
             }
         }
         keyValueObservations.append(keyValueObservation)
@@ -791,6 +791,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         DispatchQueue.main.async {
             self.selectedProjectButton.hideLoading(buttonText: nil)
             self.galleryButton.isEnabled = true
+            
             if self.noValidLocationIcon.isHidden {
                 let projId = self.getCloserProject()
                 self.setProjectsSelected(projectId: projId!)
