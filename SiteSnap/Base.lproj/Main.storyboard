@@ -329,14 +329,13 @@
                                     <action selector="onClickCaptureButton:" destination="c4J-9c-Nyi" eventType="touchUpInside" id="OKg-Kj-8f7"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F9I-UX-ezq" customClass="FlashStateButton" customModule="SiteSnap" customModuleProvider="target">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F9I-UX-ezq" customClass="FlashStateButton" customModule="SiteSnap" customModuleProvider="target">
                                 <rect key="frame" x="30" y="670" width="40" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="mVr-vF-ewL"/>
                                     <constraint firstAttribute="width" constant="40" id="sk5-zM-lz5"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <state key="normal" backgroundImage="flash_auto-24px"/>
+                                <state key="normal" backgroundImage="flash_auto"/>
                                 <connections>
                                     <action selector="onClickFlashButton:" destination="c4J-9c-Nyi" eventType="touchUpInside" id="ota-n8-Tgm"/>
                                 </connections>
@@ -347,19 +346,19 @@
                                     <constraint firstAttribute="height" constant="40" id="CUz-ce-u1L"/>
                                     <constraint firstAttribute="width" constant="40" id="vCc-gF-hgh"/>
                                 </constraints>
-                                <state key="normal" backgroundImage="gallery-24px"/>
+                                <state key="normal" backgroundImage="gallery"/>
                                 <connections>
                                     <action selector="onClickGalerry:" destination="c4J-9c-Nyi" eventType="touchUpInside" id="xHx-Lm-uIz"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="navigation-24px" translatesAutoresizingMaskIntoConstraints="NO" id="aJo-ai-FiA">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="navigation" translatesAutoresizingMaskIntoConstraints="NO" id="aJo-ai-FiA">
                                 <rect key="frame" x="327" y="76" width="40" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="40" id="Nvo-tG-XTr"/>
                                     <constraint firstAttribute="height" constant="40" id="Xfd-86-Rf6"/>
                                 </constraints>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="report-24px" translatesAutoresizingMaskIntoConstraints="NO" id="NtZ-1M-dTS">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="report" translatesAutoresizingMaskIntoConstraints="NO" id="NtZ-1M-dTS">
                                 <rect key="frame" x="303" y="81" width="24" height="24"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="24" id="KM7-np-Xz5"/>
@@ -372,7 +371,7 @@
                                     <constraint firstAttribute="height" constant="60" id="Clc-dF-9Ln"/>
                                     <constraint firstAttribute="width" constant="60" id="aXt-Ce-v3Z"/>
                                 </constraints>
-                                <state key="normal" backgroundImage="menu-24px"/>
+                                <state key="normal" backgroundImage="menu"/>
                                 <connections>
                                     <action selector="onClickMenu:" destination="c4J-9c-Nyi" eventType="touchUpInside" id="249-mj-tdg"/>
                                     <segue destination="LKM-Bc-KM5" kind="show" id="9dR-fN-kUL"/>
@@ -566,7 +565,7 @@
                                     <constraint firstAttribute="width" constant="40" id="Jx4-mh-UJt"/>
                                 </constraints>
                                 <inset key="contentEdgeInsets" minX="5" minY="5" maxX="5" maxY="5"/>
-                                <state key="normal" image="arrow_back-40px"/>
+                                <state key="normal" image="arrow_back"/>
                                 <connections>
                                     <action selector="onBack:" destination="ujF-w3-ccj" eventType="touchUpInside" id="96b-Yl-8Jx"/>
                                     <action selector="onClickBack:" destination="LKM-Bc-KM5" eventType="touchUpInside" id="JlB-qu-Q38"/>
@@ -686,7 +685,8 @@
                                     <constraint firstAttribute="width" constant="60" id="PaA-Cj-O1V"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <state key="normal" title="TAKE ANOTHER PHOTO" image="add_a_photo-24px"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title=" TAKE ANOTHER PHOTO" image="add_a_photo"/>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="PaA-Cj-O1V"/>
@@ -709,7 +709,7 @@
                                     <constraint firstAttribute="width" constant="60" id="XXW-FU-5GP"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <state key="normal" title="ADD PHOTO FROM GALLERY" image="gallery-24px">
+                                <state key="normal" title=" ADD PHOTO FROM GALLERY" image="gallery">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <variation key="default">
@@ -794,7 +794,7 @@
                                     <constraint firstAttribute="height" constant="50" id="wd1-Pt-0Dm"/>
                                 </constraints>
                                 <inset key="contentEdgeInsets" minX="5" minY="5" maxX="5" maxY="5"/>
-                                <state key="normal" image="new_tag_80px"/>
+                                <state key="normal" image="add_tag"/>
                                 <connections>
                                     <action selector="onClickAddTag:" destination="Ndu-GM-uKQ" eventType="touchUpInside" id="ZL2-2Q-mRc"/>
                                 </connections>
@@ -817,7 +817,7 @@
                                     <constraint firstAttribute="height" constant="50" id="pfb-R9-CDf"/>
                                 </constraints>
                                 <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
-                                <state key="normal" image="cancel-80px"/>
+                                <state key="normal" image="cancel"/>
                                 <connections>
                                     <action selector="onClickDeleteImageButton:" destination="Ndu-GM-uKQ" eventType="touchUpInside" id="RrA-DE-ZBY"/>
                                 </connections>
@@ -825,7 +825,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Kgn-n3-fRv" userLabel="Stack View all comments">
                                 <rect key="frame" x="40" y="545.66666666666663" width="295" height="30"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="comment-24px" translatesAutoresizingMaskIntoConstraints="NO" id="eOJ-gR-5QA">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="comment" translatesAutoresizingMaskIntoConstraints="NO" id="eOJ-gR-5QA">
                                         <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="7V8-NE-D9P"/>
@@ -904,7 +904,7 @@
                                     <constraint firstAttribute="height" constant="50" id="qta-OG-GM4"/>
                                 </constraints>
                                 <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
-                                <state key="normal" image="one-comment-24px"/>
+                                <state key="normal" image="one_comment"/>
                                 <connections>
                                     <action selector="onClickAddComment:" destination="Ndu-GM-uKQ" eventType="touchUpInside" id="jIS-Jf-TPs"/>
                                 </connections>
@@ -1009,13 +1009,13 @@
                                 <exclude reference="ULa-Hb-S4G"/>
                                 <exclude reference="Vxr-3m-TzK"/>
                                 <exclude reference="gSC-ik-5xa"/>
-                                <exclude reference="JY7-fr-aU7"/>
-                                <exclude reference="u5k-9c-OhW"/>
-                                <exclude reference="x2K-WD-Juy"/>
-                                <exclude reference="tJY-OU-k72"/>
                                 <exclude reference="fpd-0t-Pnx"/>
+                                <exclude reference="x2K-WD-Juy"/>
                                 <exclude reference="8LU-h4-eUs"/>
                                 <exclude reference="ZRE-bV-0tM"/>
+                                <exclude reference="tJY-OU-k72"/>
+                                <exclude reference="JY7-fr-aU7"/>
+                                <exclude reference="u5k-9c-OhW"/>
                                 <exclude reference="61X-wG-vfY"/>
                             </mask>
                         </variation>
@@ -1029,25 +1029,25 @@
                                 <include reference="Vxr-3m-TzK"/>
                                 <include reference="gSC-ik-5xa"/>
                                 <exclude reference="ule-lI-zrw"/>
-                                <include reference="JY7-fr-aU7"/>
-                                <include reference="u5k-9c-OhW"/>
+                                <exclude reference="45H-7w-fwF"/>
+                                <include reference="fpd-0t-Pnx"/>
                                 <exclude reference="3Nw-DJ-xM3"/>
                                 <exclude reference="Djd-QQ-Rys"/>
                                 <include reference="x2K-WD-Juy"/>
-                                <exclude reference="Smu-h0-VAJ"/>
-                                <exclude reference="hWB-kT-OQI"/>
-                                <include reference="tJY-OU-k72"/>
-                                <exclude reference="45H-7w-fwF"/>
-                                <include reference="fpd-0t-Pnx"/>
                                 <include reference="8LU-h4-eUs"/>
                                 <exclude reference="Xct-n1-FBV"/>
                                 <include reference="ZRE-bV-0tM"/>
+                                <exclude reference="Smu-h0-VAJ"/>
+                                <exclude reference="hWB-kT-OQI"/>
+                                <include reference="tJY-OU-k72"/>
+                                <exclude reference="Vln-ab-nps"/>
+                                <exclude reference="g3j-lh-JmP"/>
+                                <include reference="JY7-fr-aU7"/>
+                                <include reference="u5k-9c-OhW"/>
                                 <include reference="61X-wG-vfY"/>
                                 <exclude reference="S8z-wx-HZa"/>
                                 <exclude reference="Wf7-fA-uXX"/>
                                 <exclude reference="trs-KU-im3"/>
-                                <exclude reference="Vln-ab-nps"/>
-                                <exclude reference="g3j-lh-JmP"/>
                             </mask>
                         </variation>
                     </view>
@@ -1097,7 +1097,7 @@
                                     <constraint firstAttribute="height" constant="40" id="cr4-0u-ZlG"/>
                                 </constraints>
                                 <inset key="contentEdgeInsets" minX="5" minY="5" maxX="5" maxY="5"/>
-                                <state key="normal" image="arrow_back-40px"/>
+                                <state key="normal" image="arrow_back"/>
                                 <connections>
                                     <action selector="onBack:" destination="ujF-w3-ccj" eventType="touchUpInside" id="Wz0-29-4kN"/>
                                 </connections>
@@ -1110,7 +1110,7 @@
                                     <constraint firstAttribute="height" constant="50" id="hGj-rc-q1f"/>
                                 </constraints>
                                 <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
-                                <state key="normal" image="add_comment-80px"/>
+                                <state key="normal" image="add_comment"/>
                                 <connections>
                                     <action selector="onAddComment:" destination="ujF-w3-ccj" eventType="touchUpInside" id="gWU-H1-WQY"/>
                                 </connections>
@@ -1197,7 +1197,7 @@
                                                                 <constraint firstAttribute="width" constant="40" id="xvh-DC-am7"/>
                                                             </constraints>
                                                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <state key="normal" image="autorenew-80px"/>
+                                                            <state key="normal" image="autorenew"/>
                                                             <connections>
                                                                 <action selector="onClickAccesories:" destination="d3c-CP-8Yl" eventType="touchUpInside" id="TUg-hw-g7L"/>
                                                             </connections>
@@ -1208,7 +1208,7 @@
                                                                 <constraint firstAttribute="height" constant="40" id="MDg-nW-vx0"/>
                                                                 <constraint firstAttribute="width" constant="40" id="dxA-nW-mRC"/>
                                                             </constraints>
-                                                            <state key="normal" image="cancel-80px"/>
+                                                            <state key="normal" image="cancel"/>
                                                             <connections>
                                                                 <action selector="onClickDeleteFromQueue:" destination="d3c-CP-8Yl" eventType="touchUpInside" id="5gh-W8-hkZ"/>
                                                             </connections>
@@ -1285,7 +1285,7 @@
                                     <constraint firstAttribute="height" constant="40" id="Ijb-Z9-5do"/>
                                 </constraints>
                                 <inset key="contentEdgeInsets" minX="5" minY="5" maxX="5" maxY="5"/>
-                                <state key="normal" image="arrow_back-40px"/>
+                                <state key="normal" image="arrow_back"/>
                                 <connections>
                                     <action selector="onBack:" destination="Xby-a2-aAM" eventType="touchUpInside" id="2Gb-4l-AsG"/>
                                     <action selector="onBack:" destination="ujF-w3-ccj" eventType="touchUpInside" id="jpL-Eu-Cah"/>
@@ -1338,7 +1338,7 @@
                                     <constraint firstAttribute="height" constant="40" id="Rod-Ws-6ef"/>
                                 </constraints>
                                 <inset key="contentEdgeInsets" minX="5" minY="5" maxX="5" maxY="5"/>
-                                <state key="normal" image="arrow_back-40px"/>
+                                <state key="normal" image="arrow_back"/>
                                 <connections>
                                     <action selector="onBack:" destination="ujF-w3-ccj" eventType="touchUpInside" id="LfZ-GE-Mg4"/>
                                     <action selector="onBack:" destination="3th-Zv-vt4" eventType="touchUpInside" id="oEB-yz-naA"/>
@@ -1367,7 +1367,7 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="eNZ-Ra-vYL"/>
                                 </constraints>
-                                <state key="normal" title="  UPLOAD" image="upload-24px">
+                                <state key="normal" title="  UPLOAD" image="cloud_upload">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
@@ -1380,7 +1380,7 @@
                                     <constraint firstAttribute="width" constant="40" id="AXe-kP-6Vl"/>
                                     <constraint firstAttribute="height" constant="40" id="aCo-Lx-1nc"/>
                                 </constraints>
-                                <state key="normal" image="map-24px"/>
+                                <state key="normal" image="map"/>
                                 <connections>
                                     <action selector="onClickChangeMapType:" destination="3th-Zv-vt4" eventType="touchUpInside" id="x9U-s9-BP9"/>
                                 </connections>
@@ -1391,7 +1391,7 @@
                                     <constraint firstAttribute="height" constant="40" id="7Sd-yA-8Hn"/>
                                     <constraint firstAttribute="width" constant="40" id="QVG-D7-Y5a"/>
                                 </constraints>
-                                <state key="normal" image="navigation-24px"/>
+                                <state key="normal" image="navigation"/>
                                 <connections>
                                     <action selector="onClickCurrentLocation:" destination="3th-Zv-vt4" eventType="touchUpInside" id="h18-d9-Cu5"/>
                                 </connections>
@@ -1404,23 +1404,23 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="P43-nk-cQg">
-                                <rect key="frame" x="115.66666666666669" y="139" width="50" height="50"/>
+                                <rect key="frame" x="113" y="139" width="55" height="55"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="50" id="5T8-U9-kb9"/>
-                                    <constraint firstAttribute="height" constant="50" id="j6p-to-TM8"/>
+                                    <constraint firstAttribute="width" constant="55" id="5T8-U9-kb9"/>
+                                    <constraint firstAttribute="height" constant="55" id="j6p-to-TM8"/>
                                 </constraints>
-                                <state key="normal" image="multiple_edit_location-24px"/>
+                                <state key="normal" image="multiple_edit_location"/>
                                 <connections>
                                     <action selector="onTapEditAllClusterLocation:" destination="3th-Zv-vt4" eventType="touchUpInside" id="g2W-Iv-Y7x"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lQG-SL-iUJ">
-                                <rect key="frame" x="209.33333333333334" y="139" width="50.000000000000028" height="50"/>
+                                <rect key="frame" x="207" y="139" width="55" height="55"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="Z9F-Uv-ymD"/>
-                                    <constraint firstAttribute="width" constant="50" id="ih0-kz-vg5"/>
+                                    <constraint firstAttribute="height" constant="55" id="Z9F-Uv-ymD"/>
+                                    <constraint firstAttribute="width" constant="55" id="ih0-kz-vg5"/>
                                 </constraints>
-                                <state key="normal" image="one-edit_location-24px"/>
+                                <state key="normal" image="one_edit_location"/>
                                 <connections>
                                     <action selector="onTapEditLocation:" destination="3th-Zv-vt4" eventType="touchUpInside" id="bei-Id-ap0"/>
                                 </connections>
@@ -1433,7 +1433,7 @@
                                     <constraint firstAttribute="height" constant="40" id="Svo-Cv-Mae"/>
                                 </constraints>
                                 <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
-                                <state key="normal" image="cancel-80px"/>
+                                <state key="normal" image="cancel"/>
                                 <connections>
                                     <action selector="onClickDeleteImageButton:" destination="Ndu-GM-uKQ" eventType="touchUpInside" id="JSo-RI-bIV"/>
                                     <action selector="onTapCancelEditButton:" destination="3th-Zv-vt4" eventType="touchUpInside" id="tnM-md-UOw"/>
@@ -1505,7 +1505,7 @@
                                     <constraint firstAttribute="width" constant="40" id="sBt-Tl-zK9"/>
                                 </constraints>
                                 <inset key="contentEdgeInsets" minX="5" minY="5" maxX="5" maxY="5"/>
-                                <state key="normal" image="arrow_back-40px"/>
+                                <state key="normal" image="arrow_back"/>
                                 <connections>
                                     <action selector="onBack:" destination="Xby-a2-aAM" eventType="touchUpInside" id="SKx-rW-Gwl"/>
                                     <action selector="onBack:" destination="ujF-w3-ccj" eventType="touchUpInside" id="hzL-on-uHk"/>
@@ -1574,15 +1574,15 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R6I-Sr-rSq">
-                                                            <rect key="frame" x="8" y="10" width="532" height="40"/>
+                                                            <rect key="frame" x="8" y="10" width="183" height="40"/>
                                                             <subviews>
                                                                 <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="chJ-0Q-jOw">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="532" height="40"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="183" height="40"/>
                                                                     <subviews>
                                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X8M-W0-dyr">
                                                                             <rect key="frame" x="0.0" y="0.0" width="30" height="40"/>
                                                                             <subviews>
-                                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tag-30px" translatesAutoresizingMaskIntoConstraints="NO" id="SL6-am-pWb">
+                                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tag" translatesAutoresizingMaskIntoConstraints="NO" id="SL6-am-pWb">
                                                                                     <rect key="frame" x="10" y="10" width="20" height="20"/>
                                                                                 </imageView>
                                                                             </subviews>
@@ -1596,7 +1596,7 @@
                                                                             </constraints>
                                                                         </view>
                                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9pj-mR-agq" customClass="PaddingLabel" customModule="SiteSnap" customModuleProvider="target">
-                                                                            <rect key="frame" x="30" y="0.0" width="502" height="40"/>
+                                                                            <rect key="frame" x="30" y="0.0" width="153" height="40"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="height" constant="40" id="0Ig-n5-jdC"/>
                                                                             </constraints>
@@ -1627,7 +1627,7 @@
                                                             </constraints>
                                                         </view>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CiF-sQ-NrR" customClass="CheckBox" customModule="SiteSnap" customModuleProvider="target">
-                                                            <rect key="frame" x="590" y="15" width="30" height="30"/>
+                                                            <rect key="frame" x="241" y="15" width="30" height="30"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="30" id="DLH-GA-N5B"/>
                                                                 <constraint firstAttribute="width" constant="30" id="LIc-HW-Fro"/>
@@ -1666,7 +1666,7 @@
                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="wqR-Ce-A3E">
                                         <rect key="frame" x="25.666666666666686" y="540" width="244" height="30"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="all_tags-30px" translatesAutoresizingMaskIntoConstraints="NO" id="rv5-t4-ucJ">
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="all_tags" translatesAutoresizingMaskIntoConstraints="NO" id="rv5-t4-ucJ">
                                                 <rect key="frame" x="0.0" y="5" width="20" height="20"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="20" id="2GC-2N-l5g"/>
@@ -1749,7 +1749,7 @@
                                     <constraint firstAttribute="width" constant="40" id="rlN-FJ-8yg"/>
                                 </constraints>
                                 <inset key="contentEdgeInsets" minX="5" minY="5" maxX="5" maxY="5"/>
-                                <state key="normal" image="arrow_back-40px"/>
+                                <state key="normal" image="arrow_back"/>
                                 <connections>
                                     <action selector="onBack:" destination="ujF-w3-ccj" eventType="touchUpInside" id="49j-ED-laS"/>
                                     <action selector="onClickBack:" destination="pdt-Dd-sKU" eventType="touchUpInside" id="t3a-fZ-k6l"/>
@@ -1769,7 +1769,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Aa9-oj-Zaz">
-                                                    <rect key="frame" x="620" y="24.333333333333329" width="51" height="31"/>
+                                                    <rect key="frame" x="271" y="24.333333333333329" width="51" height="31"/>
                                                     <connections>
                                                         <action selector="onSwitchSetting:" destination="pdt-Dd-sKU" eventType="valueChanged" id="x6w-UK-JlV"/>
                                                     </connections>
@@ -1825,26 +1825,26 @@
     </scenes>
     <resources>
         <image name="SiteSnapLogo" width="445" height="221"/>
-        <image name="add_a_photo-24px" width="80" height="80"/>
-        <image name="add_comment-80px" width="80" height="80"/>
-        <image name="all_tags-30px" width="30" height="30"/>
-        <image name="arrow_back-40px" width="40" height="40"/>
-        <image name="autorenew-80px" width="80" height="80"/>
-        <image name="cancel-80px" width="80" height="80"/>
+        <image name="add_a_photo" width="45" height="45"/>
+        <image name="add_comment" width="45" height="45"/>
+        <image name="add_tag" width="45" height="45"/>
+        <image name="all_tags" width="45" height="45"/>
+        <image name="arrow_back" width="45" height="45"/>
+        <image name="autorenew" width="45" height="45"/>
+        <image name="cancel" width="45" height="45"/>
         <image name="checked" width="72" height="72"/>
-        <image name="comment-24px" width="80" height="80"/>
-        <image name="flash_auto-24px" width="40" height="40"/>
-        <image name="gallery-24px" width="80" height="80"/>
-        <image name="map-24px" width="80" height="80"/>
-        <image name="menu-24px" width="40" height="40"/>
-        <image name="multiple_edit_location-24px" width="80" height="80"/>
-        <image name="navigation-24px" width="80" height="80"/>
-        <image name="new_tag_80px" width="80" height="80"/>
-        <image name="one-comment-24px" width="80" height="80"/>
-        <image name="one-edit_location-24px" width="80" height="80"/>
-        <image name="report-24px" width="40" height="40"/>
-        <image name="tag-30px" width="30" height="30"/>
+        <image name="cloud_upload" width="45" height="45"/>
+        <image name="comment" width="45" height="45"/>
+        <image name="flash_auto" width="45" height="45"/>
+        <image name="gallery" width="45" height="45"/>
+        <image name="map" width="45" height="45"/>
+        <image name="menu" width="45" height="45"/>
+        <image name="multiple_edit_location" width="45" height="45"/>
+        <image name="navigation" width="45" height="45"/>
+        <image name="one_comment" width="45" height="45"/>
+        <image name="one_edit_location" width="45" height="45"/>
+        <image name="report" width="45" height="45"/>
+        <image name="tag" width="45" height="45"/>
         <image name="unchecked" width="72" height="72"/>
-        <image name="upload-24px" width="80" height="80"/>
     </resources>
 </document>

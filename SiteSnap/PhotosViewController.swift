@@ -457,18 +457,18 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         let localIdentifier = slidesObjects[page].localIdentifier!
         if let photo = PhotoHandler.getSpecificPhoto(localIdentifier: localIdentifier){
             if let allComment = photo.allPhotosComment {
-                addCommentButton.setImage(UIImage(named:"edit-80px"), for: .normal)
+                addCommentButton.setImage(UIImage(named:"edit"), for: .normal)
                 addCommentButton.backgroundColor = UIColor(red:0.19, green:0.44, blue:0.90, alpha:1.0) //UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
                 commentLabel.text = allComment
                 stackViewAllComments.isHidden = false
             } else {
                 if let comment = photo.individualComment {
-                    addCommentButton.setImage(UIImage(named:"edit-80px"), for: .normal)
+                    addCommentButton.setImage(UIImage(named:"edit"), for: .normal)
                     addCommentButton.backgroundColor = UIColor(red:0.19, green:0.44, blue:0.90, alpha:1.0) //UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
                     commentLabel.text = comment
                     stackViewAllComments.isHidden = false
                 } else {
-                    addCommentButton.setImage(UIImage(named:"one-comment-24px"), for: .normal)
+                    addCommentButton.setImage(UIImage(named:"one_comment"), for: .normal)
                     addCommentButton.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
                     commentLabel.text = "Tap here to add a comment"
                     stackViewAllComments.isHidden = true

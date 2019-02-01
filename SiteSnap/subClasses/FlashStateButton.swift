@@ -22,7 +22,7 @@ class FlashStateButton: UIButton {
     }
     
     func initButton(){
-        setBackgroundImage(UIImage(named: "flash_auto-24px"), for: .normal)
+        setBackgroundImage(UIImage(named: "flash_auto"), for: .normal)
         addTarget(self, action: #selector(FlashStateButton.buttonPressed), for: .touchUpInside)
     }
     
@@ -42,13 +42,13 @@ class FlashStateButton: UIButton {
     func changeFlashState(flashState: String){
         switch flashState {
         case "auto":
-            setBackgroundImage(UIImage(named: "flash_auto-24px"), for: .normal)
+            setBackgroundImage(UIImage(named: "flash_auto"), for: .normal)
             currentFlashState = flashState
         case "on":
-            setBackgroundImage(UIImage(named: "flash_on-24px"), for: .normal)
+            setBackgroundImage(UIImage(named: "flash_on"), for: .normal)
             currentFlashState = flashState
         case "off":
-            setBackgroundImage(UIImage(named: "flash_off-24px"), for: .normal)
+            setBackgroundImage(UIImage(named: "flash_off"), for: .normal)
             currentFlashState = flashState
         default:
             print("flash state unknown")

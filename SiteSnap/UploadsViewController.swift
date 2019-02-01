@@ -21,9 +21,9 @@ enum CancelRequestType: String {
 class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, URLSessionDelegate, URLSessionTaskDelegate, URLSessionDataDelegate {
 
     var images = [[ImageForUpload]]()
-    let accesoryView = [UIImageView(image: UIImage(named: "cancel-80px")),
-                        UIImageView(image: UIImage(named: "autorenew-80px")),
-                        UIImageView(image: UIImage(named: "done-80px"))]
+    let accesoryView = [UIImageView(image: UIImage(named: "cancel")),
+                        UIImageView(image: UIImage(named: "autorenew")),
+                        UIImageView(image: UIImage(named: "done"))]
     
     
     @IBOutlet weak var backButton: UIButton!

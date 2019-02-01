@@ -42,7 +42,7 @@ class ActivityIndicatorButton: UIButton {
         self.layer.cornerRadius = 10
         self.layer.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5).cgColor
         self.setTitleColor(UIColor.white, for: .normal)
-        self.image = UIImageView(image: UIImage(named: "import_export-24px"))
+        self.image = UIImageView(image: UIImage(named: "import_export"))
         self.image.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(image)
         positioningImage()

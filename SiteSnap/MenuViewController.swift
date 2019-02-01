@@ -81,15 +81,15 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         cell.tag = indexPath.row
         switch indexPath.row {
         case 0:
-            cell.menuItemIcon.image = UIImage(named: "person-80px")
+            cell.menuItemIcon.image = UIImage(named: "person")
             cell.menuItemTitle.text = "Account"
             cell.menuItemDescription.text = (UserDefaults.standard.value(forKey: "given_name") as? String)! + " " + (UserDefaults.standard.value(forKey: "family_name") as? String)!
         case 1:
-            cell.menuItemIcon.image = UIImage(named: "upload-80px")
+            cell.menuItemIcon.image = UIImage(named: "upload")
             cell.menuItemTitle.text = "Uploads"
             cell.menuItemDescription.text = "\(failedPhotosNumber) photos failed to upload"
         case 2:
-            cell.menuItemIcon.image = UIImage(named: "settings-80px")
+            cell.menuItemIcon.image = UIImage(named: "settings")
             cell.menuItemTitle.text = "Settings"
             cell.menuItemDescription.text = ""
         default:

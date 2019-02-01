@@ -129,6 +129,9 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if let prjId = UserDefaults.standard.value(forKey: "currentProjectId") as? String {
+            self.setProjectsSelected(projectId: prjId)
+        }
         sessionQueue.async {
             switch self.cameraSetupResult {
             case .success:
@@ -870,7 +873,13 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
         
         session.beginConfiguration()
-        session.sessionPreset = .high
+        switch UIDevice().model {
+        case "iPhone":
+            session.sessionPreset = .high
+        default:
+            session.sessionPreset = .photo
+        }
+        
         
         
         // Add video input.
