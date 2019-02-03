@@ -148,7 +148,9 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         }
     
         self.selectedProjectButton.hideLoading(buttonText: nil)
-        self.setProjectsSelected(projectId: (UserDefaults.standard.value(forKey: "currentProjectId") as? String)!)
+        if let currentPrj = UserDefaults.standard.value(forKey: "currentProjectId") as? String {
+            self.setProjectsSelected(projectId: currentPrj)
+        }
         self.dropDownListProjectsTableView.reloadData()
      
         
