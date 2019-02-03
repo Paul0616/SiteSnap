@@ -18,6 +18,9 @@ class TagHandler: NSObject {
     }
     
     class func saveTag(id: String, text: String, tagColor: String?) -> Bool{
+        if let _ = getSpecificTag(id: id) {
+           return false
+        }
         let context = getContext()
         let entity = NSEntityDescription.entity(forEntityName: "Tag", in: context)
         let managedObject = NSManagedObject(entity: entity!, insertInto: context)
@@ -60,6 +63,41 @@ class TagHandler: NSObject {
             return tags
         } catch  {
             return tags
+        }
+    }
+    
+    class func deleteExtraTags(tagsForVerification: [String]) -> Int {
+        let context = getContext()
+        let fetchRequest = NSFetchRequest<Tag>(entityName: "Tag")
+        fetchRequest.predicate = NSPredicate.init(format: "NOT (id IN %@)", tagsForVerification)
+        var tagsForDelete: [Tag]!
+        do {
+            tagsForDelete = try context.fetch(fetchRequest)
+        } catch _ {
+            tagsForDelete = nil
+        }
+        if tagsForDelete == nil {
+           return 0
+        }
+        if tagsForDelete.count == 0 {
+            return 0
+        }
+        var ids = [String]()
+        for tag in tagsForDelete {
+            ids.append(tag.id!)
+        }
+        context.reset()
+        let fetchDeleteRequest = NSFetchRequest<Tag>(entityName: "Tag")
+        fetchDeleteRequest.predicate = NSPredicate.init(format: "id IN %@", ids)
+        do {
+            let objects = try context.fetch(fetchDeleteRequest)
+            for object in objects {
+                context.delete(object)
+            }
+            try context.save()
+            return objects.count
+        } catch _ {
+            return 0
         }
     }
     

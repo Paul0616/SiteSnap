@@ -75,9 +75,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     //MARK: - Loading Camera View Controller
     override func viewDidLoad() {
         super.viewDidLoad()
-        if TagHandler.deleteAllTags() {
-            print("tags was deleted from internal database")
-        }
+        
         UserDefaults.standard.removeObject(forKey: "currentProjectId")
         UserDefaults.standard.removeObject(forKey: "currentProjectName")
         dropDownListProjectsTableView.isHidden = true
@@ -292,6 +290,19 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         UserDefaults.standard.set(projectId, forKey: "currentProjectId")
         
         let allTags = json["tags"] as! NSArray
+        
+        //-----------------------  check if photos from CoreData is still in gallery and if not detele them from CoreData
+        for photo in photoObjects {
+            let photoId = photo.localIdentifierString
+            let assets : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [photoId!] , options: nil)
+            if assets.count == 0 {
+                if PhotoHandler.photosDeleteBatch(identifiers: [photoId!]) {
+                    print("Photo with is: \(String(describing: photoId)) was deleted")
+                }
+            }
+            
+        }
+
         self.userProjects.removeAll()
         for item in projects {
             let project = item as! NSDictionary
@@ -301,16 +312,20 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             }
             let coord = project["projectCenterPosition"] as! NSArray
             let tags = project["tagIds"] as! NSArray
+            
+            //-------------------- make a list with all tag ids for current project from server
             var tagIds = [String]()
             for tag in tags {
                 tagIds += [tag as! String]
             }
+            //--------------------- fill the model with projects
             guard let projectModel = ProjectModel(id: project["id"]! as! String, projectName: project["name"]! as! String, latitudeCenterPosition: coord[0] as! Double, longitudeCenterPosition: coord[1] as! Double, tagIds: tagIds) else {
                 fatalError("Unable to instantiate ProductModel")
             }
             self.userProjects += [projectModel]
         }
         DispatchQueue.main.async {
+            //--------------------- clean projects Coredata and add projects from model
             if ProjectHandler.deleteAllProjects() {
                 for projectModel in self.userProjects {
                     if ProjectHandler.saveProject(id: projectModel.id, name: projectModel.projectName, latitude: projectModel.latitudeCenterPosition, longitude: projectModel.longitudeCenterPosition) {
@@ -318,14 +333,25 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                     }
                 }
             }
-            if TagHandler.deleteAllTags() {
-                for item in allTags {
-                    let tag = item as! NSDictionary
-                    if TagHandler.saveTag(id: tag["id"] as! String, text: tag["name"] as! String, tagColor: tag["colour"] as! String?) {
-                        print("TAG \(tag["name"] as! String) \(tag["id"] as! String) with was added")
-                    }
+            
+            //------------------------ 
+            //----------------------- add extra tags from server to CoreData (saveTag will add new tag only if it not already exist)
+            var allTagIds: [String]!
+            if allTags.count > 0 {
+                allTagIds = [String]()
+            }
+            for item in allTags {
+                let tag = item as! NSDictionary
+                allTagIds.append(tag["id"] as! String)
+                if TagHandler.saveTag(id: tag["id"] as! String, text: tag["name"] as! String, tagColor: tag["colour"] as! String?) {
+                    print("TAG \(tag["name"] as! String) \(tag["id"] as! String) with was added")
                 }
             }
+            let deletedTagsNumber = TagHandler.deleteExtraTags(tagsForVerification: allTagIds)
+            print("\(deletedTagsNumber) tags was deleted")
+            
+            //------------------------ for each project from CoreData find the corespondent in projectModel
+            //------------------------ and set each project from CoreData associated tags
             if let projectsRecords = ProjectHandler.fetchAllProjects() {
                 for item in projectsRecords {
                     for projectModel in self.userProjects {
@@ -341,7 +367,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                     }
                 }
             }
-            
+            //-------------------- for each tag from CoreData set associated project
             for tagItem in TagHandler.fetchObjects()! {
                 for projectItem in ProjectHandler.fetchAllProjects()! {
                     for associatedTag in projectItem.availableTags! {
