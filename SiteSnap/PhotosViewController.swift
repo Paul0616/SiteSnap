@@ -131,8 +131,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         selectedProjectButton.showLoading()
     }
     
-    func loadingProjectIntoList(){
-       
+    func loadingProjectIntoList(){        
         self.userProjects.removeAll()
         let projects = ProjectHandler.fetchAllProjects()
         for item in projects! {
@@ -161,7 +160,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cellProject", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cellProjectInPhoto", for: indexPath)
         cell.textLabel?.textColor = UIColor.white
         cell.textLabel?.text = userProjects[indexPath.row].projectName
         
@@ -169,16 +168,16 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let selected = tableView.indexPathForSelectedRow
-        if selected == indexPath {
-            cell.contentView.backgroundColor = UIColor.black
-        } else {
-            cell.contentView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
-        }
+//        let selected = tableView.indexPathForSelectedRow
+//        if selected == indexPath {
+//            cell.contentView.backgroundColor = UIColor.black
+//        } else {
+//            cell.contentView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+//        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if tableView == dropDownListProjectsTableView {
+        if tableView == self.dropDownListProjectsTableView {
             let projectId = userProjects[indexPath.row].id
             let oldProjectId = UserDefaults.standard.value(forKey: "currentProjectId") as? String
             

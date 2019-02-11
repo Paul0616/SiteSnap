@@ -18,8 +18,18 @@ class TagHandler: NSObject {
     }
     
     class func saveTag(id: String, text: String, tagColor: String?) -> Bool{
-        if let _ = getSpecificTag(id: id) {
-           return false
+        if let tag = getSpecificTag(id: id) {
+            if tag.text != text {
+                if updateTagText(id: id, text: text) {
+                    print("Text for 1 tag was modified")
+                }
+            }
+            if tag.tagColor != tagColor {
+                if updateTagColor(id: id, tagColor: tagColor!) {
+                    print("Colour for 1 tag was modified")
+                }
+            }
+            return false
         }
         let context = getContext()
         let entity = NSEntityDescription.entity(forEntityName: "Tag", in: context)
@@ -41,6 +51,35 @@ class TagHandler: NSObject {
         }
     }
     
+    class func updateTagText(id: String, text: String) -> Bool {
+        let context = getContext()
+        let fetchRequest = NSFetchRequest<Tag>(entityName: "Tag")
+        fetchRequest.predicate = NSPredicate.init(format: "id=='\(id)'")
+        do {
+            let objects = try context.fetch(fetchRequest)
+            objects.first?.text = text
+            try context.save()
+            return true
+        } catch _ {
+            return false
+        }
+    }
+    
+    class func updateTagColor(id: String, tagColor: String?) -> Bool {
+        let context = getContext()
+        let fetchRequest = NSFetchRequest<Tag>(entityName: "Tag")
+        fetchRequest.predicate = NSPredicate.init(format: "id=='\(id)'")
+        do {
+            let objects = try context.fetch(fetchRequest)
+            let colour = tagColor
+            objects.first?.tagColor = colour
+        
+            try context.save()
+            return true
+        } catch _ {
+            return false
+        }
+    }
     
     class func getSpecificTag(id: String) -> Tag! {
         let context = getContext()

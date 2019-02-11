@@ -361,10 +361,11 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                             for tagId in currentProjectTagIds {
                                 if let tagRecord = TagHandler.getSpecificTag(id: tagId) {
                                     item.addToAvailableTags(tagRecord)
+                                    print("project with id: \(String(describing: item.id)) WAS ADDED to tag: \(String(describing: tagRecord.text))")
                                 }
                             }
+                            break
                         }
-                        break
                     }
                 }
             }
@@ -375,6 +376,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                         let tag = associatedTag as! Tag
                         if tag.id == tagItem.id {
                             tagItem.addToProjects(projectItem)
+                            print("tag \(String(describing: tagItem.text)) WAS ADDED to project with id: \(String(describing: projectItem.id))")
                         }
                     }
                 }
