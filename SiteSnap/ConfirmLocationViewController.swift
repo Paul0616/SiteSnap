@@ -11,6 +11,7 @@ import MapKit
 import CoreData
 import Photos
 
+
 class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
 
     @IBOutlet weak var map: MKMapView!
@@ -22,6 +23,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
     @IBOutlet weak var editAllLocationButton: UIButton!
     @IBOutlet weak var editLocationButton: UIButton!
     @IBOutlet weak var currentLocationButton: UIButton!
+    @IBOutlet weak var gpsIcon: UIButton!
     
     var photos: [Photo]!
     var slideArray = [Slide]()
@@ -38,10 +40,12 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
     var currentClusterAnnotationIdentifier: String!
     var selectedPhotoIdentifier: String!
     var dummy: Annotation!
+    private var scaleKvoToken:NSKeyValueObservation?
     
     //MARK: -
     override func viewDidLoad() {
         super.viewDidLoad()
+        map.showsCompass = false
         backButton.layer.cornerRadius = 20
         confirmPhotoLocationButton.layer.cornerRadius = 6
         confirmPhotoLocationButton.isEnabled = false
@@ -57,7 +61,14 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
         setPhotoClusters()
         map.mapType = .hybrid
         createAnnotations(isAfterEditLocation: false)
-
+        let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(mapDoubleTapSelector(_:)))
+        doubleTapGesture.numberOfTapsRequired = 2
+        map.addGestureRecognizer(doubleTapGesture)
+    }
+  
+    
+    @objc func mapDoubleTapSelector(_ sender: UITapGestureRecognizer) {
+        print("double taps")
     }
     
     override func viewDidLayoutSubviews() {
@@ -103,6 +114,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
         confirmPhotoLocationButton.isEnabled = true
         confirmPhotoLocationButton.backgroundColor = UIColor(red:0.19, green:0.44, blue:0.90, alpha:1.0) //UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
         cancelEditButton.isHidden = false
+        gpsIcon.setImage(UIImage(named: "gps_not_fixed"), for: .normal)
         currentLocationButton.isHidden = false
         uploadButton.isHidden = true
         backButton.isHidden = true
@@ -124,6 +136,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
         confirmPhotoLocationButton.isEnabled = true
         confirmPhotoLocationButton.backgroundColor = UIColor(red:0.19, green:0.44, blue:0.90, alpha:1.0) //UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
         cancelEditButton.isHidden = false
+        gpsIcon.setImage(UIImage(named: "gps_not_fixed"), for: .normal)
         currentLocationButton.isHidden = false
         uploadButton.isHidden = true
         backButton.isHidden = true
@@ -190,6 +203,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
         confirmPhotoLocationButton.isEnabled = false
         confirmPhotoLocationButton.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
         cancelEditButton.isHidden = true
+        gpsIcon.setImage(UIImage(named: "gps_fixed"), for: .normal)
         uploadButton.isHidden = false
         backButton.isHidden = false
         editLocationMode = false
@@ -349,6 +363,8 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
         return img
     }
     
+    
+   
     //MARK: - map delegate methods
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if annotation is MKUserLocation {
@@ -407,6 +423,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
        
   
     }
+    
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         if animated {
             print("map changed ANIMATED - here carousel should appear")

@@ -67,6 +67,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         stackViewAllComments.isHidden = true
         commentLabel.translatesAutoresizingMaskIntoConstraints = false
         commentLabel.bottomAnchor.constraint(equalTo: commentScrollView.bottomAnchor, constant: 0).isActive = true
+        
     }
     
     
@@ -155,7 +156,9 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
      
         
     }
-    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return userProjects.count
     }
@@ -164,8 +167,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellProject", for: indexPath)
         cell.textLabel?.textColor = UIColor.white
         cell.textLabel?.text = userProjects[indexPath.row].projectName
-        
-        return cell
+         return cell
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -209,10 +211,13 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
             self.dropDownListProjectsTableView.isHidden = !toogle
         })
     }
+    
     //MARK: - Selecting new project
     @IBAction func onClickSelectedProjectButton(_ sender: ActivityIndicatorButton) {
         animateProjectsList(toogle: dropDownListProjectsTableView.isHidden)
     }
+  
+    
     //MARK: - UI Buttons actions
     
     @IBAction func onClickAddTag(_ sender: UIButton) {
@@ -547,7 +552,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     {
         targetContentOffset.pointee = scrollView.contentOffset
        
-        if scrollView == scrollView {
+        if scrollView == self.scrollView {
             let maxIndex = slidesObjects.count - 1
             //print("velocity:\(velocity)")
             let targetX: CGFloat = scrollView.contentOffset.x + velocity.x * 200.0
@@ -608,40 +613,44 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let pageIndex = floor(scrollView.contentOffset.x * 2 / self.slidesContainer.frame.width)
-        imageControl.currentPage = Int(pageIndex)
-        
-        // horizontal
-        let maximumHorizontalOffset: CGFloat = scrollView.contentSize.width - scrollView.frame.width
-        let currentHorizontalOffset: CGFloat = scrollView.contentOffset.x
-        
-        // vertical
-//        let maximumVerticalOffset: CGFloat = scrollView.contentSize.height - scrollView.frame.height
-//        let currentVerticalOffset: CGFloat = scrollView.contentOffset.y
+        if scrollView == self.scrollView {
+            let pageIndex = floor(scrollView.contentOffset.x * 2 / self.slidesContainer.frame.width)
+            imageControl.currentPage = Int(pageIndex)
+            
+            // horizontal
+            let maximumHorizontalOffset: CGFloat = scrollView.contentSize.width - scrollView.frame.width
+            let currentHorizontalOffset: CGFloat = scrollView.contentOffset.x
+            
+            // vertical
+    //        let maximumVerticalOffset: CGFloat = scrollView.contentSize.height - scrollView.frame.height
+    //        let currentVerticalOffset: CGFloat = scrollView.contentOffset.y
 
-        let percentageHorizontalOffset: CGFloat = currentHorizontalOffset / maximumHorizontalOffset
-//        let percentageVerticalOffset: CGFloat = currentVerticalOffset / maximumVerticalOffset
-        
-        
-        /*
-         * below code scales the imageview on paging the scrollview
-         */
-        let percentOffset: CGPoint = CGPoint(x: percentageHorizontalOffset, y: 0)
-        let valueMin = CGFloat(imageControl.currentPage) / CGFloat(slidesObjects.count - 1)
-        let valueMax = CGFloat(imageControl.currentPage + 1) / CGFloat(slidesObjects.count - 1)
-        //print("\(valueMin) - \(valueMax) - percentage : \(percentageHorizontalOffset)")
-        if(percentOffset.x > valueMin && percentOffset.x <= valueMax) {
-            slidesObjects[imageControl.currentPage].mainImage.transform = CGAffineTransform(scaleX: 1 - (1 - self.minImageScale) * (percentOffset.x - valueMin) / (valueMax - valueMin), y: 1 - (1 - self.minImageScale) * (percentOffset.x - valueMin) / (valueMax - valueMin))
-            slidesObjects[imageControl.currentPage].mainImage.alpha = 1 - (1 - self.minImageAlpha) * (percentOffset.x - valueMin) / (valueMax - valueMin)
-            if imageControl.currentPage < slidesObjects.count - 1 {
-                slidesObjects[imageControl.currentPage+1].mainImage.transform = CGAffineTransform(scaleX: self.minImageScale + (1 - self.minImageScale) * (percentOffset.x - valueMin) / (valueMax - valueMin) , y: self.minImageScale + (1 - self.minImageScale) * (percentOffset.x - valueMin) / (valueMax - valueMin))
-                 slidesObjects[imageControl.currentPage + 1].mainImage.alpha = self.minImageAlpha + (1 - self.minImageAlpha) * (percentOffset.x - valueMin) / (valueMax - valueMin)
+            let percentageHorizontalOffset: CGFloat = currentHorizontalOffset / maximumHorizontalOffset
+    //        let percentageVerticalOffset: CGFloat = currentVerticalOffset / maximumVerticalOffset
+            
+            
+            /*
+             * below code scales the imageview on paging the scrollview
+             */
+            let percentOffset: CGPoint = CGPoint(x: percentageHorizontalOffset, y: 0)
+            let valueMin = CGFloat(imageControl.currentPage) / CGFloat(slidesObjects.count - 1)
+            let valueMax = CGFloat(imageControl.currentPage + 1) / CGFloat(slidesObjects.count - 1)
+            //print("\(valueMin) - \(valueMax) - percentage : \(percentageHorizontalOffset)")
+            if(percentOffset.x > valueMin && percentOffset.x <= valueMax) {
+                slidesObjects[imageControl.currentPage].mainImage.transform = CGAffineTransform(scaleX: 1 - (1 - self.minImageScale) * (percentOffset.x - valueMin) / (valueMax - valueMin), y: 1 - (1 - self.minImageScale) * (percentOffset.x - valueMin) / (valueMax - valueMin))
+                slidesObjects[imageControl.currentPage].mainImage.alpha = 1 - (1 - self.minImageAlpha) * (percentOffset.x - valueMin) / (valueMax - valueMin)
+                if imageControl.currentPage < slidesObjects.count - 1 {
+                    slidesObjects[imageControl.currentPage+1].mainImage.transform = CGAffineTransform(scaleX: self.minImageScale + (1 - self.minImageScale) * (percentOffset.x - valueMin) / (valueMax - valueMin) , y: self.minImageScale + (1 - self.minImageScale) * (percentOffset.x - valueMin) / (valueMax - valueMin))
+                     slidesObjects[imageControl.currentPage + 1].mainImage.alpha = self.minImageAlpha + (1 - self.minImageAlpha) * (percentOffset.x - valueMin) / (valueMax - valueMin)
+                }
             }
         }
     }
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        updateCommentLabel()
-        updateTagNumber()
+        if scrollView == self.scrollView {
+            updateCommentLabel()
+            updateTagNumber()
+        }
     }
     
     // MARK: - Navigation
