@@ -63,6 +63,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
         createAnnotations(isAfterEditLocation: false)
         let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(mapDoubleTapSelector(_:)))
         doubleTapGesture.numberOfTapsRequired = 2
+        doubleTapGesture.numberOfTouchesRequired = 1
         map.addGestureRecognizer(doubleTapGesture)
     }
   
