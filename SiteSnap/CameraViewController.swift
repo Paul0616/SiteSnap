@@ -80,6 +80,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         UserDefaults.standard.removeObject(forKey: "currentProjectName")
         dropDownListProjectsTableView.isHidden = true
         capturePreviewView.session = session
+        capturePreviewView.videoPreviewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         captureButton.layer.borderColor = UIColor.white.cgColor
         captureButton.layer.borderWidth = 5
         captureButton.backgroundColor = nil
@@ -900,12 +901,12 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
         
         session.beginConfiguration()
-        switch UIDevice().model {
-        case "iPhone":
-            session.sessionPreset = .high
-        default:
-            session.sessionPreset = .photo
-        }
+//        switch UIDevice().model {
+//        case "iPhone":
+//            session.sessionPreset = .high
+//        default:
+//            session.sessionPreset = .photo
+//        }
         
         
         
@@ -927,6 +928,15 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 cameraSetupResult = .configurationFailed
                 session.commitConfiguration()
                 return
+            }
+            if videoDevice.isFocusModeSupported(.continuousAutoFocus){
+                do{
+                    try videoDevice.lockForConfiguration()
+                    videoDevice.focusMode = .continuousAutoFocus
+                    videoDevice.unlockForConfiguration()
+                } catch {
+                    print("Could not lock device for configuration: \(error)")
+                }
             }
             let videoDeviceInput = try AVCaptureDeviceInput(device: videoDevice)
             
