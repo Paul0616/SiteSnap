@@ -1345,6 +1345,7 @@
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="Ubp-0E-1k3">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                                <gestureRecognizers/>
                             </mapView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r4t-rr-cqW">
                                 <rect key="frame" x="8" y="52" width="40" height="40"/>
@@ -1390,17 +1391,6 @@
                                     <segue destination="d3c-CP-8Yl" kind="show" id="Wd9-9r-cgP"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nl4-u6-Eii">
-                                <rect key="frame" x="319" y="110" width="40" height="40"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="40" id="AXe-kP-6Vl"/>
-                                    <constraint firstAttribute="height" constant="40" id="aCo-Lx-1nc"/>
-                                </constraints>
-                                <state key="normal" image="map"/>
-                                <connections>
-                                    <action selector="onClickChangeMapType:" destination="3th-Zv-vt4" eventType="touchUpInside" id="x9U-s9-BP9"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eYg-eC-Z5W">
                                 <rect key="frame" x="16" y="110" width="40" height="40"/>
                                 <constraints>
@@ -1441,20 +1431,45 @@
                                     <action selector="onTapEditLocation:" destination="3th-Zv-vt4" eventType="touchUpInside" id="bei-Id-ap0"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qqh-td-zPC">
-                                <rect key="frame" x="327" y="52" width="40" height="40"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="40" id="2dX-CY-gfS"/>
-                                    <constraint firstAttribute="height" constant="40" id="Svo-Cv-Mae"/>
-                                </constraints>
-                                <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
-                                <state key="normal" image="cancel"/>
-                                <connections>
-                                    <action selector="onClickDeleteImageButton:" destination="Ndu-GM-uKQ" eventType="touchUpInside" id="JSo-RI-bIV"/>
-                                    <action selector="onTapCancelEditButton:" destination="3th-Zv-vt4" eventType="touchUpInside" id="tnM-md-UOw"/>
-                                </connections>
-                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="fjD-Ml-Q3e">
+                                <rect key="frame" x="327" y="52" width="40" height="152"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qqh-td-zPC">
+                                        <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="40" id="2dX-CY-gfS"/>
+                                            <constraint firstAttribute="height" constant="40" id="Svo-Cv-Mae"/>
+                                        </constraints>
+                                        <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
+                                        <state key="normal" image="cancel"/>
+                                        <connections>
+                                            <action selector="onClickDeleteImageButton:" destination="Ndu-GM-uKQ" eventType="touchUpInside" id="JSo-RI-bIV"/>
+                                            <action selector="onTapCancelEditButton:" destination="3th-Zv-vt4" eventType="touchUpInside" id="tnM-md-UOw"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gfm-7a-VAI">
+                                        <rect key="frame" x="0.0" y="56" width="40" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="40" id="gOh-Km-uDb"/>
+                                            <constraint firstAttribute="height" constant="40" id="uK9-lF-uiB"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <state key="normal" image="gps_fixed"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nl4-u6-Eii">
+                                        <rect key="frame" x="0.0" y="112" width="40" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="40" id="AXe-kP-6Vl"/>
+                                            <constraint firstAttribute="height" constant="40" id="aCo-Lx-1nc"/>
+                                        </constraints>
+                                        <state key="normal" image="map"/>
+                                        <connections>
+                                            <action selector="onClickChangeMapType:" destination="3th-Zv-vt4" eventType="touchUpInside" id="x9U-s9-BP9"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -1462,12 +1477,12 @@
                             <constraint firstItem="r4t-rr-cqW" firstAttribute="leading" secondItem="G5S-UM-ZT7" secondAttribute="leading" constant="8" id="1qG-ac-RNf"/>
                             <constraint firstItem="lQG-SL-iUJ" firstAttribute="centerX" secondItem="Cel-qg-Qv2" secondAttribute="centerX" multiplier="1.25" id="6Mx-NS-a4E"/>
                             <constraint firstItem="G5S-UM-ZT7" firstAttribute="bottom" secondItem="I5P-tR-6Dz" secondAttribute="bottom" constant="16" id="6Ox-CY-hzo"/>
-                            <constraint firstItem="G5S-UM-ZT7" firstAttribute="trailing" secondItem="Nl4-u6-Eii" secondAttribute="trailing" constant="16" id="6qI-67-4q8"/>
                             <constraint firstItem="Ubp-0E-1k3" firstAttribute="trailing" secondItem="G5S-UM-ZT7" secondAttribute="trailing" id="CZN-CP-s4r"/>
                             <constraint firstItem="I5P-tR-6Dz" firstAttribute="centerX" secondItem="VqZ-Fo-lVQ" secondAttribute="centerX" id="EYX-FF-W42"/>
+                            <constraint firstItem="fjD-Ml-Q3e" firstAttribute="top" secondItem="G5S-UM-ZT7" secondAttribute="top" constant="8" id="F7Q-YX-VtQ"/>
+                            <constraint firstItem="G5S-UM-ZT7" firstAttribute="trailing" secondItem="fjD-Ml-Q3e" secondAttribute="trailing" constant="8" id="Izt-yC-wBz"/>
                             <constraint firstItem="eYg-eC-Z5W" firstAttribute="top" secondItem="Rhn-FG-NYy" secondAttribute="bottom" constant="16" id="JOG-ad-2ZZ"/>
                             <constraint firstItem="P43-nk-cQg" firstAttribute="centerX" secondItem="Cel-qg-Qv2" secondAttribute="centerX" multiplier="0.75" id="Q0p-kL-7AN"/>
-                            <constraint firstItem="G5S-UM-ZT7" firstAttribute="trailing" secondItem="qqh-td-zPC" secondAttribute="trailing" constant="8" id="TGY-Jk-RNo"/>
                             <constraint firstItem="Ubp-0E-1k3" firstAttribute="top" secondItem="VqZ-Fo-lVQ" secondAttribute="top" id="Wue-g1-xGU"/>
                             <constraint firstItem="I5P-tR-6Dz" firstAttribute="width" secondItem="G5S-UM-ZT7" secondAttribute="width" multiplier="0.6" id="Xd0-QR-g0g"/>
                             <constraint firstItem="Cel-qg-Qv2" firstAttribute="width" secondItem="G5S-UM-ZT7" secondAttribute="width" multiplier="0.7" id="cdg-II-7bm"/>
@@ -1476,11 +1491,9 @@
                             <constraint firstItem="eYg-eC-Z5W" firstAttribute="leading" secondItem="VqZ-Fo-lVQ" secondAttribute="leading" constant="16" id="hUa-bl-IO4"/>
                             <constraint firstItem="P43-nk-cQg" firstAttribute="top" secondItem="Cel-qg-Qv2" secondAttribute="top" constant="5" id="kvz-Mg-Bw4"/>
                             <constraint firstItem="r4t-rr-cqW" firstAttribute="top" secondItem="G5S-UM-ZT7" secondAttribute="top" constant="8" id="nJZ-J8-B53"/>
-                            <constraint firstItem="qqh-td-zPC" firstAttribute="top" secondItem="G5S-UM-ZT7" secondAttribute="top" constant="8" id="oOH-bd-F3k"/>
                             <constraint firstItem="Rhn-FG-NYy" firstAttribute="centerX" secondItem="VqZ-Fo-lVQ" secondAttribute="centerX" id="pOI-cY-WZi"/>
                             <constraint firstItem="Ubp-0E-1k3" firstAttribute="leading" secondItem="G5S-UM-ZT7" secondAttribute="leading" id="phM-dG-HNG"/>
                             <constraint firstItem="Cel-qg-Qv2" firstAttribute="top" secondItem="Rhn-FG-NYy" secondAttribute="bottom" constant="40" id="qmE-rO-7mh"/>
-                            <constraint firstItem="Nl4-u6-Eii" firstAttribute="top" secondItem="Rhn-FG-NYy" secondAttribute="bottom" constant="16" id="sx5-Km-fMc"/>
                             <constraint firstItem="Rhn-FG-NYy" firstAttribute="width" secondItem="G5S-UM-ZT7" secondAttribute="width" multiplier="0.6" id="vol-aB-Vza"/>
                             <constraint firstItem="Ubp-0E-1k3" firstAttribute="bottom" secondItem="VqZ-Fo-lVQ" secondAttribute="bottom" id="ywl-Ed-s9C"/>
                         </constraints>
@@ -1493,6 +1506,7 @@
                         <outlet property="currentLocationButton" destination="eYg-eC-Z5W" id="Dxg-4c-tM8"/>
                         <outlet property="editAllLocationButton" destination="P43-nk-cQg" id="c4J-eU-ePX"/>
                         <outlet property="editLocationButton" destination="lQG-SL-iUJ" id="MmI-nG-3g9"/>
+                        <outlet property="gpsIcon" destination="gfm-7a-VAI" id="10h-pS-LcP"/>
                         <outlet property="map" destination="Ubp-0E-1k3" id="NaQ-jl-6Ws"/>
                         <outlet property="slideContainer" destination="Cel-qg-Qv2" id="wnm-d4-S2X"/>
                         <outlet property="uploadButton" destination="I5P-tR-6Dz" id="sSk-Hs-C4o"/>
@@ -1500,7 +1514,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ofy-fY-yu6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1116" y="816.34182908545733"/>
+            <point key="canvasLocation" x="1031" y="717"/>
         </scene>
         <!--Photo Inspector View Controller-->
         <scene sceneID="nxn-j5-OQx">
@@ -1853,6 +1867,7 @@
         <image name="comment" width="45" height="45"/>
         <image name="flash_auto" width="45" height="45"/>
         <image name="gallery" width="45" height="45"/>
+        <image name="gps_fixed" width="45" height="45"/>
         <image name="map" width="45" height="45"/>
         <image name="menu" width="45" height="45"/>
         <image name="multiple_edit_location" width="45" height="45"/>
