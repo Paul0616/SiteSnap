@@ -163,7 +163,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cellProjectInPhoto", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cellProject", for: indexPath)
         cell.textLabel?.textColor = UIColor.white
         cell.textLabel?.text = userProjects[indexPath.row].projectName
          return cell
