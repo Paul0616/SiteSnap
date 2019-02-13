@@ -168,6 +168,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         cell.textLabel?.textColor = UIColor.white
         cell.textLabel?.text = userProjects[indexPath.row].projectName
          return cell
+        
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
