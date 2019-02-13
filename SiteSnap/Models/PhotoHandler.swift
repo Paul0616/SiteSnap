@@ -46,8 +46,26 @@ class PhotoHandler: NSObject {
         }
     }
     
-    class func setFileSize(localIdentifiers: [String]!){
+    class func photosDatabaseContainHidden(localIdentifiers: [String]!) -> [String] {
+        var hiddenIdentifiers: [String] = [String]();
         let context = getContext()
+        let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
+        fetchRequest.predicate = NSPredicate.init(format: "localIdentifierString IN %@", localIdentifiers)
+        do {
+            let objects = try context.fetch(fetchRequest)
+            for object in objects {
+                if object.isHidden {
+                    hiddenIdentifiers.append(object.localIdentifierString!)
+                }
+            }
+        } catch _ {
+           print("Error on fetch photos")
+        }
+        return hiddenIdentifiers
+    }
+    
+    class func setFileSize(localIdentifiers: [String]!){
+//        let context = getContext()
         let assets : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: localIdentifiers! , options: nil)
         assets.enumerateObjects{(object: AnyObject!,
             count: Int,
@@ -63,20 +81,32 @@ class PhotoHandler: NSObject {
                     let unsignedInt64 = resource.value(forKey: "fileSize") as? CLong
                     sizeOnDisk = Int64(bitPattern: UInt64(unsignedInt64!))
                 }
-                
-                let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
-                fetchRequest.predicate = NSPredicate.init(format: "localIdentifierString=='\(String(object.localIdentifier))'")
-                do {
-                    let objects = try context.fetch(fetchRequest)
-                    objects.first?.fileSize = sizeOnDisk!
-                    try context.save()
-                } catch _ {
-                   print("Error on save filesize")
-                }
+                updateFileSize(localIdentifier: String(object.localIdentifier), size: sizeOnDisk!)
+//                let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
+//                fetchRequest.predicate = NSPredicate.init(format: "localIdentifierString=='\(String(object.localIdentifier))'")
+//                do {
+//                    let objects = try context.fetch(fetchRequest)
+//                    objects.first?.fileSize = sizeOnDisk!
+//                    try context.save()
+//                } catch _ {
+//                   print("Error on save filesize")
+//                }
                 //print(self.converByteToHumanReadable(sizeOnDisk!))
             }
         }
     
+    }
+    class func updateFileSize(localIdentifier: String, size: Int64){
+        let context = getContext()
+        let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
+        fetchRequest.predicate = NSPredicate.init(format: "localIdentifierString=='\(localIdentifier)'")
+        do {
+            let objects = try context.fetch(fetchRequest)
+            objects.first?.fileSize = size
+            try context.save()
+        } catch _ {
+            print("Error on save filesize")
+        }
     }
     
     class func fetchAllObjects() -> [Photo]? {

@@ -1082,6 +1082,24 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             }
         })
     }
+    func saveDocumentImageToDatabase(fileName: String, image: UIImage) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            let now: Date = Date()
+            if PhotoHandler.savePhotoInMyDatabase(localIdentifier: fileName, creationDate: now, latitude: self.lastLocation.coordinate.latitude, longitude: self.lastLocation.coordinate.longitude, isHidden: true){
+                print("Photo added in core data")
+            }
+            
+            
+            let size: Int64 = image.fileSize(image: fileName)
+            //PhotoHandler.setFileSize(localIdentifiers: [localId!])
+            PhotoHandler.updateFileSize(localIdentifier: fileName, size: size)
+            self.photoObjects = PhotoHandler.fetchAllObjects()!
+            
+            self.processingPopup.hideAndDestroy(from: self.view)
+            self.performSegue(withIdentifier: "PhotsViewIdentifier", sender: nil)
+            
+        }
+    }
     
     //MARK: - Optional find all images in specific assetCollection
     func showImages() {
@@ -1278,8 +1296,20 @@ extension CameraViewController : AVCapturePhotoCaptureDelegate {
         }
         let uiImage = UIImage(data: photo.fileDataRepresentation()!)
         
+        if let saveToGallery = UserDefaults.standard.value(forKey: "saveToGallery") as? Bool {
+            if saveToGallery {
+                self.createAlbumAndSave(image: uiImage)
+            } else {
+                let fileName = UUID().uuidString + ".jpg"
+                if (uiImage?.saveToDocumentDirectory(withName: fileName))! {
+                    print("saved in documents was successfully")
+                    saveDocumentImageToDatabase(fileName: fileName, image: uiImage!)
+                }
+            }
+        } else {
+           self.createAlbumAndSave(image: uiImage)
+        }
         
-        self.createAlbumAndSave(image: uiImage)
        // processingPopup.hideAndDestroy(from: view)
         
     }

@@ -654,27 +654,28 @@ extension UploadsViewController: UIImagePickerControllerDelegate, UINavigationCo
 
 extension UIImage {
     
-    func loadFromDocumentDirectory(image imageName: String) -> UIImage! {
-        // declare image location
-        let imagePath: String = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/\(imageName).jpg"
-        let imageUrl: URL = URL(fileURLWithPath: imagePath)
-        
+//    func loadFromDocumentDirectory(image withName: String, atSize: CGSize) -> UIImage! {
+//        // declare image location
+//        let imagePath: String = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/\(withName).jpg"
+//        let imageUrl: URL = URL(fileURLWithPath: imagePath)
+    
         // check if the image is stored already
-        if FileManager.default.fileExists(atPath: imagePath),
-            let imageData: Data = try? Data(contentsOf: imageUrl),
-            let image: UIImage = UIImage(data: imageData, scale: UIScreen.main.scale) {
-            return image
-        } else {
-            return nil
-        }
-    }
+//        if FileManager.default.fileExists(atPath: imagePath),
+//            let imageData: Data = try? Data(contentsOf: imageUrl),
+//            let image: UIImage = UIImage(data: imageData, scale: UIScreen.main.scale) {
+//
+//            return image
+//        } else {
+//            return nil
+//        }
+//    }
 
-    func saveToDocumentDirectory(image: UIImage, imageName: String) -> Bool {
-        let imagePath: String = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/\(imageName).jpg"
+    func saveToDocumentDirectory(withName: String) -> Bool {
+        let imagePath: String = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/\(withName).jpg"
         let imageUrl: URL = URL(fileURLWithPath: imagePath)
         // image has not been created yet: create it, store it, return it
 
-        if (try? image.jpegData(compressionQuality: 1.0)?.write(to: imageUrl)) != nil {
+        if (try? self.jpegData(compressionQuality: 1.0)?.write(to: imageUrl)) != nil {
             
             return true
         } else {
@@ -683,8 +684,8 @@ extension UIImage {
 
     }
     
-    func remove(imageName: String) -> Bool {
-        let imagePath: String = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/\(imageName).png"
+    func remove(image withName: String) -> Bool {
+        let imagePath: String = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/\(withName).png"
         do {
             try FileManager.default.removeItem(atPath: imagePath)
         } catch let error as NSError {
@@ -692,6 +693,39 @@ extension UIImage {
             return false
         }
         return true
+    }
+    
+    func resizeImage(targetSize: CGSize) -> UIImage {
+        let size = self.size
+        let widthRatio  = targetSize.width  / size.width
+        let heightRatio = targetSize.height / size.height
+        let newSize = widthRatio > heightRatio ?  CGSize(width: size.width * heightRatio, height: size.height * heightRatio) : CGSize(width: size.width * widthRatio,  height: size.height * widthRatio)
+        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
+        
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
+        self.draw(in: rect)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return newImage!
+    }
+    
+    func fileSize(image withName: String) -> Int64! {
+        let imagePath: String = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/\(withName).jpg"
+        var fileSize : Int64 = 0
+        
+        do {
+            //return [FileAttributeKey : Any]
+            let attr = try FileManager.default.attributesOfItem(atPath: imagePath)
+            fileSize = attr[FileAttributeKey.size] as! Int64
+            
+            //if you convert to NSDictionary, you can get file size old way as well.
+//            let dict = attr as NSDictionary
+//            fileSize = dict.fileSize()
+        } catch {
+            print("Error: \(error)")
+        }
+        return fileSize
     }
 }
 

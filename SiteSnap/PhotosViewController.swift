@@ -504,6 +504,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     
     //MARK: - Loading images into SLIDES
     func loadImages(identifiers: [String]!) {
+        let hiddenIdentifiers = PhotoHandler.photosDatabaseContainHidden(localIdentifiers: identifiers)
         //This will fetch all the assets in the collection
         let assets : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: identifiers! , options: nil)
         //print(assets)
@@ -539,6 +540,19 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
                     }
                     
                 })
+            }
+        }
+        if hiddenIdentifiers.count > 0 {
+            //var assetAlreadyExist: Bool = false
+            
+            let imageSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
+            for identifier in hiddenIdentifiers {
+                let imagePath: String = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/\(identifier)"
+                //let imageUrl: URL = URL(fileURLWithPath: imagePath)
+                if let image = UIImage(contentsOfFile: imagePath)?.resizeImage(targetSize: imageSize) {
+                    self.slidesObjects.append(self.createSlide(image: image, localIdentifier: identifier))
+                }
+                
             }
         }
         if self.slidesObjects.count > 0 {
