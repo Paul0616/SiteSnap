@@ -658,7 +658,7 @@ extension UIImage {
         // declare image location
         let imagePath: String = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/\(imageName).jpg"
         let imageUrl: URL = URL(fileURLWithPath: imagePath)
-
+        
         // check if the image is stored already
         if FileManager.default.fileExists(atPath: imagePath),
             let imageData: Data = try? Data(contentsOf: imageUrl),

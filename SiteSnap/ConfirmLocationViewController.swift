@@ -12,7 +12,7 @@ import CoreData
 import Photos
 
 
-class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
+class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate, CLLocationManagerDelegate {
 
     @IBOutlet weak var map: MKMapView!
     @IBOutlet weak var uploadButton: UIButton!
@@ -35,12 +35,13 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
     var hiddenCurrentLocation: Bool = true
     var annotationIsMultiple: Bool = false
     var editLocationMode: Bool = false
-    var moveToCurrentLocation: Bool = false
+    var preventShowSlider: Bool = false
     var pointForCurrentAnnotation: CGPoint!
     var currentClusterAnnotationIdentifier: String!
     var selectedPhotoIdentifier: String!
     var dummy: Annotation!
     private var scaleKvoToken:NSKeyValueObservation?
+    var doubleTapGesture: UITapGestureRecognizer!
     
     //MARK: -
     override func viewDidLoad() {
@@ -61,17 +62,14 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
         setPhotoClusters()
         map.mapType = .hybrid
         createAnnotations(isAfterEditLocation: false)
-        let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(mapDoubleTapSelector(_:)))
+        doubleTapGesture = UITapGestureRecognizer(target: self, action: nil)//#selector(mapDoubleTapSelector(_:)))
         doubleTapGesture.numberOfTapsRequired = 2
         doubleTapGesture.numberOfTouchesRequired = 1
+        doubleTapGesture.delegate = self
         map.addGestureRecognizer(doubleTapGesture)
+       
     }
   
-    
-    @objc func mapDoubleTapSelector(_ sender: UITapGestureRecognizer) {
-        print("double taps")
-    }
-    
     override func viewDidLayoutSubviews() {
         if firstTime {
             for view in view.subviews {
@@ -94,7 +92,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
         dismiss(animated: true, completion: nil)
     }
     @IBAction func onClickCurrentLocation(_ sender: UIButton) {
-        moveToCurrentLocation = true
+        preventShowSlider = true
         guard let location = lastLocation else {
             return
         }
@@ -364,8 +362,15 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
         return img
     }
     
-    
-   
+    //MARK: - gesture delegate
+    //if double tap is recognized on map slider need to stay hidden
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if touch.tapCount == 2 && !editLocationMode {
+            preventShowSlider = true
+        }
+        return true
+    }
+
     //MARK: - map delegate methods
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if annotation is MKUserLocation {
@@ -428,7 +433,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         if animated {
             print("map changed ANIMATED - here carousel should appear")
-            if !moveToCurrentLocation {
+            if !preventShowSlider {
                 if !editLocationMode {
                     sliderVisibility(hidden: false)
                 }
@@ -442,7 +447,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, CLLoca
                     }
                 }
             }
-            moveToCurrentLocation = false
+            preventShowSlider = false
         }
     }
     func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {

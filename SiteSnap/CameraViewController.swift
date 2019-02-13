@@ -80,6 +80,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         UserDefaults.standard.removeObject(forKey: "currentProjectName")
         dropDownListProjectsTableView.isHidden = true
         capturePreviewView.session = session
+        capturePreviewView.videoPreviewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         captureButton.layer.borderColor = UIColor.white.cgColor
         captureButton.layer.borderWidth = 5
         captureButton.backgroundColor = nil
@@ -138,6 +139,14 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 self.addObservers()
                 self.session.startRunning()
                 self.isSessionRunning = self.session.isRunning
+                do{
+                    try self.videoDeviceInput.device.lockForConfiguration()
+                    //videoDevice.focusMode = .continuousAutoFocus
+                    self.videoDeviceInput.device.isSubjectAreaChangeMonitoringEnabled = true
+                    self.videoDeviceInput.device.unlockForConfiguration()
+                } catch {
+                    print("Could not lock device for configuration: \(error)")
+                }
                 
             case .notAuthorized:
                 DispatchQueue.main.async {
@@ -361,11 +370,10 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                             for tagId in currentProjectTagIds {
                                 if let tagRecord = TagHandler.getSpecificTag(id: tagId) {
                                     item.addToAvailableTags(tagRecord)
-                                    print("project with id: \(String(describing: item.id)) WAS ADDED to tag: \(String(describing: tagRecord.text))")
                                 }
                             }
-                            break
                         }
+                        break
                     }
                 }
             }
@@ -376,7 +384,6 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                         let tag = associatedTag as! Tag
                         if tag.id == tagItem.id {
                             tagItem.addToProjects(projectItem)
-                            print("tag \(String(describing: tagItem.text)) WAS ADDED to project with id: \(String(describing: projectItem.id))")
                         }
                     }
                 }
@@ -643,6 +650,11 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                                                selector: #selector(sessionRuntimeError),
                                                name: .AVCaptureSessionRuntimeError,
                                                object: session)
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.subjectAreaDidChange),
+                                               name: .AVCaptureDeviceSubjectAreaDidChange,
+                                               object: videoDeviceInput.device)
         /*
          A session can only run when the app is full screen. It will be interrupted
          in a multi-app layout, introduced in iOS 9, see also the documentation of
@@ -902,12 +914,12 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
         
         session.beginConfiguration()
-        switch UIDevice().model {
-        case "iPhone":
-            session.sessionPreset = .high
-        default:
-            session.sessionPreset = .photo
-        }
+//        switch UIDevice().model {
+//        case "iPhone":
+//            session.sessionPreset = .high
+//        default:
+//            session.sessionPreset = .photo
+//        }
         
         
         
@@ -930,6 +942,16 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 session.commitConfiguration()
                 return
             }
+//            if videoDevice.isFocusModeSupported(.continuousAutoFocus){
+//                do{
+//                    try videoDevice.lockForConfiguration()
+//                    //videoDevice.focusMode = .continuousAutoFocus
+//                    videoDevice.isSubjectAreaChangeMonitoringEnabled = true
+//                    videoDevice.unlockForConfiguration()
+//                } catch {
+//                    print("Could not lock device for configuration: \(error)")
+//                }
+//            }
             let videoDeviceInput = try AVCaptureDeviceInput(device: videoDevice)
             
             if session.canAddInput(videoDeviceInput) {
@@ -982,6 +1004,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     //MARK: - Saving Taken Photo in ALBUM
     func createAlbumAndSave(image: UIImage!) {
+        
         //Get PHFetch Options
         let fetchOptions = PHFetchOptions()
         fetchOptions.predicate = NSPredicate(format: "title = %@", "My SiteSnap photos")
@@ -1101,11 +1124,49 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     //MARK: - Capturing tap screen for FOCUS POINT
+    @objc
+    func subjectAreaDidChange(notification: NSNotification) {
+        let devicePoint = CGPoint(x: 0.5, y: 0.5)
+        print("auto")
+        focusContinuous(with: .continuousAutoFocus, exposureMode: .continuousAutoExposure, at: devicePoint, monitorSubjectAreaChange: false)
+    }
+    
     @IBAction func focusAndExposeTap(_ sender: UITapGestureRecognizer) {
         
         let devicePoint = capturePreviewView.videoPreviewLayer.captureDevicePointConverted(fromLayerPoint: sender.location(in: sender.view))
        
         focus(with: .autoFocus, exposureMode: .autoExpose, at: devicePoint, locationPoint: sender.location(in: sender.view), monitorSubjectAreaChange: true)
+    }
+    
+    private func focusContinuous (with focusMode: AVCaptureDevice.FocusMode,
+                                  exposureMode: AVCaptureDevice.ExposureMode,
+                                  at devicePoint: CGPoint,
+                                  monitorSubjectAreaChange: Bool) {
+        self.sessionQueue.async {
+            let device = self.videoDeviceInput.device
+            do {
+                try device.lockForConfiguration()
+                
+                /*
+                 Setting (focus/exposure)PointOfInterest alone does not initiate a (focus/exposure) operation.
+                 Call set(Focus/Exposure)Mode() to apply the new point of interest.
+                 */
+                if device.isFocusPointOfInterestSupported && device.isFocusModeSupported(focusMode) {
+                    device.focusPointOfInterest = devicePoint
+                    device.focusMode = focusMode
+                }
+                
+                if device.isExposurePointOfInterestSupported && device.isExposureModeSupported(exposureMode) {
+                    device.exposurePointOfInterest = devicePoint
+                    device.exposureMode = exposureMode
+                }
+                
+                device.isSubjectAreaChangeMonitoringEnabled = monitorSubjectAreaChange
+                device.unlockForConfiguration()
+            } catch {
+                print("Could not lock device for configuration: \(error)")
+            }
+        }
     }
     private func focus(with focusMode: AVCaptureDevice.FocusMode,
                        exposureMode: AVCaptureDevice.ExposureMode,
@@ -1268,3 +1329,4 @@ extension CameraViewController: AssetsPickerViewControllerDelegate {
     }
     func assetsPicker(controller: AssetsPickerViewController, didDeselect asset: PHAsset, at indexPath: IndexPath) {}
 }
+
