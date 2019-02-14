@@ -28,7 +28,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     //MARK: - TABLE view delegate
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return 3
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -55,6 +55,10 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                 cell.settingSwitch.isOn = false
             }
             break
+        case 2:
+            cell.settingLabel?.text = "View document images"
+            cell.settingSwitch.tag = indexPath.row
+            break
         default:
             print(indexPath.row)
         }
@@ -72,6 +76,8 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             UserDefaults.standard.set(sender.isOn, forKey: "saveToGallery")
         case 1:
             UserDefaults.standard.set(sender.isOn, forKey: "debugMode")
+        case 2:
+            performSegue(withIdentifier: "files", sender: sender)
         default:
              print(sender.tag)
         }

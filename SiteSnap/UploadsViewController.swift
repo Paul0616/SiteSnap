@@ -676,7 +676,7 @@ extension UIImage {
         // image has not been created yet: create it, store it, return it
 
         if (try? self.jpegData(compressionQuality: 1.0)?.write(to: imageUrl)) != nil {
-            
+            var test = FileManager.default.fileExists(atPath: imagePath)
             return true
         } else {
             return false

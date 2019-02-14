@@ -548,11 +548,15 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
             let imageSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
             for identifier in hiddenIdentifiers {
                 let imagePath: String = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/\(identifier)"
-                //let imageUrl: URL = URL(fileURLWithPath: imagePath)
-                if let image = UIImage(contentsOfFile: imagePath)?.resizeImage(targetSize: imageSize) {
-                    self.slidesObjects.append(self.createSlide(image: image, localIdentifier: identifier))
+                var test = FileManager.default.fileExists(atPath: imagePath)
+                let imageUrl: URL = URL(fileURLWithPath: imagePath)
+                let imageData1: Data = try! Data(contentsOf: imageUrl)
+                let image1: UIImage = UIImage(data: imageData1, scale: UIScreen.main.scale)!
+                if FileManager.default.fileExists(atPath: imagePath),
+                    let imageData: Data = try? Data(contentsOf: imageUrl),
+                    let image: UIImage = UIImage(data: imageData, scale: UIScreen.main.scale) {
+                    self.slidesObjects.append(self.createSlide(image: image.resizeImage(targetSize: imageSize), localIdentifier: identifier))
                 }
-                
             }
         }
         if self.slidesObjects.count > 0 {

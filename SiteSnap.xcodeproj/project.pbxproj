@@ -43,6 +43,7 @@
 		DA977F5521C2E91300883640 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F5421C2E91300883640 /* CameraViewController.swift */; };
 		DA977F5821C3F25200883640 /* FlashStateButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F5721C3F25200883640 /* FlashStateButton.swift */; };
 		DA977F5A21C4E38B00883640 /* ActivityIndicatorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F5921C4E38B00883640 /* ActivityIndicatorButton.swift */; };
+		DA9C51FC22153E4C00326611 /* DocumentFilesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9C51FA22153E4C00326611 /* DocumentFilesViewController.swift */; };
 		DA9DFA3021F2656800CB68E2 /* Media.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9DFA2F21F2656800CB68E2 /* Media.swift */; };
 		DA9F69FD22020474006436F6 /* CheckBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9F69FC22020474006436F6 /* CheckBox.swift */; };
 		DAA2705E21C8FAB10058148A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DAA2705B21C8FAB10058148A /* Main.storyboard */; };
@@ -130,6 +131,7 @@
 		DA977F5421C2E91300883640 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		DA977F5721C3F25200883640 /* FlashStateButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlashStateButton.swift; sourceTree = "<group>"; };
 		DA977F5921C4E38B00883640 /* ActivityIndicatorButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorButton.swift; sourceTree = "<group>"; };
+		DA9C51FA22153E4C00326611 /* DocumentFilesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentFilesViewController.swift; sourceTree = "<group>"; };
 		DA9DFA2F21F2656800CB68E2 /* Media.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Media.swift; sourceTree = "<group>"; };
 		DA9F69FC22020474006436F6 /* CheckBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckBox.swift; sourceTree = "<group>"; };
 		DAA2705C21C8FAB10058148A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Main.storyboard; sourceTree = "<group>"; };
@@ -272,6 +274,7 @@
 				DA47324721D8BF75003729BB /* TagsModalViewController.swift */,
 				DA47324F21DA3109003729BB /* TagCellTableViewCell.swift */,
 				40B296BB21CCE5A000A3C487 /* Slide.swift */,
+				DA9C51FA22153E4C00326611 /* DocumentFilesViewController.swift */,
 				DAB7796121DE8A3900308543 /* Annotation.swift */,
 				DA977F1221C1461100883640 /* Assets.xcassets */,
 				DA977F1721C1461100883640 /* Info.plist */,
@@ -613,6 +616,7 @@
 				DA47325A21DCC26A003729BB /* ConfirmLocationViewController.swift in Sources */,
 				DA2D955121ED0389005DE088 /* MenuTableViewCell.swift in Sources */,
 				DA977F5521C2E91300883640 /* CameraViewController.swift in Sources */,
+				DA9C51FC22153E4C00326611 /* DocumentFilesViewController.swift in Sources */,
 				DAB7796821DFA26B00308543 /* PreviewView.swift in Sources */,
 				40B9656121CA7240004A383D /* LocationManager.swift in Sources */,
 				DA47325221DA4402003729BB /* PaddingLabel.swift in Sources */,
