@@ -108,6 +108,7 @@ class Slider: UIView, UIScrollViewDelegate {
     }
     //MARK: - Loading images into SLIDES
     func loadImages(identifiers: [String]!) {
+        let hiddenIdentifiers = PhotoHandler.photosDatabaseContainHidden(localIdentifiers: identifiers)
         //This will fetch all the assets in the collection
         let assets : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: identifiers! , options: nil)
         //print(assets)
@@ -135,6 +136,19 @@ class Slider: UIView, UIScrollViewDelegate {
                 })
             }
         }
+        if hiddenIdentifiers.count > 0 {
+            let imageSize = CGSize(width: 200, height: 200)
+            let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+            for identifier in hiddenIdentifiers {
+                let imagePath: String = path.appending("/\(identifier)")
+                if FileManager.default.fileExists(atPath: imagePath),
+                    let imageData: Data = FileManager.default.contents(atPath: imagePath),
+                    let image: UIImage = UIImage(data: imageData, scale: UIScreen.main.scale) {
+                    self.slides.append(self.createSlide(image: image.resizeImage(targetSize: imageSize), localIdentifier: identifier))
+                }
+            }
+        }
+        
         if self.slides.count > 0 {
             setupSlideScrollView(slides: self.slides)
         }
