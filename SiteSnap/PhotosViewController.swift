@@ -546,14 +546,15 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
             //var assetAlreadyExist: Bool = false
             
             let imageSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
+            let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
             for identifier in hiddenIdentifiers {
-                let imagePath: String = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/\(identifier)"
-                var test = FileManager.default.fileExists(atPath: imagePath)
-                let imageUrl: URL = URL(fileURLWithPath: imagePath)
-                let imageData1: Data = try! Data(contentsOf: imageUrl)
-                let image1: UIImage = UIImage(data: imageData1, scale: UIScreen.main.scale)!
+                let imagePath: String = path.appending("/\(identifier)")
+//                var test = FileManager.default.fileExists(atPath: imagePath)
+//                let imageUrl: URL = URL(fileURLWithPath: imagePath)
+//                let imageData1: Data = try! Data(contentsOf: imageUrl)
+//                let image1: UIImage = UIImage(data: imageData1, scale: UIScreen.main.scale)!
                 if FileManager.default.fileExists(atPath: imagePath),
-                    let imageData: Data = try? Data(contentsOf: imageUrl),
+                    let imageData: Data = FileManager.default.contents(atPath: imagePath),  //try? Data(contentsOf: imageUrl),
                     let image: UIImage = UIImage(data: imageData, scale: UIScreen.main.scale) {
                     self.slidesObjects.append(self.createSlide(image: image.resizeImage(targetSize: imageSize), localIdentifier: identifier))
                 }
@@ -714,21 +715,29 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     
     //MARK: - delete hidden assets
     func deleteAssets(withIdentifiers identifiers: [String]) {
-        let assetsToDelete : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: identifiers , options: nil)
-        var validation: Bool = true
-        assetsToDelete.enumerateObjects{(object: AnyObject!,
-            count: Int,
-            stop: UnsafeMutablePointer<ObjCBool>) in
-            //print(count)
-            if object is PHAsset {
-                let asset = object as! PHAsset
-                validation = validation && asset.isHidden
+//        let assetsToDelete : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: identifiers , options: nil)
+//        var validation: Bool = true
+//        assetsToDelete.enumerateObjects{(object: AnyObject!,
+//            count: Int,
+//            stop: UnsafeMutablePointer<ObjCBool>) in
+//            //print(count)
+//            if object is PHAsset {
+//                let asset = object as! PHAsset
+//                validation = validation && asset.isHidden
+//            }
+//        }
+//        if validation {
+//            PHPhotoLibrary.shared().performChanges({
+//                PHAssetChangeRequest.deleteAssets(assetsToDelete)
+//            })
+//        }
+        for identifier in identifiers {
+            let imagePath: String = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0].appending("/\(identifier)")
+            do {
+                try FileManager.default.removeItem(atPath: imagePath)
+            } catch let error as NSError {
+                print(error.debugDescription)
             }
-        }
-        if validation {
-            PHPhotoLibrary.shared().performChanges({
-                PHAssetChangeRequest.deleteAssets(assetsToDelete)
-            })
         }
     }
 

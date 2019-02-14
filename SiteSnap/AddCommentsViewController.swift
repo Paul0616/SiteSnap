@@ -115,39 +115,49 @@ class AddCommentsViewController: UIViewController {
     
     //MARK: - Loading image
     func loadImage(identifier: String!) {
-        
-        //This will fetch all the assets in the collection
-        let assets : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [identifier!] , options: nil)
-        //print(assets)
-        
-        let imageManager = PHCachingImageManager()
-        //Enumerating objects to get a chached image - This is to save loading time
-
-        assets.enumerateObjects{(object: AnyObject!,
-            count: Int,
-            stop: UnsafeMutablePointer<ObjCBool>) in
-            print(count)
-            if object is PHAsset {
-                let asset = object as! PHAsset
-                //                print(asset)
-                
-                //let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
-                let imageSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
-                
-                let options = PHImageRequestOptions()
-                options.deliveryMode = .opportunistic
-                options.isSynchronous = true
-                options.isNetworkAccessAllowed = true
-                options.resizeMode = PHImageRequestOptionsResizeMode.exact
-                
-                imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFill, options: options, resultHandler: {
-                    (image, info) -> Void in
-                    //print(info!)
+        let hiddenIdentifiers = PhotoHandler.photosDatabaseContainHidden(localIdentifiers: [identifier])
+        if hiddenIdentifiers.count > 0 {
+            let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+            let imagePath: String = path.appending("/\(identifier!)")
+            if FileManager.default.fileExists(atPath: imagePath),
+                let imageData: Data = FileManager.default.contents(atPath: imagePath),  //try? Data(contentsOf: imageUrl),
+                let image: UIImage = UIImage(data: imageData, scale: UIScreen.main.scale) {
                     self.currentImageView.image = image
+            }
+        } else {
+            //This will fetch all the assets in the collection
+            let assets : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [identifier!] , options: nil)
+            //print(assets)
+            
+            let imageManager = PHCachingImageManager()
+            //Enumerating objects to get a chached image - This is to save loading time
+
+            assets.enumerateObjects{(object: AnyObject!,
+                count: Int,
+                stop: UnsafeMutablePointer<ObjCBool>) in
+                print(count)
+                if object is PHAsset {
+                    let asset = object as! PHAsset
+                    //                print(asset)
                     
-                    /* The image is now available to us */
+                    //let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
+                    let imageSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
                     
-                })
+                    let options = PHImageRequestOptions()
+                    options.deliveryMode = .opportunistic
+                    options.isSynchronous = true
+                    options.isNetworkAccessAllowed = true
+                    options.resizeMode = PHImageRequestOptionsResizeMode.exact
+                    
+                    imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFill, options: options, resultHandler: {
+                        (image, info) -> Void in
+                        //print(info!)
+                        self.currentImageView.image = image
+                        
+                        /* The image is now available to us */
+                        
+                    })
+                }
             }
         }
         

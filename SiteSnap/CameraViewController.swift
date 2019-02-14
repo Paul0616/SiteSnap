@@ -304,10 +304,12 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         //-----------------------  check if photos from CoreData is still in gallery and if not detele them from CoreData
         for photo in photoObjects {
             let photoId = photo.localIdentifierString
-            let assets : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [photoId!] , options: nil)
-            if assets.count == 0 {
-                if PhotoHandler.photosDeleteBatch(identifiers: [photoId!]) {
-                    print("Photo with is: \(String(describing: photoId)) was deleted")
+            if !photo.isHidden {
+                let assets : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [photoId!] , options: nil)
+                if assets.count == 0 {
+                    if PhotoHandler.photosDeleteBatch(identifiers: [photoId!]) {
+                        print("Photo with is: \(String(describing: photoId)) was deleted")
+                    }
                 }
             }
             
@@ -1082,17 +1084,29 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             }
         })
     }
-    func saveDocumentImageToDatabase(fileName: String, image: UIImage) {
+    func saveDocumentImageToDatabase(fileName: String) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             let now: Date = Date()
             if PhotoHandler.savePhotoInMyDatabase(localIdentifier: fileName, creationDate: now, latitude: self.lastLocation.coordinate.latitude, longitude: self.lastLocation.coordinate.longitude, isHidden: true){
                 print("Photo added in core data")
             }
             
+            let imagePath: String = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0].appending("/\(fileName)")
+            var fileSize : Int64 = 0
             
-            let size: Int64 = image.fileSize(image: fileName)
+            do {
+                let attr = try FileManager.default.attributesOfItem(atPath: imagePath)
+                fileSize = attr[FileAttributeKey.size] as! Int64
+                
+                //if you convert to NSDictionary, you can get file size old way as well.
+                //            let dict = attr as NSDictionary
+                //            fileSize = dict.fileSize()
+            } catch {
+                print("Error: \(error)")
+            }
+           // let size: Int64 = image.fileSize(image: fileName)
             //PhotoHandler.setFileSize(localIdentifiers: [localId!])
-            PhotoHandler.updateFileSize(localIdentifier: fileName, size: size)
+            PhotoHandler.updateFileSize(localIdentifier: fileName, size: fileSize)
             self.photoObjects = PhotoHandler.fetchAllObjects()!
             
             self.processingPopup.hideAndDestroy(from: self.view)
@@ -1301,9 +1315,13 @@ extension CameraViewController : AVCapturePhotoCaptureDelegate {
                 self.createAlbumAndSave(image: uiImage)
             } else {
                 let fileName = UUID().uuidString + ".jpg"
-                if (uiImage?.saveToDocumentDirectory(withName: fileName))! {
+                let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+                // Get the Document directory path
+                let documentDirectorPath:String = paths[0].appending("/\(fileName)")
+                let data = uiImage?.jpegData(compressionQuality: 1.0)
+                if FileManager.default.createFile(atPath: documentDirectorPath, contents: data, attributes: nil) {
                     print("saved in documents was successfully")
-                    saveDocumentImageToDatabase(fileName: fileName, image: uiImage!)
+                    saveDocumentImageToDatabase(fileName: fileName)
                 }
             }
         } else {

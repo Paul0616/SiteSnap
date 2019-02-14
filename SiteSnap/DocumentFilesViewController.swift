@@ -26,6 +26,15 @@ class DocumentFilesViewController: UIViewController, UITableViewDelegate, UITabl
         cell.imageView?.image = images[indexPath.row]
         return cell
     }
+    func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        let imagePath: String = imagesDirectoryPath.appending("/\(titles[indexPath.row])")
+        do {
+            try FileManager.default.removeItem(atPath: imagePath)
+            refreshTable()
+        } catch let error as NSError {
+            print(error.debugDescription)
+        }
+    }
     
 
     override func viewDidLoad() {
