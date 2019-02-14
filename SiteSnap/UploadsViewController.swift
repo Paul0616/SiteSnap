@@ -128,7 +128,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
-    private func removeImage(withIdentifier identifier: String) {
+    private func removeImageFromTableView(withIdentifier identifier: String) {
         if images[0].count > 0 {
             print(identifier)
             print(images[0].count)
@@ -284,7 +284,8 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
 //                    prepareUploadPhoto(localIdentifier: localIdentifier)
 //                } else {
                     if PhotoHandler.removePhoto(localIdentifier: localIdentifier) {
-                        removeImage(withIdentifier: localIdentifier)
+                        removeImageFromTableView(withIdentifier: localIdentifier)
+                        //deleteImageIfHidden(localIdentifier: localIdentifier)
                         tableView.reloadData()
                     }
                     
@@ -545,40 +546,51 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     //MARK: load full image
     func loadImage(identifier: String!) -> UIImage! {
-        
-        //This will fetch all the assets in the collection
-        let assets : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [identifier!] , options: nil)
-        //print(assets)
-        
-        let imageManager = PHCachingImageManager()
-        //Enumerating objects to get a chached image - This is to save loading time
         var loadedImage : UIImage! = nil
-        assets.enumerateObjects{(object: AnyObject!,
-            count: Int,
-            stop: UnsafeMutablePointer<ObjCBool>) in
-            //print(count)
-        
-            if object is PHAsset {
-                let asset = object as! PHAsset
-                //                print(asset)
-               //asset.mediaType
-                //let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
-                let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
-                //PHAssetResource.assetResources(for: asset).first?.originalFilename
-                let options = PHImageRequestOptions()
-                options.deliveryMode = .opportunistic
-                options.isSynchronous = true
-                options.isNetworkAccessAllowed = true
-                options.resizeMode = PHImageRequestOptionsResizeMode.exact
-                
-                imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFit, options: options, resultHandler: {
-                    (image, info) -> Void in
-                    print(info!)
-                    loadedImage = image
-                    //image?.save(image: image!, imageName: asset.localIdentifier)
-                    /* The image is now available to us */
+        let hiddenIdentifiers = PhotoHandler.photosDatabaseContainHidden(localIdentifiers: [identifier])
+        if hiddenIdentifiers.count > 0 {
+            let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+            let imagePath: String = path.appending("/\(identifier!)")
+            if FileManager.default.fileExists(atPath: imagePath),
+                let imageData: Data = FileManager.default.contents(atPath: imagePath),  //try? Data(contentsOf: imageUrl),
+                let image: UIImage = UIImage(data: imageData, scale: UIScreen.main.scale) {
+                loadedImage = image
+            }
+        } else {
+            //This will fetch all the assets in the collection
+            let assets : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [identifier!] , options: nil)
+            //print(assets)
+            
+            let imageManager = PHCachingImageManager()
+            //Enumerating objects to get a chached image - This is to save loading time
+            
+            assets.enumerateObjects{(object: AnyObject!,
+                count: Int,
+                stop: UnsafeMutablePointer<ObjCBool>) in
+                //print(count)
+            
+                if object is PHAsset {
+                    let asset = object as! PHAsset
+                    //                print(asset)
+                   //asset.mediaType
+                    //let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
+                    let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
+                    //PHAssetResource.assetResources(for: asset).first?.originalFilename
+                    let options = PHImageRequestOptions()
+                    options.deliveryMode = .opportunistic
+                    options.isSynchronous = true
+                    options.isNetworkAccessAllowed = true
+                    options.resizeMode = PHImageRequestOptionsResizeMode.exact
                     
-                })
+                    imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFit, options: options, resultHandler: {
+                        (image, info) -> Void in
+                        print(info!)
+                        loadedImage = image
+                        //image?.save(image: image!, imageName: asset.localIdentifier)
+                        /* The image is now available to us */
+                        
+                    })
+                }
             }
         }
         return loadedImage
@@ -591,38 +603,50 @@ extension UIImageView {
     //MARK: - Loading image
     func loadImage(identifier: String!) {
         
-        //This will fetch all the assets in the collection
-        let assets : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [identifier!] , options: nil)
-        //print(assets)
-        
-        let imageManager = PHCachingImageManager()
-        //Enumerating objects to get a chached image - This is to save loading time
-        
-        assets.enumerateObjects{(object: AnyObject!,
-            count: Int,
-            stop: UnsafeMutablePointer<ObjCBool>) in
-            //print(count)
-            if object is PHAsset {
-                let asset = object as! PHAsset
-                //                print(asset)
-                
-                //let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
-                let imageSize = CGSize(width: 100, height: 100)
-                
-                let options = PHImageRequestOptions()
-                options.deliveryMode = .opportunistic
-                options.isSynchronous = true
-                options.isNetworkAccessAllowed = true
-                options.resizeMode = PHImageRequestOptionsResizeMode.exact
-                
-                imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFit, options: options, resultHandler: {
-                    (image, info) -> Void in
-                    //print(info!)
-                    self.image = image
-                    //image?.save(image: image!, imageName: asset.localIdentifier)
-                    /* The image is now available to us */
+        let hiddenIdentifiers = PhotoHandler.photosDatabaseContainHidden(localIdentifiers: [identifier])
+        if hiddenIdentifiers.count > 0 {
+            let imageSize = CGSize(width: 100, height: 100)
+            let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+            let imagePath: String = path.appending("/\(identifier!)")
+            if FileManager.default.fileExists(atPath: imagePath),
+                let imageData: Data = FileManager.default.contents(atPath: imagePath),  //try? Data(contentsOf: imageUrl),
+                let image: UIImage = UIImage(data: imageData, scale: UIScreen.main.scale) {
+                self.image = image.resizeImage(targetSize: imageSize)
+            }
+        } else {
+            //This will fetch all the assets in the collection
+            let assets : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [identifier!] , options: nil)
+            //print(assets)
+            
+            let imageManager = PHCachingImageManager()
+            //Enumerating objects to get a chached image - This is to save loading time
+            
+            assets.enumerateObjects{(object: AnyObject!,
+                count: Int,
+                stop: UnsafeMutablePointer<ObjCBool>) in
+                //print(count)
+                if object is PHAsset {
+                    let asset = object as! PHAsset
+                    //                print(asset)
                     
-                })
+                    //let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
+                    let imageSize = CGSize(width: 100, height: 100)
+                    
+                    let options = PHImageRequestOptions()
+                    options.deliveryMode = .opportunistic
+                    options.isSynchronous = true
+                    options.isNetworkAccessAllowed = true
+                    options.resizeMode = PHImageRequestOptionsResizeMode.exact
+                    
+                    imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFit, options: options, resultHandler: {
+                        (image, info) -> Void in
+                        //print(info!)
+                        self.image = image
+                        //image?.save(image: image!, imageName: asset.localIdentifier)
+                        /* The image is now available to us */
+                        
+                    })
+                }
             }
         }
         
@@ -630,71 +654,29 @@ extension UIImageView {
 }
 
 //MARK: - LOADING SAVING IMAGES in documentDirectory
-extension UploadsViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        
-        //obtaining saving path
-        let fileManager = FileManager.default
-        let documentsPath = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
-        let imagePath = documentsPath?.appendingPathComponent("image.jpg")
-        print(imagePath ?? "N0 imagePath found")
-        // extract image from the picker and save it
-        if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            
-            let imageData = pickedImage.jpegData(compressionQuality: 0.75)
-            try! imageData?.write(to: imagePath!)
-        }
-        
-        let identifier = (info[UIImagePickerController.InfoKey.phAsset] as? PHAsset)?.localIdentifier
-        print(identifier!)
-        self.dismiss(animated: true, completion: nil)
-    }
-}
+//extension UploadsViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+//
+//    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+//
+//        //obtaining saving path
+//        let fileManager = FileManager.default
+//        let documentsPath = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
+//        let imagePath = documentsPath?.appendingPathComponent("image.jpg")
+//        print(imagePath ?? "N0 imagePath found")
+//        // extract image from the picker and save it
+//        if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+//
+//            let imageData = pickedImage.jpegData(compressionQuality: 0.75)
+//            try! imageData?.write(to: imagePath!)
+//        }
+//
+//        let identifier = (info[UIImagePickerController.InfoKey.phAsset] as? PHAsset)?.localIdentifier
+//        print(identifier!)
+//        self.dismiss(animated: true, completion: nil)
+//    }
+//}
 
 extension UIImage {
-    
-//    func loadFromDocumentDirectory(image withName: String, atSize: CGSize) -> UIImage! {
-//        // declare image location
-//        let imagePath: String = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/\(withName).jpg"
-//        let imageUrl: URL = URL(fileURLWithPath: imagePath)
-    
-        // check if the image is stored already
-//        if FileManager.default.fileExists(atPath: imagePath),
-//            let imageData: Data = try? Data(contentsOf: imageUrl),
-//            let image: UIImage = UIImage(data: imageData, scale: UIScreen.main.scale) {
-//
-//            return image
-//        } else {
-//            return nil
-//        }
-//    }
-
-    func saveToDocumentDirectory(withName: String) -> Bool {
-        let imagePath: String = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/\(withName).jpg"
-        let imageUrl: URL = URL(fileURLWithPath: imagePath)
-        // image has not been created yet: create it, store it, return it
-
-        if (try? self.jpegData(compressionQuality: 1.0)?.write(to: imageUrl)) != nil {
-            //var test = FileManager.default.fileExists(atPath: imagePath)
-            return true
-        } else {
-            return false
-        }
-
-    }
-    
-    func remove(image withName: String) -> Bool {
-        let imagePath: String = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/\(withName).png"
-        do {
-            try FileManager.default.removeItem(atPath: imagePath)
-        } catch let error as NSError {
-            print(error.debugDescription)
-            return false
-        }
-        return true
-    }
-    
     func resizeImage(targetSize: CGSize) -> UIImage {
         let size = self.size
         let widthRatio  = targetSize.width  / size.width
@@ -706,26 +688,7 @@ extension UIImage {
         self.draw(in: rect)
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        
         return newImage!
-    }
-    
-    func fileSize(image withName: String) -> Int64! {
-        let imagePath: String = "\(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0])/\(withName).jpg"
-        var fileSize : Int64 = 0
-        
-        do {
-            //return [FileAttributeKey : Any]
-            let attr = try FileManager.default.attributesOfItem(atPath: imagePath)
-            fileSize = attr[FileAttributeKey.size] as! Int64
-            
-            //if you convert to NSDictionary, you can get file size old way as well.
-//            let dict = attr as NSDictionary
-//            fileSize = dict.fileSize()
-        } catch {
-            print("Error: \(error)")
-        }
-        return fileSize
     }
 }
 

@@ -165,10 +165,47 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
         }
        cancelUI()
     }
-    
+//    public class SimpleLine: UIView  {
+//
+//        override init(frame: CGRect) {
+//            super.init(frame: frame)
+//        }
+//
+//        public required init?(coder aDecoder: NSCoder) {
+//            fatalError("init(coder:) has not been implemented")
+//        }
+//
+//        public override func draw(_ rect: CGRect) {
+//            let h = frame.height
+//            let w = frame.width
+//
+//            guard let context = UIGraphicsGetCurrentContext() else { return }
+//            let lineWidth: CGFloat = 1.0
+//            context.setLineWidth(lineWidth)
+//            context.setStrokeColor(UIColor.yellow.cgColor)
+//            let startingPoint = CGPoint(x: -w/2, y: -lineWidth/2)
+//            let endingPoint = CGPoint(x: w/2, y: -lineWidth/2)
+//            context.move(to: startingPoint)
+//            context.addLine(to: endingPoint)
+//            let startingPoint1 = CGPoint(x: -lineWidth/2, y: -h/2)
+//            let endingPoint1 = CGPoint(x: -lineWidth/2, y: h/2)
+//            context.move(to: startingPoint1)
+//            context.addLine(to: endingPoint1)
+//            context.strokePath()
+//        }
+//
+//    }
+
     @IBAction func onTapSetPhotoLocation(_ sender: UIButton) {
         let frame = map.frame
         let center = CGPoint(x: frame.midX, y: frame.midY)
+        
+//        let line = SimpleLine(frame: CGRect(x: 0, y: 0, width: 21, height: 21))
+//        line.draw(CGRect(x: center.x, y: center.y, width: 21, height: 21))
+//        var identifierSelected: String = currentClusterAnnotationIdentifier
+//        if annotationIsMultiple {
+//            identifierSelected = slideContainer.slides[slideContainer.photosControl.currentPage].localIdentifier!
+//        }
         let locationCoordinate = map.convert(center, toCoordinateFrom: map)
         var identifiers = [String]()
         if selectedPhotoIdentifier == nil {
@@ -183,7 +220,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
                 }
             }
         } else {
-            identifiers.append(currentClusterAnnotationIdentifier)
+            identifiers.append(selectedPhotoIdentifier)
         }
             
         if PhotoHandler.updateLocations(localIdentifiers: identifiers, location: locationCoordinate) {
@@ -323,40 +360,51 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
     */
     //MARK: - Loading image
     func loadImage(identifier: String!) -> UIImage! {
-        
         var img: UIImage!
-        //This will fetch all the assets in the collection
-        let assets : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [identifier!] , options: nil)
-        //print(assets)
-        
-        let imageManager = PHCachingImageManager()
-        //Enumerating objects to get a chached image - This is to save loading time
-        
-        assets.enumerateObjects{(object: AnyObject!,
-            count: Int,
-            stop: UnsafeMutablePointer<ObjCBool>) in
-            print(count)
-            if object is PHAsset {
-                let asset = object as! PHAsset
-                //                print(asset)
-                
-                //let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
-                let imageSize = CGSize(width: 150, height: 150)
-                
-                let options = PHImageRequestOptions()
-                options.deliveryMode = .opportunistic
-                options.isSynchronous = true
-                options.isNetworkAccessAllowed = true
-                options.resizeMode = PHImageRequestOptionsResizeMode.exact
-                
-                imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFill, options: options, resultHandler: {
-                    (image, info) -> Void in
-                    //print(info!)
-                    //let loadedImage = image
-                    img = image
-                    /* The image is now available to us */
+        let hiddenIdentifiers = PhotoHandler.photosDatabaseContainHidden(localIdentifiers: [identifier])
+        if hiddenIdentifiers.count > 0 {
+            let imageSize = CGSize(width: 150, height: 150)
+            let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+            let imagePath: String = path.appending("/\(identifier!)")
+            if FileManager.default.fileExists(atPath: imagePath),
+                let imageData: Data = FileManager.default.contents(atPath: imagePath),
+                let image: UIImage = UIImage(data: imageData, scale: UIScreen.main.scale) {
+                img = image.resizeImage(targetSize: imageSize)
+            }
+        } else {
+            //This will fetch all the assets in the collection
+            let assets : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: [identifier!] , options: nil)
+            //print(assets)
+            
+            let imageManager = PHCachingImageManager()
+            //Enumerating objects to get a chached image - This is to save loading time
+            
+            assets.enumerateObjects{(object: AnyObject!,
+                count: Int,
+                stop: UnsafeMutablePointer<ObjCBool>) in
+                print(count)
+                if object is PHAsset {
+                    let asset = object as! PHAsset
+                    //                print(asset)
                     
-                })
+                    //let imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
+                    let imageSize = CGSize(width: 150, height: 150)
+                    
+                    let options = PHImageRequestOptions()
+                    options.deliveryMode = .opportunistic
+                    options.isSynchronous = true
+                    options.isNetworkAccessAllowed = true
+                    options.resizeMode = PHImageRequestOptionsResizeMode.exact
+                    
+                    imageManager.requestImage(for: asset, targetSize: imageSize, contentMode: .aspectFill, options: options, resultHandler: {
+                        (image, info) -> Void in
+                        //print(info!)
+                        //let loadedImage = image
+                        img = image
+                        /* The image is now available to us */
+                        
+                    })
+                }
             }
         }
         return img
@@ -389,7 +437,8 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
             annotationView?.canShowCallout = false
             annotationView?.annotation = annotation
         }
-
+        let h: CGFloat = annotationView?.bounds.height ?? 0.0
+        annotationView?.centerOffset = CGPoint.init(x: 0.0, y: 7-(h / 2.0));
         return annotationView
 
     }
