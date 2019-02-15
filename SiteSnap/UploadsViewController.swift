@@ -127,7 +127,9 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
         }
     }
-    
+    private func deleteImageIfHidden(localIdentifier: String){
+        
+    }
     private func removeImageFromTableView(withIdentifier identifier: String) {
         if images[0].count > 0 {
             print(identifier)
@@ -285,7 +287,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
 //                } else {
                     if PhotoHandler.removePhoto(localIdentifier: localIdentifier) {
                         removeImageFromTableView(withIdentifier: localIdentifier)
-                        //deleteImageIfHidden(localIdentifier: localIdentifier)
+                        deleteImageIfHidden(localIdentifier: localIdentifier)
                         tableView.reloadData()
                     }
                     
