@@ -84,6 +84,7 @@ class Slider: UIView, UIScrollViewDelegate {
                 slides[i].mainImage.alpha = minImageAlpha
             }
         }
+        
         photosControl.numberOfPages = slides.count
         
        // imagesDotsContainer.bringSubviewToFront(imageControl)
@@ -91,6 +92,7 @@ class Slider: UIView, UIScrollViewDelegate {
 //        tapGestureRecognizer.numberOfTapsRequired = 1
 //        scrollView.addGestureRecognizer(tapGestureRecognizer)
     }
+    
     func setSlides(slides: [Slide]){
         self.slides.removeAll()
         for slideView in scrollView.subviews {
@@ -106,6 +108,7 @@ class Slider: UIView, UIScrollViewDelegate {
         }
         onPageChange(photosControl)
     }
+    
     //MARK: - Loading images into SLIDES
     func loadImages(identifiers: [String]!) {
         let hiddenIdentifiers = PhotoHandler.photosDatabaseContainHidden(localIdentifiers: identifiers)

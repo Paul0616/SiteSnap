@@ -127,9 +127,19 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
         }
     }
+    
     private func deleteImageIfHidden(localIdentifier: String){
-        
+        let hiddenIdentifiers = PhotoHandler.photosDatabaseContainHidden(localIdentifiers: [localIdentifier])
+        if hiddenIdentifiers.count > 0 {
+            let imagePath: String = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0].appending("/\(localIdentifier)")
+            do {
+                try FileManager.default.removeItem(atPath: imagePath)
+            } catch let error as NSError {
+                print(error.debugDescription)
+            }
+        }
     }
+    
     private func removeImageFromTableView(withIdentifier identifier: String) {
         if images[0].count > 0 {
             print(identifier)

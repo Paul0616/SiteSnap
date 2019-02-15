@@ -90,17 +90,15 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         galleryButton.isEnabled = false
         
         noValidLocationIcon.isHidden = true
+        //delete unused files from document directory
+        deleteAssets(unused: true)
+        
         if photoDatabaseShouldBeDeleted {
             for tag in TagHandler.fetchObjects()! {
                 tag.photos = nil
             }
-            if let saveToGallery = UserDefaults.standard.value(forKey: "saveToGallery") as? Bool {
-                if !saveToGallery {
-                    if let hiddenPhotoIds = PhotoHandler.getHiddenAndUploadedPhotosForDelelete() {
-                        deleteAssets(withIdentifiers: hiddenPhotoIds)
-                    }
-                }
-            }
+            //delete uploaded files from document directory
+            deleteAssets(unused: false)
             if let uploadedPhotoIds = PhotoHandler.getUploadedPhotosForDelelete() {
                 if PhotoHandler.photosDeleteBatch(identifiers: uploadedPhotoIds) {
                     print("all uploaded photos was deleted from Core Data")
@@ -1275,22 +1273,41 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
        
     }
     //MARK: - delete hidden assets
-    func deleteAssets(withIdentifiers identifiers: [String]) {
-        let assetsToDelete : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: identifiers , options: nil)
-        var validation: Bool = true
-        assetsToDelete.enumerateObjects{(object: AnyObject!,
-            count: Int,
-            stop: UnsafeMutablePointer<ObjCBool>) in
-            //print(count)
-            if object is PHAsset {
-                let asset = object as! PHAsset
-                validation = validation && asset.isHidden
+    func deleteAssets(unused: Bool) {
+//        let assetsToDelete : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: identifiers , options: nil)
+//        var validation: Bool = true
+//        assetsToDelete.enumerateObjects{(object: AnyObject!,
+//            count: Int,
+//            stop: UnsafeMutablePointer<ObjCBool>) in
+//            //print(count)
+//            if object is PHAsset {
+//                let asset = object as! PHAsset
+//                validation = validation && asset.isHidden
+//            }
+//        }
+//        if validation {
+//            PHPhotoLibrary.shared().performChanges({
+//                PHAssetChangeRequest.deleteAssets(assetsToDelete)
+//            })
+//        }
+        do {
+            let directoryPath: String = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
+            let files: [String] = try FileManager.default.contentsOfDirectory(atPath: directoryPath)
+            let hiddenAndUploadedPhotos:[String] = PhotoHandler.getHiddenAndUploadedPhotosForDelelete()
+            for fileName in files {
+                let hiddenIdentifier = PhotoHandler.photosDatabaseContainHidden(localIdentifiers: [fileName])
+                if unused {
+                    if hiddenIdentifier.count == 0 {
+                        try FileManager.default.removeItem(atPath: directoryPath.appending("/\(fileName)"))
+                    }
+                } else {
+                    if hiddenAndUploadedPhotos.contains(fileName) {
+                        try FileManager.default.removeItem(atPath: directoryPath.appending("/\(fileName)"))
+                    }
+                }
             }
-        }
-        if validation {
-            PHPhotoLibrary.shared().performChanges({
-                PHAssetChangeRequest.deleteAssets(assetsToDelete)
-            })
+        } catch let error as NSError {
+        print(error.debugDescription)
         }
     }
     // MARK: -

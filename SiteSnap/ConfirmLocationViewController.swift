@@ -22,7 +22,6 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
     @IBOutlet weak var slideContainer: Slider!
     @IBOutlet weak var editAllLocationButton: UIButton!
     @IBOutlet weak var editLocationButton: UIButton!
-    @IBOutlet weak var currentLocationButton: UIButton!
     @IBOutlet weak var gpsIcon: UIButton!
     
     var photos: [Photo]!
@@ -52,7 +51,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
         confirmPhotoLocationButton.isEnabled = false
         cancelEditButton.layer.cornerRadius = 20
         cancelEditButton.isHidden = true
-        currentLocationButton.isHidden = true
+        gpsIcon.isHidden = true
         confirmPhotoLocationButton.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
         uploadButton.layer.cornerRadius = 6
         // Do any additional setup after loading the view.
@@ -114,12 +113,13 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
         confirmPhotoLocationButton.backgroundColor = UIColor(red:0.19, green:0.44, blue:0.90, alpha:1.0) //UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
         cancelEditButton.isHidden = false
         gpsIcon.setImage(UIImage(named: "gps_not_fixed"), for: .normal)
-        currentLocationButton.isHidden = false
+        gpsIcon.isHidden = false
         uploadButton.isHidden = true
         backButton.isHidden = true
         editLocationMode = true
         for annotation in annotationsArray {
             map.view(for: annotation)?.isHidden = true
+           // map.removeOverlays(map.overlays)
             
         }
         sliderVisibility(hidden: true)
@@ -136,12 +136,13 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
         confirmPhotoLocationButton.backgroundColor = UIColor(red:0.19, green:0.44, blue:0.90, alpha:1.0) //UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
         cancelEditButton.isHidden = false
         gpsIcon.setImage(UIImage(named: "gps_not_fixed"), for: .normal)
-        currentLocationButton.isHidden = false
+        gpsIcon.isHidden = false
         uploadButton.isHidden = true
         backButton.isHidden = true
         editLocationMode = true
         for annotation in annotationsArray {
             map.view(for: annotation)?.isHidden = true
+           // map.removeOverlays(map.overlays)
         }
         sliderVisibility(hidden: true)
         dummy = Bundle.main.loadNibNamed("Annotation", owner: self, options: nil)?.first as? Annotation
@@ -250,6 +251,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
     private func createAnnotations(isAfterEditLocation: Bool){
         if map.annotations.count > 0 {
             map.removeAnnotations(map.annotations)
+           // map.removeOverlays(map.overlays)
         }
         annotationsArray.removeAll()
         for cluster in clustersPhotos {
@@ -267,7 +269,11 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
         map.addAnnotations(annotationsArray)
         if !isAfterEditLocation {
             map.showAnnotations(annotationsArray, animated: true)
+//            let overlays = annotationsArray.map { MKCircle(center: $0.coordinate, radius: 2) }
+//            map.addOverlays(overlays)
         }
+        
+    
     }
     
     
@@ -340,7 +346,9 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
         locationManager = LocationManager()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestAlwaysAuthorization()
+        if CLLocationManager.authorizationStatus() != .authorizedWhenInUse {
+            locationManager.requestWhenInUseAuthorization()
+        }
         
         if LocationManager.locationServicesEnabled() {
             //locationManager.requestLocation()
@@ -438,7 +446,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
             annotationView?.annotation = annotation
         }
         let h: CGFloat = annotationView?.bounds.height ?? 0.0
-        annotationView?.centerOffset = CGPoint.init(x: 0.0, y: 7-(h / 2.0));
+        annotationView?.centerOffset = CGPoint.init(x: -8, y: -(h / 2.0)-7);
         return annotationView
 
     }
@@ -448,7 +456,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
         let annotations = mapView.annotations
         currentClusterAnnotationIdentifier = view.annotation!.subtitle as? String
         print("SELECT")
-        currentLocationButton.isHidden = true
+        gpsIcon.isHidden = true
         for annotation in annotations {
             if annotation.subtitle != currentClusterAnnotationIdentifier {
                 mapView.view(for: annotation)?.isHidden = true
@@ -506,10 +514,10 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
     func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
         if !animated && !editLocationMode {
             if hiddenCurrentLocation {
-                currentLocationButton.isHidden = hiddenCurrentLocation
+                gpsIcon.isHidden = hiddenCurrentLocation
                 hiddenCurrentLocation = false
             } else {
-                currentLocationButton.isHidden = hiddenCurrentLocation
+                gpsIcon.isHidden = hiddenCurrentLocation
             }
             
             print("USER CHANGE REGION - carousel should disappear")
@@ -519,6 +527,15 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
                 mapView.view(for: annotation)?.isHidden = false
             }
         }
+    }
+    
+
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        let renderer = MKCircleRenderer(overlay: overlay)
+        renderer.fillColor = UIColor.black //.withAlphaComponent(0.5)
+        //renderer.strokeColor = UIColor.blue
+        //renderer.lineWidth = 2
+        return renderer
     }
     
     //MARK: - location delegate methods

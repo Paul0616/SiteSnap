@@ -13,6 +13,7 @@ class DocumentFilesViewController: UIViewController, UITableViewDelegate, UITabl
     var imagesDirectoryPath:String!
     var images:[UIImage]!
     var titles:[String]!
+    @IBOutlet weak var back: UIButton!
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -36,10 +37,13 @@ class DocumentFilesViewController: UIViewController, UITableViewDelegate, UITabl
         }
     }
     
-
+    @IBAction func onTapBack(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        back.layer.cornerRadius = 20
         // Do any additional setup after loading the view.
         images = []
         let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
