@@ -662,6 +662,7 @@
                     <connections>
                         <outlet property="backButton" destination="u1F-cs-dZm" id="kJx-hg-tWe"/>
                         <outlet property="tableView" destination="rHp-HS-bAB" id="8Ta-LS-Sj6"/>
+                        <outlet property="versionLabel" destination="cnx-9S-0Oj" id="Mt5-6z-myL"/>
                         <segue destination="pdt-Dd-sKU" kind="show" identifier="SettingSegue" id="p7A-lB-4hR"/>
                     </connections>
                 </viewController>
@@ -924,7 +925,7 @@
                                             <action selector="onClickSelectedProjectButton:" destination="Ndu-GM-uKQ" eventType="touchUpInside" id="AWR-Ch-ik2"/>
                                         </connections>
                                     </button>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Bil-ri-fq4">
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" indicatorStyle="white" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Bil-ri-fq4">
                                         <rect key="frame" x="0.0" y="50" width="225" height="100"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
