@@ -563,6 +563,9 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     //MARK: - Scroll View function from delegate
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>)
     {
+        if scrollView == dropDownListProjectsTableView as UIScrollView {
+            return
+        }
         targetContentOffset.pointee = scrollView.contentOffset
        
         if scrollView == self.scrollView {
@@ -626,6 +629,9 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView == dropDownListProjectsTableView as UIScrollView {
+            return
+        }
         if scrollView == self.scrollView {
             let pageIndex = floor(scrollView.contentOffset.x * 2 / self.slidesContainer.frame.width)
             imageControl.currentPage = Int(pageIndex)
@@ -660,6 +666,9 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         }
     }
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if scrollView == dropDownListProjectsTableView as UIScrollView {
+            return
+        }
         if scrollView == self.scrollView {
             updateCommentLabel()
             updateTagNumber()
