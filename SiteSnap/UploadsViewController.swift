@@ -230,9 +230,18 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         if let devId = user?.deviceId {
             deviceId = devId
         }
-        var debug: String = "true"
+        var debug: String
+       
         if let statusDebug = UserDefaults.standard.value(forKey: "debugMode") as? Bool {
             debug = "\(statusDebug)"
+        } else {
+            debug = "false"
+        }
+        var version: String
+        if let appVersion = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as? String {
+            version = appVersion
+        } else {
+            version = "1.0"
         }
         let parameters = [
             "forProject": currentProjectId,
@@ -242,7 +251,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
             "comment": comment,
             "photoDate": myDate,
             "tags": tagIds,
-            "appVersion": "1.0",
+            "appVersion": version,
             "deviceId": deviceId,
             "addDevice": "iOS",
             ]

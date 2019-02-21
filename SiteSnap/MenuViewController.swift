@@ -27,7 +27,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         // Do any additional setup after loading the view.
         tableView.delegate = self
         failedPhotosNumber = PhotoHandler.getFailedUploadPhotosNumber()
-        versionLabel.text = " Version "
+        versionLabel.text = "Version "
         let appVersion = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as? String
         versionLabel.text = versionLabel.text?.appending(appVersion!)
         self.pool = AWSCognitoIdentityUserPool(forKey: AWSCognitoUserPoolsSignInProviderKey)

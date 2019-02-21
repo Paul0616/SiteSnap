@@ -380,6 +380,9 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
                 }
             }
             photoObjects = PhotoHandler.fetchAllObjects()
+            if photoObjects?.count == 0 {
+                self.dismiss(animated: false, completion: nil)
+            }
         }
         //##################
   
