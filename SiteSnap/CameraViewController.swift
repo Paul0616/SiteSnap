@@ -694,7 +694,11 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         if let userInfoValue = notification.userInfo?[AVCaptureSessionInterruptionReasonKey] as AnyObject?,
             let reasonIntegerValue = userInfoValue.integerValue,
             let reason = AVCaptureSession.InterruptionReason(rawValue: reasonIntegerValue) {
-            print("Capture session was interrupted with reason \(reason)")
+            if reason == .videoDeviceNotAvailableInBackground {
+                print("Capture session was interrupted with reason: 'An interruption caused by the app being sent to the background while using a camera.'")
+            } else {
+                print("Capture session was interrupted with reason \(reason)")
+            }
             
             //var showResumeButton = false
             if reason == .videoDeviceInUseByAnotherClient {
