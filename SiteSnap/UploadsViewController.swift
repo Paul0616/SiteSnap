@@ -43,7 +43,14 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         titleButton.layer.cornerRadius = 6
         titleButton.isEnabled = false
         // Do any additional setup after loading the view.
-        let photos = PhotoHandler.fetchAllObjects()!
+        var photos = PhotoHandler.fetchAllObjects()!
+        for photo in photos {
+            let img = loadImage(identifier: photo.localIdentifierString)
+            if let data = img!.jpegData(compressionQuality: 1.0) {
+                PhotoHandler.updateFileSize(localIdentifier: photo.localIdentifierString!, size: Int64(data.count))
+            }
+        }
+        photos = PhotoHandler.fetchAllObjects()!
         var unprocessedImages = [ImageForUpload]()
         let currentProjectName = UserDefaults.standard.value(forKey: "currentProjectName")
         
@@ -340,6 +347,9 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         if let image = image {
             guard let mediaImage = Media(withImage: image, forKey: "image") else { return }
             data = mediaImage.data
+           // let bcf = ByteCountFormatter()
+           // let s = bcf.string(fromByteCount: Int64(data.count)) //  Int64(bitPattern: UInt64(data.count))
+            //PhotoHandler.updateFileSize(localIdentifier: identifier, size: Int64(data.count))
             fileName = mediaImage.filename
             mimeType = mediaImage.mimeType
         }

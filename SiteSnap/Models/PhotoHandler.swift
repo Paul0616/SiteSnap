@@ -64,8 +64,9 @@ class PhotoHandler: NSObject {
         return hiddenIdentifiers
     }
     
+    //get filesize from localIdentifier image from gallery then call uptadeFileSize to save it in CoreData
     class func setFileSize(localIdentifiers: [String]!){
-//        let context = getContext()
+
         let assets : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: localIdentifiers! , options: nil)
         assets.enumerateObjects{(object: AnyObject!,
             count: Int,
@@ -73,6 +74,7 @@ class PhotoHandler: NSObject {
             
             if object is PHAsset {
                 let asset = object as! PHAsset
+                //asset.
                 let resources = PHAssetResource.assetResources(for: asset) // your PHAsset
                 
                 var sizeOnDisk: Int64? = 0
@@ -82,16 +84,7 @@ class PhotoHandler: NSObject {
                     sizeOnDisk = Int64(bitPattern: UInt64(unsignedInt64!))
                 }
                 updateFileSize(localIdentifier: String(object.localIdentifier), size: sizeOnDisk!)
-//                let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
-//                fetchRequest.predicate = NSPredicate.init(format: "localIdentifierString=='\(String(object.localIdentifier))'")
-//                do {
-//                    let objects = try context.fetch(fetchRequest)
-//                    objects.first?.fileSize = sizeOnDisk!
-//                    try context.save()
-//                } catch _ {
-//                   print("Error on save filesize")
-//                }
-                //print(self.converByteToHumanReadable(sizeOnDisk!))
+
             }
         }
     

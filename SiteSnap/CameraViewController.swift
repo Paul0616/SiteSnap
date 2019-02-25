@@ -364,7 +364,9 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             //------------------------ and set each project from CoreData associated tags
             if let projectsRecords = ProjectHandler.fetchAllProjects() {
                 for item in projectsRecords {
+                    print("\(item.id)")
                     for projectModel in self.userProjects {
+                        print("\(projectModel.id)")
                         if projectModel.id == item.id {
                             let currentProjectTagIds = projectModel.tagIds
                             for tagId in currentProjectTagIds {
@@ -372,8 +374,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                                     item.addToAvailableTags(tagRecord)
                                 }
                             }
+                            break
                         }
-                        break
                     }
                 }
             }
@@ -803,8 +805,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             var photoSettings = AVCapturePhotoSettings()
             
             // Capture HEIF photos when supported. Enable current flash mode and high-resolution photos.
-            if  self.photoOutput.availablePhotoCodecTypes.contains(.hevc) {
-                photoSettings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.hevc])
+            if  self.photoOutput.availablePhotoCodecTypes.contains(.jpeg) {
+                photoSettings = AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])
             }
             
             if self.videoDeviceInput.device.isFlashAvailable {
