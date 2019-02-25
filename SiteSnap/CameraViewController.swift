@@ -364,9 +364,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             //------------------------ and set each project from CoreData associated tags
             if let projectsRecords = ProjectHandler.fetchAllProjects() {
                 for item in projectsRecords {
-                    print("\(item.id)")
                     for projectModel in self.userProjects {
-                        print("\(projectModel.id)")
                         if projectModel.id == item.id {
                             let currentProjectTagIds = projectModel.tagIds
                             for tagId in currentProjectTagIds {
