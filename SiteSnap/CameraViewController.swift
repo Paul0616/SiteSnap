@@ -215,73 +215,95 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
     //MARK: - Connect to SITESnap Backend API
-    func attemptSignInToSiteSnapBackend()
-    {
+    func refreshProjectsAndTags(){
+        let request = makeUrlRequest()
+        let task = URLSession.shared.dataTask(with: request as URLRequest) {(data, response, error) -> Void in
+            if error == nil {
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
+                    self.setUpInternalTables(json: json)
+                }
+                catch let error as NSError
+                {
+                    print(error.localizedDescription)
+                }
+            }
+        }
+        task.resume()
+    }
+    
+    func makeUrlRequest() -> URLRequest {
         let url = URL(string: siteSnapBackendHost + "session/getPhoneSessionInfo")!
         var request = URLRequest(url: url)
         let tokenString = "Bearer " + (UserDefaults.standard.value(forKey: "token") as? String)!
         request.setValue(tokenString, forHTTPHeaderField: "Authorization")
         request.httpMethod = "GET"
-        let task = URLSession.shared.dataTask(with: request as URLRequest)
-        {(data,response,error) -> Void in
-            if error != nil {
-                print(error?.localizedDescription as Any)
-                if let err = error as? URLError {
-                    switch err.code {
-                    case .notConnectedToInternet:
-                        DispatchQueue.main.async(execute: {
-                            let alert = UIAlertController(
-                                title: "Failed to Login",
-                                message:"Not Connected To The Internet",
-                                preferredStyle: .alert)
-                            let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
-                                // do something when user press OK button
-                            }
-                            alert.addAction(OKAction)
-                            self.present(alert, animated: true, completion: nil)
-                            return
-                        })
-                    case .timedOut:
-                        DispatchQueue.main.async(execute: {
-                            let alert = UIAlertController(
-                                title: "Failed to Login",
-                                message:"Request Timed Out",
-                                preferredStyle: .alert)
-                            
-                            let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
-                                // do something when user press OK button
-                            }
-                            alert.addAction(OKAction)
-                            self.present(alert, animated: true, completion: nil)
-                            return
-                        })
-                    case .networkConnectionLost:
-                        DispatchQueue.main.async(execute: {
-                            let alert = UIAlertController(
-                                title: "Failed to Login",
-                                message:"Lost Connection to the Network",
-                                preferredStyle: .alert)
-                            
-                            let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
-                                // do something when user press OK button
-                            }
-                            alert.addAction(OKAction)
-                            self.present(alert, animated: true, completion: nil)
-                            return
-                        })
-                    default:
-                        print("Default Error")
-                        print(err)
-                    }
+        return request
+    }
+    func treatErrors(error: Error?) {
+        if error != nil {
+            print(error?.localizedDescription as Any)
+            if let err = error as? URLError {
+                switch err.code {
+                case .notConnectedToInternet:
+                    DispatchQueue.main.async(execute: {
+                        let alert = UIAlertController(
+                            title: "Failed to Login",
+                            message:"Not Connected To The Internet",
+                            preferredStyle: .alert)
+                        let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+                            // do something when user press OK button
+                        }
+                        alert.addAction(OKAction)
+                        self.present(alert, animated: true, completion: nil)
+                        return
+                    })
+                case .timedOut:
+                    DispatchQueue.main.async(execute: {
+                        let alert = UIAlertController(
+                            title: "Failed to Login",
+                            message:"Request Timed Out",
+                            preferredStyle: .alert)
+                        
+                        let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+                            // do something when user press OK button
+                        }
+                        alert.addAction(OKAction)
+                        self.present(alert, animated: true, completion: nil)
+                        return
+                    })
+                case .networkConnectionLost:
+                    DispatchQueue.main.async(execute: {
+                        let alert = UIAlertController(
+                            title: "Failed to Login",
+                            message:"Lost Connection to the Network",
+                            preferredStyle: .alert)
+                        
+                        let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+                            // do something when user press OK button
+                        }
+                        alert.addAction(OKAction)
+                        self.present(alert, animated: true, completion: nil)
+                        return
+                    })
+                default:
+                    print("Default Error")
+                    print(err)
                 }
+            }
+        }
+    }
+    func attemptSignInToSiteSnapBackend()
+    {
+        let request = makeUrlRequest()
+        let task = URLSession.shared.dataTask(with: request as URLRequest) {(data, response, error) -> Void in
+            if error != nil {
+                self.treatErrors(error: error)
                 return
             }
-            
-            do
-            {
+            do {
                 let json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
                 self.setUpInternalTables(json: json)
-
             }
             catch let error as NSError
             {
@@ -289,6 +311,78 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             }
         }
         task.resume()
+//        let url = URL(string: siteSnapBackendHost + "session/getPhoneSessionInfo")!
+//        var request = URLRequest(url: url)
+//        let tokenString = "Bearer " + (UserDefaults.standard.value(forKey: "token") as? String)!
+//        request.setValue(tokenString, forHTTPHeaderField: "Authorization")
+//        request.httpMethod = "GET"
+//        let task = URLSession.shared.dataTask(with: request as URLRequest)
+//        {(data,response,error) -> Void in
+//            if error != nil {
+//                print(error?.localizedDescription as Any)
+//                if let err = error as? URLError {
+//                    switch err.code {
+//                    case .notConnectedToInternet:
+//                        DispatchQueue.main.async(execute: {
+//                            let alert = UIAlertController(
+//                                title: "Failed to Login",
+//                                message:"Not Connected To The Internet",
+//                                preferredStyle: .alert)
+//                            let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+//                                // do something when user press OK button
+//                            }
+//                            alert.addAction(OKAction)
+//                            self.present(alert, animated: true, completion: nil)
+//                            return
+//                        })
+//                    case .timedOut:
+//                        DispatchQueue.main.async(execute: {
+//                            let alert = UIAlertController(
+//                                title: "Failed to Login",
+//                                message:"Request Timed Out",
+//                                preferredStyle: .alert)
+//
+//                            let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+//                                // do something when user press OK button
+//                            }
+//                            alert.addAction(OKAction)
+//                            self.present(alert, animated: true, completion: nil)
+//                            return
+//                        })
+//                    case .networkConnectionLost:
+//                        DispatchQueue.main.async(execute: {
+//                            let alert = UIAlertController(
+//                                title: "Failed to Login",
+//                                message:"Lost Connection to the Network",
+//                                preferredStyle: .alert)
+//
+//                            let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+//                                // do something when user press OK button
+//                            }
+//                            alert.addAction(OKAction)
+//                            self.present(alert, animated: true, completion: nil)
+//                            return
+//                        })
+//                    default:
+//                        print("Default Error")
+//                        print(err)
+//                    }
+//                }
+//                return
+//            }
+//
+//            do
+//            {
+//                let json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
+//                self.setUpInternalTables(json: json)
+//
+//            }
+//            catch let error as NSError
+//            {
+//                print(error.localizedDescription)
+//            }
+//        }
+//        task.resume()
     }
     
     func setUpInternalTables(json: NSDictionary){
