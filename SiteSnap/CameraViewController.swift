@@ -70,12 +70,19 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var userProjects = [ProjectModel]()
     //var projectId: String = ""
     var selectedFromGallery: Bool = false
+    var timer: Timer!
     
-    
+    @objc
+    func responseFunction(){
+        attemptSignInToSiteSnapBackendAndUpdateInternal()
+    }
     //MARK: - Loading Camera View Controller
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+       //sessionAPIQueue.async {
+            self.timer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(self.responseFunction), userInfo: nil, repeats: true)
+            
+       // }
         UserDefaults.standard.removeObject(forKey: "currentProjectId")
         UserDefaults.standard.removeObject(forKey: "currentProjectName")
         dropDownListProjectsTableView.isHidden = true
@@ -127,6 +134,9 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        if !timer.isValid {
+            timer.fire()
+        }
         if let prjId = UserDefaults.standard.value(forKey: "currentProjectId") as? String {
             self.setProjectsSelected(projectId: prjId)
         }
@@ -215,6 +225,81 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
     //MARK: - Connect to SITESnap Backend API
+    
+    func attemptSignInToSiteSnapBackendAndUpdateInternal(){
+      
+        let url = URL(string: siteSnapBackendHost + "session/getPhoneSessionInfo")!
+        var request = URLRequest(url: url)
+        let tokenString = "Bearer " + (UserDefaults.standard.value(forKey: "token") as? String)!
+        request.setValue(tokenString, forHTTPHeaderField: "Authorization")
+        request.httpMethod = "GET"
+        let task = URLSession.shared.dataTask(with: request as URLRequest)
+        {(data,response,error) -> Void in
+            if error != nil {
+                print(error?.localizedDescription as Any)
+                if let err = error as? URLError {
+                    switch err.code {
+                    case .notConnectedToInternet:
+                        DispatchQueue.main.async(execute: {
+                            let alert = UIAlertController(
+                                title: "Failed to Login",
+                                message:"Not Connected To The Internet",
+                                preferredStyle: .alert)
+                            let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+                                // do something when user press OK button
+                            }
+                            alert.addAction(OKAction)
+                            self.present(alert, animated: true, completion: nil)
+                            return
+                        })
+                    case .timedOut:
+                        DispatchQueue.main.async(execute: {
+                            let alert = UIAlertController(
+                                title: "Failed to Login",
+                                message:"Request Timed Out",
+                                preferredStyle: .alert)
+                            
+                            let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+                                // do something when user press OK button
+                            }
+                            alert.addAction(OKAction)
+                            self.present(alert, animated: true, completion: nil)
+                            return
+                        })
+                    case .networkConnectionLost:
+                        DispatchQueue.main.async(execute: {
+                            let alert = UIAlertController(
+                                title: "Failed to Login",
+                                message:"Lost Connection to the Network",
+                                preferredStyle: .alert)
+                            
+                            let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+                                // do something when user press OK button
+                            }
+                            alert.addAction(OKAction)
+                            self.present(alert, animated: true, completion: nil)
+                            return
+                        })
+                    default:
+                        print("Default Error")
+                        print(err)
+                    }
+                }
+                return
+            }
+            
+            do
+            {
+                let json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as? NSDictionary
+                print(json!)
+            }
+            catch let error as NSError
+            {
+                print(error.localizedDescription)
+            }
+        }
+        task.resume()
+    }
     func attemptSignInToSiteSnapBackend()
     {
         let url = URL(string: siteSnapBackendHost + "session/getPhoneSessionInfo")!

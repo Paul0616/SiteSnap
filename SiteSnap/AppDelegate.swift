@@ -59,7 +59,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window?.makeKeyAndVisible()
     }
     //MARK: -
-    
+//    func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+//        let url = URL(string: siteSnapBackendHost + "session/getPhoneSessionInfo")!
+//        var request = URLRequest(url: url)
+//        let tokenString = "Bearer " + (UserDefaults.standard.value(forKey: "token") as? String)!
+//        request.setValue(tokenString, forHTTPHeaderField: "Authorization")
+//        request.httpMethod = "GET"
+//        let task = URLSession.shared.dataTask(with: request as URLRequest)
+//        {(data,response,error) -> Void in
+//            do
+//            {
+//                let json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
+//                print(json)
+//
+//            }
+//            catch let error as NSError
+//            {
+//                print(error.localizedDescription)
+//            }
+//        }
+//        task.resume()
+//    }
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
@@ -82,6 +102,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let pool = AWSCognitoIdentityUserPool(forKey: AWSCognitoUserPoolsSignInProviderKey)
         self.storyboard = UIStoryboard(name: "Main", bundle: nil)
         pool.delegate = self
+        
+//        UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
         
         return true
     }
