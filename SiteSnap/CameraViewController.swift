@@ -74,7 +74,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     @objc
     func responseFunction(){
-        attemptSignInToSiteSnapBackendAndUpdateInternal()
+      refreshProjectsAndTags()
     }
     //MARK: - Loading Camera View Controller
     override func viewDidLoad() {
@@ -227,29 +227,43 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     //MARK: - Connect to SITESnap Backend API
     func refreshProjectsAndTags(){
         let request = makeUrlRequest()
-        let task = URLSession.shared.dataTask(with: request as URLRequest) {(data, response, error) -> Void in
-            if error == nil {
-                do {
-                    let json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
-                    self.setUpInternalTables(json: json)
-                }
-                catch let error as NSError
-                {
-                    print(error.localizedDescription)
+        if let request = request {
+            let task = URLSession.shared.dataTask(with: request as URLRequest) {(data, response, error) -> Void in
+                if error == nil {
+                    do {
+                        let json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
+                        print(json)
+                        let formatter = DateFormatter()
+                        formatter.dateFormat = "HH:mm:ss"
+                        let now = formatter.string(from: Date())
+                        print(now)
+                        //self.setUpInternalTables(json: json)
+                    }
+                    catch let error as NSError
+                    {
+                        print(error.localizedDescription)
+                    }
+                } else {
+                    self.treatErrors(error: error)
                 }
             }
+            task.resume()
         }
-        task.resume()
     }
     
-    func makeUrlRequest() -> URLRequest {
+    func makeUrlRequest() -> URLRequest! {
         let url = URL(string: siteSnapBackendHost + "session/getPhoneSessionInfo")!
         var request = URLRequest(url: url)
-        let tokenString = "Bearer " + (UserDefaults.standard.value(forKey: "token") as? String)!
-        request.setValue(tokenString, forHTTPHeaderField: "Authorization")
-        request.httpMethod = "GET"
-        return request
+        if (self.pool?.token().isCompleted)! {
+            let tokenString = "Bearer " + (self.pool?.token().result as String?)!
+            request.setValue(tokenString, forHTTPHeaderField: "Authorization")
+            request.httpMethod = "GET"
+            return request
+        } else {
+            return nil
+        }
     }
+    
     func treatErrors(error: Error?) {
         if error != nil {
             print(error?.localizedDescription as Any)
@@ -258,7 +272,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 case .notConnectedToInternet:
                     DispatchQueue.main.async(execute: {
                         let alert = UIAlertController(
-                            title: "Failed to Login",
+                            title: "SiteSnap server access",
                             message:"Not Connected To The Internet",
                             preferredStyle: .alert)
                         let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
@@ -271,7 +285,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 case .timedOut:
                     DispatchQueue.main.async(execute: {
                         let alert = UIAlertController(
-                            title: "Failed to Login",
+                            title: "SiteSnap server access",
                             message:"Request Timed Out",
                             preferredStyle: .alert)
                         
@@ -285,7 +299,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 case .networkConnectionLost:
                     DispatchQueue.main.async(execute: {
                         let alert = UIAlertController(
-                            title: "Failed to Login",
+                            title: "SiteSnap server access",
                             message:"Lost Connection to the Network",
                             preferredStyle: .alert)
                         
@@ -303,106 +317,30 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             }
         }
     }
+    
     func attemptSignInToSiteSnapBackend()
     {
         let request = makeUrlRequest()
-        let task = URLSession.shared.dataTask(with: request as URLRequest) {(data, response, error) -> Void in
-            if error != nil {
-                self.treatErrors(error: error)
-                return
+        if let request = request {
+            let task = URLSession.shared.dataTask(with: request as URLRequest) {(data, response, error) -> Void in
+                if error != nil {
+                    self.treatErrors(error: error)
+                    return
+                }
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
+                    self.setUpInternalTables(json: json)
+                }
+                catch let error as NSError
+                {
+                    print(error.localizedDescription)
+                }
             }
-            do {
-                let json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
-                self.setUpInternalTables(json: json)
-            }
-            catch let error as NSError
-            {
-                print(error.localizedDescription)
-            }
+            task.resume()
         }
-        task.resume()
-//        let url = URL(string: siteSnapBackendHost + "session/getPhoneSessionInfo")!
-//        var request = URLRequest(url: url)
-//        let tokenString = "Bearer " + (UserDefaults.standard.value(forKey: "token") as? String)!
-//        request.setValue(tokenString, forHTTPHeaderField: "Authorization")
-//        request.httpMethod = "GET"
-//        let task = URLSession.shared.dataTask(with: request as URLRequest)
-//        {(data,response,error) -> Void in
-//            if error != nil {
-//                print(error?.localizedDescription as Any)
-//                if let err = error as? URLError {
-//                    switch err.code {
-//                    case .notConnectedToInternet:
-//                        DispatchQueue.main.async(execute: {
-//                            let alert = UIAlertController(
-//                                title: "Failed to Login",
-//                                message:"Not Connected To The Internet",
-//                                preferredStyle: .alert)
-//                            let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
-//                                // do something when user press OK button
-//                            }
-//                            alert.addAction(OKAction)
-//                            self.present(alert, animated: true, completion: nil)
-//                            return
-//                        })
-//                    case .timedOut:
-//                        DispatchQueue.main.async(execute: {
-//                            let alert = UIAlertController(
-//                                title: "Failed to Login",
-//                                message:"Request Timed Out",
-//                                preferredStyle: .alert)
-//
-//                            let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
-//                                // do something when user press OK button
-//                            }
-//                            alert.addAction(OKAction)
-//                            self.present(alert, animated: true, completion: nil)
-//                            return
-//                        })
-//                    case .networkConnectionLost:
-//                        DispatchQueue.main.async(execute: {
-//                            let alert = UIAlertController(
-//                                title: "Failed to Login",
-//                                message:"Lost Connection to the Network",
-//                                preferredStyle: .alert)
-//
-//                            let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
-//                                // do something when user press OK button
-//                            }
-//                            alert.addAction(OKAction)
-//                            self.present(alert, animated: true, completion: nil)
-//                            return
-//                        })
-//                    default:
-//                        print("Default Error")
-//                        print(err)
-//                    }
-//                }
-//                return
-//            }
-//
-//            do
-//            {
-//                let json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
-//                self.setUpInternalTables(json: json)
-//
-//            }
-//            catch let error as NSError
-//            {
-//                print(error.localizedDescription)
-//            }
-//        }
-//        task.resume()
     }
     
-    func setUpInternalTables(json: NSDictionary){
-        let projects = json["projects"] as! NSArray
-        let projectId = json["lastUsedProjectId"] as! String
-        
-        UserDefaults.standard.set(projectId, forKey: "currentProjectId")
-        
-        let allTags = json["tags"] as! NSArray
-        
+    func checkDatabasePhotoIsStillInGallery(){
         //-----------------------  check if photos from CoreData is still in gallery and if not detele them from CoreData
         for photo in photoObjects {
             let photoId = photo.localIdentifierString
@@ -414,15 +352,15 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                     }
                 }
             }
-            
         }
-
+    }
+    func refillProjectModels(projects: NSArray, lastUsedProject: String){
         self.userProjects.removeAll()
         for item in projects {
             let project = item as! NSDictionary
             let pID = project["id"]! as! String
-            if pID == projectId {
-               UserDefaults.standard.set(project["name"]! as! String, forKey: "currentProjectName")
+            if pID == lastUsedProject {
+                UserDefaults.standard.set(project["name"]! as! String, forKey: "currentProjectName")
             }
             let coord = project["projectCenterPosition"] as! NSArray
             let tags = project["tagIds"] as! NSArray
@@ -438,6 +376,46 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             }
             self.userProjects += [projectModel]
         }
+    }
+    
+    
+    func deleteExtraProjectsFromCoreData(){
+        //update userProjects if exists project deleted
+        //check if currentProject still exist
+    }
+    func addProjectToCoreData(){
+        //update userProjects if succesfully added
+    }
+    func updateProjectNameInCoreData(){
+        //update userProjects if succesfully updateted
+    }
+    
+    func setUpInternalTables(json: NSDictionary){
+        let projects = json["projects"] as! NSArray
+        let projectId = json["lastUsedProjectId"] as! String
+        
+        UserDefaults.standard.set(projectId, forKey: "currentProjectId")
+        
+        let allTags = json["tags"] as! NSArray
+        checkDatabasePhotoIsStillInGallery()
+        
+        //check if user have projects
+        //--------------------------
+        if projects.count != 0 {
+            timer.invalidate()
+            performSegue(withIdentifier: "NoProjectsAssigned", sender: nil)
+        }
+        
+        //check every serverlist comparing to projectmodels
+        //------- if not in projectmodels -> add it to projectmodel and database
+        //------- if in server list -> check for name change and make update in projectModel and database accordingly
+        
+        //check every projectModels comparing to serverlist
+        //------- if not in server list -> delete it from projectmodel and database and if is the currentProject change the currentProject to closest
+        //------- if in server list -> check for name change and make update in projectModel and database accordingly
+        
+        refillProjectModels(projects: projects, lastUsedProject: projectId)
+        
         DispatchQueue.main.async {
             //--------------------- clean projects Coredata and add projects from model
             if ProjectHandler.deleteAllProjects() {
@@ -497,6 +475,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         print(json)
         self.loadingProjectIntoList()
     }
+    
     //MARK: - PERMISSIONS / AUTHORIZATIONS
     func videoAuthorization(){
         
@@ -703,6 +682,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func refresh() {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.userTappedLogOut = false
+        
         self.user?.getDetails().continueOnSuccessWith { (task) -> AnyObject? in
             DispatchQueue.main.async {
                 self.response = task.result
@@ -737,6 +717,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             }
             return nil
         }
+        
 
     }
     

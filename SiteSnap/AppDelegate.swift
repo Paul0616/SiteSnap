@@ -102,8 +102,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let pool = AWSCognitoIdentityUserPool(forKey: AWSCognitoUserPoolsSignInProviderKey)
         self.storyboard = UIStoryboard(name: "Main", bundle: nil)
         pool.delegate = self
-        
-//        UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
+
         
         return true
     }

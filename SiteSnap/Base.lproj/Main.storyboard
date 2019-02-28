@@ -538,6 +538,7 @@
                         <outlet property="noValidLocationIcon" destination="NtZ-1M-dTS" id="lrO-Pa-NYe"/>
                         <outlet property="selectedProjectButton" destination="DrV-oQ-auP" id="Jiw-ru-SYM"/>
                         <segue destination="Ndu-GM-uKQ" kind="show" identifier="PhotsViewIdentifier" id="4zH-bW-a7I"/>
+                        <segue destination="2oM-O8-dF4" kind="show" identifier="NoProjectsAssigned" id="Qse-xH-33t"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OlZ-2b-ggJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -668,7 +669,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="k4w-td-SVX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1757" y="-1023"/>
+            <point key="canvasLocation" x="1657" y="-1279"/>
         </scene>
         <!--Photos View Controller-->
         <scene sceneID="z3O-ux-27f">
@@ -1825,7 +1826,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="euw-Uc-MIw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2768" y="-1023"/>
+            <point key="canvasLocation" x="2463" y="-1279"/>
         </scene>
         <!--Document Files View Controller-->
         <scene sceneID="6tf-Md-wWo">
@@ -1887,7 +1888,67 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iSi-qy-bTw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3654" y="-1029"/>
+            <point key="canvasLocation" x="3306" y="-1279"/>
+        </scene>
+        <!--No Projects Assigned View Controller-->
+        <scene sceneID="TGl-Tx-boz">
+            <objects>
+                <viewController id="2oM-O8-dF4" customClass="NoProjectsAssignedViewController" customModule="SiteSnap" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="FR2-Gw-5R2">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Uh Oh!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gmb-Fp-5BT">
+                                <rect key="frame" x="32" y="94" width="311" height="38.333333333333343"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="32"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="11" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dy4-qc-vvR">
+                                <rect key="frame" x="32" y="148.33333333333337" width="311" height="289"/>
+                                <mutableString key="text">It look like you are not added to any active projects, which means you can't upload any photos.  Please contact your system administrator to get them to add you to a project so you can upload photos.  Otherwise, tap the sign in button bellow to sign in as another user.</mutableString>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y7C-B6-bW0">
+                                <rect key="frame" x="64" y="618" width="247" height="96"/>
+                                <color key="backgroundColor" red="0.18823529410000001" green="0.43921568630000002" blue="0.8980392157" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="96" id="r3u-Aj-Msx"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                <state key="normal" title="SIGN IN AS ANOTHER USER">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="onTapSignInButton:" destination="2oM-O8-dF4" eventType="touchUpInside" id="ZyK-hC-ONQ"/>
+                                    <action selector="onTapreset:" destination="8Lf-SE-Jyw" eventType="touchUpInside" id="bcL-lr-vlb"/>
+                                    <action selector="signInPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="eto-da-69q"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="0.1019607843" green="0.1019607843" blue="0.1019607843" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="gmb-Fp-5BT" firstAttribute="leading" secondItem="DRi-Pw-xK6" secondAttribute="leading" constant="32" id="7Lt-yI-SiZ"/>
+                            <constraint firstItem="DRi-Pw-xK6" firstAttribute="trailing" secondItem="Y7C-B6-bW0" secondAttribute="trailing" constant="64" id="7oB-4m-jZI"/>
+                            <constraint firstItem="Dy4-qc-vvR" firstAttribute="leading" secondItem="DRi-Pw-xK6" secondAttribute="leading" constant="32" id="9Pd-5c-y4g"/>
+                            <constraint firstItem="Dy4-qc-vvR" firstAttribute="top" secondItem="gmb-Fp-5BT" secondAttribute="bottom" constant="16" id="I7N-cB-aaO"/>
+                            <constraint firstItem="DRi-Pw-xK6" firstAttribute="trailing" secondItem="Dy4-qc-vvR" secondAttribute="trailing" constant="32" id="KH1-Gm-lsT"/>
+                            <constraint firstItem="gmb-Fp-5BT" firstAttribute="top" secondItem="DRi-Pw-xK6" secondAttribute="top" constant="50" id="RDh-jx-qLn"/>
+                            <constraint firstItem="Y7C-B6-bW0" firstAttribute="leading" secondItem="DRi-Pw-xK6" secondAttribute="leading" constant="64" id="T4h-xa-W8I"/>
+                            <constraint firstItem="DRi-Pw-xK6" firstAttribute="trailing" secondItem="gmb-Fp-5BT" secondAttribute="trailing" constant="32" id="fHn-ka-WcY"/>
+                            <constraint firstItem="DRi-Pw-xK6" firstAttribute="bottom" secondItem="Y7C-B6-bW0" secondAttribute="bottom" constant="64" id="zha-xe-Yvh"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="DRi-Pw-xK6"/>
+                    </view>
+                    <connections>
+                        <outlet property="signInButton" destination="Y7C-B6-bW0" id="1cW-kb-7dV"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WZ6-ve-5wH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-138.40000000000001" y="-770.68965517241384"/>
         </scene>
     </scenes>
     <resources>

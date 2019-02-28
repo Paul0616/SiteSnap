@@ -74,4 +74,38 @@ class ProjectHandler: NSObject {
             return projects
         }
     }
+    class func deleteExtraProjects(projectsForVerification: [String]) -> Int {
+        let context = getContext()
+        let fetchRequest = NSFetchRequest<Project>(entityName: "Project")
+        fetchRequest.predicate = NSPredicate.init(format: "NOT (id IN %@)", projectsForVerification)
+        var projectsForDelete: [Project]!
+        do {
+            projectsForDelete = try context.fetch(fetchRequest)
+        } catch _ {
+            projectsForDelete = nil
+        }
+        if projectsForDelete == nil {
+            return 0
+        }
+        if projectsForDelete.count == 0 {
+            return 0
+        }
+        var ids = [String]()
+        for project in projectsForDelete {
+            ids.append(project.id!)
+        }
+        context.reset()
+        let fetchDeleteRequest = NSFetchRequest<Project>(entityName: "Project")
+        fetchDeleteRequest.predicate = NSPredicate.init(format: "id IN %@", ids)
+        do {
+            let objects = try context.fetch(fetchDeleteRequest)
+            for object in objects {
+                context.delete(object)
+            }
+            try context.save()
+            return objects.count
+        } catch _ {
+            return 0
+        }
+    }
 }
