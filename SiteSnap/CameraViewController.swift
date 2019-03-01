@@ -71,10 +71,12 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var selectedFromGallery: Bool = false
     var timer: Timer!
     var firstTime: Bool = true
+    var locationWasUpdated: Bool = false
+    var projectWasSelected: Bool = false
     
     @objc
     func responseFunction(){
-      refreshProjectsAndTags()
+      attemptSignInToSiteSnapBackend()
     }
     //MARK: - Loading Camera View Controller
     override func viewDidLoad() {
@@ -134,7 +136,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if !timer.isValid {
+        if timer != nil && !timer.isValid {
             timer.fire()
         }
         if let prjId = UserDefaults.standard.value(forKey: "currentProjectId") as? String {
@@ -225,31 +227,31 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
     //MARK: - Connect to SITESnap Backend API
-    func refreshProjectsAndTags(){
-        let request = makeUrlRequest()
-        if let request = request {
-            let task = URLSession.shared.dataTask(with: request as URLRequest) {(data, response, error) -> Void in
-                if error == nil {
-                    do {
-                        let json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
-                        print(json)
-                        let formatter = DateFormatter()
-                        formatter.dateFormat = "HH:mm:ss"
-                        let now = formatter.string(from: Date())
-                        print(now)
-                        //self.setUpInternalTables(json: json)
-                    }
-                    catch let error as NSError
-                    {
-                        print(error.localizedDescription)
-                    }
-                } else {
-                    self.treatErrors(error: error)
-                }
-            }
-            task.resume()
-        }
-    }
+//    func refreshProjectsAndTags(){
+//        let request = makeUrlRequest()
+//        if let request = request {
+//            let task = URLSession.shared.dataTask(with: request as URLRequest) {(data, response, error) -> Void in
+//                if error == nil {
+//                    do {
+//                        let json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
+//                        print(json)
+//                        let formatter = DateFormatter()
+//                        formatter.dateFormat = "HH:mm:ss"
+//                        let now = formatter.string(from: Date())
+//                        print(now)
+//                        //self.setUpInternalTables(json: json)
+//                    }
+//                    catch let error as NSError
+//                    {
+//                        print(error.localizedDescription)
+//                    }
+//                } else {
+//                    self.treatErrors(error: error)
+//                }
+//            }
+//            task.resume()
+//        }
+//    }
     
     func makeUrlRequest() -> URLRequest! {
         let url = URL(string: siteSnapBackendHost + "session/getPhoneSessionInfo")!
@@ -356,9 +358,6 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func setCurrentProjectName(projects: NSArray, lastUsedProject: String){
-        if !firstTime {
-            return
-        }
         for item in projects {
             let project = item as! NSDictionary
             let pID = project["id"]! as! String
@@ -366,57 +365,85 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 UserDefaults.standard.set(project["name"]! as! String, forKey: "currentProjectName")
             }
         }
-         self.timer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(self.responseFunction), userInfo: nil, repeats: true)
-        firstTime = false
     }
-    func addToProjectModels(projects: NSArray, projectId: String){
-        for item in projects {
-            let project = item as! NSDictionary
-            let pID = project["id"]! as! String
-            if pID == projectId {
-                let coord = project["projectCenterPosition"] as! NSArray
-                let tags = project["tagIds"] as! NSArray
-                
-                //-------------------- make a list with all tag ids for current project from server
-                var tagIds = [String]()
-                for tag in tags {
-                    tagIds += [tag as! String]
-                }
-                //--------------------- fill the model with projects
-                guard let projectModel = ProjectModel(id: project["id"]! as! String, projectName: project["name"]! as! String, latitudeCenterPosition: coord[0] as! Double, longitudeCenterPosition: coord[1] as! Double, tagIds: tagIds) else {
-                    fatalError("Unable to instantiate ProductModel")
-                }
-                self.userProjects += [projectModel]
-                break
-            }
-        }
-    }
-    func getServerProjectName(projects: NSArray, projectId: String) -> String {
-        var projectName: String = ""
-        for item in projects {
-            let project = item as! NSDictionary
-            let pID = project["id"]! as! String
-            if pID == projectId {
-                projectName = project["name"]! as! String
-                break
-            }
-        }
-        return projectName
-    }
+//    func addToProjectModels(projects: NSArray, projectId: String){
+//        for item in projects {
+//            let project = item as! NSDictionary
+//            let pID = project["id"]! as! String
+//            if pID == projectId {
+//                let coord = project["projectCenterPosition"] as! NSArray
+//                let tags = project["tagIds"] as! NSArray
+//
+//                //-------------------- make a list with all tag ids for current project from server
+//                var tagIds = [String]()
+//                for tag in tags {
+//                    tagIds += [tag as! String]
+//                }
+//                //--------------------- fill the model with projects
+//                guard let projectModel = ProjectModel(id: project["id"]! as! String, projectName: project["name"]! as! String, latitudeCenterPosition: coord[0] as! Double, longitudeCenterPosition: coord[1] as! Double, tagIds: tagIds) else {
+//                    fatalError("Unable to instantiate ProductModel")
+//                }
+//                self.userProjects += [projectModel]
+//                break
+//            }
+//        }
+//    }
+//    func getServerProjectName(projects: NSArray, projectId: String) -> String {
+//        var projectName: String = ""
+//        for item in projects {
+//            let project = item as! NSDictionary
+//            let pID = project["id"]! as! String
+//            if pID == projectId {
+//                projectName = project["name"]! as! String
+//                break
+//            }
+//        }
+//        return projectName
+//    }
     
-    func deleteExtraProjectsFromCoreData(){
-        //update userProjects if exists project deleted
-        //check if currentProject still exist
-    }
+//    func deleteExtraProject(userProjectId: String){
+//        //update userProjects if exists project deleted
+//        //check if currentProject still exist
+//        for i in 0...userProjects.count {
+//            if userProjects[i].id == userProjectId {
+//                userProjects.remove(at: i)
+//                let currentProjectId = (UserDefaults.standard.value(forKey: "currentProjectId") as? String)!
+//                if currentProjectId == userProjectId {
+//
+//                }
+//                break
+//            }
+//        }
+//    }
     
-    func updateProjectNameInCoreData(){
-        //update userProjects if succesfully updateted
-    }
+//    func updateProjectName(projects: NSArray){
+//        //update userProjects if succesfully updateted
+//        for item in projects {
+//            let project = item as! NSDictionary
+//            let pID = project["id"]! as! String
+//            for projectModel in userProjects {
+//                if pID == projectModel.id {
+//                    let coord = project["projectCenterPosition"] as! NSArray
+//                    let tags = project["tagIds"] as! NSArray
+//                    //-------------------- make a list with all tag ids for current project from server
+//                    var tagIds = [String]()
+//                    for tag in tags {
+//                        tagIds += [tag as! String]
+//                    }
+//                    projectModel.projectName = project["name"]! as! String
+//                    projectModel.latitudeCenterPosition = coord[0] as! Double
+//                    projectModel.longitudeCenterPosition = coord[1] as! Double
+//                    projectModel.tagIds = tagIds
+//                    break
+//                }
+//            }
+//        }
+//    }
     
     func setUpInternalTables(json: NSDictionary){
         let projects = json["projects"] as! NSArray
         let projectId = json["lastUsedProjectId"] as! String
-        UserDefaults.standard.set(projectId, forKey: "currentProjectId")
+        
         
         let allTags = json["tags"] as! NSArray
         checkDatabasePhotoIsStillInGallery()
@@ -427,54 +454,64 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             performSegue(withIdentifier: "NoProjectsAssigned", sender: nil)
             return
         }
-        setCurrentProjectName(projects: projects, lastUsedProject: projectId)
-        //--------------------------
-        
-        var projectsIds = [String]()
-        for item in projects {
-            let project = item as! NSDictionary
-            projectsIds.append(project["id"] as! String)
+       
+       if self.firstTime {
+            UserDefaults.standard.set(projectId, forKey: "currentProjectId")
+                self.setCurrentProjectName(projects: projects, lastUsedProject: projectId)
+            self.timer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(self.responseFunction), userInfo: nil, repeats: true)
+            if locationWasUpdated {
+                let closestProjectId = self.getCloserProject(projects: projects)
+                UserDefaults.standard.set(closestProjectId, forKey: "currentProjectId")
+                self.setCurrentProjectName(projects: projects, lastUsedProject: closestProjectId!)
+            }
+                self.firstTime = false
         }
         
-        //check every serverlist comparing to projectmodels
-        //------- if not in projectmodels -> add it to projectmodel and database
-        //------- if in server list -> check for name change and make update in projectModel and database accordingly
+//        //--------------------------
+//
+//        var projectsIds = [String]()
+//        for item in projects {
+//            let project = item as! NSDictionary
+//            projectsIds.append(project["id"] as! String)
+//        }
+//
+//        //check every serverlist comparing to projectmodels
+//        //------- if not in projectmodels -> add it to projectmodel and database
+//        //------- if in server list -> check for name change and make update in projectModel and database accordingly
+//
+//        for projectId in projectsIds{
+//            let projectAlreadyAdded = userProjects.contains{ userProject in
+//                if case projectId = userProject.id {
+//                    return true
+//                } else {
+//                    return false
+//                }
+//            }
+//            if !projectAlreadyAdded {
+//               addToProjectModels(projects: projects, projectId: projectId)
+//            } else {
+//               updateProjectName(projects: projects)
+//            }
+//        }
+//
+//        //check every projectModels comparing to serverlist
+//        //------- if not in server list -> delete it from projectmodel and database and if is the currentProject change the currentProject to closest
+//        //------- if in server list -> check for name change and make update in projectModel and database accordingly
+//        for userProject in userProjects {
+//            let prjAlreadyAdded = projects.contains{ project in
+//                let prj = project as! NSDictionary
+//                let prjId = prj["id"]! as! String
+//                if case userProject.id = prjId {
+//                    return true
+//                } else {
+//                    return false
+//                }
+//            }
+//            if !prjAlreadyAdded {
+//                deleteExtraProject(userProjectId: userProject.id)
+//            }
+//        }
         
-        for projectId in projectsIds{
-            let projectAlreadyAdded = userProjects.contains{ userProject in
-                if case projectId = userProject.id {
-                    return true
-                } else {
-                    return false
-                }
-            }
-            if !projectAlreadyAdded {
-               addToProjectModels(projects: projects, projectId: projectId)
-            } else {
-                //let projectName = getServerProjectName(projects: projects, projectId: projectId)
-                updateProjectNameInCoreData()
-               // if projectName ==
-            }
-        }
-        
-        //check every projectModels comparing to serverlist
-        //------- if not in server list -> delete it from projectmodel and database and if is the currentProject change the currentProject to closest
-        //------- if in server list -> check for name change and make update in projectModel and database accordingly
-        for userProject in userProjects {
-            let prjAlreadyAdded = projects.contains{ project in
-                let prj = project as! NSDictionary
-                let prjId = prj["id"]! as! String
-                if case userProject.id = prjId {
-                    return true
-                } else {
-                    return false
-                }
-            }
-            if !prjAlreadyAdded {
-                deleteExtraProjectsFromCoreData()
-            }
-        }
-        //refillProjectModels(projects: projects, lastUsedProject: projectId)
         
         DispatchQueue.main.async {
             //--------------------- clean projects Coredata and add projects from model
@@ -531,6 +568,20 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 }
             }
             
+        }
+        
+        self.userProjects.removeAll()
+        let projectsFromDatabase = ProjectHandler.fetchAllProjects()
+        for item in projectsFromDatabase! {
+            var tagIds = [String]()
+            for tag in item.availableTags! {
+                let t = tag as! Tag
+                tagIds.append(t.id!)
+            }
+            guard let projectModel = ProjectModel(id: item.id!, projectName: item.name!, latitudeCenterPosition: item.latitude, longitudeCenterPosition: item.longitude, tagIds: tagIds) else {
+                fatalError("Unable to instantiate ProductModel")
+            }
+            self.userProjects += [projectModel]
         }
         print(json)
         self.loadingProjectIntoList()
@@ -723,6 +774,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let userLocation:CLLocation = locations[0] as CLLocation
         lastLocation = userLocation
+        locationWasUpdated = true
         // Call stopUpdatingLocation() to stop listening for location updates,
         // other wise this function will be called every time when user location changes.
         
@@ -980,13 +1032,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         DispatchQueue.main.async {
             self.selectedProjectButton.hideLoading(buttonText: nil)
             self.galleryButton.isEnabled = true
-            
-            if self.noValidLocationIcon.isHidden {
-                let projId = self.getCloserProject()
-                self.setProjectsSelected(projectId: projId!)
-            } else {
-                self.setProjectsSelected(projectId: (UserDefaults.standard.value(forKey: "currentProjectId") as? String)!)
-            }
+            self.setProjectsSelected(projectId: (UserDefaults.standard.value(forKey: "currentProjectId") as? String)!)
             self.dropDownListProjectsTableView.reloadData()
         }
        
@@ -1027,25 +1073,32 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func setProjectsSelected(projectId: String){
+        if userProjects.count == 0 {
+            return
+        }
         for i in 0...userProjects.count-1 {
-            userProjects[i].selected = userProjects[i].id == projectId
-            if userProjects[i].selected {
+            //userProjects[i].selected = userProjects[i].id == projectId
+            if userProjects[i].id == projectId {
                 selectedProjectButton.setTitle(userProjects[i].projectName, for: .normal)
             }
         }
     }
-    func getCloserProject() -> String! {
-        let projects = ProjectHandler.fetchAllProjects()
-        var closestProject = projects?.first?.id
-        let firstLocation = CLLocation(latitude: (projects?.first?.latitude)!, longitude: (projects?.first?.longitude)!)
+    func getCloserProject(projects: NSArray) -> String! {
+        //let projects = ProjectHandler.fetchAllProjects()
+        let firstItem = projects[0] as! NSDictionary
+        var closestProject = firstItem["id"]! as! String
+        let firstCoords = firstItem["projectCenterPosition"] as! NSArray
+        let firstLocation = CLLocation(latitude: firstCoords[0] as! Double, longitude: firstCoords[1] as! Double)
         var closestDistance = firstLocation.distance(from: lastLocation)
-        for project in projects! {
-            let location = CLLocation(latitude: project.latitude, longitude: project.longitude)
-            
+        for item in projects {
+            let project = item as! NSDictionary
+            let pID = project["id"]! as! String
+            let coords = project["projectCenterPosition"] as! NSArray
+            let location = CLLocation(latitude: coords[0] as! Double, longitude: coords[1] as! Double)
             let dist = location.distance(from: lastLocation)
-            if  dist < closestDistance {
+            if dist < closestDistance {
                 closestDistance = dist
-                closestProject = project.id
+                closestProject = pID
             }
         }
         return closestProject

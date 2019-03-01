@@ -198,12 +198,12 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     }
     
     func setProjectsSelected(projectId: String){
-        for i in 0...userProjects.count-1 {
-            userProjects[i].selected = userProjects[i].id == projectId
-            if userProjects[i].selected {
-                selectedProjectButton.setTitle(userProjects[i].projectName, for: .normal)
-            }
-        }
+//        for i in 0...userProjects.count-1 {
+//            userProjects[i].selected = userProjects[i].id == projectId
+//            if userProjects[i].selected {
+//                selectedProjectButton.setTitle(userProjects[i].projectName, for: .normal)
+//            }
+//        }
     }
     
     func animateProjectsList(toogle: Bool){

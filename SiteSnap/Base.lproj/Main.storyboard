@@ -1906,7 +1906,7 @@
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="11" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dy4-qc-vvR">
                                 <rect key="frame" x="32" y="148.33333333333337" width="311" height="289"/>
-                                <mutableString key="text">It look like you are not added to any active projects, which means you can't upload any photos.  Please contact your system administrator to get them to add you to a project so you can upload photos.  Otherwise, tap the sign in button bellow to sign in as another user.</mutableString>
+                                <string key="text">It look like you are not added to any active projects, which means you can't upload any photos.  Please contact your system administrator to get them to add you to a project so you can upload photos.  Otherwise, tap the sign in button bellow to sign in as another user.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>

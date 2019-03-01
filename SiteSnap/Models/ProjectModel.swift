@@ -16,7 +16,7 @@ class ProjectModel: NSObject {
     var latitudeCenterPosition: Double
     var longitudeCenterPosition: Double
     var tagIds: [String]
-    var selected: Bool = false
+    //var selected: Bool = false
     
     //MARK: - Initializare
     
