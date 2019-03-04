@@ -629,6 +629,12 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
             
             if let selectedPhoto = photo {
                 tagNumberLabel.text = selectedPhoto.tags?.count.description
+                print("-------------")
+                for t in selectedPhoto.tags! {
+                    let tag = t as! Tag
+                    print("TAG-urile pozei: \(tag.text!)")
+                }
+                print("#############")
             }
         }
     }

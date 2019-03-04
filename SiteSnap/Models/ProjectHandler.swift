@@ -36,6 +36,15 @@ class ProjectHandler: NSObject {
     }
     
     class func saveProject(id: String, name: String, latitude: Double, longitude: Double) -> Bool{
+        if let project = getSpecificProject(id: id) {
+            if project.name != name || project.latitude != latitude || project.longitude != longitude {
+                if updateProject(id: id, name: name, latitude: latitude, longitude: longitude) {
+                    print("Project \(id) was updated")
+                }
+            }
+            return false
+        }
+        
         let context = getContext()
         let entity = NSEntityDescription.entity(forEntityName: "Project", in: context)
         let managedObject = NSManagedObject(entity: entity!, insertInto: context)
@@ -48,6 +57,35 @@ class ProjectHandler: NSObject {
             return true
         } catch  {
             return false
+        }
+    }
+    
+    class func updateProject(id: String, name: String, latitude: Double, longitude: Double) -> Bool {
+        let context = getContext()
+        let fetchRequest = NSFetchRequest<Project>(entityName: "Project")
+        fetchRequest.predicate = NSPredicate.init(format: "id=='\(id)'")
+        do {
+            let objects = try context.fetch(fetchRequest)
+            objects.first?.name = name
+            objects.first?.latitude = latitude
+            objects.first?.longitude = longitude
+            try context.save()
+            return true
+        } catch _ {
+            return false
+        }
+    }
+    
+    class func getSpecificProject(id: String) -> Project! {
+        let context = getContext()
+        let fetchRequest = NSFetchRequest<Project>(entityName: "Project")
+        fetchRequest.predicate = NSPredicate.init(format: "id=='\(id)'")
+        do {
+            let objects = try context.fetch(fetchRequest)
+            
+            return objects.first
+        } catch _ {
+            return nil
         }
     }
     class func getCurrentProject() -> Project? {

@@ -167,29 +167,49 @@ class BackendConnection: NSObject {
         
         DispatchQueue.main.async {
             //self.checkDatabasePhotoIsStillInGallery()
-            let photos = PhotoHandler.fetchAllObjects()
-            print("-----BEFORE ---\(photos!.count) photos")
-            for photo in photos! {
-                let tags = photo.tags
-                for item in tags! {
-                    let tag = item as! Tag
-                    print("Tag: \(tag.text)")
+//            let photos = PhotoHandler.fetchAllObjects()
+//            print("-----BEFORE ---\(photos!.count) photos")
+//            for photo in photos! {
+//                let tags = photo.tags
+//                for item in tags! {
+//                    let tag = item as! Tag
+//                    print("Tag: \(String(describing: tag.text))")
+//                }
+//            }
+            
+            //----------------------- add extra projects from server to CoreData (saveProject will add new project only if it not already exist)
+           // if ProjectHandler.deleteAllProjects() {
+            for item in projects {
+                let project = item as! NSDictionary
+                let pID = project["id"]! as! String
+                let projectname = project["name"]! as! String
+                let coord = project["projectCenterPosition"] as! NSArray
+                if ProjectHandler.saveProject(id: pID, name: projectname, latitude: coord[0] as! Double, longitude: coord[1] as! Double) {
+                    print("PROJECT: \(projectname) added")
                 }
             }
-            
-            //--------------------- clean projects Coredata and add projects from model
-            if ProjectHandler.deleteAllProjects() {
-                for item in projects {
-                    let project = item as! NSDictionary
-                    let pID = project["id"]! as! String
-                    let projectname = project["name"]! as! String
-                    let coord = project["projectCenterPosition"] as! NSArray
-                    if ProjectHandler.saveProject(id: pID, name: projectname, latitude: coord[0] as! Double, longitude: coord[1] as! Double) {
-                        print("PROJECT: \(projectname) added")
-                    }
-                }
+            var allProjectsIds: [String] = [String]()
+            for item in projects {
+                let project = item as! NSDictionary
+                let pID = project["id"]! as! String
+                allProjectsIds.append(pID)
             }
+            let deletedProjectsNumber = ProjectHandler.deleteExtraProjects(projectsForVerification: allProjectsIds)
+            print("\(deletedProjectsNumber) projects was deleted")
+        
+            //}
             
+            
+//            let photos1 = PhotoHandler.fetchAllObjects()
+//            print("-----AFTER ---\(photos1!.count) photos")
+//            for photo in photos1! {
+//                let tags = photo.tags
+//                for item in tags! {
+//                    let tag = item as! Tag
+//                    print("Tag: \(String(describing: tag.text))")
+//                }
+//            }
+
             //------------------------
             //----------------------- add extra tags from server to CoreData (saveTag will add new tag only if it not already exist)
             var allTagIds: [String]!
@@ -215,10 +235,30 @@ class BackendConnection: NSObject {
                         let pID = project["id"]! as! String
                         if pID == itemRecord.id {
                             let projectTagIds = project["tagIds"] as! NSArray
+                            //add tags to every project
                             for tagId in projectTagIds {
                                 let tagIdString = tagId as! String
                                 if let tagRecord = TagHandler.getSpecificTag(id: tagIdString) {
                                     itemRecord.addToAvailableTags(tagRecord)
+                                }
+                            }
+                            //delete tags from project if them not avilable anymore
+                            var availableTagIdFromDatabase = [String]()
+                            for tagitem in itemRecord.availableTags! {
+                                let tag = tagitem as! Tag
+                                availableTagIdFromDatabase.append(tag.id!)
+                            }
+                            var availableTagIdServer = [String]()
+                            for tagId in projectTagIds {
+                                let tagIdString = tagId as! String
+                                availableTagIdServer.append(tagIdString)
+                            }
+                            for itemFromDatabase in availableTagIdFromDatabase {
+                                if !availableTagIdServer.contains(itemFromDatabase) {
+                                    if let tagRecord = TagHandler.getSpecificTag(id: itemFromDatabase) {
+                                        itemRecord.removeFromAvailableTags(tagRecord)
+                                        print("\(tagRecord.text) was removed from project \(itemRecord.id)")
+                                    }
                                 }
                             }
                         }
@@ -232,21 +272,35 @@ class BackendConnection: NSObject {
                         let tag = associatedTag as! Tag
                         if tag.id == tagItem.id {
                             tagItem.addToProjects(projectItem)
+                            
                         }
                     }
                 }
             }
-            
-            print(json)
-            let photos1 = PhotoHandler.fetchAllObjects()
-            print("-----AFTER ---\(photos1!.count) photos")
-            for photo in photos1! {
-                let tags = photo.tags
-                for item in tags! {
-                    let tag = item as! Tag
-                    print("Tag: \(tag.text)")
+            //------------------ for each photo tags, search it in project available tags and if it no longer there removed from photo tag
+            let photos = PhotoHandler.fetchAllObjects()
+            for photo in photos! {
+                //let tagModels = PhotoHandler.getTags(localIdentifier: photo.localIdentifierString!)
+                
+                let project = ProjectHandler.getCurrentProject()
+                var currentProjectTagIds = [String]()
+                for tg in (project?.availableTags)! {
+                    let tag = tg as! Tag
+                    currentProjectTagIds.append(tag.id!)
+                     print("-----PROJECT TAGS-------\(tag.text)")
+                }
+                for photoTag in photo.tags! {
+                    let tag = photoTag as! Tag
+                    print("-----PHOTO TAGS-------\(tag.text)")
+                    if !currentProjectTagIds.contains(tag.id!) {
+                        photo.removeFromTags(tag)
+                        print("\(tag.text) was removed from photo \(photo.localIdentifierString)")
+                    }
                 }
             }
+            
+          // print(json)
+            
             // get the current date and time
             let currentDateTime = Date()
             
