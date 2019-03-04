@@ -11,7 +11,7 @@ import Photos
 import AssetsPickerViewController
 import CoreData
 
-class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableViewDelegate, UITableViewDataSource {
+class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableViewDelegate, UITableViewDataSource, BackendConnectionDelegate {
 
     @IBOutlet weak var dropDownListProjectsTableView: UITableView!
     @IBOutlet weak var selectedProjectButton: ActivityIndicatorButton!
@@ -35,10 +35,18 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     var userProjects = [ProjectModel]()
     var photoObjects: [Photo]?
     var slidesObjects:[Slide] = [];
+    var oldProjectSelectedId: String!
+    var lastLocation: CLLocation!
+    var locationManager: CLLocationManager!
+    var selectedFromGallery: Bool = false
+    var timerBackend: Timer!
+   
+    var galleryWillBeOpen: Bool = false
     
     let minImageScale: CGFloat = 0.75
     let minImageAlpha: CGFloat = 0.2
     var firstTime: Bool = true
+    var projectWasSelected: Bool = false
     
     //MARK: -
     override func viewDidLoad() {
@@ -67,7 +75,10 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         stackViewAllComments.isHidden = true
         commentLabel.translatesAutoresizingMaskIntoConstraints = false
         commentLabel.bottomAnchor.constraint(equalTo: commentScrollView.bottomAnchor, constant: 0).isActive = true
-        
+        //checkLocationAuthorization()
+        if let currentPrj = UserDefaults.standard.value(forKey: "currentProjectId") as? String {
+            oldProjectSelectedId = currentPrj
+        }
     }
     
     
@@ -77,8 +88,18 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
             updateCommentLabel()
             updateTagNumber()
         }
+        
         dropDownListProjectsTableView.isHidden = true
+        if let prjWasSelected = UserDefaults.standard.value(forKey: "projectWasSelected") as? Bool {
+            projectWasSelected = prjWasSelected
+        }
         loadingProjectIntoList()
+        
+        if !galleryWillBeOpen {
+            if timerBackend == nil || !timerBackend.isValid {
+                timerBackend = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(callBackendConnection), userInfo: nil, repeats: true)
+            }
+        }
         print("photos: \(photoObjects?.count as Any) = slides: \(slidesObjects.count)")
     }
     override func viewDidLayoutSubviews() {
@@ -112,6 +133,87 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         }
     }
 
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if !galleryWillBeOpen {
+            timerBackend.invalidate()
+        }
+    }
+    
+    
+    //MARK: - The called function for the timer
+    @objc func callBackendConnection(){
+        let backendConnection = BackendConnection(projectWasSelected: projectWasSelected, lastLocation: lastLocation)
+        backendConnection.delegate = self
+        backendConnection.attemptSignInToSiteSnapBackend()
+    }
+    
+    //MARK: - Connect to SITESnap function DELEGATE
+    func treatErrors(_ error: Error?) {
+        if error != nil {
+            print(error?.localizedDescription as Any)
+            if let err = error as? URLError {
+                switch err.code {
+                case .notConnectedToInternet:
+                    DispatchQueue.main.async(execute: {
+                        let alert = UIAlertController(
+                            title: "SiteSnap server access",
+                            message:"Not Connected To The Internet",
+                            preferredStyle: .alert)
+                        let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+                            // do something when user press OK button
+                        }
+                        alert.addAction(OKAction)
+                        self.present(alert, animated: true, completion: nil)
+                        return
+                    })
+                case .timedOut:
+                    DispatchQueue.main.async(execute: {
+                        let alert = UIAlertController(
+                            title: "SiteSnap server access",
+                            message:"Request Timed Out",
+                            preferredStyle: .alert)
+                        
+                        let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+                            // do something when user press OK button
+                        }
+                        alert.addAction(OKAction)
+                        self.present(alert, animated: true, completion: nil)
+                        return
+                    })
+                case .networkConnectionLost:
+                    DispatchQueue.main.async(execute: {
+                        let alert = UIAlertController(
+                            title: "SiteSnap server access",
+                            message:"Lost Connection to the Network",
+                            preferredStyle: .alert)
+                        
+                        let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+                            // do something when user press OK button
+                        }
+                        alert.addAction(OKAction)
+                        self.present(alert, animated: true, completion: nil)
+                        return
+                    })
+                default:
+                    print("Default Error")
+                    print(err)
+                }
+            }
+        }
+    }
+    
+    func noProjectAssigned() {
+        timerBackend.invalidate()
+        performSegue(withIdentifier: "NoProjectsAssigned", sender: nil)
+        //return
+    }
+    
+    func databaseUpdateFinished() {
+        loadingProjectIntoList()
+        updateTagNumber()
+    }
+    
     //MARK: - OPTONAL custom page Control
     func updatePageControl() {
         for (index, dot) in imageControl.subviews.enumerated() {
@@ -132,7 +234,11 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         selectedProjectButton.showLoading()
     }
     
-    func loadingProjectIntoList(){        
+    func loadingProjectIntoList(){
+        //if project list is opened should not refresh projects
+        if !dropDownListProjectsTableView.isHidden {
+            return
+        }
         self.userProjects.removeAll()
         let projects = ProjectHandler.fetchAllProjects()
         for item in projects! {
@@ -148,13 +254,27 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         }
     
         self.selectedProjectButton.hideLoading(buttonText: nil)
+        
         if let currentPrj = UserDefaults.standard.value(forKey: "currentProjectId") as? String {
             self.setProjectsSelected(projectId: currentPrj)
+            //----------------
+            if oldProjectSelectedId != currentPrj {
+                let alertController = UIAlertController(title: "Project no longer available",
+                                                        message: "You no longer have access to the project \(String(describing: oldProjectSelectedId)), either because you have been removed from it or the project has been removed by an administrator.\r\n\r\nAnother project has been selected automatically, but please confirm this is the correct project you wish to upload the photo(s) to before continuing",
+                                                        preferredStyle: .alert)
+                alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+                    print("New project automatically selected")
+                })
+                )
+                
+                self.present(alertController, animated: true, completion: nil)
+            }
+            //-----------------
         }
         self.dropDownListProjectsTableView.reloadData()
-     
         
     }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -191,6 +311,8 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
             if projectId != oldProjectId {
                 UserDefaults.standard.set(projectId, forKey: "currentProjectId")
                 UserDefaults.standard.set(userProjects[indexPath.row].projectName, forKey: "currentProjectName")
+                UserDefaults.standard.set(true, forKey: "projectWasSelected")
+                projectWasSelected = true
                 setProjectsSelected(projectId: projectId)
                 resetAllPhotosTags(oldProjectId: oldProjectId!, oldProjectName: userProjects[indexPath.row].projectName)
             }
@@ -198,12 +320,15 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     }
     
     func setProjectsSelected(projectId: String){
-//        for i in 0...userProjects.count-1 {
-//            userProjects[i].selected = userProjects[i].id == projectId
-//            if userProjects[i].selected {
-//                selectedProjectButton.setTitle(userProjects[i].projectName, for: .normal)
-//            }
-//        }
+        if userProjects.count == 0 {
+            return
+        }
+        for i in 0...userProjects.count-1 {
+            //userProjects[i].selected = userProjects[i].id == projectId
+            if userProjects[i].id == projectId {
+                selectedProjectButton.setTitle(userProjects[i].projectName, for: .normal)
+            }
+        }
     }
     
     func animateProjectsList(toogle: Bool){
@@ -231,6 +356,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     }
     
     @IBAction func onClickAddFromGallery(_ sender: UIButton) {
+        galleryWillBeOpen = true
         checkPermission()
     }
     @IBAction func onNext(_ sender: UIButton) {
@@ -323,6 +449,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
                                                     print("original tags for photos was restablished")
                                                     self.tagNumberLabel.text = "0"
                                                 }
+                                                self.oldProjectSelectedId = UserDefaults.standard.value(forKey: "currentProjectId") as? String
                                             })
         )
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in
@@ -491,6 +618,8 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         var photo: Photo!
         if slidesObjects.count > 0 {
             let localIdentifier = slidesObjects[page].localIdentifier!
+            
+            //allTagsWasSet means 'apply tag to all photos' is checked
             if PhotoHandler.allTagsWasSet(localIdentifier: localIdentifier) {
                 let identifier = PhotoHandler.getAllTagsPhotoIdentifier(localIdentifier: localIdentifier)
                 photo = PhotoHandler.getSpecificPhoto(localIdentifier: identifier!)
@@ -756,6 +885,7 @@ extension PhotosViewController: AssetsPickerViewControllerDelegate {
     func assetsPicker(controller: AssetsPickerViewController, selected assets: [PHAsset]) {
         // do your job with selected assets
         var identifiers = [String]()
+        galleryWillBeOpen = false
         for phAsset in assets {
             identifiers.append(phAsset.localIdentifier)
             var coordinates: CLLocationCoordinate2D!

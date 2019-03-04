@@ -18,7 +18,6 @@
 		40B296BC21CCE5A000A3C487 /* Slide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B296BB21CCE5A000A3C487 /* Slide.swift */; };
 		40B296BF21CCE61B00A3C487 /* Slide.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40B296BE21CCE61B00A3C487 /* Slide.xib */; };
 		40B9656121CA7240004A383D /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B9656021CA7240004A383D /* LocationManager.swift */; };
-		40E9A18C222674D3008E8352 /* RepeatingTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E9A18B222674D3008E8352 /* RepeatingTimer.swift */; };
 		40E9A18E22280DA5008E8352 /* NoProjectsAssignedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E9A18D22280DA5008E8352 /* NoProjectsAssignedViewController.swift */; };
 		803902112621DA84596AB896 /* Pods_SiteSnap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08D194FC8394711D1AE36F7F /* Pods_SiteSnap.framework */; };
 		986B5C30526579D6810F2F9D /* Pods_SiteSnapTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1CFB1EA0BFC2019A65CB46F /* Pods_SiteSnapTests.framework */; };
@@ -66,6 +65,7 @@
 		DABA66E121D23F1D0036CEE7 /* Tag+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA66DB21D23F1D0036CEE7 /* Tag+CoreDataClass.swift */; };
 		DABA66E221D23F1D0036CEE7 /* Tag+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA66DC21D23F1D0036CEE7 /* Tag+CoreDataProperties.swift */; };
 		DABA66E421D65B620036CEE7 /* AddCommentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA66E321D65B620036CEE7 /* AddCommentsViewController.swift */; };
+		DAD922F3222ADD0C00A7A93E /* BackendConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD922F2222ADD0C00A7A93E /* BackendConnection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,7 +99,6 @@
 		40B296BB21CCE5A000A3C487 /* Slide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slide.swift; sourceTree = "<group>"; };
 		40B296BE21CCE61B00A3C487 /* Slide.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Slide.xib; sourceTree = "<group>"; };
 		40B9656021CA7240004A383D /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
-		40E9A18B222674D3008E8352 /* RepeatingTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatingTimer.swift; sourceTree = "<group>"; };
 		40E9A18D22280DA5008E8352 /* NoProjectsAssignedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoProjectsAssignedViewController.swift; sourceTree = "<group>"; };
 		6A73AA7E3AC6DD8718D48C21 /* Pods-SiteSnap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SiteSnap.release.xcconfig"; path = "Pods/Target Support Files/Pods-SiteSnap/Pods-SiteSnap.release.xcconfig"; sourceTree = "<group>"; };
 		8F546AE8E44AB36E527F9A39 /* Pods-SiteSnapUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SiteSnapUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SiteSnapUITests/Pods-SiteSnapUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -156,6 +155,7 @@
 		DABA66DB21D23F1D0036CEE7 /* Tag+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tag+CoreDataClass.swift"; sourceTree = "<group>"; };
 		DABA66DC21D23F1D0036CEE7 /* Tag+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tag+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		DABA66E321D65B620036CEE7 /* AddCommentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCommentsViewController.swift; sourceTree = "<group>"; };
+		DAD922F2222ADD0C00A7A93E /* BackendConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendConnection.swift; sourceTree = "<group>"; };
 		E2508CF1AC12C64EBAC4FE17 /* Pods_SiteSnapUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SiteSnapUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB4AC2D94214D4822AE7D8E3 /* Pods-SiteSnap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SiteSnap.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SiteSnap/Pods-SiteSnap.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -261,6 +261,7 @@
 				405977E821C242BF00AF9F4B /* Fonts */,
 				DA977F0821C1460F00883640 /* AppDelegate.swift */,
 				4047811521EC820C006987B4 /* Constants.swift */,
+				DAD922F2222ADD0C00A7A93E /* BackendConnection.swift */,
 				DA977F0A21C1460F00883640 /* SignInViewController.swift */,
 				DA1E46CD21F4EC46004FB425 /* ForgotPasswordViewController.swift */,
 				DA1E46CF21F50E3C004FB425 /* ConfirmForgotPasswordViewController.swift */,
@@ -321,7 +322,6 @@
 				DAB7796721DFA26B00308543 /* PreviewView.swift */,
 				DAB7796921E0F15A00308543 /* Slider.swift */,
 				DA9F69FC22020474006436F6 /* CheckBox.swift */,
-				40E9A18B222674D3008E8352 /* RepeatingTimer.swift */,
 			);
 			path = subClasses;
 			sourceTree = "<group>";
@@ -627,7 +627,6 @@
 				DA9DFA3021F2656800CB68E2 /* Media.swift in Sources */,
 				DA47325A21DCC26A003729BB /* ConfirmLocationViewController.swift in Sources */,
 				DA2D955121ED0389005DE088 /* MenuTableViewCell.swift in Sources */,
-				40E9A18C222674D3008E8352 /* RepeatingTimer.swift in Sources */,
 				DA977F5521C2E91300883640 /* CameraViewController.swift in Sources */,
 				DA9C51FC22153E4C00326611 /* DocumentFilesViewController.swift in Sources */,
 				DAB7796821DFA26B00308543 /* PreviewView.swift in Sources */,
@@ -653,6 +652,7 @@
 				DA977F0921C1460F00883640 /* AppDelegate.swift in Sources */,
 				40B296BA21CCD87300A3C487 /* PhotosViewController.swift in Sources */,
 				DAB7796221DE8A3900308543 /* Annotation.swift in Sources */,
+				DAD922F3222ADD0C00A7A93E /* BackendConnection.swift in Sources */,
 				40B296BC21CCE5A000A3C487 /* Slide.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

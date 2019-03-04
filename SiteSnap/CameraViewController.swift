@@ -14,8 +14,8 @@ import CoreLocation
 import CoreData
 import AWSCognitoIdentityProvider
 
-class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate {
- 
+class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate, BackendConnectionDelegate {
+    
     private let session = AVCaptureSession()
     private var isSessionRunning = false
     private let sessionQueue = DispatchQueue(label: "session queue") // Communicate with the session and other session objects on this queue.
@@ -67,24 +67,18 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     @IBOutlet weak var dropDownListProjectsTableView: UITableView!
     
     var userProjects = [ProjectModel]()
-    //var projectId: String = ""
     var selectedFromGallery: Bool = false
-    var timer: Timer!
-    var firstTime: Bool = true
-    var locationWasUpdated: Bool = false
+    var timerAuthenticationCognito: Timer!
+    var timerBackend: Timer!
+  //  var locationWasUpdated: Bool = false
     var projectWasSelected: Bool = false
-    
-    @objc
-    func responseFunction(){
-      attemptSignInToSiteSnapBackend()
-    }
+    var galleryWillBeOpen: Bool = false
+
+
     //MARK: - Loading Camera View Controller
     override func viewDidLoad() {
         super.viewDidLoad()
-       //sessionAPIQueue.async {
-        
-            
-       // }
+       
         UserDefaults.standard.removeObject(forKey: "currentProjectId")
         UserDefaults.standard.removeObject(forKey: "currentProjectName")
         dropDownListProjectsTableView.isHidden = true
@@ -98,7 +92,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         captureButton.layer.cornerRadius = 35
         galleryButton.isEnabled = false
         
-        noValidLocationIcon.isHidden = true
+        noValidLocationIcon.isHidden = false
         //delete unused files from document directory
         deleteAssets(unused: true)
         
@@ -106,42 +100,61 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             for tag in TagHandler.fetchObjects()! {
                 tag.photos = nil
             }
-            //delete uploaded files from document directory
-            deleteAssets(unused: false)
+            //delete uploaded files from photo database
             if let uploadedPhotoIds = PhotoHandler.getUploadedPhotosForDelelete() {
                 if PhotoHandler.photosDeleteBatch(identifiers: uploadedPhotoIds) {
                     print("all uploaded photos was deleted from Core Data")
                 }
             }
-            
             userProjects.removeAll()
             photoDatabaseShouldBeDeleted = false
         }
+        print("there ARE \(photoObjects.count) photos")
         
+        self.showProjectLoadingIndicator()
+        self.pool = AWSCognitoIdentityUserPool(forKey: AWSCognitoUserPoolsSignInProviderKey)
+        if (self.user == nil) {
+            self.user = self.pool?.currentUser()
+            print("USER = CURRENT USER = \(String(describing: self.user?.username))")
+        }
         
-        photoObjects = PhotoHandler.fetchAllObjects()!
-       print("there ARE \(photoObjects.count) photos")
-        //CHECK LAST LOG IN
-        // if !userLogged {
-            self.showProjectLoadingIndicator()
-            self.pool = AWSCognitoIdentityUserPool(forKey: AWSCognitoUserPoolsSignInProviderKey)
-            if (self.user == nil) {
-                self.user = self.pool?.currentUser()
-                print("USER = CURRENT USER = \(String(describing: self.user?.username))")
-            }
-            self.refresh()
-             videoAuthorization()
+        //initially user do not have project choosed
+        projectWasSelected = false
+        UserDefaults.standard.set(projectWasSelected, forKey: "projectWasSelected")
+        
+        loadingProjectIntoList()
+        checkLocationAuthorization()
+        libraryAuthorization()
+        
+        timerAuthenticationCognito = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(refresh), userInfo: nil, repeats: true)
+        refresh()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.callBackendConnection()
+        }
+       
+        videoAuthorization()
        
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if timer != nil && !timer.isValid {
-            timer.fire()
+        if let prjWasSelected = UserDefaults.standard.value(forKey: "projectWasSelected") as? Bool {
+            projectWasSelected = prjWasSelected
         }
+       
+        photoObjects = PhotoHandler.fetchAllObjects()!
+        if !galleryWillBeOpen {
+            if timerBackend == nil || !timerBackend.isValid {
+               timerBackend = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(callBackendConnection), userInfo: nil, repeats: true)
+            }
+        }
+        checkDatabasePhotoIsStillInGallery()
+        
         if let prjId = UserDefaults.standard.value(forKey: "currentProjectId") as? String {
+            print(prjId)
             self.setProjectsSelected(projectId: prjId)
         }
+        
         sessionQueue.async {
             switch self.cameraSetupResult {
             case .success:
@@ -199,9 +212,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             selectedFromGallery = false
             performSegue(withIdentifier: "PhotsViewIdentifier", sender: nil)
         }
-        
-     //   }
     }
+    
     override func viewWillDisappear(_ animated: Bool) {
         sessionQueue.async {
             if self.cameraSetupResult == .success {
@@ -210,8 +222,15 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 self.removeObservers()
             }
         }
-        
+       
         super.viewWillDisappear(animated)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        if !galleryWillBeOpen {
+             timerBackend.invalidate()
+        }
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -226,47 +245,16 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             videoPreviewLayerConnection.videoOrientation = newVideoOrientation
         }
     }
-    //MARK: - Connect to SITESnap Backend API
-//    func refreshProjectsAndTags(){
-//        let request = makeUrlRequest()
-//        if let request = request {
-//            let task = URLSession.shared.dataTask(with: request as URLRequest) {(data, response, error) -> Void in
-//                if error == nil {
-//                    do {
-//                        let json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
-//                        print(json)
-//                        let formatter = DateFormatter()
-//                        formatter.dateFormat = "HH:mm:ss"
-//                        let now = formatter.string(from: Date())
-//                        print(now)
-//                        //self.setUpInternalTables(json: json)
-//                    }
-//                    catch let error as NSError
-//                    {
-//                        print(error.localizedDescription)
-//                    }
-//                } else {
-//                    self.treatErrors(error: error)
-//                }
-//            }
-//            task.resume()
-//        }
-//    }
     
-    func makeUrlRequest() -> URLRequest! {
-        let url = URL(string: siteSnapBackendHost + "session/getPhoneSessionInfo")!
-        var request = URLRequest(url: url)
-        if (self.pool?.token().isCompleted)! {
-            let tokenString = "Bearer " + (self.pool?.token().result as String?)!
-            request.setValue(tokenString, forHTTPHeaderField: "Authorization")
-            request.httpMethod = "GET"
-            return request
-        } else {
-            return nil
-        }
+    //MARK: - The called function for the timer
+    @objc func callBackendConnection(){
+        let backendConnection = BackendConnection(projectWasSelected: projectWasSelected, lastLocation: lastLocation)
+        backendConnection.delegate = self
+        backendConnection.attemptSignInToSiteSnapBackend()
     }
     
-    func treatErrors(error: Error?) {
+    //MARK: - Connect to SITESnap function DELEGATE
+    func treatErrors(_ error: Error?) {
         if error != nil {
             print(error?.localizedDescription as Any)
             if let err = error as? URLError {
@@ -320,30 +308,22 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
     
-    func attemptSignInToSiteSnapBackend()
-    {
-        let request = makeUrlRequest()
-        if let request = request {
-            let task = URLSession.shared.dataTask(with: request as URLRequest) {(data, response, error) -> Void in
-                if error != nil {
-                    self.treatErrors(error: error)
-                    return
-                }
-                do {
-                    let json = try JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
-                    self.setUpInternalTables(json: json)
-                }
-                catch let error as NSError
-                {
-                    print(error.localizedDescription)
-                }
-            }
-            task.resume()
-        }
+    func noProjectAssigned() {
+        timerBackend.invalidate()
+        performSegue(withIdentifier: "NoProjectsAssigned", sender: nil)
+        //return
     }
     
+    func databaseUpdateFinished() {
+        loadingProjectIntoList()
+    }
+    
+   
+
+    //MARK: - Check still in gallery
     func checkDatabasePhotoIsStillInGallery(){
         //-----------------------  check if photos from CoreData is still in gallery and if not detele them from CoreData
+        //photoObjects = PhotoHandler.fetchAllObjects()!
         for photo in photoObjects {
             let photoId = photo.localIdentifierString
             if !photo.isHidden {
@@ -356,241 +336,9 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             }
         }
     }
-    
-    func setCurrentProjectName(projects: NSArray, lastUsedProject: String){
-        for item in projects {
-            let project = item as! NSDictionary
-            let pID = project["id"]! as! String
-            if pID == lastUsedProject {
-                UserDefaults.standard.set(project["name"]! as! String, forKey: "currentProjectName")
-            }
-        }
-    }
-//    func addToProjectModels(projects: NSArray, projectId: String){
-//        for item in projects {
-//            let project = item as! NSDictionary
-//            let pID = project["id"]! as! String
-//            if pID == projectId {
-//                let coord = project["projectCenterPosition"] as! NSArray
-//                let tags = project["tagIds"] as! NSArray
-//
-//                //-------------------- make a list with all tag ids for current project from server
-//                var tagIds = [String]()
-//                for tag in tags {
-//                    tagIds += [tag as! String]
-//                }
-//                //--------------------- fill the model with projects
-//                guard let projectModel = ProjectModel(id: project["id"]! as! String, projectName: project["name"]! as! String, latitudeCenterPosition: coord[0] as! Double, longitudeCenterPosition: coord[1] as! Double, tagIds: tagIds) else {
-//                    fatalError("Unable to instantiate ProductModel")
-//                }
-//                self.userProjects += [projectModel]
-//                break
-//            }
-//        }
-//    }
-//    func getServerProjectName(projects: NSArray, projectId: String) -> String {
-//        var projectName: String = ""
-//        for item in projects {
-//            let project = item as! NSDictionary
-//            let pID = project["id"]! as! String
-//            if pID == projectId {
-//                projectName = project["name"]! as! String
-//                break
-//            }
-//        }
-//        return projectName
-//    }
-    
-//    func deleteExtraProject(userProjectId: String){
-//        //update userProjects if exists project deleted
-//        //check if currentProject still exist
-//        for i in 0...userProjects.count {
-//            if userProjects[i].id == userProjectId {
-//                userProjects.remove(at: i)
-//                let currentProjectId = (UserDefaults.standard.value(forKey: "currentProjectId") as? String)!
-//                if currentProjectId == userProjectId {
-//
-//                }
-//                break
-//            }
-//        }
-//    }
-    
-//    func updateProjectName(projects: NSArray){
-//        //update userProjects if succesfully updateted
-//        for item in projects {
-//            let project = item as! NSDictionary
-//            let pID = project["id"]! as! String
-//            for projectModel in userProjects {
-//                if pID == projectModel.id {
-//                    let coord = project["projectCenterPosition"] as! NSArray
-//                    let tags = project["tagIds"] as! NSArray
-//                    //-------------------- make a list with all tag ids for current project from server
-//                    var tagIds = [String]()
-//                    for tag in tags {
-//                        tagIds += [tag as! String]
-//                    }
-//                    projectModel.projectName = project["name"]! as! String
-//                    projectModel.latitudeCenterPosition = coord[0] as! Double
-//                    projectModel.longitudeCenterPosition = coord[1] as! Double
-//                    projectModel.tagIds = tagIds
-//                    break
-//                }
-//            }
-//        }
-//    }
-    
-    func setUpInternalTables(json: NSDictionary){
-        let projects = json["projects"] as! NSArray
-        let projectId = json["lastUsedProjectId"] as! String
-        
-        
-        let allTags = json["tags"] as! NSArray
-        checkDatabasePhotoIsStillInGallery()
-        
-        //check if user have projects
-        if projects.count == 0 {
-            timer.invalidate()
-            performSegue(withIdentifier: "NoProjectsAssigned", sender: nil)
-            return
-        }
-       
-       if self.firstTime {
-            UserDefaults.standard.set(projectId, forKey: "currentProjectId")
-                self.setCurrentProjectName(projects: projects, lastUsedProject: projectId)
-            self.timer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(self.responseFunction), userInfo: nil, repeats: true)
-            if locationWasUpdated {
-                let closestProjectId = self.getCloserProject(projects: projects)
-                UserDefaults.standard.set(closestProjectId, forKey: "currentProjectId")
-                self.setCurrentProjectName(projects: projects, lastUsedProject: closestProjectId!)
-            }
-                self.firstTime = false
-        }
-        
-//        //--------------------------
-//
-//        var projectsIds = [String]()
-//        for item in projects {
-//            let project = item as! NSDictionary
-//            projectsIds.append(project["id"] as! String)
-//        }
-//
-//        //check every serverlist comparing to projectmodels
-//        //------- if not in projectmodels -> add it to projectmodel and database
-//        //------- if in server list -> check for name change and make update in projectModel and database accordingly
-//
-//        for projectId in projectsIds{
-//            let projectAlreadyAdded = userProjects.contains{ userProject in
-//                if case projectId = userProject.id {
-//                    return true
-//                } else {
-//                    return false
-//                }
-//            }
-//            if !projectAlreadyAdded {
-//               addToProjectModels(projects: projects, projectId: projectId)
-//            } else {
-//               updateProjectName(projects: projects)
-//            }
-//        }
-//
-//        //check every projectModels comparing to serverlist
-//        //------- if not in server list -> delete it from projectmodel and database and if is the currentProject change the currentProject to closest
-//        //------- if in server list -> check for name change and make update in projectModel and database accordingly
-//        for userProject in userProjects {
-//            let prjAlreadyAdded = projects.contains{ project in
-//                let prj = project as! NSDictionary
-//                let prjId = prj["id"]! as! String
-//                if case userProject.id = prjId {
-//                    return true
-//                } else {
-//                    return false
-//                }
-//            }
-//            if !prjAlreadyAdded {
-//                deleteExtraProject(userProjectId: userProject.id)
-//            }
-//        }
-        
-        
-        DispatchQueue.main.async {
-            //--------------------- clean projects Coredata and add projects from model
-            if ProjectHandler.deleteAllProjects() {
-                for projectModel in self.userProjects {
-                    if ProjectHandler.saveProject(id: projectModel.id, name: projectModel.projectName, latitude: projectModel.latitudeCenterPosition, longitude: projectModel.longitudeCenterPosition) {
-                        print("PROJECT: \(projectModel.projectName) added")
-                    }
-                }
-            }
-            
-            //------------------------ 
-            //----------------------- add extra tags from server to CoreData (saveTag will add new tag only if it not already exist)
-            var allTagIds: [String]!
-            if allTags.count > 0 {
-                allTagIds = [String]()
-            }
-            for item in allTags {
-                let tag = item as! NSDictionary
-                allTagIds.append(tag["id"] as! String)
-                if TagHandler.saveTag(id: tag["id"] as! String, text: tag["name"] as! String, tagColor: tag["colour"] as! String?) {
-                    print("TAG \(tag["name"] as! String) \(tag["id"] as! String) with was added")
-                }
-            }
-            let deletedTagsNumber = TagHandler.deleteExtraTags(tagsForVerification: allTagIds)
-            print("\(deletedTagsNumber) tags was deleted")
-            
-            //------------------------ for each project from CoreData find the corespondent in projectModel
-            //------------------------ and set each project from CoreData associated tags
-            if let projectsRecords = ProjectHandler.fetchAllProjects() {
-                for item in projectsRecords {
-                    for projectModel in self.userProjects {
-                        if projectModel.id == item.id {
-                            let currentProjectTagIds = projectModel.tagIds
-                            for tagId in currentProjectTagIds {
-                                if let tagRecord = TagHandler.getSpecificTag(id: tagId) {
-                                    item.addToAvailableTags(tagRecord)
-                                }
-                            }
-                            break
-                        }
-                    }
-                }
-            }
-            //-------------------- for each tag from CoreData set associated project
-            for tagItem in TagHandler.fetchObjects()! {
-                for projectItem in ProjectHandler.fetchAllProjects()! {
-                    for associatedTag in projectItem.availableTags! {
-                        let tag = associatedTag as! Tag
-                        if tag.id == tagItem.id {
-                            tagItem.addToProjects(projectItem)
-                        }
-                    }
-                }
-            }
-            
-        }
-        
-        self.userProjects.removeAll()
-        let projectsFromDatabase = ProjectHandler.fetchAllProjects()
-        for item in projectsFromDatabase! {
-            var tagIds = [String]()
-            for tag in item.availableTags! {
-                let t = tag as! Tag
-                tagIds.append(t.id!)
-            }
-            guard let projectModel = ProjectModel(id: item.id!, projectName: item.name!, latitudeCenterPosition: item.latitude, longitudeCenterPosition: item.longitude, tagIds: tagIds) else {
-                fatalError("Unable to instantiate ProductModel")
-            }
-            self.userProjects += [projectModel]
-        }
-        print(json)
-        self.loadingProjectIntoList()
-    }
-    
+
     //MARK: - PERMISSIONS / AUTHORIZATIONS
     func videoAuthorization(){
-        
-            
         
         /*
          Check video authorization status. Video access is required and audio
@@ -724,12 +472,10 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
     
-    func determineMyCurrentLocation() {
-        
+    func checkLocationAuthorization() {
         locationManager = LocationManager()
-        locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        
+        locationManager.delegate = self
         switch locationSetupResult {
         case .notDetermined:
             // Request when-in-use authorization initially
@@ -738,29 +484,25 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             break
             
         case .restricted, .denied:
-             noValidLocationIcon.isHidden = false
+            noValidLocationIcon.isHidden = false
             // Disable location features
             break
             
         case .authorizedWhenInUse:
-             noValidLocationIcon.isHidden = true
+            noValidLocationIcon.isHidden = true
             // Enable basic location features
             break
             
         case .authorizedAlways:
-             noValidLocationIcon.isHidden = true
+            noValidLocationIcon.isHidden = true
             // Enable any of your app's location features
             break
         default:
             locationSetupResult = .denied
-            
         }
         
         if LocationManager.locationServicesEnabled() {
-            //locationManager.requestLocation()
-            
             locationManager.startUpdatingLocation()
-            //locationManager.startUpdatingHeading()
         }
     }
     
@@ -774,12 +516,14 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let userLocation:CLLocation = locations[0] as CLLocation
         lastLocation = userLocation
-        locationWasUpdated = true
+        //locationWasUpdated = true
         // Call stopUpdatingLocation() to stop listening for location updates,
         // other wise this function will be called every time when user location changes.
         
-        manager.stopUpdatingLocation()
         
+        
+        manager.stopUpdatingLocation()
+
         print("user latitude = \(userLocation.coordinate.latitude)")
         print("user longitude = \(userLocation.coordinate.longitude)")
     }
@@ -787,11 +531,12 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error)
     {
         noValidLocationIcon.isHidden = false
+        //locationWasUpdated = false
         print("Error \(error)")
     }
     
     //MARK: - log in user
-    func refresh() {
+    @objc func refresh() {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.userTappedLogOut = false
         
@@ -817,20 +562,15 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 if (self.pool?.token().isCompleted)! {
                     UserDefaults.standard.set(self.pool?.token().result, forKey: "token")
                     print(self.pool?.token().result as Any)
+                    self.timerAuthenticationCognito.invalidate()
                 } else {
                     UserDefaults.standard.removeObject(forKey: "token")
                 }
                 print("USER DEFAULTS SETTED")
                 
-                    //self.videoAuthorization()
-                    self.determineMyCurrentLocation()
-                    self.libraryAuthorization()
-                    self.attemptSignInToSiteSnapBackend()
             }
             return nil
         }
-        
-
     }
     
     //MARK: - Observers
@@ -984,7 +724,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             permissionLibraryIfDenied()
             return
         }
-        determineMyCurrentLocation()
+       // determineMyCurrentLocation()
         
         /*
          Retrieve the video preview layer's video orientation on the main queue before
@@ -1019,7 +759,9 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     @IBAction func onClickGalerry(_ sender: UIButton) {
+        galleryWillBeOpen = true
         checkPermissionLibrary()
+        
     }
    
     
@@ -1029,12 +771,34 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func loadingProjectIntoList(){
-        DispatchQueue.main.async {
-            self.selectedProjectButton.hideLoading(buttonText: nil)
-            self.galleryButton.isEnabled = true
-            self.setProjectsSelected(projectId: (UserDefaults.standard.value(forKey: "currentProjectId") as? String)!)
-            self.dropDownListProjectsTableView.reloadData()
+       // DispatchQueue.main.async {
+        if !dropDownListProjectsTableView.isHidden {
+            return
         }
+        userProjects.removeAll()
+        let projectsFromDatabase = ProjectHandler.fetchAllProjects()
+        for item in projectsFromDatabase! {
+            var tagIds = [String]()
+            for tag in item.availableTags! {
+                let t = tag as! Tag
+                tagIds.append(t.id!)
+            }
+            guard let projectModel = ProjectModel(id: item.id!, projectName: item.name!, latitudeCenterPosition: item.latitude, longitudeCenterPosition: item.longitude, tagIds: tagIds) else {
+                fatalError("Unable to instantiate ProductModel")
+            }
+            userProjects += [projectModel]
+        }
+        if userProjects.count == 0 {
+            return
+        }
+        guard let currentProjectId = UserDefaults.standard.value(forKey: "currentProjectId") as? String else {
+            return
+        }
+        selectedProjectButton.hideLoading(buttonText: nil)
+        galleryButton.isEnabled = true
+        setProjectsSelected(projectId: currentProjectId)
+        dropDownListProjectsTableView.reloadData()
+       // }
        
     }
     
@@ -1069,6 +833,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             let selectedCell:UITableViewCell = tableView.cellForRow(at: indexPath)!
             selectedCell.contentView.backgroundColor = UIColor.black
             setProjectsSelected(projectId: projectId)
+            projectWasSelected = true
+            UserDefaults.standard.set(projectWasSelected, forKey: "projectWasSelected")
         }
     }
     
@@ -1083,26 +849,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             }
         }
     }
-    func getCloserProject(projects: NSArray) -> String! {
-        //let projects = ProjectHandler.fetchAllProjects()
-        let firstItem = projects[0] as! NSDictionary
-        var closestProject = firstItem["id"]! as! String
-        let firstCoords = firstItem["projectCenterPosition"] as! NSArray
-        let firstLocation = CLLocation(latitude: firstCoords[0] as! Double, longitude: firstCoords[1] as! Double)
-        var closestDistance = firstLocation.distance(from: lastLocation)
-        for item in projects {
-            let project = item as! NSDictionary
-            let pID = project["id"]! as! String
-            let coords = project["projectCenterPosition"] as! NSArray
-            let location = CLLocation(latitude: coords[0] as! Double, longitude: coords[1] as! Double)
-            let dist = location.distance(from: lastLocation)
-            if dist < closestDistance {
-                closestDistance = dist
-                closestProject = pID
-            }
-        }
-        return closestProject
-    }
+   
     func animateProjectsList(toogle: Bool){
         UIView.animate(withDuration: 0.3, animations: {
             self.dropDownListProjectsTableView.isHidden = !toogle
@@ -1471,27 +1218,15 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
-
+        if  segue.identifier == "PhotsViewIdentifier",
+            let destination = segue.destination as? PhotosViewController {
+            destination.lastLocation = lastLocation
+            
+        }
        
     }
     //MARK: - delete hidden assets
     func deleteAssets(unused: Bool) {
-//        let assetsToDelete : PHFetchResult = PHAsset.fetchAssets(withLocalIdentifiers: identifiers , options: nil)
-//        var validation: Bool = true
-//        assetsToDelete.enumerateObjects{(object: AnyObject!,
-//            count: Int,
-//            stop: UnsafeMutablePointer<ObjCBool>) in
-//            //print(count)
-//            if object is PHAsset {
-//                let asset = object as! PHAsset
-//                validation = validation && asset.isHidden
-//            }
-//        }
-//        if validation {
-//            PHPhotoLibrary.shared().performChanges({
-//                PHAssetChangeRequest.deleteAssets(assetsToDelete)
-//            })
-//        }
         do {
             let directoryPath: String = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
             let files: [String] = try FileManager.default.contentsOfDirectory(atPath: directoryPath)
@@ -1514,6 +1249,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     // MARK: -
 }
+
 extension CameraViewController : AVCapturePhotoCaptureDelegate {
     
     func photoOutput(_ output: AVCapturePhotoOutput, willBeginCaptureFor resolvedSettings: AVCaptureResolvedPhotoSettings) {
@@ -1558,7 +1294,7 @@ extension CameraViewController: AssetsPickerViewControllerDelegate {
     func assetsPickerDidCancel(controller: AssetsPickerViewController) {}
     func assetsPicker(controller: AssetsPickerViewController, selected assets: [PHAsset]) {
         // do your job with selected assets
-        
+        galleryWillBeOpen = false
         for phAsset in assets {
 
             if(phAsset.location != nil) {
