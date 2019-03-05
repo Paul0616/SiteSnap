@@ -137,7 +137,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+        super.viewDidAppear(animated)
         if let prjWasSelected = UserDefaults.standard.value(forKey: "projectWasSelected") as? Bool {
             projectWasSelected = prjWasSelected
         }
@@ -146,6 +146,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         if !galleryWillBeOpen {
             if timerBackend == nil || !timerBackend.isValid {
                timerBackend = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(callBackendConnection), userInfo: nil, repeats: true)
+                print("TIMER STARTED - camera")
             }
         }
         checkDatabasePhotoIsStillInGallery()
@@ -230,6 +231,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         super.viewDidDisappear(animated)
         if !galleryWillBeOpen {
              timerBackend.invalidate()
+            print("TIMER INVALID - camera")
         }
     }
     
@@ -310,6 +312,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func noProjectAssigned() {
         timerBackend.invalidate()
+        print("TIMER INVALID - camera")
         performSegue(withIdentifier: "NoProjectsAssigned", sender: nil)
         //return
     }
@@ -1026,6 +1029,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 self.photoObjects = PhotoHandler.fetchAllObjects()!
                 
                 self.processingPopup.hideAndDestroy(from: self.view)
+                self.timerBackend.invalidate()
+                print("TIMER INVALID - camera")
                 self.performSegue(withIdentifier: "PhotsViewIdentifier", sender: nil)
                 
             }

@@ -7,14 +7,20 @@
 //
 
 import UIKit
+import CoreLocation
 
-class TagsModalViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
+class TagsModalViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, BackendConnectionDelegate {
+   
+    
 
     var currentPhotoLocalIdentifier: String?
     var tags: [TagModel]!
     var tagsWithSections: [[TagModel]]!
     var searchTags: [[TagModel]]!
     var searchFlag: Bool = false
+    var timerBackend: Timer!
+    var projectWasSelected: Bool = false
+    var lastLocation: CLLocation!
     
     @IBOutlet weak var alltagsCheck: CheckBox!
    
@@ -42,12 +48,50 @@ class TagsModalViewController: UIViewController, UITableViewDelegate, UITableVie
         // Do any additional setup after loading the view.
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if let prjWasSelected = UserDefaults.standard.value(forKey: "projectWasSelected") as? Bool {
+            projectWasSelected = prjWasSelected
+        }
+        if timerBackend == nil || !timerBackend.isValid {
+            timerBackend = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(callBackendConnection), userInfo: nil, repeats: true)
+            print("TIMER STARTED - tags")
+        }
+        
+    }
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        timerBackend.invalidate()
+        print("TIMER INVALID - tags")
+    }
+    
+    //MARK: - The called function for the timer
+    @objc func callBackendConnection(){
+        let backendConnection = BackendConnection(projectWasSelected: projectWasSelected, lastLocation: lastLocation)
+        backendConnection.delegate = self
+        backendConnection.attemptSignInToSiteSnapBackend()
+    }
+    func treatErrors(_ error: Error?) {
+        print(error!)
+    }
+    
+    func noProjectAssigned() {
+        timerBackend.invalidate()
+        print("TIMER INVALID - tags")
+        performSegue(withIdentifier: "NoProjectsAssigned", sender: nil)
+    }
+    
+    func databaseUpdateFinished() {
+        tblView.reloadData()
+    }
+    
     @IBAction func onClickClose(_ sender: UIButton) {
 //        let color = UIColor(hexString: "#a6b012")
 //        windowView.backgroundColor = color
 //        dismiss(animated: true, completion: nil)
        performSegue(withIdentifier: "unwindToPhotosViewController", sender: sender)
     }
+    
     @IBAction func onCheckAllTags(_ sender: CheckBox) {
         if sender.isOn {
             if PhotoHandler.addAllTags(currentLocalIdentifier: currentPhotoLocalIdentifier!) {

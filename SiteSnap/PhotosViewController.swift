@@ -11,7 +11,7 @@ import Photos
 import AssetsPickerViewController
 import CoreData
 
-class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableViewDelegate, UITableViewDataSource, BackendConnectionDelegate {
+class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate, BackendConnectionDelegate {
 
     @IBOutlet weak var dropDownListProjectsTableView: UITableView!
     @IBOutlet weak var selectedProjectButton: ActivityIndicatorButton!
@@ -31,6 +31,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     @IBOutlet weak var stackViewAllComments: UIStackView!
     @IBOutlet weak var sameCommentsToAll: CheckBox!
     
+    
     //var photosLocalIdentifiers: [String]?
     var userProjects = [ProjectModel]()
     var photoObjects: [Photo]?
@@ -41,12 +42,13 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     var selectedFromGallery: Bool = false
     var timerBackend: Timer!
    
-    var galleryWillBeOpen: Bool = false
+    var timerCanBeInvalidatedIfViewDissapear: Bool = true
     
     let minImageScale: CGFloat = 0.75
     let minImageAlpha: CGFloat = 0.2
     var firstTime: Bool = true
     var projectWasSelected: Bool = false
+    private var locationSetupResult: CLAuthorizationStatus = CLLocationManager.authorizationStatus()
     
     //MARK: -
     override func viewDidLoad() {
@@ -75,7 +77,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         stackViewAllComments.isHidden = true
         commentLabel.translatesAutoresizingMaskIntoConstraints = false
         commentLabel.bottomAnchor.constraint(equalTo: commentScrollView.bottomAnchor, constant: 0).isActive = true
-        //checkLocationAuthorization()
+        checkLocationAuthorization()
         if let currentPrj = UserDefaults.standard.value(forKey: "currentProjectId") as? String {
             oldProjectSelectedId = currentPrj
         }
@@ -83,6 +85,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         photoObjects = PhotoHandler.fetchAllObjects()
         if !firstTime {
             updateCommentLabel()
@@ -95,9 +98,10 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         }
         loadingProjectIntoList()
         
-        if !galleryWillBeOpen {
+        if timerCanBeInvalidatedIfViewDissapear {
             if timerBackend == nil || !timerBackend.isValid {
                 timerBackend = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(callBackendConnection), userInfo: nil, repeats: true)
+                print("TIMER STARTED - photos")
             }
         }
         print("photos: \(photoObjects?.count as Any) = slides: \(slidesObjects.count)")
@@ -135,8 +139,9 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        if !galleryWillBeOpen {
+        if timerCanBeInvalidatedIfViewDissapear {
             timerBackend.invalidate()
+            print("TIMER INVALID - photos")
         }
     }
     
@@ -146,6 +151,57 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         let backendConnection = BackendConnection(projectWasSelected: projectWasSelected, lastLocation: lastLocation)
         backendConnection.delegate = self
         backendConnection.attemptSignInToSiteSnapBackend()
+    }
+    //MARK: - Authorization for location
+    func checkLocationAuthorization() {
+        locationManager = LocationManager()
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.delegate = self
+        switch locationSetupResult {
+        case .notDetermined:
+            // Request when-in-use authorization initially
+            locationManager.requestWhenInUseAuthorization()
+            break
+            
+        case .restricted, .denied:
+            // Disable location features
+            break
+            
+        case .authorizedWhenInUse:
+            // Enable basic location features
+            break
+            
+        case .authorizedAlways:
+            // Enable any of your app's location features
+            break
+        default:
+            locationSetupResult = .denied
+        }
+        
+        if LocationManager.locationServicesEnabled() {
+            locationManager.startUpdatingLocation()
+        }
+    }
+    
+    //MARK: - CLLocationManagerDelegate functions
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        locationSetupResult = status
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let userLocation:CLLocation = locations[0] as CLLocation
+        lastLocation = userLocation
+        // Call stopUpdatingLocation() to stop listening for location updates,
+        // other wise this function will be called every time when user location changes.
+
+        manager.stopUpdatingLocation()
+        print("user latitude = \(userLocation.coordinate.latitude)")
+        print("user longitude = \(userLocation.coordinate.longitude)")
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error)
+    {
+        print("Error \(error)")
     }
     
     //MARK: - Connect to SITESnap function DELEGATE
@@ -356,7 +412,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     }
     
     @IBAction func onClickAddFromGallery(_ sender: UIButton) {
-        galleryWillBeOpen = true
+        timerCanBeInvalidatedIfViewDissapear = false
         checkPermission()
     }
     @IBAction func onNext(_ sender: UIButton) {
@@ -818,6 +874,10 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         if let sourceViewController = segue.source as? TagsModalViewController {
             print(sourceViewController.description)
             updateTagNumber()
+            if timerBackend == nil || !timerBackend.isValid {
+                timerBackend = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(callBackendConnection), userInfo: nil, repeats: true)
+                print("TIMER STARTED - photos")
+            }
         }
     }
     // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -842,6 +902,10 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
             } else {
                 destination.currentPhotoLocalIdentifier = self.slidesObjects[imageControl.currentPage].localIdentifier
             }
+            destination.lastLocation = lastLocation
+            timerBackend.invalidate()
+            
+            print("TIMER INVALID - photos")
         }
         
         if segue.identifier == "PhotoInspectorSegue",
@@ -891,7 +955,7 @@ extension PhotosViewController: AssetsPickerViewControllerDelegate {
     func assetsPicker(controller: AssetsPickerViewController, selected assets: [PHAsset]) {
         // do your job with selected assets
         var identifiers = [String]()
-        galleryWillBeOpen = false
+        timerCanBeInvalidatedIfViewDissapear = true
         for phAsset in assets {
             identifiers.append(phAsset.localIdentifier)
             var coordinates: CLLocationCoordinate2D!

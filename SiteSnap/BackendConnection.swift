@@ -257,7 +257,7 @@ class BackendConnection: NSObject {
                                 if !availableTagIdServer.contains(itemFromDatabase) {
                                     if let tagRecord = TagHandler.getSpecificTag(id: itemFromDatabase) {
                                         itemRecord.removeFromAvailableTags(tagRecord)
-                                        print("\(tagRecord.text) was removed from project \(itemRecord.id)")
+                                        print("\(String(describing: tagRecord.text)) was removed from project \(String(describing: itemRecord.id))")
                                     }
                                 }
                             }
@@ -287,14 +287,14 @@ class BackendConnection: NSObject {
                 for tg in (project?.availableTags)! {
                     let tag = tg as! Tag
                     currentProjectTagIds.append(tag.id!)
-                     print("-----PROJECT TAGS-------\(tag.text)")
+                   //  print("-----PROJECT TAGS-------\(String(describing: tag.text))")
                 }
                 for photoTag in photo.tags! {
                     let tag = photoTag as! Tag
-                    print("-----PHOTO TAGS-------\(tag.text)")
-                    if !currentProjectTagIds.contains(tag.id!) {
+                    print("-----PHOTO TAGS-------\(String(describing: tag.text))")
+                    if !currentProjectTagIds.contains(String(describing: tag.id!)) {
                         photo.removeFromTags(tag)
-                        print("\(tag.text) was removed from photo \(photo.localIdentifierString)")
+                      //  print("\(String(describing: tag.text)) was removed from photo \(String(describing: photo.localIdentifierString))")
                     }
                 }
             }
@@ -315,9 +315,6 @@ class BackendConnection: NSObject {
             self.delegate?.databaseUpdateFinished()
             //self.loadingProjectIntoList()
         }
-        
-        
-        
     }
 }
 
