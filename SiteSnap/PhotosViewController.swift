@@ -915,6 +915,11 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
             destination.localIdentifier = slide.localIdentifier
             
         }
+        if  segue.identifier == "ConfirmLocationSegue",
+            let destination = segue.destination as? ConfirmLocationViewController {
+            destination.lastLocation = lastLocation
+            
+        }
     }
     
     

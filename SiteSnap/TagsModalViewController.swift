@@ -30,21 +30,8 @@ class TagsModalViewController: UIViewController, UITableViewDelegate, UITableVie
         super.viewDidLoad()
 
         alltagsCheck.isOn = PhotoHandler.allTagsWasSet(localIdentifier: currentPhotoLocalIdentifier!)
-        tags = PhotoHandler.getTags(localIdentifier: currentPhotoLocalIdentifier!)
-       
-        tags = self.tags.sorted(by: { $0.selected && !$1.selected})
-        var tagsSelected = [TagModel]()
-        var tagsUnselected = [TagModel]()
-        for tag in tags {
-            if tag.selected {
-                tagsSelected.append(tag)
-            } else {
-                tagsUnselected.append(tag)
-            }
-        }
-       
-        tagsWithSections = [tagsSelected, tagsUnselected]
-       
+        
+        makeTagArray()
         // Do any additional setup after loading the view.
     }
     
@@ -64,7 +51,22 @@ class TagsModalViewController: UIViewController, UITableViewDelegate, UITableVie
         timerBackend.invalidate()
         print("TIMER INVALID - tags")
     }
-    
+    //MARK: - make tags array
+    func makeTagArray(){
+        tags = PhotoHandler.getTags(localIdentifier: currentPhotoLocalIdentifier!)
+        tags = self.tags.sorted(by: { $0.selected && !$1.selected})
+        var tagsSelected = [TagModel]()
+        var tagsUnselected = [TagModel]()
+        for tag in tags {
+            if tag.selected {
+                tagsSelected.append(tag)
+            } else {
+                tagsUnselected.append(tag)
+            }
+        }
+        
+        tagsWithSections = [tagsSelected, tagsUnselected]
+    }
     //MARK: - The called function for the timer
     @objc func callBackendConnection(){
         let backendConnection = BackendConnection(projectWasSelected: projectWasSelected, lastLocation: lastLocation)
@@ -82,6 +84,7 @@ class TagsModalViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func databaseUpdateFinished() {
+        makeTagArray()
         tblView.reloadData()
     }
     
@@ -111,10 +114,25 @@ class TagsModalViewController: UIViewController, UITableViewDelegate, UITableVie
         let tagId = tags[index].tag.id
         let photo = PhotoHandler.getSpecificPhoto(localIdentifier: currentPhotoLocalIdentifier!)
         let tag = TagHandler.getSpecificTag(id: tagId!)
+        for t in (photo?.tags)! {
+            let tg = t as! Tag
+            print("current photo contain \(tg.text)")
+        }
+        for a in (tag?.photos)! {
+            let pa = a as! Photo
+            print("\(pa.localIdentifierString)")
+        }
+      
         if sender.isOn {
             tag?.addToPhotos(photo!)
+            photo?.addToTags(tag!)
         } else {
             tag?.removeFromPhotos(photo!)
+            photo?.removeFromTags(tag!)
+        }
+        for t in (photo?.tags)! {
+            let tg = t as! Tag
+            print("current photo contain \(tg.text)")
         }
     }
    

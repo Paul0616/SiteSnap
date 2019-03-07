@@ -12,7 +12,7 @@ import CoreData
 import Photos
 
 
-class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate, CLLocationManagerDelegate {
+class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate, CLLocationManagerDelegate, BackendConnectionDelegate {
 
     @IBOutlet weak var map: MKMapView!
     @IBOutlet weak var uploadButton: UIButton!
@@ -42,6 +42,10 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
     private var scaleKvoToken:NSKeyValueObservation?
     var doubleTapGesture: UITapGestureRecognizer!
     
+    var timerBackend: Timer!
+    var projectWasSelected: Bool = false
+    var oldProjectSelectedId: String!
+    
     //MARK: -
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,9 +70,25 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
         doubleTapGesture.numberOfTouchesRequired = 1
         doubleTapGesture.delegate = self
         map.addGestureRecognizer(doubleTapGesture)
-       
+        if let currentPrj = UserDefaults.standard.value(forKey: "currentProjectId") as? String {
+            oldProjectSelectedId = currentPrj
+        }
     }
-  
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if let prjWasSelected = UserDefaults.standard.value(forKey: "projectWasSelected") as? Bool {
+            projectWasSelected = prjWasSelected
+        }
+        if timerBackend == nil || !timerBackend.isValid {
+            timerBackend = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(callBackendConnection), userInfo: nil, repeats: true)
+            print("TIMER STARTED - map")
+        }
+    }
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        timerBackend.invalidate()
+        print("TIMER INVALID - map")
+    }
     override func viewDidLayoutSubviews() {
         if firstTime {
             for view in view.subviews {
@@ -166,36 +186,41 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
         }
        cancelUI()
     }
-//    public class SimpleLine: UIView  {
-//
-//        override init(frame: CGRect) {
-//            super.init(frame: frame)
-//        }
-//
-//        public required init?(coder aDecoder: NSCoder) {
-//            fatalError("init(coder:) has not been implemented")
-//        }
-//
-//        public override func draw(_ rect: CGRect) {
-//            let h = frame.height
-//            let w = frame.width
-//
-//            guard let context = UIGraphicsGetCurrentContext() else { return }
-//            let lineWidth: CGFloat = 1.0
-//            context.setLineWidth(lineWidth)
-//            context.setStrokeColor(UIColor.yellow.cgColor)
-//            let startingPoint = CGPoint(x: -w/2, y: -lineWidth/2)
-//            let endingPoint = CGPoint(x: w/2, y: -lineWidth/2)
-//            context.move(to: startingPoint)
-//            context.addLine(to: endingPoint)
-//            let startingPoint1 = CGPoint(x: -lineWidth/2, y: -h/2)
-//            let endingPoint1 = CGPoint(x: -lineWidth/2, y: h/2)
-//            context.move(to: startingPoint1)
-//            context.addLine(to: endingPoint1)
-//            context.strokePath()
-//        }
-//
-//    }
+    
+    //MARK: - The called function for the timer
+    @objc func callBackendConnection(){
+        let backendConnection = BackendConnection(projectWasSelected: projectWasSelected, lastLocation: lastLocation)
+        backendConnection.delegate = self
+        backendConnection.attemptSignInToSiteSnapBackend()
+    }
+    func treatErrors(_ error: Error?) {
+        print(error!)
+    }
+    
+    func noProjectAssigned() {
+        timerBackend.invalidate()
+        print("TIMER INVALID - tags")
+        performSegue(withIdentifier: "NoProjectsAssigned", sender: nil)
+    }
+    
+    func databaseUpdateFinished() {
+        //makeTagArray()
+        //tblView.reloadData()
+        if let currentPrj = UserDefaults.standard.value(forKey: "currentProjectId") as? String {
+            if oldProjectSelectedId != currentPrj {
+                let alertController = UIAlertController(title: "Project no longer available",
+                                                        message: "You no longer have access to the project \(String(describing: oldProjectSelectedId)), either because you have been removed from it or the project has been removed by an administrator.\r\n\r\nYou will be returned to the Photo Data Screen. Please confirm this is the correct project you wish to upload the photo(s) to before continuing.",
+                    preferredStyle: .alert)
+                alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+                    self.dismiss(animated: true, completion: nil)
+                })
+                )
+                
+                self.present(alertController, animated: true, completion: nil)
+            }
+        }
+    }
+
 
     @IBAction func onTapSetPhotoLocation(_ sender: UIButton) {
         let frame = map.frame

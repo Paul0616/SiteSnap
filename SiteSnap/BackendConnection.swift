@@ -287,14 +287,14 @@ class BackendConnection: NSObject {
                 for tg in (project?.availableTags)! {
                     let tag = tg as! Tag
                     currentProjectTagIds.append(tag.id!)
-                   //  print("-----PROJECT TAGS-------\(String(describing: tag.text))")
+                     print("-----PROJECT TAGS-------\(String(describing: tag.text)) current project available tag")
                 }
                 for photoTag in photo.tags! {
                     let tag = photoTag as! Tag
                     print("-----PHOTO TAGS-------\(String(describing: tag.text))")
                     if !currentProjectTagIds.contains(String(describing: tag.id!)) {
                         photo.removeFromTags(tag)
-                      //  print("\(String(describing: tag.text)) was removed from photo \(String(describing: photo.localIdentifierString))")
+                        print("\(String(describing: tag.text)) was removed from photo \(String(describing: photo.localIdentifierString))")
                     }
                 }
             }
