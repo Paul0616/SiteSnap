@@ -30,6 +30,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
     @IBOutlet weak var titleButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
     var uploadingProcessRunning: Bool = false
+    var appDidEnterBackground: Bool = false
     var user: AWSCognitoIdentityUser?
     var pool: AWSCognitoIdentityUserPool?
     var time: Date!
@@ -39,6 +40,17 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
     //MARK: - view control load
     override func viewDidLoad() {
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(applicationDidBecomeActive(notification:)),
+            name: UIApplication.didBecomeActiveNotification,
+            object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(applicationDidEnterBackground(notification:)),
+            name: UIApplication.didEnterBackgroundNotification,
+            object: nil)
+        
         backButton.layer.cornerRadius = 20
         titleButton.layer.cornerRadius = 6
         titleButton.isEnabled = false
@@ -60,19 +72,16 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
             unprocessedImages.append(image!)
         }
         images.append(unprocessedImages)
-        uploadingProcessRunning = true
-        //testStartUpload(localIdentifier: images[0][0].localIdentifier)
+        
         self.pool = AWSCognitoIdentityUserPool(forKey: AWSCognitoUserPoolsSignInProviderKey)
         if (self.user == nil) {
             self.user = self.pool?.currentUser()
             print("USER = CURRENT USER = \(String(describing: self.user?.username))")
         }
         currentUploadingLocalIdentifier = images[0][0].localIdentifier
-        if images[0].count > 0  {
-            setStateOfImage(withIdentifier: currentUploadingLocalIdentifier, state: .inProgress)
-            prepareUploadPhoto(localIdentifier: currentUploadingLocalIdentifier)
-        }
-        //
+        uploadingProcessRunning = true
+        startUploadingOneByOne()
+      
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -80,7 +89,20 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 print("disapear")
         }
     }
-    
+    //MARK: - Callback observers
+    @objc func applicationDidBecomeActive(notification: NSNotification) {
+        print("App is active with notification \(notification.name.rawValue)")
+        uploadingProcessRunning = true
+        appDidEnterBackground = false
+        startUploadingOneByOne()
+        
+    }
+    @objc func applicationDidEnterBackground(notification: NSNotification) {
+        print("App is enter in background notification \(notification.name.rawValue)")
+        uploadingProcessRunning = false
+        appDidEnterBackground = true
+        failAllWaitingImages()
+    }
     //MARK: - UI Buttons click
     @IBAction func onBack(_ sender: Any) {
         
@@ -134,7 +156,23 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
         }
     }
-    
+    private func startUploadingOneByOne(){
+        if images[0].count > 0  {
+            setStateOfImage(withIdentifier: currentUploadingLocalIdentifier, state: .inProgress)
+            prepareUploadPhoto(localIdentifier: currentUploadingLocalIdentifier)
+        }
+    }
+    private func failAllWaitingImages(){
+        if let _ = sessionManager{
+            cancelUploadRequest(request: .UploadTask)
+        }
+        if images[0].count > 0 {
+            for image in images[0] {
+                image.state = .waiting
+            }
+        }
+       // self.tableView.reloadData()
+    }
     private func deleteImageIfHidden(localIdentifier: String){
         let hiddenIdentifiers = PhotoHandler.photosDatabaseContainHidden(localIdentifiers: [localIdentifier])
         if hiddenIdentifiers.count > 0 {
@@ -305,19 +343,11 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
             break
             
             case .waiting:
-                
-               
-//                if !uploadingProcessRunning {
-//                    setStateOfImage(withIdentifier: localIdentifier, state: .inProgress)
-//                    prepareUploadPhoto(localIdentifier: localIdentifier)
-//                } else {
-                    if PhotoHandler.removePhoto(localIdentifier: localIdentifier) {
-                        removeImageFromTableView(withIdentifier: localIdentifier)
-                        deleteImageIfHidden(localIdentifier: localIdentifier)
-                        tableView.reloadData()
-                    }
-                    
-//                }
+                if PhotoHandler.removePhoto(localIdentifier: localIdentifier) {
+                    removeImageFromTableView(withIdentifier: localIdentifier)
+                    deleteImageIfHidden(localIdentifier: localIdentifier)
+                    tableView.reloadData()
+                }
             break
             
             case .done:
@@ -384,14 +414,16 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
                         if let error = response.error {
                             self.uploadingProcessRunning = false
                             print(error.localizedDescription)
-                            let state = self.getStateOfImage(withIdentifier: identifier)
-                            self.changeState(fromState: state, localIdentifier: identifier)
+                            if !self.appDidEnterBackground  {
+                                let state = self.getStateOfImage(withIdentifier: identifier)
+                                self.changeState(fromState: state, localIdentifier: identifier)
+                            }
                            
                         } else {
                             self.uploadingProcessRunning = false
                             print(response.response?.statusCode as Any)
                             self.makeImageDone(localIdentifier: identifier)
-//                            self.updateProgressAndReloadData(localIdentifier: identifier, progress: 0, speed: 0, estimatedTime: -1)
+
                         }
                        
                         
@@ -412,8 +444,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 print("Error in upload: \(error.localizedDescription)")
                 let state = self.getStateOfImage(withIdentifier: identifier)
                 self.changeState(fromState: state, localIdentifier: identifier)
-//                self.updateProgressAndReloadData(localIdentifier: identifier, progress: 0, speed: 0, estimatedTime: -1)
-                //onError?(error)
+
             }
         }
     }
@@ -560,8 +591,9 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
                     for image in images[0] {
                         if image.state == ImageForUpload.State.waiting {
                             currentUploadingLocalIdentifier = image.localIdentifier
-                            setStateOfImage(withIdentifier: currentUploadingLocalIdentifier, state: .inProgress)
-                            prepareUploadPhoto(localIdentifier: currentUploadingLocalIdentifier)
+                            startUploadingOneByOne()
+                            //setStateOfImage(withIdentifier: currentUploadingLocalIdentifier, state: .inProgress)
+                            //prepareUploadPhoto(localIdentifier: currentUploadingLocalIdentifier)
                             break
                         }
                     }
