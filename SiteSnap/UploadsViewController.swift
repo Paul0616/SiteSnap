@@ -36,6 +36,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
     var time: Date!
     var currentUploadingLocalIdentifier: String!
     var sessionManager: SessionManager!
+    var timer: Timer!
     
     //MARK: - view control load
     override func viewDidLoad() {
@@ -92,10 +93,20 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
     //MARK: - Callback observers
     @objc func applicationDidBecomeActive(notification: NSNotification) {
         print("App is active with notification \(notification.name.rawValue)")
+        if NetworkState.isConnected() {
+            uploadingProcessRunning = true
+            appDidEnterBackground = false
+            startUploadingOneByOne()
+        } else {
+          timer = Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(retryUpload), userInfo: nil, repeats: false)
+            
+        }
+    }
+    @objc func retryUpload(){
         uploadingProcessRunning = true
         appDidEnterBackground = false
         startUploadingOneByOne()
-        
+        timer.invalidate()
     }
     @objc func applicationDidEnterBackground(notification: NSNotification) {
         print("App is enter in background notification \(notification.name.rawValue)")
