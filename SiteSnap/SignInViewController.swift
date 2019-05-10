@@ -83,6 +83,29 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         }
         return true
     }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if textField == userNameTextField || textField == passwordTextField {
+            animateViewMoving(up: true, moveValue: 100)
+        }
+    }
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField == userNameTextField || textField == passwordTextField {
+            animateViewMoving(up: false, moveValue: 100)
+        }
+    }
+    
+    func animateViewMoving (up:Bool, moveValue :CGFloat){
+        let movementDuration:TimeInterval = 0.3
+        let movement:CGFloat = ( up ? -moveValue : moveValue)
+        
+        UIView.beginAnimations("animateView", context: nil)
+        UIView.setAnimationBeginsFromCurrentState(true)
+        UIView.setAnimationDuration(movementDuration)
+        
+        self.view.frame = self.view.frame.offsetBy(dx: 0, dy: movement)
+        UIView.commitAnimations()
+    }
 }
 extension SignInViewController: AWSCognitoIdentityPasswordAuthentication {
     
