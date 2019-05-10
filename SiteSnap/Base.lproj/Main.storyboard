@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="c4J-9c-Nyi">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="c4J-9c-Nyi">
     <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -1952,7 +1952,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="SiteSnapLogo" width="445" height="221"/>
+        <image name="SiteSnapLogo" width="222.5" height="110.5"/>
         <image name="add_a_photo" width="45" height="45"/>
         <image name="add_comment" width="45" height="45"/>
         <image name="add_tag" width="45" height="45"/>
@@ -1960,7 +1960,7 @@
         <image name="arrow_back" width="45" height="45"/>
         <image name="autorenew" width="45" height="45"/>
         <image name="cancel" width="45" height="45"/>
-        <image name="checked" width="72" height="72"/>
+        <image name="checked" width="24" height="24"/>
         <image name="cloud_upload" width="45" height="45"/>
         <image name="comment" width="45" height="45"/>
         <image name="flash_auto" width="45" height="45"/>
@@ -1974,6 +1974,6 @@
         <image name="one_edit_location" width="45" height="45"/>
         <image name="report" width="45" height="45"/>
         <image name="tag" width="45" height="45"/>
-        <image name="unchecked" width="72" height="72"/>
+        <image name="unchecked" width="24" height="24"/>
     </resources>
 </document>
