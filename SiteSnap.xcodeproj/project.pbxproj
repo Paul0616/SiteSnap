@@ -66,6 +66,7 @@
 		DABA66E221D23F1D0036CEE7 /* Tag+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA66DC21D23F1D0036CEE7 /* Tag+CoreDataProperties.swift */; };
 		DABA66E421D65B620036CEE7 /* AddCommentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA66E321D65B620036CEE7 /* AddCommentsViewController.swift */; };
 		DAD922F3222ADD0C00A7A93E /* BackendConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD922F2222ADD0C00A7A93E /* BackendConnection.swift */; };
+		DAE790D12285A6A2003B465D /* NetworkState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE790D02285A6A2003B465D /* NetworkState.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -156,6 +157,7 @@
 		DABA66DC21D23F1D0036CEE7 /* Tag+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tag+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		DABA66E321D65B620036CEE7 /* AddCommentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCommentsViewController.swift; sourceTree = "<group>"; };
 		DAD922F2222ADD0C00A7A93E /* BackendConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendConnection.swift; sourceTree = "<group>"; };
+		DAE790D02285A6A2003B465D /* NetworkState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkState.swift; sourceTree = "<group>"; };
 		E2508CF1AC12C64EBAC4FE17 /* Pods_SiteSnapUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SiteSnapUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB4AC2D94214D4822AE7D8E3 /* Pods-SiteSnap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SiteSnap.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SiteSnap/Pods-SiteSnap.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -322,6 +324,7 @@
 				DAB7796721DFA26B00308543 /* PreviewView.swift */,
 				DAB7796921E0F15A00308543 /* Slider.swift */,
 				DA9F69FC22020474006436F6 /* CheckBox.swift */,
+				DAE790D02285A6A2003B465D /* NetworkState.swift */,
 			);
 			path = subClasses;
 			sourceTree = "<group>";
@@ -641,6 +644,7 @@
 				DA47325021DA3109003729BB /* TagCellTableViewCell.swift in Sources */,
 				DA977F5A21C4E38B00883640 /* ActivityIndicatorButton.swift in Sources */,
 				4033274621F0A00D007EE9DF /* Project+CoreDataClass.swift in Sources */,
+				DAE790D12285A6A2003B465D /* NetworkState.swift in Sources */,
 				4033274821F0A016007EE9DF /* Project+CoreDataProperties.swift in Sources */,
 				DAA2706021C922B80058148A /* ProcessingPopup.swift in Sources */,
 				4033274A21F5B52D007EE9DF /* SettingsViewController.swift in Sources */,
