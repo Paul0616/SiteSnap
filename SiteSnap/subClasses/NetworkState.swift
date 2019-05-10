@@ -6,8 +6,12 @@
 //  Copyright © 2019 Paul Oprea. All rights reserved.
 //
 
-import UIKit
+import Foundation
+import Alamofire
 
-class NetworkState: NSObject {
-
+class NetworkState {
+    class func isConnected() ->Bool {
+        return NetworkReachabilityManager()!.isReachable
+    }
+    
 }
