@@ -11,7 +11,6 @@ import Alamofire
 
 class NetworkState {
     class func isConnected() ->Bool {
-        print("")
         return NetworkReachabilityManager()!.isReachable
     }
 
