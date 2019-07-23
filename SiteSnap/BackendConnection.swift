@@ -223,8 +223,11 @@ class BackendConnection: NSObject {
                     print("TAG \(tag["name"] as! String) \(tag["id"] as! String) with was added")
                 }
             }
-            let deletedTagsNumber = TagHandler.deleteExtraTags(tagsForVerification: allTagIds)
-            print("\(deletedTagsNumber) tags was deleted")
+            if let ids = allTagIds {
+                let deletedTagsNumber = TagHandler.deleteExtraTags(tagsForVerification: ids)
+                print("\(deletedTagsNumber) tags was deleted")
+            }
+            
             
             //------------------------ for each project from CoreData find the corespondent in projectModel
             //------------------------ and set each project from CoreData associated tags
