@@ -21,7 +21,14 @@ class ConfirmForgotPasswordViewController: UIViewController, UITextFieldDelegate
         updatePasswordButton.layer.cornerRadius = 6
         confirmationCode.delegate = self
         proposedPassword.delegate = self
+//        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+//        appDelegate.userWantToResetPassword = true
     }
+    override func viewWillDisappear(_ animated: Bool) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.userWantToResetPassword = false
+    }
+    
     
     // MARK: - IBActions
     //MARK: - UItextfieldDelegate
@@ -49,7 +56,7 @@ class ConfirmForgotPasswordViewController: UIViewController, UITextFieldDelegate
         }
         
         //confirm forgot password with input from ui.
-        self.user?.confirmForgotPassword(confirmationCodeValue, password: self.proposedPassword.text!).continueWith {[weak self] (task: AWSTask) -> AnyObject? in
+        self.user?.confirmForgotPassword(confirmationCodeValue, password: self.proposedPassword.text!).continueOnSuccessWith{[weak self] (task: AWSTask) -> AnyObject? in
             guard let strongSelf = self else { return nil }
             DispatchQueue.main.async(execute: {
                 if let error = task.error as NSError? {

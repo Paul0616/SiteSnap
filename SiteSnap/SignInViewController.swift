@@ -18,8 +18,10 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var loginButton: UIButton!
     var passwordAuthenticationCompletion: AWSTaskCompletionSource<AWSCognitoIdentityPasswordAuthenticationDetails>?
     var usernameText: String?
-    
-    
+ 
+    var user: AWSCognitoIdentityUser?
+    var pool: AWSCognitoIdentityUserPool?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -38,6 +40,27 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
 //                print("Family: \(fontFamilyName)   Font: \(fontName)")
 //            }
 //        }
+        self.pool = AWSCognitoIdentityUserPool(forKey: AWSCognitoUserPoolsSignInProviderKey)
+        if (self.user == nil) {
+            self.user = self.pool?.currentUser()
+            print("USER = CURRENT USER = \(String(describing: self.user?.username!))")
+        
+        }
+        if let log1 = user?.isSignedIn {
+            if log1 {
+                print("CAMERAAAAAAAAAA...")
+                dismiss(animated: true, completion: nil)
+//                if let cameraVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "initController") as? CameraViewController {
+//                    cameraVC.modalPresentationStyle = .fullScreen
+//                    present(cameraVC, animated: true, completion: nil)
+//                }
+            }
+        }
+        if (self.usernameText == nil) {
+            //self.usernameText = authenticationInput.lastKnownUsername
+            self.usernameText = UserDefaults.standard.value(forKey: "email") as? String
+        }
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -62,6 +85,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         if (self.userNameTextField.text != nil && self.passwordTextField.text != nil) {
             let authDetails = AWSCognitoIdentityPasswordAuthenticationDetails(username: self.userNameTextField.text!, password: self.passwordTextField.text! )
             self.passwordAuthenticationCompletion?.set(result: authDetails)
+            //pool?.currentUser()?.isSignedIn
         } else {
             let alertController = UIAlertController(title: "Missing information",
                                                     message: "Please enter a valid user name and password",
@@ -142,4 +166,6 @@ extension SignInViewController: AWSCognitoIdentityPasswordAuthentication {
             }
         }
     }
+    
+    
 }

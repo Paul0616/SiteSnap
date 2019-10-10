@@ -9,14 +9,14 @@
 import UIKit
 import Photos
 import PhotosUI
-import TinyLog
 import Device
+import SnapKit
 
 // MARK: - AssetsPhotoViewController
 open class AssetsPhotoViewController: UIViewController {
     
     override open var preferredStatusBarStyle: UIStatusBarStyle {
-        return self.pickerConfig?.statusBarStyle ?? .default
+        return AssetsPickerConfig.statusBarStyle
     }
     
     // MARK: Properties
@@ -29,15 +29,23 @@ open class AssetsPhotoViewController: UIViewController {
     fileprivate var requestIdMap = [IndexPath: PHImageRequestID]()
     
     fileprivate lazy var cancelButtonItem: UIBarButtonItem = {
-        let buttonItem = UIBarButtonItem(title: String(key: "Cancel"), style: .plain, target: self, action: #selector(pressedCancel(button:)))
+        let buttonItem = UIBarButtonItem(barButtonSystemItem: .cancel,
+                                         target: self,
+                                         action: #selector(pressedCancel(button:)))
         return buttonItem
     }()
     fileprivate lazy var doneButtonItem: UIBarButtonItem = {
-        let buttonItem = UIBarButtonItem(title: String(key: "Done"), style: .plain, target: self, action: #selector(pressedDone(button:)))
+        let buttonItem = UIBarButtonItem.init(barButtonSystemItem: .done,
+                                              target: self,
+                                              action: #selector(pressedDone(button:)))
         return buttonItem
     }()
-    fileprivate let emptyView: AssetsEmptyView = AssetsEmptyView.newAutoLayout()
-    fileprivate let noPermissionView: AssetsNoPermissionView = AssetsNoPermissionView.newAutoLayout()
+    fileprivate let emptyView: AssetsEmptyView = {
+        return AssetsEmptyView()
+    }()
+    fileprivate let noPermissionView: AssetsNoPermissionView = {
+        return AssetsNoPermissionView()
+    }()
     fileprivate var delegate: AssetsPickerViewControllerDelegate? {
         return (navigationController as? AssetsPickerViewController)?.pickerDelegate
     }
@@ -50,13 +58,12 @@ open class AssetsPhotoViewController: UIViewController {
     fileprivate var selectedArray = [PHAsset]()
     fileprivate var selectedMap = [String: PHAsset]()
     
-    fileprivate var didSetupConstraints = false
     fileprivate var didSetInitialPosition: Bool = false
     
     fileprivate var isPortrait: Bool = true
     
-    var leadingConstraint: NSLayoutConstraint?
-    var trailingConstraint: NSLayoutConstraint?
+    var leadingConstraint: LayoutConstraint?
+    var trailingConstraint: LayoutConstraint?
     
     fileprivate lazy var collectionView: UICollectionView = {
         
@@ -65,7 +72,6 @@ open class AssetsPhotoViewController: UIViewController {
         layout.scrollDirection = .vertical
         
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        view.configureForAutoLayout()
         view.allowsMultipleSelection = true
         view.alwaysBounceVertical = true
         view.register(self.pickerConfig.assetCellType, forCellWithReuseIdentifier: self.cellReuseIdentifier)
@@ -100,7 +106,7 @@ open class AssetsPhotoViewController: UIViewController {
     override open func loadView() {
         super.loadView()
         view = UIView()
-        view.backgroundColor = .white
+		view.backgroundColor = .ap_background
         view.addSubview(collectionView)
         view.addSubview(emptyView)
         view.addSubview(noPermissionView)
@@ -112,6 +118,7 @@ open class AssetsPhotoViewController: UIViewController {
         
         setupCommon()
         setupBarButtonItems()
+        setupCollectionView()
         
         updateEmptyView(count: 0)
         updateNoPermissionView()
@@ -159,26 +166,6 @@ open class AssetsPhotoViewController: UIViewController {
             }
             didSetInitialPosition = true
         }
-    }
-    
-    override open func updateViewConstraints() {
-        if !didSetupConstraints {
-            collectionView.autoPinEdge(toSuperviewEdge: .top)
-            
-            if #available(iOS 11.0, *) {
-                leadingConstraint = collectionView.autoPinEdge(toSuperviewEdge: .leading, withInset: view.safeAreaInsets.left)
-                trailingConstraint = collectionView.autoPinEdge(toSuperviewEdge: .trailing, withInset: view.safeAreaInsets.right)
-            } else {
-                leadingConstraint = collectionView.autoPinEdge(toSuperviewEdge: .leading)
-                trailingConstraint = collectionView.autoPinEdge(toSuperviewEdge: .trailing)
-            }
-            collectionView.autoPinEdge(toSuperviewEdge: .bottom)
-            
-            emptyView.autoPinEdgesToSuperviewEdges()
-            noPermissionView.autoPinEdgesToSuperviewEdges()
-            didSetupConstraints = true
-        }
-        super.updateViewConstraints()
     }
     
     open func deselectAll() {
@@ -250,13 +237,37 @@ open class AssetsPhotoViewController: UIViewController {
 extension AssetsPhotoViewController {
     
     func setupCommon() {
-        view.backgroundColor = .white
+		view.backgroundColor = .ap_background
     }
     
     func setupBarButtonItems() {
         navigationItem.leftBarButtonItem = cancelButtonItem
         navigationItem.rightBarButtonItem = doneButtonItem
         doneButtonItem.isEnabled = false
+    }
+    
+    func setupCollectionView() {
+        
+        collectionView.snp.makeConstraints { (make) in
+            make.top.equalToSuperview()
+            
+            if #available(iOS 11.0, *) {
+                leadingConstraint = make.leading.equalToSuperview().inset(view.safeAreaInsets.left).constraint.layoutConstraints.first
+                trailingConstraint = make.trailing.equalToSuperview().inset(view.safeAreaInsets.right).constraint.layoutConstraints.first
+            } else {
+                leadingConstraint = make.leading.equalToSuperview().constraint.layoutConstraints.first
+                trailingConstraint = make.trailing.equalToSuperview().constraint.layoutConstraints.first
+            }
+            make.bottom.equalToSuperview()
+        }
+        
+        emptyView.snp.makeConstraints { (make) in
+            make.edges.equalToSuperview()
+        }
+        
+        noPermissionView.snp.makeConstraints { (make) in
+            make.edges.equalToSuperview()
+        }
     }
     
     func setupAssets() {

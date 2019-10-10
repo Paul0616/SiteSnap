@@ -8,8 +8,6 @@
 
 import UIKit
 import Photos
-import TinyLog
-import PureLayout
 
 // MARK: - AssetsAlbumViewControllerDelegate
 public protocol AssetsAlbumViewControllerDelegate {
@@ -21,7 +19,7 @@ public protocol AssetsAlbumViewControllerDelegate {
 open class AssetsAlbumViewController: UIViewController {
     
     override open var preferredStatusBarStyle: UIStatusBarStyle {
-        return self.pickerConfig?.statusBarStyle ?? .default
+        return AssetsPickerConfig.statusBarStyle
     }
     
     open var delegate: AssetsAlbumViewControllerDelegate?
@@ -32,7 +30,9 @@ open class AssetsAlbumViewController: UIViewController {
     let headerReuseIdentifier: String = UUID().uuidString
     
     lazy var cancelButtonItem: UIBarButtonItem = {
-        let buttonItem = UIBarButtonItem(title: String(key: "Cancel"), style: .plain, target: self, action: #selector(pressedCancel(button:)))
+        let buttonItem = UIBarButtonItem(barButtonSystemItem: .cancel,
+                                         target: self,
+                                         action: #selector(pressedCancel(button:)))
         return buttonItem
     }()
     
@@ -40,8 +40,6 @@ open class AssetsAlbumViewController: UIViewController {
         let buttonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(pressedSearch(button:)))
         return buttonItem
     }()
-    
-    var didSetupConstraints = false
     
     lazy var collectionView: UICollectionView = {
         
@@ -54,7 +52,6 @@ open class AssetsAlbumViewController: UIViewController {
         let defaultSpace = self.pickerConfig.albumDefaultSpace
         let itemSpace = self.pickerConfig.albumItemSpace(isPortrait: isPortrait)
         let view = UICollectionView(frame: self.view.bounds, collectionViewLayout: layout)
-        view.configureForAutoLayout()
         view.register(self.pickerConfig.albumCellType, forCellWithReuseIdentifier: self.cellReuseIdentifier)
         view.register(AssetsAlbumHeaderView.classForCoder(), forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: self.headerReuseIdentifier)
         view.contentInset = UIEdgeInsets(top: defaultSpace, left: itemSpace, bottom: defaultSpace, right: itemSpace)
@@ -84,7 +81,7 @@ open class AssetsAlbumViewController: UIViewController {
     open override func loadView() {
         super.loadView()
         view = UIView()
-        view.backgroundColor = .white
+		view.backgroundColor = .ap_background
         
         view.addSubview(collectionView)
         view.setNeedsUpdateConstraints()
@@ -97,6 +94,10 @@ open class AssetsAlbumViewController: UIViewController {
         setupCommon()
         setupBarButtonItems()
         
+        collectionView.snp.makeConstraints { (make) in
+            make.edges.equalToSuperview()
+        }
+        
         AssetsManager.shared.authorize(completion: { [weak self] isAuthorized in
             if isAuthorized {
                 AssetsManager.shared.fetchAlbums { (_) in
@@ -106,15 +107,6 @@ open class AssetsAlbumViewController: UIViewController {
                 self?.dismiss(animated: true, completion: nil)
             }
         })
-    }
-    
-    open override func updateViewConstraints() {
-        super.updateViewConstraints()
-        
-        if !didSetupConstraints {
-            collectionView.autoPinEdgesToSuperviewEdges()
-            didSetupConstraints = true
-        }
     }
     
     open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -134,7 +126,7 @@ open class AssetsAlbumViewController: UIViewController {
 extension AssetsAlbumViewController {
     func setupCommon() {
         title = String(key: "Title_Albums")
-        view.backgroundColor = .white
+        view.backgroundColor = .ap_background
     }
     
     func setupBarButtonItems() {
@@ -230,6 +222,23 @@ extension AssetsAlbumViewController: UICollectionViewDataSource {
                 albumCell.imageView.image = nil
             }
         }
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
+        guard let albumCell = collectionView.cellForItem(at: indexPath) as? AssetsAlbumCellProtocol else {
+            logw("Failed to cast UICollectionViewCell.")
+            return false
+        }
+        albumCell.imageView.dim(animated: false, color: .ap_label, alpha: 0.5)
+        return true
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath) {
+        guard let albumCell = collectionView.cellForItem(at: indexPath) as? AssetsAlbumCellProtocol else {
+            logw("Failed to cast UICollectionViewCell.")
+            return
+        }
+        albumCell.imageView.undim()
     }
 }
 

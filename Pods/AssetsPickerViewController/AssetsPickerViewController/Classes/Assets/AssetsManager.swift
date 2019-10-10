@@ -8,7 +8,6 @@
 
 import UIKit
 import Photos
-import TinyLog
 
 // MARK: - AssetsManagerDelegate
 public protocol AssetsManagerDelegate: class {
@@ -265,6 +264,8 @@ extension AssetsManager {
             return 1
         case .moment:
             return 2
+        @unknown default:
+            fatalError()
         }
     }
     

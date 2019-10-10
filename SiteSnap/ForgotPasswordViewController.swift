@@ -22,7 +22,10 @@ class ForgotPasswordViewController: UIViewController, UITextFieldDelegate {
         // Do any additional setup after loading the view.
         self.pool = AWSCognitoIdentityUserPool(forKey: AWSCognitoUserPoolsSignInProviderKey)
         emailAddressTextField.delegate = self
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.userWantToResetPassword = true
     }
+    
     
     //MARK: - UItextfieldDelegate
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

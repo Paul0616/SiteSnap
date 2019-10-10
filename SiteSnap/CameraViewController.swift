@@ -31,7 +31,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     @objc dynamic var videoDeviceInput: AVCaptureDeviceInput!
     var defaultVideoDevice: AVCaptureDevice?
     private let photoOutput = AVCapturePhotoOutput()
-
+    
     var cameraHasFlash: Bool = true
     var currentFlashMode = AVCaptureDevice.FlashMode.auto
     private var keyValueObservations = [NSKeyValueObservation]()
@@ -52,8 +52,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var response: AWSCognitoIdentityUserGetDetailsResponse?
     var user: AWSCognitoIdentityUser?
     var pool: AWSCognitoIdentityUserPool?
-    var userLogged: Bool = false
-   
+    var isUserLogged: Bool = false
+    
     @IBOutlet weak var menuButton: UIButton!
     @IBOutlet weak var buttonContainerView: UIView!
     @IBOutlet weak var capturePreviewView: PreviewView!
@@ -70,15 +70,18 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var selectedFromGallery: Bool = false
     var timerAuthenticationCognito: Timer!
     var timerBackend: Timer!
-  //  var locationWasUpdated: Bool = false
+    //  var locationWasUpdated: Bool = false
     var projectWasSelected: Bool = false
     var galleryWillBeOpen: Bool = false
-
-
+    
+    
+    
     //MARK: - Loading Camera View Controller
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-       
+        
         UserDefaults.standard.removeObject(forKey: "currentProjectId")
         UserDefaults.standard.removeObject(forKey: "currentProjectName")
         dropDownListProjectsTableView.isHidden = true
@@ -113,11 +116,18 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         self.showProjectLoadingIndicator()
         self.pool = AWSCognitoIdentityUserPool(forKey: AWSCognitoUserPoolsSignInProviderKey)
+
         if (self.user == nil) {
             self.user = self.pool?.currentUser()
             print("USER = CURRENT USER = \(String(describing: self.user?.username))")
+            if let _userlogged = self.user?.isSignedIn {
+                isUserLogged = _userlogged
+            }
         }
-        
+        startCameraViewController()
+    }
+    
+    fileprivate func startCameraViewController() {
         //initially user do not have project choosed
         projectWasSelected = false
         UserDefaults.standard.set(projectWasSelected, forKey: "projectWasSelected")
@@ -131,21 +141,21 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.callBackendConnection()
         }
-       
+        
         videoAuthorization()
-       
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
         if let prjWasSelected = UserDefaults.standard.value(forKey: "projectWasSelected") as? Bool {
             projectWasSelected = prjWasSelected
         }
-       
+        
         photoObjects = PhotoHandler.fetchAllObjects()!
         if !galleryWillBeOpen {
             if timerBackend == nil || !timerBackend.isValid {
-               timerBackend = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(callBackendConnection), userInfo: nil, repeats: true)
+                timerBackend = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(callBackendConnection), userInfo: nil, repeats: true)
                 print("TIMER STARTED - camera")
             }
         }
@@ -155,7 +165,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             print(prjId)
             self.setProjectsSelected(projectId: prjId)
         }
-        
+        //        if isUserLogged{
         sessionQueue.async {
             switch self.cameraSetupResult {
             case .success:
@@ -213,6 +223,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             selectedFromGallery = false
             performSegue(withIdentifier: "PhotsViewIdentifier", sender: nil)
         }
+        //        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -223,14 +234,16 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 self.removeObservers()
             }
         }
-       
+        
         super.viewWillDisappear(animated)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         if !galleryWillBeOpen {
-             timerBackend.invalidate()
+            if timerBackend != nil {
+                timerBackend.invalidate()
+            }
             print("TIMER INVALID - camera")
         }
     }
@@ -321,8 +334,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         loadingProjectIntoList()
     }
     
-   
-
+    
+    
     //MARK: - Check still in gallery
     func checkDatabasePhotoIsStillInGallery(){
         //-----------------------  check if photos from CoreData is still in gallery and if not detele them from CoreData
@@ -339,7 +352,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             }
         }
     }
-
+    
     //MARK: - PERMISSIONS / AUTHORIZATIONS
     func videoAuthorization(){
         
@@ -375,7 +388,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             // The user has previously denied access.
             cameraSetupResult = .notAuthorized
         }
-       
+        
         sessionQueue.async {
             self.configureSession()
         }
@@ -415,6 +428,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             break
         case .authorized:
             break
+        @unknown default:
+            print("unknown")
         }
     }
     
@@ -423,6 +438,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         case .authorized:
             print("Access was already granted.")
             let picker = AssetsPickerViewController()
+            picker.modalPresentationStyle = .fullScreen
             picker.pickerDelegate = self
             picker.pickerConfig.albumIsShowEmptyAlbum = false
             self.present(picker, animated: true, completion: nil)
@@ -442,6 +458,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             print("User do not have access to photo album.")
         case .denied:
             print("User has denied the permission.")
+        @unknown default:
+            print("unknown")
         }
     }
     
@@ -472,6 +490,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             break
         case .authorizedWhenInUse:
             break
+        @unknown default:
+            print("unknown")
         }
     }
     
@@ -526,7 +546,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         
         manager.stopUpdatingLocation()
-
+        
         print("user latitude = \(userLocation.coordinate.latitude)")
         print("user longitude = \(userLocation.coordinate.longitude)")
     }
@@ -559,9 +579,9 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                         UserDefaults.standard.set(attribute.value, forKey: "email")
                     }
                 }
-
-//                print(self.user?.username! as Any)
-//                print("\(self.pool?.getUser() as Any)")
+                
+                //                print(self.user?.username! as Any)
+                //                print("\(self.pool?.getUser() as Any)")
                 if (self.pool?.token().isCompleted)! {
                     UserDefaults.standard.set(self.pool?.token().result, forKey: "token")
                     print(self.pool?.token().result as Any)
@@ -652,7 +672,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 }
             } else
                 if reason == .videoDeviceNotAvailableDueToSystemPressure {
-                print("Session stopped running due to shutdown system pressure level.")
+                    print("Session stopped running due to shutdown system pressure level.")
             }
             
         }
@@ -692,25 +712,25 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     //MARK: - Selecting new project
     @IBAction func onClickSelectedProjectButton(_ sender: ActivityIndicatorButton) {
-         animateProjectsList(toogle: dropDownListProjectsTableView.isHidden)
+        animateProjectsList(toogle: dropDownListProjectsTableView.isHidden)
     }
     
     //MARK: - Click on UI buttons
     @IBAction func onClickMenu(_ sender: UIButton){
         //performSegue(withIdentifier: "Photo1", sender: sender)
     }
-   
+    
     @IBAction func onClickFlashButton(_ sender: FlashStateButton) {
         print(sender.currentFlashState)
         switch sender.currentFlashState {
-            case "auto":
-                currentFlashMode = AVCaptureDevice.FlashMode.auto
-            case "on":
-                currentFlashMode = AVCaptureDevice.FlashMode.on
-            case "off":
-                currentFlashMode = AVCaptureDevice.FlashMode.off
-            default:
-                currentFlashMode = AVCaptureDevice.FlashMode.auto
+        case "auto":
+            currentFlashMode = AVCaptureDevice.FlashMode.auto
+        case "on":
+            currentFlashMode = AVCaptureDevice.FlashMode.on
+        case "off":
+            currentFlashMode = AVCaptureDevice.FlashMode.off
+        default:
+            currentFlashMode = AVCaptureDevice.FlashMode.auto
         }
     }
     
@@ -727,7 +747,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             permissionLibraryIfDenied()
             return
         }
-       // determineMyCurrentLocation()
+        // determineMyCurrentLocation()
         
         /*
          Retrieve the video preview layer's video orientation on the main queue before
@@ -755,9 +775,9 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             if !photoSettings.__availablePreviewPhotoPixelFormatTypes.isEmpty {
                 photoSettings.previewPhotoFormat = [kCVPixelBufferPixelFormatTypeKey as String: photoSettings.__availablePreviewPhotoPixelFormatTypes.first!]
             }
-
+            
             self.photoOutput.capturePhoto(with: photoSettings, delegate: self)
-
+            
         }
     }
     
@@ -766,7 +786,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         checkPermissionLibrary()
         
     }
-   
+    
     
     //MARK: - Loading and processing PROJECTS
     func showProjectLoadingIndicator(){
@@ -774,7 +794,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func loadingProjectIntoList(){
-       // DispatchQueue.main.async {
+        // DispatchQueue.main.async {
         if !dropDownListProjectsTableView.isHidden {
             return
         }
@@ -801,8 +821,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         galleryButton.isEnabled = true
         setProjectsSelected(projectId: currentProjectId)
         dropDownListProjectsTableView.reloadData()
-       // }
-       
+        // }
+        
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -852,7 +872,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             }
         }
     }
-   
+    
     func animateProjectsList(toogle: Bool){
         UIView.animate(withDuration: 0.3, animations: {
             self.dropDownListProjectsTableView.isHidden = !toogle
@@ -866,22 +886,22 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
         
         session.beginConfiguration()
-//        switch UIDevice().model {
-//        case "iPhone":
-//            session.sessionPreset = .high
-//        default:
-//            session.sessionPreset = .photo
-//        }
+        //        switch UIDevice().model {
+        //        case "iPhone":
+        //            session.sessionPreset = .high
+        //        default:
+        //            session.sessionPreset = .photo
+        //        }
         
         
         
         // Add video input.
         do {
             // Choose the back dual camera if available, otherwise default to a wide angle camera.
-//            if let dualCameraDevice = AVCaptureDevice.default(.builtInDualCamera, for: .video, position: .back) {
-//                defaultVideoDevice = dualCameraDevice
-//            } else
-                if let backCameraDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) {
+            //            if let dualCameraDevice = AVCaptureDevice.default(.builtInDualCamera, for: .video, position: .back) {
+            //                defaultVideoDevice = dualCameraDevice
+            //            } else
+            if let backCameraDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) {
                 // If a rear dual camera is not available, default to the rear wide angle camera.
                 defaultVideoDevice = backCameraDevice
             } else if let frontCameraDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front) {
@@ -894,16 +914,16 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 session.commitConfiguration()
                 return
             }
-//            if videoDevice.isFocusModeSupported(.continuousAutoFocus){
-//                do{
-//                    try videoDevice.lockForConfiguration()
-//                    //videoDevice.focusMode = .continuousAutoFocus
-//                    videoDevice.isSubjectAreaChangeMonitoringEnabled = true
-//                    videoDevice.unlockForConfiguration()
-//                } catch {
-//                    print("Could not lock device for configuration: \(error)")
-//                }
-//            }
+            //            if videoDevice.isFocusModeSupported(.continuousAutoFocus){
+            //                do{
+            //                    try videoDevice.lockForConfiguration()
+            //                    //videoDevice.focusMode = .continuousAutoFocus
+            //                    videoDevice.isSubjectAreaChangeMonitoringEnabled = true
+            //                    videoDevice.unlockForConfiguration()
+            //                } catch {
+            //                    print("Could not lock device for configuration: \(error)")
+            //                }
+            //            }
             let videoDeviceInput = try AVCaptureDeviceInput(device: videoDevice)
             
             if session.canAddInput(videoDeviceInput) {
@@ -951,7 +971,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         session.commitConfiguration()
     }
-
+    
     
     
     //MARK: - Saving Taken Photo in ALBUM
@@ -980,7 +1000,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 }
             })
         }
-       
+        
         saveImage(image: image)
     }
     
@@ -1008,13 +1028,13 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             print("added image to album")
             print(error as Any)
             
-           
+            
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 if (self.photosLocalIdentifierArray == nil){
-        
-                   self.photosLocalIdentifierArray = [localId!]
-                   
+                    
+                    self.photosLocalIdentifierArray = [localId!]
+                    
                 } else {
                     self.photosLocalIdentifierArray?.append(localId!)
                 }
@@ -1056,7 +1076,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             } catch {
                 print("Error: \(error)")
             }
-           // let size: Int64 = image.fileSize(image: fileName)
+            // let size: Int64 = image.fileSize(image: fileName)
             //PhotoHandler.setFileSize(localIdentifiers: [localId!])
             PhotoHandler.updateFileSize(localIdentifier: fileName, size: fileSize)
             self.photoObjects = PhotoHandler.fetchAllObjects()!
@@ -1118,7 +1138,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     @IBAction func focusAndExposeTap(_ sender: UITapGestureRecognizer) {
         
         let devicePoint = capturePreviewView.videoPreviewLayer.captureDevicePointConverted(fromLayerPoint: sender.location(in: sender.view))
-       
+        
         focus(with: .autoFocus, exposureMode: .autoExpose, at: devicePoint, locationPoint: sender.location(in: sender.view), monitorSubjectAreaChange: true)
     }
     
@@ -1199,8 +1219,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         })
         
     }
-  
-
+    
+    
     //MARK: - Screen White Flash on Taking Photos NOT USED ANYMORE
     func whiteFlash(){
         let screenFlash = UIView(frame: capturePreviewView.frame)
@@ -1215,10 +1235,10 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         })
         
     }
-
+    
     
     // MARK: - Navigation
-
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
@@ -1228,7 +1248,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             destination.lastLocation = lastLocation
             
         }
-       
+        
     }
     //MARK: - delete hidden assets
     func deleteAssets(unused: Bool) {
@@ -1249,7 +1269,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 }
             }
         } catch let error as NSError {
-        print(error.debugDescription)
+            print(error.debugDescription)
         }
     }
     // MARK: -
@@ -1285,13 +1305,13 @@ extension CameraViewController : AVCapturePhotoCaptureDelegate {
                 }
             }
         } else {
-           self.createAlbumAndSave(image: uiImage)
+            self.createAlbumAndSave(image: uiImage)
         }
         
-       // processingPopup.hideAndDestroy(from: view)
+        // processingPopup.hideAndDestroy(from: view)
         
     }
- 
+    
 }
 extension CameraViewController: AssetsPickerViewControllerDelegate {
     
@@ -1301,7 +1321,7 @@ extension CameraViewController: AssetsPickerViewControllerDelegate {
         // do your job with selected assets
         galleryWillBeOpen = false
         for phAsset in assets {
-
+            
             if(phAsset.location != nil) {
                 print(phAsset.location!)
             }

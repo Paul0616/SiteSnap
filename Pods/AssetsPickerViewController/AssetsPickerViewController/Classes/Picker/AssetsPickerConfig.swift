@@ -10,10 +10,16 @@ import UIKit
 import Photos
 
 open class AssetsPickerConfig {
+
+    // MARK: - Localized Strings Config
+
+    public static var customStringConfig: AssetsPickerCustomStringConfig? = nil
     
     // MARK: - Album Config
     
-    open var statusBarStyle: UIStatusBarStyle = .default
+    /// Static appearances
+    public static var statusBarStyle: UIStatusBarStyle = .default
+    public static var defaultCheckmarkColor: UIColor = UIColor(red: 0.078, green: 0.435, blue: 0.875, alpha: 1)
 
     /// Set selected album at initial load.
     open var albumDefaultType: PHAssetCollectionSubtype = .smartAlbumUserLibrary
@@ -92,7 +98,7 @@ open class AssetsPickerConfig {
             return _assetCacheSize
         }
     }
-    open var assetPortraitColumnCount: Int = UI_USER_INTERFACE_IDIOM() == .pad ? 5 : 4
+    open var assetPortraitColumnCount: Int = UI_USER_INTERFACE_IDIOM() == .pad ? 5 : 3
     open var assetPortraitInteritemSpace: CGFloat = 1
     open var assetPortraitLineSpace: CGFloat = 1
     
@@ -102,7 +108,7 @@ open class AssetsPickerConfig {
         return CGSize(width: edge, height: edge)
     }
     
-    open var assetLandscapeColumnCount: Int = 7
+    open var assetLandscapeColumnCount: Int = UI_USER_INTERFACE_IDIOM() == .pad ? 7 : 5
     open var assetLandscapeInteritemSpace: CGFloat = 1.5
     open var assetLandscapeLineSpace: CGFloat = 1.5
     

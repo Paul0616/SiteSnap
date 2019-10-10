@@ -81,6 +81,9 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         if let currentPrj = UserDefaults.standard.value(forKey: "currentProjectId") as? String {
             oldProjectSelectedId = currentPrj
         }
+        let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleLabelCommentTap(_:)))
+        commentLabel.isUserInteractionEnabled = true
+        commentLabel.addGestureRecognizer(tap)
     }
     
     
@@ -427,6 +430,9 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         performSegue(withIdentifier: "AddCommentViewIdentifier", sender: sender)
     }
     
+    @objc func handleLabelCommentTap(_ sender: UITapGestureRecognizer) {
+        performSegue(withIdentifier: "AddCommentViewIdentifier", sender: sender)
+    }
     
     @IBAction func onClickDeleteImageButton(_ sender: UIButton) {
         if self.imageControl.numberOfPages > 0 {
@@ -598,6 +604,8 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
             print("User do not have access to photo album.")
         case .denied:
             print("User has denied the permission.")
+        @unknown default:
+            print("unknown")
         }
     }
     

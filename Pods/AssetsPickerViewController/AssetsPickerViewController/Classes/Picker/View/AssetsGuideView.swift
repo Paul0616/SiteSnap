@@ -6,18 +6,16 @@
 //
 //
 
-import Foundation
-import SwiftARGB
+import UIKit
 
 open class AssetsGuideView: UIView {
-    
-    private var didSetupConstraints: Bool = false
+
     var lineSpace: CGFloat = 10
     var titleStyle: UIFont.TextStyle = .title1
     var bodyStyle: UIFont.TextStyle = .body
     
     fileprivate lazy var messageLabel: UILabel = {
-        let label = UILabel.newAutoLayout()
+        let label = UILabel()
         label.textAlignment = .center
         label.numberOfLines = 10
         return label
@@ -34,16 +32,13 @@ open class AssetsGuideView: UIView {
     }
     
     func commonInit() {
-        backgroundColor = .white
         addSubview(messageLabel)
-    }
-    
-    open override func updateConstraints() {
-        if !didSetupConstraints {
-            messageLabel.autoPinEdgesToSuperviewEdges(with: UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15))
-            didSetupConstraints = true
+        messageLabel.snp.makeConstraints { (make) in
+            make.top.equalToSuperview()
+            make.leading.equalToSuperview().inset(15)
+            make.bottom.equalToSuperview()
+            make.trailing.equalToSuperview().inset(15)
         }
-        super.updateConstraints()
     }
     
     open func set(title: String, message: String) {
@@ -55,7 +50,7 @@ open class AssetsGuideView: UIView {
         titleParagraphStyle.alignment = .center
         let attributedTitle = NSMutableAttributedString(string: "\(title)\n", attributes: [
             NSAttributedString.Key.font: UIFont.systemFont(forStyle: titleStyle),
-            NSAttributedString.Key.foregroundColor: UIColor(rgbHex: 0x999999),
+			NSAttributedString.Key.foregroundColor: UIColor.ap_secondaryLabel,
             NSAttributedString.Key.paragraphStyle: titleParagraphStyle
             ])
         
@@ -66,7 +61,7 @@ open class AssetsGuideView: UIView {
         bodyParagraphStyle.tailIndent = -20
         let attributedBody = NSMutableAttributedString(string: message, attributes: [
             NSAttributedString.Key.font: UIFont.systemFont(forStyle: bodyStyle),
-            NSAttributedString.Key.foregroundColor: UIColor(rgbHex: 0x999999),
+			NSAttributedString.Key.foregroundColor: UIColor.ap_secondaryLabel,
             NSAttributedString.Key.paragraphStyle: bodyParagraphStyle
             ])
         

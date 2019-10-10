@@ -116,9 +116,11 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
                 self.user?.signOut()
                 UserDefaults.standard.removeObject(forKey: "given_name")
                 UserDefaults.standard.removeObject(forKey: "family_name")
+                print("user defaults removes")
                 let appDelegate = UIApplication.shared.delegate as! AppDelegate
                 appDelegate.userTappedLogOut = true
                 self.refresh()
+                
             })
             )
             alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { action in

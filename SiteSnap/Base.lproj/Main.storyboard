@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="c4J-9c-Nyi">
-    <device id="retina5_9" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="c4J-9c-Nyi">
+    <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -28,7 +26,6 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="52" id="hBL-Fe-wq4"/>
                                 </constraints>
-                                <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad" returnKeyType="continue" enablesReturnKeyAutomatically="YES" textContentType="one-time-code"/>
                             </textField>
@@ -37,7 +34,6 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="52" id="b4C-pF-Lwq"/>
                                 </constraints>
-                                <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="done" enablesReturnKeyAutomatically="YES" secureTextEntry="YES" textContentType="password"/>
                             </textField>
@@ -88,6 +84,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="bWf-Vq-vgy"/>
                     </view>
+                    <navigationItem key="navigationItem" id="kM7-e1-NF4"/>
                     <connections>
                         <outlet property="confirmationCode" destination="4bZ-QV-INJ" id="bt1-RH-eGj"/>
                         <outlet property="proposedPassword" destination="8Mn-Nh-wXe" id="a7t-SN-yXz"/>
@@ -123,7 +120,6 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="52" id="Ah4-n4-kRm"/>
                                 </constraints>
-                                <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="done" enablesReturnKeyAutomatically="YES" textContentType="username"/>
                             </textField>
@@ -162,7 +158,7 @@
                     <connections>
                         <outlet property="emailAddressTextField" destination="bEg-vY-1wQ" id="NO0-bp-KKK"/>
                         <outlet property="resetButton" destination="F8p-xX-4XY" id="Pig-WI-uH7"/>
-                        <segue destination="QBm-W5-0i7" kind="show" identifier="confirmForgotPasswordSegue" id="CQ3-UY-djC"/>
+                        <segue destination="QBm-W5-0i7" kind="presentation" identifier="confirmForgotPasswordSegue" modalPresentationStyle="fullScreen" id="CQ3-UY-djC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XEA-L3-jDf" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -182,7 +178,6 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="52" id="tFS-yR-SG9"/>
                                 </constraints>
-                                <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="continue" enablesReturnKeyAutomatically="YES" textContentType="username"/>
                             </textField>
@@ -191,7 +186,6 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="52" id="Gb0-WR-wC4"/>
                                 </constraints>
-                                <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="done" enablesReturnKeyAutomatically="YES" secureTextEntry="YES" textContentType="password"/>
                             </textField>
@@ -231,7 +225,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
-                                    <segue destination="8Lf-SE-Jyw" kind="show" id="rd9-Z0-rNB"/>
+                                    <segue destination="8Lf-SE-Jyw" kind="presentation" modalPresentationStyle="fullScreen" id="rd9-Z0-rNB"/>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SiteSnapLogo" translatesAutoresizingMaskIntoConstraints="NO" id="wFn-Pg-Voz">
@@ -279,7 +273,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="44" y="44.527736131934034"/>
+            <point key="canvasLocation" x="-26" y="-64"/>
         </scene>
         <!--Camera View Controller-->
         <scene sceneID="Ant-3a-3eV">
@@ -374,7 +368,7 @@
                                 <state key="normal" backgroundImage="menu"/>
                                 <connections>
                                     <action selector="onClickMenu:" destination="c4J-9c-Nyi" eventType="touchUpInside" id="249-mj-tdg"/>
-                                    <segue destination="LKM-Bc-KM5" kind="show" id="9dR-fN-kUL"/>
+                                    <segue destination="LKM-Bc-KM5" kind="presentation" modalPresentationStyle="fullScreen" id="9dR-fN-kUL"/>
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="APg-gK-bOu">
@@ -526,6 +520,7 @@
                             </mask>
                         </variation>
                     </view>
+                    <navigationItem key="navigationItem" id="cQh-dm-dvL"/>
                     <connections>
                         <outlet property="buttonContainerView" destination="Rhf-fl-6Lh" id="fBX-sA-Z6g"/>
                         <outlet property="cameraUnavailableLabel" destination="TWu-9i-7m9" id="TBb-Jk-IMX"/>
@@ -537,8 +532,8 @@
                         <outlet property="menuButton" destination="X3g-6a-Fel" id="Qg7-o6-5MP"/>
                         <outlet property="noValidLocationIcon" destination="NtZ-1M-dTS" id="lrO-Pa-NYe"/>
                         <outlet property="selectedProjectButton" destination="DrV-oQ-auP" id="Jiw-ru-SYM"/>
-                        <segue destination="Ndu-GM-uKQ" kind="show" identifier="PhotsViewIdentifier" id="4zH-bW-a7I"/>
-                        <segue destination="2oM-O8-dF4" kind="show" identifier="NoProjectsAssigned" id="Qse-xH-33t"/>
+                        <segue destination="Ndu-GM-uKQ" kind="presentation" identifier="PhotsViewIdentifier" modalPresentationStyle="fullScreen" id="4zH-bW-a7I"/>
+                        <segue destination="2oM-O8-dF4" kind="presentation" identifier="NoProjectsAssigned" modalPresentationStyle="fullScreen" id="Qse-xH-33t"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OlZ-2b-ggJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -595,7 +590,7 @@
                                         <rect key="frame" x="0.0" y="28" width="335" height="80"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="rMY-b9-K64" id="Eci-MT-cqh">
-                                            <rect key="frame" x="0.0" y="0.0" width="335" height="79.666666666666671"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="335" height="80"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hwS-o5-8yi">
@@ -606,16 +601,16 @@
                                                     </constraints>
                                                 </imageView>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="uuC-JW-NcV">
-                                                    <rect key="frame" x="110" y="-10.333333333333336" width="50" height="100.33333333333334"/>
+                                                    <rect key="frame" x="110" y="-10.333333333333336" width="50" height="100.66666666666669"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ayc-nh-2Dy">
-                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50.333333333333336"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50.666666666666664"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aAd-a0-p7D">
-                                                            <rect key="frame" x="0.0" y="50.333333333333343" width="50" height="50"/>
+                                                            <rect key="frame" x="0.0" y="50.666666666666671" width="50" height="50"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -660,11 +655,12 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="g38-GI-vl9"/>
                     </view>
+                    <navigationItem key="navigationItem" id="jEr-1j-ugc"/>
                     <connections>
                         <outlet property="backButton" destination="u1F-cs-dZm" id="kJx-hg-tWe"/>
                         <outlet property="tableView" destination="rHp-HS-bAB" id="8Ta-LS-Sj6"/>
                         <outlet property="versionLabel" destination="cnx-9S-0Oj" id="Mt5-6z-myL"/>
-                        <segue destination="pdt-Dd-sKU" kind="show" identifier="SettingSegue" id="p7A-lB-4hR"/>
+                        <segue destination="pdt-Dd-sKU" kind="presentation" identifier="SettingSegue" modalPresentationStyle="fullScreen" id="p7A-lB-4hR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="k4w-td-SVX" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -753,7 +749,7 @@
                                 </variation>
                                 <connections>
                                     <action selector="onNext:" destination="Ndu-GM-uKQ" eventType="touchUpInside" id="dTZ-Yf-jC4"/>
-                                    <segue destination="3th-Zv-vt4" kind="show" identifier="ConfirmLocationSegue" id="OAT-Li-p8G"/>
+                                    <segue destination="3th-Zv-vt4" kind="presentation" identifier="ConfirmLocationSegue" modalPresentationStyle="fullScreen" id="OAT-Li-p8G"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NHP-4F-nwH">
@@ -1071,14 +1067,14 @@
                         <outlet property="stackViewAllComments" destination="Kgn-n3-fRv" id="JCG-xE-6Ib"/>
                         <outlet property="tagNumberLabel" destination="Y3G-1o-9fE" id="ef2-14-Ao7"/>
                         <outlet property="takePhotoButton" destination="xax-sd-5Co" id="387-wP-iVl"/>
-                        <segue destination="ujF-w3-ccj" kind="show" identifier="AddCommentViewIdentifier" id="yVO-YD-uBd"/>
-                        <segue destination="Xby-a2-aAM" kind="show" identifier="PhotoInspectorSegue" id="AfI-jz-Vmt"/>
+                        <segue destination="ujF-w3-ccj" kind="presentation" identifier="AddCommentViewIdentifier" modalPresentationStyle="fullScreen" id="yVO-YD-uBd"/>
+                        <segue destination="Xby-a2-aAM" kind="presentation" identifier="PhotoInspectorSegue" modalPresentationStyle="fullScreen" id="AfI-jz-Vmt"/>
                         <segue destination="HuH-zq-xfS" kind="presentation" identifier="SetTagSegue" id="dNi-G9-QYX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZGt-Cr-JA3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1996" y="44"/>
+            <point key="canvasLocation" x="2004" y="4"/>
         </scene>
         <!--Add Comments View Controller-->
         <scene sceneID="gI4-69-M9r">
@@ -1131,6 +1127,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="aDA-gh-fvI"/>
                     </view>
+                    <navigationItem key="navigationItem" id="TfK-o1-p9n"/>
                     <connections>
                         <outlet property="addCommentButton" destination="VyQ-Iv-zPh" id="2Im-WA-Z8a"/>
                         <outlet property="back" destination="9KF-iw-282" id="ngH-fW-cQL"/>
@@ -1293,7 +1290,7 @@
                                     <action selector="onBack:" destination="ujF-w3-ccj" eventType="touchUpInside" id="jpL-Eu-Cah"/>
                                     <action selector="onBack:" destination="3th-Zv-vt4" eventType="touchUpInside" id="wIs-ym-MAn"/>
                                     <action selector="onBack:" destination="d3c-CP-8Yl" eventType="touchUpInside" id="xue-JG-1Ub"/>
-                                    <segue destination="c4J-9c-Nyi" kind="show" identifier="backToCameraSegue" id="opx-Tt-86q"/>
+                                    <segue destination="c4J-9c-Nyi" kind="presentation" identifier="backToCameraSegue" modalPresentationStyle="fullScreen" id="opx-Tt-86q"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -1311,6 +1308,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="5ow-37-F6G"/>
                     </view>
+                    <navigationItem key="navigationItem" id="sLE-jz-WOQ"/>
                     <connections>
                         <outlet property="backButton" destination="2xY-Tr-Vkz" id="dyb-I6-qgV"/>
                         <outlet property="tableView" destination="h4R-TM-LHq" id="Sb7-OS-YvT"/>
@@ -1374,7 +1372,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
-                                    <segue destination="d3c-CP-8Yl" kind="show" id="Wd9-9r-cgP"/>
+                                    <segue destination="d3c-CP-8Yl" kind="presentation" modalPresentationStyle="fullScreen" id="Wd9-9r-cgP"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cel-qg-Qv2" customClass="Slider" customModule="SiteSnap" customModuleProvider="target">
@@ -1475,6 +1473,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="G5S-UM-ZT7"/>
                     </view>
+                    <navigationItem key="navigationItem" id="2YV-bA-xt4"/>
                     <connections>
                         <outlet property="backButton" destination="r4t-rr-cqW" id="8rf-UN-bpn"/>
                         <outlet property="cancelEditButton" destination="qqh-td-zPC" id="pKF-Iu-A5y"/>
@@ -1528,6 +1527,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ML7-ry-ci1"/>
                     </view>
+                    <navigationItem key="navigationItem" id="X9z-9n-1cI"/>
                     <connections>
                         <outlet property="backbutton" destination="331-8h-HoJ" id="WO9-lH-quG"/>
                         <outlet property="scrollView" destination="ViT-fb-JD7" id="Dns-Ho-Mni"/>
@@ -1770,11 +1770,11 @@
                                         <rect key="frame" x="0.0" y="28" width="335" height="80"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="cOD-c2-K7r" id="xj7-hp-nnx">
-                                            <rect key="frame" x="0.0" y="0.0" width="335" height="79.666666666666671"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="335" height="80"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Aa9-oj-Zaz">
-                                                    <rect key="frame" x="271" y="24.333333333333329" width="51" height="31"/>
+                                                    <rect key="frame" x="271" y="24.666666666666671" width="51" height="31"/>
                                                     <connections>
                                                         <action selector="onSwitchSetting:" destination="pdt-Dd-sKU" eventType="valueChanged" id="x6w-UK-JlV"/>
                                                     </connections>
@@ -1819,9 +1819,10 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="WGi-4e-dab"/>
                     </view>
+                    <navigationItem key="navigationItem" id="z2Z-Zt-3pt"/>
                     <connections>
                         <outlet property="backButton" destination="ih2-UE-4uM" id="8F0-FX-3Cg"/>
-                        <segue destination="mPL-XD-T7J" kind="show" identifier="files" id="tcm-Ja-fIm"/>
+                        <segue destination="mPL-XD-T7J" kind="presentation" identifier="files" modalPresentationStyle="fullScreen" id="tcm-Ja-fIm"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="euw-Uc-MIw" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1856,10 +1857,10 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="detailButton" indentationWidth="10" reuseIdentifier="CellID" editingAccessoryType="detailButton" id="28a-Rn-RuT">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="28" width="375" height="43.666667938232422"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="28a-Rn-RuT" id="rOt-e4-Qzh">
-                                            <rect key="frame" x="0.0" y="0.0" width="328" height="43.666666666666664"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="336" height="43.666667938232422"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -1881,6 +1882,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="i86-9j-QcY"/>
                     </view>
+                    <navigationItem key="navigationItem" id="hk5-Cy-VYY"/>
                     <connections>
                         <outlet property="back" destination="pBq-sz-gQn" id="oQ2-I5-TwZ"/>
                         <outlet property="tableView" destination="dZ7-W1-IJd" id="Mhc-Oo-70q"/>
@@ -1942,6 +1944,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="DRi-Pw-xK6"/>
                     </view>
+                    <navigationItem key="navigationItem" id="Xoe-F1-jb7"/>
                     <connections>
                         <outlet property="signInButton" destination="Y7C-B6-bW0" id="1cW-kb-7dV"/>
                     </connections>
@@ -1976,4 +1979,7 @@
         <image name="tag" width="45" height="45"/>
         <image name="unchecked" width="24" height="24"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="4zH-bW-a7I"/>
+    </inferredMetricsTieBreakers>
 </document>

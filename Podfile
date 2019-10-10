@@ -6,9 +6,9 @@ target 'SiteSnap' do
   use_frameworks!
 
   # Pods for SiteSnap
-  pod 'AssetsPickerViewController', '~> 2.0'
+  pod 'AssetsPickerViewController', '~> 2.7.2'
   pod 'AWSCore', '~> 2.8.0'
-  pod 'AWSCognitoIdentityProvider', '~> 2.8.0'
+  pod 'AWSCognitoIdentityProvider'
   pod 'Alamofire', '~> 4.0'
   pod 'SwiftyJSON'
   target 'SiteSnapTests' do

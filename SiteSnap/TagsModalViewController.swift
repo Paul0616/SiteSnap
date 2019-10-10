@@ -33,6 +33,8 @@ class TagsModalViewController: UIViewController, UITableViewDelegate, UITableVie
         
         makeTagArray()
         // Do any additional setup after loading the view.
+        
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.unwindToPhotosViewController(_:))))
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -87,8 +89,10 @@ class TagsModalViewController: UIViewController, UITableViewDelegate, UITableVie
         makeTagArray()
         tblView.reloadData()
     }
-    
-    @IBAction func onClickClose(_ sender: UIButton) {
+    @objc func unwindToPhotosViewController(_ sender:UITapGestureRecognizer){
+        onClickClose(nil)
+    }
+    @IBAction func onClickClose(_ sender: UIButton?) {
 //        let color = UIColor(hexString: "#a6b012")
 //        windowView.backgroundColor = color
 //        dismiss(animated: true, completion: nil)
@@ -116,11 +120,11 @@ class TagsModalViewController: UIViewController, UITableViewDelegate, UITableVie
         let tag = TagHandler.getSpecificTag(id: tagId!)
         for t in (photo?.tags)! {
             let tg = t as! Tag
-            print("current photo contain \(tg.text)")
+            print("current photo contain \(tg.text ?? "nil")")
         }
         for a in (tag?.photos)! {
             let pa = a as! Photo
-            print("\(pa.localIdentifierString)")
+            print("\(pa.localIdentifierString ?? "nil")")
         }
       
         if sender.isOn {
@@ -132,7 +136,7 @@ class TagsModalViewController: UIViewController, UITableViewDelegate, UITableVie
         }
         for t in (photo?.tags)! {
             let tg = t as! Tag
-            print("current photo contain \(tg.text)")
+            print("current photo contain \(tg.text ?? "nil")")
         }
     }
    

@@ -79,7 +79,7 @@ class AddCommentsViewController: UIViewController {
         bottomConstratint.constant = -keyboardHeight
         commentTextview.updateConstraints()
         
-        print(keyboardHeight)
+        print(keyboardHeight!)
         //print(width)
     }
     
