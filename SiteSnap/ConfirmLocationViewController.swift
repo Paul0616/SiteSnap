@@ -138,9 +138,9 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
         backButton.isHidden = true
         editLocationMode = true
         for annotation in annotationsArray {
-            map.view(for: annotation)?.isHidden = true
-           // map.removeOverlays(map.overlays)
-            
+            if(annotation.subtitle == currentClusterAnnotationIdentifier) {
+                map.view(for: annotation)?.isHidden = true
+            }
         }
         sliderVisibility(hidden: true)
         dummy = Bundle.main.loadNibNamed("Annotation", owner: self, options: nil)?.first as? Annotation
@@ -162,7 +162,6 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
         editLocationMode = true
         for annotation in annotationsArray {
             map.view(for: annotation)?.isHidden = true
-           // map.removeOverlays(map.overlays)
         }
         sliderVisibility(hidden: true)
         dummy = Bundle.main.loadNibNamed("Annotation", owner: self, options: nil)?.first as? Annotation
@@ -480,11 +479,12 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
         mapView.setCenter((view.annotation?.coordinate)!, animated: true)
         let annotations = mapView.annotations
         currentClusterAnnotationIdentifier = view.annotation!.subtitle as? String
-        print("SELECT")
+        print("SELECT ---------- \(currentClusterAnnotationIdentifier ?? "")")
         gpsIcon.isHidden = true
         for annotation in annotations {
             if annotation.subtitle != currentClusterAnnotationIdentifier {
-                mapView.view(for: annotation)?.isHidden = true
+                //mapView.view(for: annotation)?.isHidden = true
+                print("\(annotation.subtitle! ?? "") is OTHER Annotation than CURRENT")
             } else {
                 let currentAnnotation = annotation as? PhotoAnnotation
                 annotationIsMultiple = currentAnnotation!.numberOfPhotos! > 1
