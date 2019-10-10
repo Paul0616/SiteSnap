@@ -160,8 +160,11 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
         uploadButton.isHidden = true
         backButton.isHidden = true
         editLocationMode = true
+        
         for annotation in annotationsArray {
-            map.view(for: annotation)?.isHidden = true
+            if(annotation.subtitle == currentClusterAnnotationIdentifier) {
+                map.view(for: annotation)?.isHidden = true
+            }
         }
         sliderVisibility(hidden: true)
         dummy = Bundle.main.loadNibNamed("Annotation", owner: self, options: nil)?.first as? Annotation
