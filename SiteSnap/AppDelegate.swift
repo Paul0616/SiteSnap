@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var storyboard: UIStoryboard?
     var userTappedLogOut: Bool = false
     var userWantToResetPassword: Bool = false
-    var signInLoaded = false
+    var isSignInControlerPresenting = false
     
     //    var user: AWSCognitoIdentityUser?
     //    var pool: AWSCognitoIdentityUserPool?
@@ -189,10 +189,12 @@ extension AppDelegate: AWSCognitoIdentityInteractiveAuthenticationDelegate {
                         initialViewController.modalPresentationStyle = .fullScreen
                         self.window?.rootViewController = initialViewController
                     }
-                    if (!self.signInLoaded){
-                        self.signInLoaded = true
+                    if (!self.isSignInControlerPresenting){
+                        self.isSignInControlerPresenting = true
                         print("signInLoaded = \(self.signInViewController!.isViewLoaded)")
-                        self.window?.rootViewController?.present(self.signInViewController!, animated: true, completion: nil)
+                        self.window?.rootViewController?.present(self.signInViewController!, animated: true, completion: {() in
+                            self.isSignInControlerPresenting = false
+                        })
                     }
                 }
             } else {

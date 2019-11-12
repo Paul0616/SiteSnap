@@ -446,10 +446,12 @@
 					};
 					DA977F1B21C1461100883640 = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1120;
 						TestTargetID = DA977F0421C1460F00883640;
 					};
 					DA977F2621C1461100883640 = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1120;
 						TestTargetID = DA977F0421C1460F00883640;
 					};
 				};
@@ -862,7 +864,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ro.duoline.SiteSnapTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SiteSnap.app/SiteSnap";
 			};
@@ -884,7 +886,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ro.duoline.SiteSnapTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SiteSnap.app/SiteSnap";
 			};
@@ -905,7 +907,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ro.duoline.SiteSnapUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = SiteSnap;
 			};
@@ -926,7 +928,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = ro.duoline.SiteSnapUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = SiteSnap;
 			};

@@ -118,7 +118,7 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
                 UserDefaults.standard.removeObject(forKey: "family_name")
                 print("user defaults removes")
                 let appDelegate = UIApplication.shared.delegate as! AppDelegate
-                appDelegate.signInLoaded = false
+                //appDelegate.isSignInControlerPresenting = false
                 appDelegate.userTappedLogOut = true
                 self.refresh()
                 

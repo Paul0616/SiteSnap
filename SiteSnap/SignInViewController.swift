@@ -43,7 +43,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         self.pool = AWSCognitoIdentityUserPool(forKey: AWSCognitoUserPoolsSignInProviderKey)
         if (self.user == nil) {
             self.user = self.pool?.currentUser()
-            print("USER = CURRENT USER = \(String(describing: self.user?.username!))")
+            print("USER = CURRENT USER = \(self.user?.username ?? "")")
         
         }
         if let log1 = user?.isSignedIn {
