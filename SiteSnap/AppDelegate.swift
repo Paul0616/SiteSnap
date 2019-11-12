@@ -18,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var storyboard: UIStoryboard?
     var userTappedLogOut: Bool = false
     var userWantToResetPassword: Bool = false
+    var signInLoaded = false
     
     //    var user: AWSCognitoIdentityUser?
     //    var pool: AWSCognitoIdentityUserPool?
@@ -168,6 +169,8 @@ extension AppDelegate: AWSCognitoIdentityInteractiveAuthenticationDelegate {
      
      It will grab the view controller from the storyboard and present it.
      */
+    
+    
     func startPasswordAuthentication() -> AWSCognitoIdentityPasswordAuthentication {
         
         if self.signInViewController == nil {
@@ -183,11 +186,14 @@ extension AppDelegate: AWSCognitoIdentityInteractiveAuthenticationDelegate {
                     print(self.userTappedLogOut ? "LOG OUT" : "LOG CHECKED OK")
                     if self.userTappedLogOut {
                         let initialViewController = self.storyboard!.instantiateInitialViewController() as! CameraViewController
-                        //initialViewController.modalPresentationStyle = .fullScreen
+                        initialViewController.modalPresentationStyle = .fullScreen
                         self.window?.rootViewController = initialViewController
                     }
-                    
-                    self.window?.rootViewController?.present(self.signInViewController!, animated: true, completion: nil)
+                    if (!self.signInLoaded){
+                        self.signInLoaded = true
+                        print("signInLoaded = \(self.signInViewController!.isViewLoaded)")
+                        self.window?.rootViewController?.present(self.signInViewController!, animated: true, completion: nil)
+                    }
                 }
             } else {
                 print("Log in screen is already visible")

@@ -2021,6 +2021,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
 			productRefGroup = D215D7EBC8B7BF3BBA4198BE98777701 /* Products */;

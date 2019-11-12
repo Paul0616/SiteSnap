@@ -809,15 +809,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_TEAM = 85TX4DE8AK;
+				DEVELOPMENT_TEAM = W4JDZP9URB;
 				INFOPLIST_FILE = SiteSnap/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.6;
-				PRODUCT_BUNDLE_IDENTIFIER = ro.duoline.SiteSnap1;
+				MARKETING_VERSION = 1.4.8;
+				PRODUCT_BUNDLE_IDENTIFIER = com.au.tridenttechnologies.sitesnapapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -831,15 +831,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_TEAM = 85TX4DE8AK;
+				DEVELOPMENT_TEAM = W4JDZP9URB;
 				INFOPLIST_FILE = SiteSnap/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.6;
-				PRODUCT_BUNDLE_IDENTIFIER = ro.duoline.SiteSnap1;
+				MARKETING_VERSION = 1.4.8;
+				PRODUCT_BUNDLE_IDENTIFIER = com.au.tridenttechnologies.sitesnapapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
