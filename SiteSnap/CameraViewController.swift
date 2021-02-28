@@ -718,7 +718,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     //MARK: - Selecting new project
     @IBAction func onClickSelectedProjectButton(_ sender: ActivityIndicatorButton) {
-        animateProjectsList(toogle: dropDownListProjectsTableView.isHidden)
+       // animateProjectsList(toogle: dropDownListProjectsTableView.isHidden)
+        
     }
     
     //MARK: - Click on UI buttons
@@ -1254,6 +1255,9 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             destination.lastLocation = lastLocation
             
         }
+        if segue.identifier == "projectsListSegue", let destination = segue.destination as? ProjectsListViewController {
+            destination.delegate = self
+        }
         
     }
     //MARK: - delete hidden assets
@@ -1278,11 +1282,20 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             print(error.debugDescription)
         }
     }
-    // MARK: -
     
-    @IBAction func showPopup(_ sender: Any) {
+}
+
+extension CameraViewController: ProjectListViewControllerDelegate {
+    func projectWasSelectedFromOutside(projectId: String) {
+        UserDefaults.standard.set(projectId, forKey: "currentProjectId")
+        if let project = ProjectHandler.getCurrentProject() {
+            UserDefaults.standard.set(project.name, forKey: "currentProjectName")
+            animateProjectsList(toogle: false)
+            setProjectsSelected(projectId: projectId)
+            projectWasSelected = true
+            UserDefaults.standard.set(projectWasSelected, forKey: "projectWasSelected")
+        }
     }
-    
 }
 
 extension CameraViewController : AVCapturePhotoCaptureDelegate {

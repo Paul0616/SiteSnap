@@ -7,22 +7,28 @@
 //
 
 import UIKit
-
+//protocol ProjectTableViewCellDelegate {
+//    func rowWasSelected(with row: Int)
+//}
 class ProjectTableViewCell: UITableViewCell {
-
+//    var delegate: ProjectTableViewCellDelegate?
+    
     @IBOutlet weak var projectTitleLabel: UILabel!
     @IBOutlet weak var roundCheckBox: RoundCheckBox!
     @IBOutlet weak var projectOwnerLabel: UILabel!
+
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+    
     }
-
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
-        roundCheckBox.isChecked = selected
+      //  roundCheckBox.isChecked = selected
+      //  delegate?.rowWasSelected(with: roundCheckBox.tag)
     }
 
 }

@@ -8,10 +8,15 @@
 
 import UIKit
 
-class ProjectsListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+protocol ProjectListViewControllerDelegate {
+    func projectWasSelectedFromOutside(projectId: String)
+}
+
+class ProjectsListViewController: UIViewController, UITableViewDataSource {
 
     var userProjects = [ProjectModel]()
     var currentProjectId: String?
+    var delegate: ProjectListViewControllerDelegate?
     
     @IBOutlet weak var line: UIView!
     @IBOutlet weak var newProjectButton: UIButton!
@@ -28,15 +33,13 @@ class ProjectsListViewController: UIViewController, UITableViewDelegate, UITable
         loadingProjectIntoList()
     }
     
+    
     @IBAction func onCloseTap(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
     
+    
     func loadingProjectIntoList(){
-        // DispatchQueue.main.async {
-//        if !dropDownListProjectsTableView.isHidden {
-//            return
-//        }
         userProjects.removeAll()
         let projectsFromDatabase = ProjectHandler.fetchAllProjects()
         for item in projectsFromDatabase! {
@@ -54,34 +57,43 @@ class ProjectsListViewController: UIViewController, UITableViewDelegate, UITable
             return
         }
         currentProjectId = UserDefaults.standard.value(forKey: "currentProjectId") as? String
-//        selectedProjectButton.hideLoading(buttonText: nil)
-//        galleryButton.isEnabled = true
-//        setProjectsSelected(projectId: currentProjectId)
-//        dropDownListProjectsTableView.reloadData()
         projectsTableView.reloadData()
-        
     }
     
-    //MARK: - TableView Delegate
+    @objc func handleTapRoundCheckBox(sender: RoundCheckBox){
+        currentProjectId = userProjects[sender.tag].id
+        //projectsTableView.reloadData()
+        dismiss(animated: true, completion: nil)
+        print("\(currentProjectId ?? "")")
+        delegate?.projectWasSelectedFromOutside(projectId: currentProjectId!)
+    }
+   
+}
+//MARK: - TableView Delegate
+extension ProjectsListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return userProjects.count
     }
-    
-   
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "projectCell", for: indexPath) as! ProjectTableViewCell
         cell.projectTitleLabel.text = userProjects[indexPath.row].projectName
         cell.projectOwnerLabel.text = userProjects[indexPath.row].projectOwnerName
-        //cell.roundCheckBox.isChecked = userProjects[indexPath.row].id == currentProjectId
-        if userProjects[indexPath.row].id == currentProjectId {
-            tableView.selectRow(at: indexPath, animated: true, scrollPosition: UITableView.ScrollPosition.none)
-        }
+        cell.roundCheckBox.tag = indexPath.row
+        cell.roundCheckBox.addTarget(self, action: #selector(handleTapRoundCheckBox(sender:)), for: .allTouchEvents)
+        cell.roundCheckBox.isChecked = userProjects[indexPath.row].id == currentProjectId
+//        if userProjects[indexPath.row].id == currentProjectId {
+//            //currentProjectId = userProjects[sender.tag].id
+//            currentIndex = indexPath.row
+//            tableView.selectRow(at: indexPath, animated: true, scrollPosition: UITableView.ScrollPosition.none)
+//        }
         
         return cell
     }
+    
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
     }
 }
+
