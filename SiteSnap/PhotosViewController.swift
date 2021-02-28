@@ -306,7 +306,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
                 let t = tag as! Tag
                 tagIds.append(t.id!)
             }
-            guard let projectModel = ProjectModel(id: item.id!, projectName: item.name!, latitudeCenterPosition: item.latitude, longitudeCenterPosition: item.longitude, tagIds: tagIds) else {
+            guard let projectModel = ProjectModel(id: item.id!, projectName: item.name!, projectOwnerName: item.projectOwnerName!, latitudeCenterPosition: item.latitude, longitudeCenterPosition: item.longitude, tagIds: tagIds) else {
                 fatalError("Unable to instantiate ProductModel")
             }
             self.userProjects += [projectModel]
@@ -604,6 +604,8 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
             print("User do not have access to photo album.")
         case .denied:
             print("User has denied the permission.")
+        case .limited:
+            break
         @unknown default:
             print("unknown")
         }

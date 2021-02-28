@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,28 +16,28 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SiteSnapLogo" translatesAutoresizingMaskIntoConstraints="NO" id="HTh-ZP-uZP">
-                                <rect key="frame" x="71" y="276" width="233" height="115"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="site_snap_logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="4CL-5X-skf">
+                                <rect key="frame" x="138" y="273.5" width="99" height="120"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="115" id="gQA-3x-xc8"/>
-                                    <constraint firstAttribute="width" constant="233" id="v2Z-4y-vZK"/>
+                                    <constraint firstAttribute="height" constant="120" id="2Mt-kt-BFb"/>
+                                    <constraint firstAttribute="width" secondItem="4CL-5X-skf" secondAttribute="height" multiplier="213:257" id="vET-Kd-Yb1"/>
                                 </constraints>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" red="0.10196078431372549" green="0.10196078431372549" blue="0.10196078431372549" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="HTh-ZP-uZP" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="A2P-6Q-UYU"/>
-                            <constraint firstItem="HTh-ZP-uZP" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="RKc-hf-Bs6"/>
-                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" red="0.066666666666666666" green="0.058823529411764705" blue="0.24313725490196078" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="4CL-5X-skf" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="Bkc-T9-YjP"/>
+                            <constraint firstItem="4CL-5X-skf" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Rvu-bD-PHd"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="53" y="375"/>
+            <point key="canvasLocation" x="52" y="374.66266866566718"/>
         </scene>
     </scenes>
     <resources>
-        <image name="SiteSnapLogo" width="445" height="221"/>
+        <image name="site_snap_logo.png" width="213" height="257"/>
     </resources>
 </document>

@@ -183,8 +183,9 @@ class BackendConnection: NSObject {
                 let project = item as! NSDictionary
                 let pID = project["id"]! as! String
                 let projectname = project["name"]! as! String
+                let projectOwnerName = project["projectOwnerName"]! as! String
                 let coord = project["projectCenterPosition"] as! NSArray
-                if ProjectHandler.saveProject(id: pID, name: projectname, latitude: coord[0] as! Double, longitude: coord[1] as! Double) {
+                if ProjectHandler.saveProject(id: pID, name: projectname, latitude: coord[0] as! Double, longitude: coord[1] as! Double, projectOwnerName: projectOwnerName) {
                     print("PROJECT: \(projectname) added")
                 }
             }

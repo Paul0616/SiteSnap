@@ -7,18 +7,19 @@ target 'SiteSnap' do
 
   # Pods for SiteSnap
   pod 'AssetsPickerViewController', '~> 2.7.2'
-  pod 'AWSCore', '~> 2.8.0'
-  pod 'AWSCognitoIdentityProvider'
+  pod 'AWSCore', '~> 2.23.0'
+  pod 'AWSCognitoIdentityProvider', '~> 2.23.0'
   pod 'Alamofire', '~> 4.0'
   pod 'SwiftyJSON'
-  target 'SiteSnapTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
+#  pod 'DLRadioButton', '~> 1.4'
+#  target 'SiteSnapTests' do
+#    inherit! :search_paths
+#    # Pods for testing
+#  end
 
-  target 'SiteSnapUITests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
+#  target 'SiteSnapUITests' do
+#    inherit! :search_paths
+#    # Pods for testing
+#  end
 
 end

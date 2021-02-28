@@ -1,5 +1,5 @@
 //
-// Copyright 2010-2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// Copyright 2010-2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License").
 // You may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
 //
 
 #import "AWSCognitoIdentityService.h"
-#import "AWSNetworking.h"
 #import "AWSCategory.h"
 #import "AWSNetworking.h"
 #import "AWSSignature.h"
@@ -504,6 +503,29 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
     }];
 }
 
+- (AWSTask<AWSCognitoIdentityGetPrincipalTagAttributeMapResponse *> *)getPrincipalTagAttributeMap:(AWSCognitoIdentityGetPrincipalTagAttributeMapInput *)request {
+    return [self invokeRequest:request
+                    HTTPMethod:AWSHTTPMethodPOST
+                     URLString:@""
+                  targetPrefix:@"AWSCognitoIdentityService"
+                 operationName:@"GetPrincipalTagAttributeMap"
+                   outputClass:[AWSCognitoIdentityGetPrincipalTagAttributeMapResponse class]];
+}
+
+- (void)getPrincipalTagAttributeMap:(AWSCognitoIdentityGetPrincipalTagAttributeMapInput *)request
+     completionHandler:(void (^)(AWSCognitoIdentityGetPrincipalTagAttributeMapResponse *response, NSError *error))completionHandler {
+    [[self getPrincipalTagAttributeMap:request] continueWithBlock:^id _Nullable(AWSTask<AWSCognitoIdentityGetPrincipalTagAttributeMapResponse *> * _Nonnull task) {
+        AWSCognitoIdentityGetPrincipalTagAttributeMapResponse *result = task.result;
+        NSError *error = task.error;
+
+        if (completionHandler) {
+            completionHandler(result, error);
+        }
+
+        return nil;
+    }];
+}
+
 - (AWSTask<AWSCognitoIdentityListIdentitiesResponse *> *)listIdentities:(AWSCognitoIdentityListIdentitiesInput *)request {
     return [self invokeRequest:request
                     HTTPMethod:AWSHTTPMethodPOST
@@ -540,6 +562,29 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
      completionHandler:(void (^)(AWSCognitoIdentityListIdentityPoolsResponse *response, NSError *error))completionHandler {
     [[self listIdentityPools:request] continueWithBlock:^id _Nullable(AWSTask<AWSCognitoIdentityListIdentityPoolsResponse *> * _Nonnull task) {
         AWSCognitoIdentityListIdentityPoolsResponse *result = task.result;
+        NSError *error = task.error;
+
+        if (completionHandler) {
+            completionHandler(result, error);
+        }
+
+        return nil;
+    }];
+}
+
+- (AWSTask<AWSCognitoIdentityListTagsForResourceResponse *> *)listTagsForResource:(AWSCognitoIdentityListTagsForResourceInput *)request {
+    return [self invokeRequest:request
+                    HTTPMethod:AWSHTTPMethodPOST
+                     URLString:@""
+                  targetPrefix:@"AWSCognitoIdentityService"
+                 operationName:@"ListTagsForResource"
+                   outputClass:[AWSCognitoIdentityListTagsForResourceResponse class]];
+}
+
+- (void)listTagsForResource:(AWSCognitoIdentityListTagsForResourceInput *)request
+     completionHandler:(void (^)(AWSCognitoIdentityListTagsForResourceResponse *response, NSError *error))completionHandler {
+    [[self listTagsForResource:request] continueWithBlock:^id _Nullable(AWSTask<AWSCognitoIdentityListTagsForResourceResponse *> * _Nonnull task) {
+        AWSCognitoIdentityListTagsForResourceResponse *result = task.result;
         NSError *error = task.error;
 
         if (completionHandler) {
@@ -618,6 +663,52 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
     }];
 }
 
+- (AWSTask<AWSCognitoIdentitySetPrincipalTagAttributeMapResponse *> *)setPrincipalTagAttributeMap:(AWSCognitoIdentitySetPrincipalTagAttributeMapInput *)request {
+    return [self invokeRequest:request
+                    HTTPMethod:AWSHTTPMethodPOST
+                     URLString:@""
+                  targetPrefix:@"AWSCognitoIdentityService"
+                 operationName:@"SetPrincipalTagAttributeMap"
+                   outputClass:[AWSCognitoIdentitySetPrincipalTagAttributeMapResponse class]];
+}
+
+- (void)setPrincipalTagAttributeMap:(AWSCognitoIdentitySetPrincipalTagAttributeMapInput *)request
+     completionHandler:(void (^)(AWSCognitoIdentitySetPrincipalTagAttributeMapResponse *response, NSError *error))completionHandler {
+    [[self setPrincipalTagAttributeMap:request] continueWithBlock:^id _Nullable(AWSTask<AWSCognitoIdentitySetPrincipalTagAttributeMapResponse *> * _Nonnull task) {
+        AWSCognitoIdentitySetPrincipalTagAttributeMapResponse *result = task.result;
+        NSError *error = task.error;
+
+        if (completionHandler) {
+            completionHandler(result, error);
+        }
+
+        return nil;
+    }];
+}
+
+- (AWSTask<AWSCognitoIdentityTagResourceResponse *> *)tagResource:(AWSCognitoIdentityTagResourceInput *)request {
+    return [self invokeRequest:request
+                    HTTPMethod:AWSHTTPMethodPOST
+                     URLString:@""
+                  targetPrefix:@"AWSCognitoIdentityService"
+                 operationName:@"TagResource"
+                   outputClass:[AWSCognitoIdentityTagResourceResponse class]];
+}
+
+- (void)tagResource:(AWSCognitoIdentityTagResourceInput *)request
+     completionHandler:(void (^)(AWSCognitoIdentityTagResourceResponse *response, NSError *error))completionHandler {
+    [[self tagResource:request] continueWithBlock:^id _Nullable(AWSTask<AWSCognitoIdentityTagResourceResponse *> * _Nonnull task) {
+        AWSCognitoIdentityTagResourceResponse *result = task.result;
+        NSError *error = task.error;
+
+        if (completionHandler) {
+            completionHandler(result, error);
+        }
+
+        return nil;
+    }];
+}
+
 - (AWSTask *)unlinkDeveloperIdentity:(AWSCognitoIdentityUnlinkDeveloperIdentityInput *)request {
     return [self invokeRequest:request
                     HTTPMethod:AWSHTTPMethodPOST
@@ -656,6 +747,29 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
 
         if (completionHandler) {
             completionHandler(error);
+        }
+
+        return nil;
+    }];
+}
+
+- (AWSTask<AWSCognitoIdentityUntagResourceResponse *> *)untagResource:(AWSCognitoIdentityUntagResourceInput *)request {
+    return [self invokeRequest:request
+                    HTTPMethod:AWSHTTPMethodPOST
+                     URLString:@""
+                  targetPrefix:@"AWSCognitoIdentityService"
+                 operationName:@"UntagResource"
+                   outputClass:[AWSCognitoIdentityUntagResourceResponse class]];
+}
+
+- (void)untagResource:(AWSCognitoIdentityUntagResourceInput *)request
+     completionHandler:(void (^)(AWSCognitoIdentityUntagResourceResponse *response, NSError *error))completionHandler {
+    [[self untagResource:request] continueWithBlock:^id _Nullable(AWSTask<AWSCognitoIdentityUntagResourceResponse *> * _Nonnull task) {
+        AWSCognitoIdentityUntagResourceResponse *result = task.result;
+        NSError *error = task.error;
+
+        if (completionHandler) {
+            completionHandler(result, error);
         }
 
         return nil;

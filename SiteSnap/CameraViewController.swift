@@ -119,7 +119,9 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
         if (self.user == nil) {
             self.user = self.pool?.currentUser()
-            print("USER = CURRENT USER = \(String(describing: self.user?.username))")
+            if let username = (self.user?.username) {
+                print("USER = CURRENT USER = \(String(describing: username))")
+            }
             if let _userlogged = self.user?.isSignedIn {
                 isUserLogged = _userlogged
             }
@@ -428,6 +430,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             break
         case .authorized:
             break
+        case .limited:
+            break
         @unknown default:
             print("unknown")
         }
@@ -458,6 +462,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             print("User do not have access to photo album.")
         case .denied:
             print("User has denied the permission.")
+        case .limited:
+            break
         @unknown default:
             print("unknown")
         }
@@ -806,7 +812,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 let t = tag as! Tag
                 tagIds.append(t.id!)
             }
-            guard let projectModel = ProjectModel(id: item.id!, projectName: item.name!, latitudeCenterPosition: item.latitude, longitudeCenterPosition: item.longitude, tagIds: tagIds) else {
+            guard let projectModel = ProjectModel(id: item.id!, projectName: item.name!, projectOwnerName: item.projectOwnerName!, latitudeCenterPosition: item.latitude, longitudeCenterPosition: item.longitude, tagIds: tagIds) else {
                 fatalError("Unable to instantiate ProductModel")
             }
             userProjects += [projectModel]
@@ -1273,6 +1279,10 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
     // MARK: -
+    
+    @IBAction func showPopup(_ sender: Any) {
+    }
+    
 }
 
 extension CameraViewController : AVCapturePhotoCaptureDelegate {

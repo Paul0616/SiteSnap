@@ -13,9 +13,11 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var userNameTextField: UITextField!
     @IBOutlet weak var tapHereButton: UIButton!
+    @IBOutlet weak var signUpButton: UIButton!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var logo: UIImageView!
     @IBOutlet weak var loginButton: UIButton!
+    @IBOutlet weak var logoText: UIImageView!
     var passwordAuthenticationCompletion: AWSTaskCompletionSource<AWSCognitoIdentityPasswordAuthenticationDetails>?
     var usernameText: String?
  
@@ -27,14 +29,10 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         // Do any additional setup after loading the view, typically from a nib.
         userNameTextField.delegate = self
         passwordTextField.delegate = self
-        loginButton.layer.cornerRadius = 6
-        
+        loginButton.layer.cornerRadius = 10
         self.logo.alpha = 0
+        self.logoText.alpha = 0
         
-        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 5, options: [.curveEaseOut], animations: {
-            self.logo.transform = CGAffineTransform(translationX: 0, y: -180)
-            self.logo.alpha = 1
-        }, completion: nil)
 //        for fontFamilyName in UIFont.familyNames {
 //            for fontName in UIFont.fontNames(forFamilyName: fontFamilyName) {
 //                print("Family: \(fontFamilyName)   Font: \(fontName)")
@@ -43,7 +41,9 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         self.pool = AWSCognitoIdentityUserPool(forKey: AWSCognitoUserPoolsSignInProviderKey)
         if (self.user == nil) {
             self.user = self.pool?.currentUser()
-            print("USER = CURRENT USER = \(self.user?.username ?? "")")
+            if let username = (self.user?.username) {
+                print("USER = CURRENT USER = \(username)")
+            }
         
         }
         if let log1 = user?.isSignedIn {
@@ -72,6 +72,19 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         // Or to rotate and lock
         // AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
         
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
+        UIView.animate(withDuration: 0.8, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 5, options: [.curveEaseOut], animations: {
+            self.logo.transform = CGAffineTransform(translationX: -100, y: -180)
+            self.logoText.transform = CGAffineTransform(translationX: 45, y: -180)
+            self.logo.alpha = 1
+        }, completion: {finished in
+            UIView.animate(withDuration: 0.5, animations:{
+                self.logoText.alpha = 1
+            })
+        })
     }
     
     override func viewWillDisappear(_ animated: Bool) {

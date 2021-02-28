@@ -18,7 +18,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var storyboard: UIStoryboard?
     var userTappedLogOut: Bool = false
     var userWantToResetPassword: Bool = false
+    var userWantToSignUp: Bool = false
     var isSignInControlerPresenting = false
+
     
     //    var user: AWSCognitoIdentityUser?
     //    var pool: AWSCognitoIdentityUserPool?
@@ -84,7 +86,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // fetch the user pool client we initialized in above step
         let pool = AWSCognitoIdentityUserPool(forKey: AWSCognitoUserPoolsSignInProviderKey)
         self.storyboard = UIStoryboard(name: "Main", bundle: nil)
-        pool.delegate = self
+        pool?.delegate = self
         
         
         return true
@@ -178,10 +180,15 @@ extension AppDelegate: AWSCognitoIdentityInteractiveAuthenticationDelegate {
             signInViewController?.modalPresentationStyle = .fullScreen
         }
         
+//        if self.signUpViewController == nil {
+//            self.signUpViewController = storyboard!.instantiateInitialViewController(withIdentifier: "signUpViewController") as? SignUpViewController
+//            signUpViewController?.modalPresentationStyle = .fullScreen
+//        }
+        
         DispatchQueue.main.async {
             
             if (!self.signInViewController!.isViewLoaded || self.signInViewController!.view.window == nil) {
-                if(!self.userWantToResetPassword){
+                if(!self.userWantToResetPassword && !self.userWantToSignUp){
                     print("START PASSWORD AUTHENTICATION - signIn should appear")
                     print(self.userTappedLogOut ? "LOG OUT" : "LOG CHECKED OK")
                     if self.userTappedLogOut {

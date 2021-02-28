@@ -13,6 +13,7 @@ class ProjectModel: NSObject {
     
     var id: String
     var projectName: String
+    var projectOwnerName: String
     var latitudeCenterPosition: Double
     var longitudeCenterPosition: Double
     var tagIds: [String]
@@ -22,6 +23,7 @@ class ProjectModel: NSObject {
     
     init?(id: String,
           projectName: String,
+          projectOwnerName: String,
           latitudeCenterPosition: Double,
           longitudeCenterPosition: Double,
           tagIds: [String]
@@ -33,5 +35,6 @@ class ProjectModel: NSObject {
         self.latitudeCenterPosition = latitudeCenterPosition
         self.longitudeCenterPosition = longitudeCenterPosition
         self.tagIds = tagIds
+        self.projectOwnerName = projectOwnerName
     }
 }

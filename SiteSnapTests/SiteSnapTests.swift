@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import SiteSnap
+//@testable import SiteSnap
 
 class SiteSnapTests: XCTestCase {
 

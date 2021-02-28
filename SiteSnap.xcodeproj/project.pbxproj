@@ -12,16 +12,23 @@
 		4033274821F0A016007EE9DF /* Project+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4033274721F0A016007EE9DF /* Project+CoreDataProperties.swift */; };
 		4033274A21F5B52D007EE9DF /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4033274921F5B52D007EE9DF /* SettingsViewController.swift */; };
 		4033274C21F5BE87007EE9DF /* SettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4033274B21F5BE87007EE9DF /* SettingsTableViewCell.swift */; };
+		403EEAAA25E63C7D00EB151B /* ReCAPTCHAViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 403EEAA925E63C7D00EB151B /* ReCAPTCHAViewController.swift */; };
+		403EEAAE25E63DB300EB151B /* ReCAPTCHAViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 403EEAAD25E63DB300EB151B /* ReCAPTCHAViewModel.swift */; };
+		403EEAB525E63E5C00EB151B /* recaptcha.html in Resources */ = {isa = PBXBuildFile; fileRef = 403EEAB325E63E3D00EB151B /* recaptcha.html */; };
 		4047811621EC820C006987B4 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4047811521EC820C006987B4 /* Constants.swift */; };
+		40615ADB25E1443300D4E079 /* site_snap_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 40615ADA25E1443300D4E079 /* site_snap_logo.png */; };
+		40747BE925EA5F080009BFDE /* RoundCheckBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40747BE825EA5F080009BFDE /* RoundCheckBox.swift */; };
+		407C5C0325E4E1B0003C4276 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407C5C0225E4E1B0003C4276 /* SignUpViewController.swift */; };
 		4095FBE921F071A7008A39D4 /* ProjectHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4095FBE821F071A7008A39D4 /* ProjectHandler.swift */; };
+		409ABECC25E78E2A00C17E1E /* ProjectsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409ABECB25E78E2A00C17E1E /* ProjectsListViewController.swift */; };
+		409ABED025E7A11200C17E1E /* ProjectTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 409ABECF25E7A11200C17E1E /* ProjectTableViewCell.swift */; };
+		40A4E95625EB880400FEE564 /* NewProjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A4E95525EB880400FEE564 /* NewProjectViewController.swift */; };
 		40B296BA21CCD87300A3C487 /* PhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B296B921CCD87300A3C487 /* PhotosViewController.swift */; };
 		40B296BC21CCE5A000A3C487 /* Slide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B296BB21CCE5A000A3C487 /* Slide.swift */; };
 		40B296BF21CCE61B00A3C487 /* Slide.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40B296BE21CCE61B00A3C487 /* Slide.xib */; };
 		40B9656121CA7240004A383D /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B9656021CA7240004A383D /* LocationManager.swift */; };
 		40E9A18E22280DA5008E8352 /* NoProjectsAssignedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E9A18D22280DA5008E8352 /* NoProjectsAssignedViewController.swift */; };
 		803902112621DA84596AB896 /* Pods_SiteSnap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08D194FC8394711D1AE36F7F /* Pods_SiteSnap.framework */; };
-		986B5C30526579D6810F2F9D /* Pods_SiteSnapTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A1CFB1EA0BFC2019A65CB46F /* Pods_SiteSnapTests.framework */; };
-		BC38C8AAB78F9CDC091EF1E5 /* Pods_SiteSnapUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2508CF1AC12C64EBAC4FE17 /* Pods_SiteSnapUITests.framework */; };
 		DA1E46CE21F4EC46004FB425 /* ForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA1E46CD21F4EC46004FB425 /* ForgotPasswordViewController.swift */; };
 		DA1E46D021F50E3C004FB425 /* ConfirmForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA1E46CF21F50E3C004FB425 /* ConfirmForgotPasswordViewController.swift */; };
 		DA2D954F21EB6042005DE088 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA2D954E21EB6042005DE088 /* MenuViewController.swift */; };
@@ -39,8 +46,6 @@
 		DA977F1121C1460F00883640 /* SiteSnap.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DA977F0F21C1460F00883640 /* SiteSnap.xcdatamodeld */; };
 		DA977F1321C1461100883640 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DA977F1221C1461100883640 /* Assets.xcassets */; };
 		DA977F1621C1461100883640 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DA977F1421C1461100883640 /* LaunchScreen.storyboard */; };
-		DA977F2121C1461100883640 /* SiteSnapTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F2021C1461100883640 /* SiteSnapTests.swift */; };
-		DA977F2C21C1461100883640 /* SiteSnapUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F2B21C1461100883640 /* SiteSnapUITests.swift */; };
 		DA977F5521C2E91300883640 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F5421C2E91300883640 /* CameraViewController.swift */; };
 		DA977F5821C3F25200883640 /* FlashStateButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F5721C3F25200883640 /* FlashStateButton.swift */; };
 		DA977F5A21C4E38B00883640 /* ActivityIndicatorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA977F5921C4E38B00883640 /* ActivityIndicatorButton.swift */; };
@@ -69,23 +74,6 @@
 		DAE790D12285A6A2003B465D /* NetworkState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE790D02285A6A2003B465D /* NetworkState.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		DA977F1D21C1461100883640 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DA977EFD21C1460F00883640 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DA977F0421C1460F00883640;
-			remoteInfo = SiteSnap;
-		};
-		DA977F2821C1461100883640 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DA977EFD21C1460F00883640 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DA977F0421C1460F00883640;
-			remoteInfo = SiteSnap;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		08D194FC8394711D1AE36F7F /* Pods_SiteSnap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SiteSnap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		401B3F1A21E5FB8400509EF2 /* UploadsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadsViewController.swift; sourceTree = "<group>"; };
@@ -93,9 +81,18 @@
 		4033274721F0A016007EE9DF /* Project+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Project+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		4033274921F5B52D007EE9DF /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		4033274B21F5BE87007EE9DF /* SettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewCell.swift; sourceTree = "<group>"; };
+		403EEAA925E63C7D00EB151B /* ReCAPTCHAViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReCAPTCHAViewController.swift; sourceTree = "<group>"; };
+		403EEAAD25E63DB300EB151B /* ReCAPTCHAViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReCAPTCHAViewModel.swift; sourceTree = "<group>"; };
+		403EEAB325E63E3D00EB151B /* recaptcha.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = recaptcha.html; path = SiteSnap/Models/recaptcha.html; sourceTree = "<group>"; };
 		4047811521EC820C006987B4 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		405977E921C2455700AF9F4B /* MYRIADPRO-REGULAR.OTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MYRIADPRO-REGULAR.OTF"; sourceTree = "<group>"; };
+		40615ADA25E1443300D4E079 /* site_snap_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = site_snap_logo.png; sourceTree = "<group>"; };
+		40747BE825EA5F080009BFDE /* RoundCheckBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundCheckBox.swift; sourceTree = "<group>"; };
+		407C5C0225E4E1B0003C4276 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		4095FBE821F071A7008A39D4 /* ProjectHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectHandler.swift; sourceTree = "<group>"; };
+		409ABECB25E78E2A00C17E1E /* ProjectsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectsListViewController.swift; sourceTree = "<group>"; };
+		409ABECF25E7A11200C17E1E /* ProjectTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectTableViewCell.swift; sourceTree = "<group>"; };
+		40A4E95525EB880400FEE564 /* NewProjectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProjectViewController.swift; sourceTree = "<group>"; };
 		40B296B921CCD87300A3C487 /* PhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosViewController.swift; sourceTree = "<group>"; };
 		40B296BB21CCE5A000A3C487 /* Slide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slide.swift; sourceTree = "<group>"; };
 		40B296BE21CCE61B00A3C487 /* Slide.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Slide.xib; sourceTree = "<group>"; };
@@ -126,10 +123,6 @@
 		DA977F1221C1461100883640 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DA977F1521C1461100883640 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DA977F1721C1461100883640 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DA977F1C21C1461100883640 /* SiteSnapTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SiteSnapTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		DA977F2021C1461100883640 /* SiteSnapTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiteSnapTests.swift; sourceTree = "<group>"; };
-		DA977F2221C1461100883640 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DA977F2721C1461100883640 /* SiteSnapUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SiteSnapUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA977F2B21C1461100883640 /* SiteSnapUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiteSnapUITests.swift; sourceTree = "<group>"; };
 		DA977F2D21C1461100883640 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DA977F5421C2E91300883640 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
@@ -168,22 +161,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				803902112621DA84596AB896 /* Pods_SiteSnap.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DA977F1921C1461100883640 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				986B5C30526579D6810F2F9D /* Pods_SiteSnapTests.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DA977F2421C1461100883640 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				BC38C8AAB78F9CDC091EF1E5 /* Pods_SiteSnapUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -234,10 +211,11 @@
 		DA977EFC21C1460F00883640 = {
 			isa = PBXGroup;
 			children = (
+				403EEAB325E63E3D00EB151B /* recaptcha.html */,
+				40615ADA25E1443300D4E079 /* site_snap_logo.png */,
 				DA977F0721C1460F00883640 /* SiteSnap */,
 				DA977F2A21C1461100883640 /* SiteSnapUITests */,
 				DA977F0621C1460F00883640 /* Products */,
-				DA977F1F21C1461100883640 /* SiteSnapTests */,
 				3F13EECA5D4600273754C76C /* Pods */,
 				119EB5E4C864C37FECC5FF17 /* Frameworks */,
 			);
@@ -247,8 +225,6 @@
 			isa = PBXGroup;
 			children = (
 				DA977F0521C1460F00883640 /* SiteSnap.app */,
-				DA977F1C21C1461100883640 /* SiteSnapTests.xctest */,
-				DA977F2721C1461100883640 /* SiteSnapUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -265,11 +241,15 @@
 				4047811521EC820C006987B4 /* Constants.swift */,
 				DAD922F2222ADD0C00A7A93E /* BackendConnection.swift */,
 				DA977F0A21C1460F00883640 /* SignInViewController.swift */,
+				407C5C0225E4E1B0003C4276 /* SignUpViewController.swift */,
+				403EEAA925E63C7D00EB151B /* ReCAPTCHAViewController.swift */,
 				DA1E46CD21F4EC46004FB425 /* ForgotPasswordViewController.swift */,
 				DA1E46CF21F50E3C004FB425 /* ConfirmForgotPasswordViewController.swift */,
 				401B3F1A21E5FB8400509EF2 /* UploadsViewController.swift */,
 				DAA615A021E663DF00B5B15E /* UploadsTableViewCell.swift */,
 				DA977F5421C2E91300883640 /* CameraViewController.swift */,
+				409ABECB25E78E2A00C17E1E /* ProjectsListViewController.swift */,
+				40A4E95525EB880400FEE564 /* NewProjectViewController.swift */,
 				DA2D954E21EB6042005DE088 /* MenuViewController.swift */,
 				40E9A18D22280DA5008E8352 /* NoProjectsAssignedViewController.swift */,
 				4033274921F5B52D007EE9DF /* SettingsViewController.swift */,
@@ -290,15 +270,6 @@
 				DAA2705821C8FAB10058148A /* Base.lproj */,
 			);
 			path = SiteSnap;
-			sourceTree = "<group>";
-		};
-		DA977F1F21C1461100883640 /* SiteSnapTests */ = {
-			isa = PBXGroup;
-			children = (
-				DA977F2021C1461100883640 /* SiteSnapTests.swift */,
-				DA977F2221C1461100883640 /* Info.plist */,
-			);
-			path = SiteSnapTests;
 			sourceTree = "<group>";
 		};
 		DA977F2A21C1461100883640 /* SiteSnapUITests */ = {
@@ -325,6 +296,8 @@
 				DAB7796921E0F15A00308543 /* Slider.swift */,
 				DA9F69FC22020474006436F6 /* CheckBox.swift */,
 				DAE790D02285A6A2003B465D /* NetworkState.swift */,
+				409ABECF25E7A11200C17E1E /* ProjectTableViewCell.swift */,
+				40747BE825EA5F080009BFDE /* RoundCheckBox.swift */,
 			);
 			path = subClasses;
 			sourceTree = "<group>";
@@ -348,6 +321,7 @@
 				DAA615A221E7B1D300B5B15E /* ImageForUpload.swift */,
 				4095FBE821F071A7008A39D4 /* ProjectHandler.swift */,
 				DA9DFA2F21F2656800CB68E2 /* Media.swift */,
+				403EEAAD25E63DB300EB151B /* ReCAPTCHAViewModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -387,44 +361,6 @@
 			productReference = DA977F0521C1460F00883640 /* SiteSnap.app */;
 			productType = "com.apple.product-type.application";
 		};
-		DA977F1B21C1461100883640 /* SiteSnapTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = DA977F3321C1461100883640 /* Build configuration list for PBXNativeTarget "SiteSnapTests" */;
-			buildPhases = (
-				82EE54033F391DD6AF5DB967 /* [CP] Check Pods Manifest.lock */,
-				DA977F1821C1461100883640 /* Sources */,
-				DA977F1921C1461100883640 /* Frameworks */,
-				DA977F1A21C1461100883640 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				DA977F1E21C1461100883640 /* PBXTargetDependency */,
-			);
-			name = SiteSnapTests;
-			productName = SiteSnapTests;
-			productReference = DA977F1C21C1461100883640 /* SiteSnapTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		DA977F2621C1461100883640 /* SiteSnapUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = DA977F3621C1461100883640 /* Build configuration list for PBXNativeTarget "SiteSnapUITests" */;
-			buildPhases = (
-				0DECA7973A5AD4CB102C5526 /* [CP] Check Pods Manifest.lock */,
-				DA977F2321C1461100883640 /* Sources */,
-				DA977F2421C1461100883640 /* Frameworks */,
-				DA977F2521C1461100883640 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				DA977F2921C1461100883640 /* PBXTargetDependency */,
-			);
-			name = SiteSnapUITests;
-			productName = SiteSnapUITests;
-			productReference = DA977F2721C1461100883640 /* SiteSnapUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -432,7 +368,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1010;
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = "Paul Oprea";
 				TargetAttributes = {
 					DA977F0421C1460F00883640 = {
@@ -443,16 +379,6 @@
 								enabled = 0;
 							};
 						};
-					};
-					DA977F1B21C1461100883640 = {
-						CreatedOnToolsVersion = 10.1;
-						LastSwiftMigration = 1120;
-						TestTargetID = DA977F0421C1460F00883640;
-					};
-					DA977F2621C1461100883640 = {
-						CreatedOnToolsVersion = 10.1;
-						LastSwiftMigration = 1120;
-						TestTargetID = DA977F0421C1460F00883640;
 					};
 				};
 			};
@@ -470,8 +396,6 @@
 			projectRoot = "";
 			targets = (
 				DA977F0421C1460F00883640 /* SiteSnap */,
-				DA977F1B21C1461100883640 /* SiteSnapTests */,
-				DA977F2621C1461100883640 /* SiteSnapUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -481,7 +405,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				403EEAB525E63E5C00EB151B /* recaptcha.html in Resources */,
 				DAA2705E21C8FAB10058148A /* Main.storyboard in Resources */,
+				40615ADB25E1443300D4E079 /* site_snap_logo.png in Resources */,
 				DA977F1621C1461100883640 /* LaunchScreen.storyboard in Resources */,
 				DAB7797021E1146B00308543 /* Slider.xib in Resources */,
 				DA977F1321C1461100883640 /* Assets.xcassets in Resources */,
@@ -490,41 +416,9 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DA977F1A21C1461100883640 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DA977F2521C1461100883640 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0DECA7973A5AD4CB102C5526 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-SiteSnapUITests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		1C372CAAC134B0F11EB64D4E /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -537,24 +431,6 @@
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-SiteSnap-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		82EE54033F391DD6AF5DB967 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-SiteSnapTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -589,7 +465,9 @@
 				4047811621EC820C006987B4 /* Constants.swift in Sources */,
 				DA47325821DBB227003729BB /* PhotoInspectorViewController.swift in Sources */,
 				DA977F1121C1460F00883640 /* SiteSnap.xcdatamodeld in Sources */,
+				407C5C0325E4E1B0003C4276 /* SignUpViewController.swift in Sources */,
 				DABA66E221D23F1D0036CEE7 /* Tag+CoreDataProperties.swift in Sources */,
+				403EEAAA25E63C7D00EB151B /* ReCAPTCHAViewController.swift in Sources */,
 				40E9A18E22280DA5008E8352 /* NoProjectsAssignedViewController.swift in Sources */,
 				4095FBE921F071A7008A39D4 /* ProjectHandler.swift in Sources */,
 				4033274C21F5BE87007EE9DF /* SettingsTableViewCell.swift in Sources */,
@@ -600,11 +478,13 @@
 				DABA66DE21D23F1D0036CEE7 /* Photo+CoreDataProperties.swift in Sources */,
 				DAA615A321E7B1D300B5B15E /* ImageForUpload.swift in Sources */,
 				DA47324C21D8FA7D003729BB /* PhotoHandler.swift in Sources */,
+				40A4E95625EB880400FEE564 /* NewProjectViewController.swift in Sources */,
 				DA1E46CE21F4EC46004FB425 /* ForgotPasswordViewController.swift in Sources */,
 				DA47324821D8BF75003729BB /* TagsModalViewController.swift in Sources */,
 				DA2D954F21EB6042005DE088 /* MenuViewController.swift in Sources */,
 				DA9DFA3021F2656800CB68E2 /* Media.swift in Sources */,
 				DA47325A21DCC26A003729BB /* ConfirmLocationViewController.swift in Sources */,
+				403EEAAE25E63DB300EB151B /* ReCAPTCHAViewModel.swift in Sources */,
 				DA2D955121ED0389005DE088 /* MenuTableViewCell.swift in Sources */,
 				DA977F5521C2E91300883640 /* CameraViewController.swift in Sources */,
 				DA9C51FC22153E4C00326611 /* DocumentFilesViewController.swift in Sources */,
@@ -619,10 +499,12 @@
 				DA9F69FD22020474006436F6 /* CheckBox.swift in Sources */,
 				DA47325021DA3109003729BB /* TagCellTableViewCell.swift in Sources */,
 				DA977F5A21C4E38B00883640 /* ActivityIndicatorButton.swift in Sources */,
+				409ABED025E7A11200C17E1E /* ProjectTableViewCell.swift in Sources */,
 				4033274621F0A00D007EE9DF /* Project+CoreDataClass.swift in Sources */,
 				DAE790D12285A6A2003B465D /* NetworkState.swift in Sources */,
 				4033274821F0A016007EE9DF /* Project+CoreDataProperties.swift in Sources */,
 				DAA2706021C922B80058148A /* ProcessingPopup.swift in Sources */,
+				409ABECC25E78E2A00C17E1E /* ProjectsListViewController.swift in Sources */,
 				4033274A21F5B52D007EE9DF /* SettingsViewController.swift in Sources */,
 				DA977F5821C3F25200883640 /* FlashStateButton.swift in Sources */,
 				DABA66DD21D23F1D0036CEE7 /* Photo+CoreDataClass.swift in Sources */,
@@ -634,39 +516,11 @@
 				DAB7796221DE8A3900308543 /* Annotation.swift in Sources */,
 				DAD922F3222ADD0C00A7A93E /* BackendConnection.swift in Sources */,
 				40B296BC21CCE5A000A3C487 /* Slide.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DA977F1821C1461100883640 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DA977F2121C1461100883640 /* SiteSnapTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		DA977F2321C1461100883640 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DA977F2C21C1461100883640 /* SiteSnapUITests.swift in Sources */,
+				40747BE925EA5F080009BFDE /* RoundCheckBox.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		DA977F1E21C1461100883640 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DA977F0421C1460F00883640 /* SiteSnap */;
-			targetProxy = DA977F1D21C1461100883640 /* PBXContainerItemProxy */;
-		};
-		DA977F2921C1461100883640 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DA977F0421C1460F00883640 /* SiteSnap */;
-			targetProxy = DA977F2821C1461100883640 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		DA977F1421C1461100883640 /* LaunchScreen.storyboard */ = {
@@ -714,6 +568,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -775,6 +630,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -848,92 +704,6 @@
 			};
 			name = Release;
 		};
-		DA977F3421C1461100883640 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = AD448BB73B0722A794A046E3 /* Pods-SiteSnapTests.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 85TX4DE8AK;
-				INFOPLIST_FILE = SiteSnapTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = ro.duoline.SiteSnapTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SiteSnap.app/SiteSnap";
-			};
-			name = Debug;
-		};
-		DA977F3521C1461100883640 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = B694197D45F977E7140AA1E8 /* Pods-SiteSnapTests.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 85TX4DE8AK;
-				INFOPLIST_FILE = SiteSnapTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = ro.duoline.SiteSnapTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SiteSnap.app/SiteSnap";
-			};
-			name = Release;
-		};
-		DA977F3721C1461100883640 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8F546AE8E44AB36E527F9A39 /* Pods-SiteSnapUITests.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 85TX4DE8AK;
-				INFOPLIST_FILE = SiteSnapUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = ro.duoline.SiteSnapUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = SiteSnap;
-			};
-			name = Debug;
-		};
-		DA977F3821C1461100883640 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = A667BD70F929A9FE7CC99171 /* Pods-SiteSnapUITests.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 85TX4DE8AK;
-				INFOPLIST_FILE = SiteSnapUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = ro.duoline.SiteSnapUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = SiteSnap;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -951,24 +721,6 @@
 			buildConfigurations = (
 				DA977F3121C1461100883640 /* Debug */,
 				DA977F3221C1461100883640 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		DA977F3321C1461100883640 /* Build configuration list for PBXNativeTarget "SiteSnapTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				DA977F3421C1461100883640 /* Debug */,
-				DA977F3521C1461100883640 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		DA977F3621C1461100883640 /* Build configuration list for PBXNativeTarget "SiteSnapUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				DA977F3721C1461100883640 /* Debug */,
-				DA977F3821C1461100883640 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

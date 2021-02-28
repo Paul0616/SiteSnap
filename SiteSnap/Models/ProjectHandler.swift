@@ -35,10 +35,10 @@ class ProjectHandler: NSObject {
         }
     }
     
-    class func saveProject(id: String, name: String, latitude: Double, longitude: Double) -> Bool{
+    class func saveProject(id: String, name: String, latitude: Double, longitude: Double, projectOwnerName: String) -> Bool{
         if let project = getSpecificProject(id: id) {
-            if project.name != name || project.latitude != latitude || project.longitude != longitude {
-                if updateProject(id: id, name: name, latitude: latitude, longitude: longitude) {
+            if project.name != name || project.latitude != latitude || project.longitude != longitude || project.projectOwnerName != projectOwnerName {
+                if updateProject(id: id, name: name, latitude: latitude, longitude: longitude, projectOwnerName: projectOwnerName) {
                     print("Project \(id) was updated")
                 }
             }
@@ -52,6 +52,7 @@ class ProjectHandler: NSObject {
         managedObject.setValue(name, forKey: "name")
         managedObject.setValue(latitude, forKey: "latitude")
         managedObject.setValue(longitude, forKey: "longitude")
+        managedObject.setValue(projectOwnerName, forKey: "projectOwnerName")
         do {
             try context.save()
             return true
@@ -60,7 +61,7 @@ class ProjectHandler: NSObject {
         }
     }
     
-    class func updateProject(id: String, name: String, latitude: Double, longitude: Double) -> Bool {
+    class func updateProject(id: String, name: String, latitude: Double, longitude: Double, projectOwnerName: String) -> Bool {
         let context = getContext()
         let fetchRequest = NSFetchRequest<Project>(entityName: "Project")
         fetchRequest.predicate = NSPredicate.init(format: "id=='\(id)'")
@@ -69,6 +70,7 @@ class ProjectHandler: NSObject {
             objects.first?.name = name
             objects.first?.latitude = latitude
             objects.first?.longitude = longitude
+            objects.first?.projectOwnerName = projectOwnerName
             try context.save()
             return true
         } catch _ {

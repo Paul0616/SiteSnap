@@ -22,7 +22,7 @@ extension Project {
     @NSManaged public var longitude: Double
     @NSManaged public var name: String?
     @NSManaged public var availableTags: NSSet?
-
+    @NSManaged public var projectOwnerName: String?
 }
 
 // MARK: Generated accessors for availableTags
