@@ -22,7 +22,7 @@ class ProcessingPopup: UIVisualEffectView {
         self.frame = CGRect(x: view.frame.midX - strLabel.frame.width/2, y: view.frame.midY - strLabel.frame.height/2 , width: 160, height: 46)
         self.layer.cornerRadius = 15
         self.layer.masksToBounds = true
-        activityIndicator = UIActivityIndicatorView(style: .white)
+        activityIndicator = UIActivityIndicatorView(style: .medium)
         activityIndicator.frame = CGRect(x: 0, y: 0, width: 46, height: 46)
         activityIndicator.startAnimating()
         self.contentView.addSubview(activityIndicator)

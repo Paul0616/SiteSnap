@@ -75,6 +75,23 @@ class TagsModalViewController: UIViewController, UITableViewDelegate, UITableVie
         backendConnection.delegate = self
         backendConnection.attemptSignInToSiteSnapBackend()
     }
+    
+    func displayMessageFromServer(_ message: String?) {
+        if let message = message{
+            DispatchQueue.main.async(execute: {
+                let alert = UIAlertController(
+                    title: nil,
+                    message: message,
+                    preferredStyle: .alert)
+                let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+                    // do something when user press OK button
+                }
+                alert.addAction(OKAction)
+                self.present(alert, animated: true, completion: nil)
+            })
+        }
+    }
+    
     func treatErrors(_ error: Error?) {
         print(error!)
     }
@@ -83,6 +100,10 @@ class TagsModalViewController: UIViewController, UITableViewDelegate, UITableVie
         timerBackend.invalidate()
         print("TIMER INVALID - tags")
         performSegue(withIdentifier: "NoProjectsAssigned", sender: nil)
+    }
+    
+    func userNeedToCreateFirstProject() {
+        
     }
     
     func databaseUpdateFinished() {
@@ -251,9 +272,10 @@ class TagsModalViewController: UIViewController, UITableViewDelegate, UITableVie
 extension UIColor {
     convenience init(hexString: String) {
         let hex = hexString.trimmingCharacters(in: NSCharacterSet.alphanumerics.inverted)
-        var int = UInt32()
-        Scanner(string: hex).scanHexInt32(&int)
-        let a, r, g, b: UInt32
+        var int = UInt64()
+        Scanner(string: hex).scanHexInt64(&int)
+        //Scanner(string: hex).scanHexInt32(&int)
+        let a, r, g, b: UInt64
         switch hex.count {
         case 3: // RGB (12-bit)
             (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)

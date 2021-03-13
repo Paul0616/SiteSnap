@@ -31,3 +31,19 @@ let siteSnapBackendHost: String = "https://backend.sitesnap.com.au:443/api/"
     debugMode - settings
     projectWasSelected - if user has choosed a project is true else is false
  */
+enum GPSStatus {
+    case no_gps
+    case gps_updating
+    case gps_no_updating
+    
+    var image: UIImage? {
+        switch self {
+        case .no_gps:
+            return UIImage(named: "gps_no")!
+        case .gps_updating:
+            return UIImage(named: "gps_fixed")!
+        case .gps_no_updating:
+            return UIImage(named: "gps_not_fixed")!
+        }
+    }
+}

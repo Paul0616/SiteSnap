@@ -199,10 +199,30 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
         print(error!)
     }
     
+    func displayMessageFromServer(_ message: String?) {
+        if let message = message{
+            DispatchQueue.main.async(execute: {
+                let alert = UIAlertController(
+                    title: nil,
+                    message: message,
+                    preferredStyle: .alert)
+                let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+                    // do something when user press OK button
+                }
+                alert.addAction(OKAction)
+                self.present(alert, animated: true, completion: nil)
+            })
+        }
+    }
+    
     func noProjectAssigned() {
         timerBackend.invalidate()
         print("TIMER INVALID - tags")
         performSegue(withIdentifier: "NoProjectsAssigned", sender: nil)
+    }
+    
+    func userNeedToCreateFirstProject() {
+        
     }
     
     func databaseUpdateFinished() {
@@ -573,7 +593,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
         // Call stopUpdatingLocation() to stop listening for location updates,
         // other wise this function will be called every time when user location changes.
         
-        manager.stopUpdatingLocation()
+        //manager.stopUpdatingLocation()
         
         print("user latitude = \(userLocation.coordinate.latitude)")
         print("user longitude = \(userLocation.coordinate.longitude)")

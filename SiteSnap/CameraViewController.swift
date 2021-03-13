@@ -14,7 +14,9 @@ import CoreLocation
 import CoreData
 import AWSCognitoIdentityProvider
 
-class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate, BackendConnectionDelegate {
+
+
+class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate, BackendConnectionDelegate, NewProjectViewControllerDelegate {
     
     private let session = AVCaptureSession()
     private var isSessionRunning = false
@@ -60,9 +62,10 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     @IBOutlet weak var captureButton: UIButton!
     @IBOutlet weak var captureInnerButton: UIView!
     @IBOutlet weak var selectedProjectButton: ActivityIndicatorButton!
-    @IBOutlet weak var noValidLocationIcon: UIImageView!
+
     @IBOutlet weak var galleryButton: UIButton!
     
+    @IBOutlet weak var gpsStatusImageView: UIImageView!
     @IBOutlet weak var cameraUnavailableLabel: UILabel!
     @IBOutlet weak var dropDownListProjectsTableView: UITableView!
     
@@ -95,7 +98,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         captureButton.layer.cornerRadius = 35
         galleryButton.isEnabled = false
         
-        noValidLocationIcon.isHidden = false
+        gpsStatusImageView.image = GPSStatus.no_gps.image
         //delete unused files from document directory
         deleteAssets(unused: true)
         
@@ -226,6 +229,10 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             performSegue(withIdentifier: "PhotsViewIdentifier", sender: nil)
         }
         //        }
+        
+//        if LocationManager.locationServicesEnabled() && !LocationManager.shared.isUpdatingLocation {
+//            locationManager.startUpdatingLocation()
+//        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -236,6 +243,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 self.removeObservers()
             }
         }
+//        locationManager.stopUpdatingLocation();
         
         super.viewWillDisappear(animated)
     }
@@ -263,6 +271,15 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
     }
     
+    //MARK: - New Project DELEGATE
+    func newProjectAddedCallback(projectModel: ProjectModel?) {
+        if timerBackend == nil || !timerBackend.isValid {
+            timerBackend = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(callBackendConnection), userInfo: nil, repeats: true)
+            timerBackend.fire()
+            print("TIMER STARTED - camera")
+        }
+    }
+    
     //MARK: - The called function for the timer
     @objc func callBackendConnection(){
         let backendConnection = BackendConnection(projectWasSelected: projectWasSelected, lastLocation: lastLocation)
@@ -271,56 +288,53 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     //MARK: - Connect to SITESnap function DELEGATE
+    func displayMessageFromServer(_ message: String?) {
+        if let message = message{
+            DispatchQueue.main.async(execute: {
+                let alert = UIAlertController(
+                    title: nil,
+                    message: message,
+                    preferredStyle: .alert)
+                let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+                    // do something when user press OK button
+                }
+                alert.addAction(OKAction)
+                self.present(alert, animated: true, completion: nil)
+            })
+        }
+    }
+    
     func treatErrors(_ error: Error?) {
         if error != nil {
             print(error?.localizedDescription as Any)
             if let err = error as? URLError {
+                var message: String?
                 switch err.code {
                 case .notConnectedToInternet:
-                    DispatchQueue.main.async(execute: {
-                        let alert = UIAlertController(
-                            title: "SiteSnap server access",
-                            message:"Not Connected To The Internet",
-                            preferredStyle: .alert)
-                        let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
-                            // do something when user press OK button
-                        }
-                        alert.addAction(OKAction)
-                        self.present(alert, animated: true, completion: nil)
-                        return
-                    })
+                    message = "Not Connected To The Internet"
                 case .timedOut:
-                    DispatchQueue.main.async(execute: {
-                        let alert = UIAlertController(
-                            title: "SiteSnap server access",
-                            message:"Request Timed Out",
-                            preferredStyle: .alert)
-                        
-                        let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
-                            // do something when user press OK button
-                        }
-                        alert.addAction(OKAction)
-                        self.present(alert, animated: true, completion: nil)
-                        return
-                    })
+                    message = "Request Timed Out"
                 case .networkConnectionLost:
-                    DispatchQueue.main.async(execute: {
-                        let alert = UIAlertController(
-                            title: "SiteSnap server access",
-                            message:"Lost Connection to the Network",
-                            preferredStyle: .alert)
-                        
-                        let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
-                            // do something when user press OK button
-                        }
-                        alert.addAction(OKAction)
-                        self.present(alert, animated: true, completion: nil)
-                        return
-                    })
+                    message = "Lost Connection to the Network"
                 default:
                     print("Default Error")
+                    message = "Error"
                     print(err)
                 }
+                
+                DispatchQueue.main.async(execute: {
+                    let alert = UIAlertController(
+                        title: "SiteSnap server access",
+                        message: message,
+                        preferredStyle: .alert)
+                    
+                    let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+                        // do something when user press OK button
+                    }
+                    alert.addAction(OKAction)
+                    self.present(alert, animated: true, completion: nil)
+                
+                })
             }
         }
     }
@@ -328,8 +342,36 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func noProjectAssigned() {
         timerBackend.invalidate()
         print("TIMER INVALID - camera")
-        performSegue(withIdentifier: "NoProjectsAssigned", sender: nil)
-        //return
+    
+        DispatchQueue.main.async {
+            
+            self.selectedProjectButton.hideLoading(buttonText: nil)
+            if let _: UIAlertController = self.presentedViewController as? UIAlertController{
+                print("alert is on screen")
+                self.dismiss(animated: true, completion: {
+                    self.performSegue(withIdentifier: "NoProjectsAssigned", sender: nil)
+                })
+            } else {
+                self.performSegue(withIdentifier: "NoProjectsAssigned", sender: nil)
+            }
+        }
+    }
+    
+    func userNeedToCreateFirstProject() {
+        timerBackend.invalidate()
+        print("TIMER INVALID - camera")
+    
+        DispatchQueue.main.async {
+            //self.selectedProjectButton.hideLoading(buttonText: nil)
+            if let _: UIAlertController = self.presentedViewController as? UIAlertController{
+                print("alert is on screen")
+                self.dismiss(animated: true, completion: {
+                    self.performSegue(withIdentifier: "createNewProjectIdentifier", sender: nil)
+                })
+            } else {
+                self.performSegue(withIdentifier: "createNewProjectIdentifier", sender: nil)
+            }
+        }
     }
     
     func databaseUpdateFinished() {
@@ -502,35 +544,40 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func checkLocationAuthorization() {
-        locationManager = LocationManager()
+        locationManager = LocationManager.shared
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.distanceFilter = 35.0
         locationManager.delegate = self
         switch locationSetupResult {
         case .notDetermined:
             // Request when-in-use authorization initially
-            noValidLocationIcon.isHidden = false
+            //noValidLocationIcon.isHidden = false
+            gpsStatusImageView.image = GPSStatus.no_gps.image
             locationManager.requestWhenInUseAuthorization()
             break
             
         case .restricted, .denied:
-            noValidLocationIcon.isHidden = false
+            //noValidLocationIcon.isHidden = false
+            gpsStatusImageView.image = GPSStatus.no_gps.image
             // Disable location features
             break
             
         case .authorizedWhenInUse:
-            noValidLocationIcon.isHidden = true
+            //noValidLocationIcon.isHidden = true
+            gpsStatusImageView.image = GPSStatus.gps_no_updating.image
             // Enable basic location features
             break
             
         case .authorizedAlways:
-            noValidLocationIcon.isHidden = true
+            //noValidLocationIcon.isHidden = true
+            gpsStatusImageView.image = GPSStatus.gps_no_updating.image
             // Enable any of your app's location features
             break
         default:
             locationSetupResult = .denied
         }
         
-        if LocationManager.locationServicesEnabled() {
+        if LocationManager.locationServicesEnabled() && !LocationManager.shared.isUpdatingLocation {
             locationManager.startUpdatingLocation()
         }
     }
@@ -538,20 +585,25 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         locationSetupResult = status
         if status == .authorizedAlways || status == .authorizedWhenInUse {
-            noValidLocationIcon.isHidden = true
+            //noValidLocationIcon.isHidden = true
+            gpsStatusImageView.image = GPSStatus.gps_no_updating.image
         }
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let userLocation:CLLocation = locations[0] as CLLocation
         lastLocation = userLocation
-        //locationWasUpdated = true
+        
         // Call stopUpdatingLocation() to stop listening for location updates,
         // other wise this function will be called every time when user location changes.
         
         
         
-        manager.stopUpdatingLocation()
+        //manager.stopUpdatingLocation()
+        gpsStatusImageView.image = GPSStatus.gps_updating.image
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+            self.gpsStatusImageView.image = GPSStatus.gps_no_updating.image
+        })
         
         print("user latitude = \(userLocation.coordinate.latitude)")
         print("user longitude = \(userLocation.coordinate.longitude)")
@@ -559,8 +611,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error)
     {
-        noValidLocationIcon.isHidden = false
-        //locationWasUpdated = false
+        //noValidLocationIcon.isHidden = false
+        gpsStatusImageView.image = GPSStatus.no_gps.image
         print("Error \(error)")
     }
     
@@ -946,10 +998,13 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                      Use the status bar orientation as the initial video orientation. Subsequent orientation changes are
                      handled by CameraViewController.viewWillTransition(to:with:).
                      */
-                    let statusBarOrientation = UIApplication.shared.statusBarOrientation
+                    let interfaceOrientation = UIApplication.shared.windows.first?.windowScene?.interfaceOrientation
+                   // print(interfaceOrientation?.rawValue)
+                   // let statusBarOrientation = UIApplication.shared.statusBarOrientation
+                  //  print(statusBarOrientation.rawValue)
                     var initialVideoOrientation: AVCaptureVideoOrientation = .portrait
-                    if statusBarOrientation != .unknown {
-                        if let videoOrientation = AVCaptureVideoOrientation(rawValue: statusBarOrientation.rawValue) {
+                    if interfaceOrientation != .unknown {
+                        if let videoOrientation = AVCaptureVideoOrientation(rawValue: interfaceOrientation!.rawValue) {
                             initialVideoOrientation = videoOrientation
                         }
                     }
@@ -1259,6 +1314,10 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             destination.delegate = self
         }
         
+        if segue.identifier == "createNewProjectIdentifier", let destination = segue.destination as? NewProjectViewController {
+            destination.delegate = self
+            destination.isFirstProject = true
+        }
     }
     //MARK: - delete hidden assets
     func deleteAssets(unused: Bool) {
@@ -1379,4 +1438,10 @@ extension CameraViewController: AssetsPickerViewControllerDelegate {
         return true
     }
     func assetsPicker(controller: AssetsPickerViewController, didDeselect asset: PHAsset, at indexPath: IndexPath) {}
+}
+
+extension UIViewController {
+    func isVisible() -> Bool {
+        return self.isViewLoaded && self.view.window != nil
+    }
 }

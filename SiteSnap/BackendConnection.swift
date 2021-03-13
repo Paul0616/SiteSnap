@@ -12,17 +12,20 @@ import CoreLocation
 
 protocol BackendConnectionDelegate: class {
     func treatErrors(_ error: Error?)
+    func displayMessageFromServer(_ message: String?)
     func noProjectAssigned()
     func databaseUpdateFinished()
+    func userNeedToCreateFirstProject()
 //    func getLocation(_ location: CLLocation)
 //    func isLocationAvailable(_ isLocationAvailable: Bool, status: CLAuthorizationStatus?)
 }
 
 class BackendConnection: NSObject {
     
+
+    
     var pool: AWSCognitoIdentityUserPool?
     weak var delegate: BackendConnectionDelegate?
-    //var locationManager: CLLocationManager!
     
     let projectWasSelected: Bool
     let lastLocation: CLLocation?
@@ -32,18 +35,12 @@ class BackendConnection: NSObject {
         self.projectWasSelected = projectWasSelected
         self.lastLocation = lastLocation
         self.pool = AWSCognitoIdentityUserPool(forKey: AWSCognitoUserPoolsSignInProviderKey)
-//        if LocationManager.locationServicesEnabled() {
-//            //locationManager.requestLocation()
-//
-//
-//            //locationManager.startUpdatingHeading()
-//        }
     }
     
   
    
     
-    func makeUrlRequest() -> URLRequest! {
+     func makeUrlRequest() -> URLRequest! {
         let url = URL(string: siteSnapBackendHost + "session/getPhoneSessionInfo")!
         var request = URLRequest(url: url)
         if (self.pool?.token().isCompleted)! {
@@ -59,15 +56,10 @@ class BackendConnection: NSObject {
     
     func attemptSignInToSiteSnapBackend()
     {
-//        locationManager.delegate = self
-//        if LocationManager.locationServicesEnabled() {
-//            locationManager.startUpdatingLocation()
-//        }
         let request = makeUrlRequest()
         if let request = request {
             let task = URLSession.shared.dataTask(with: request as URLRequest) {(data, response, error) -> Void in
                 if error != nil {
-                    //self.treatErrors(error: error)
                     self.delegate?.treatErrors(error)
                     return
                 }
@@ -95,7 +87,10 @@ class BackendConnection: NSObject {
             }
         }
     }
-    func isProjectValidForSelection(projects: NSArray, projectId: String) -> Bool{
+    func isProjectValidForSelection(projects: NSArray, projectId: String?) -> Bool{
+        guard let projectId = projectId else {
+            return false
+        }
         for item in projects {
             let project = item as! NSDictionary
             let pID = project["id"]! as! String
@@ -129,18 +124,39 @@ class BackendConnection: NSObject {
         return closestProject
     }
     func setUpInternalTables(json: NSDictionary){
+        //if messageFromServer is not null then displayed
+        if let messageFromServer = json["messageFromServer"] as? String {
+            self.delegate?.displayMessageFromServer(messageFromServer)
+        }
+        //if user is free tier and have no projects assigned then return
+        if let isRunningSiteSnapFree = json["isRunningSiteSnapFree"] as? Bool,
+           let userProjects = json["projects"] as? NSArray,
+           userProjects.count == 0,
+           isRunningSiteSnapFree {
+            self.delegate?.userNeedToCreateFirstProject()
+            return
+        }
+       
         let projects = json["projects"] as! NSArray
-        let projectId = json["lastUsedProjectId"] as! String
+        
+        //check if user have projects
+        if projects.count == 0 {
+            let isAdmin = json["isAdmin"] as! Bool
+            if isAdmin {
+                delegate?.userNeedToCreateFirstProject()
+            } else {
+                delegate?.noProjectAssigned()
+            }
+            return
+        }
+        
+        let projectId = json["lastUsedProjectId"] as? String
         
         
         let allTags = json["tags"] as! NSArray
         
         
-        //check if user have projects
-        if projects.count == 0 {
-            delegate?.noProjectAssigned()
-            return
-        }
+        
         var projectValid: Bool = true
         if let currentProjectId = UserDefaults.standard.value(forKey: "currentProjectId") as? String {
             projectValid = isProjectValidForSelection(projects: projects, projectId: currentProjectId)
@@ -148,7 +164,7 @@ class BackendConnection: NSObject {
         if !projectWasSelected || !projectValid {
             if isProjectValidForSelection(projects: projects, projectId: projectId) {
                 UserDefaults.standard.set(projectId, forKey: "currentProjectId")
-                self.setCurrentProjectName(projects: projects, lastUsedProject: projectId)
+                self.setCurrentProjectName(projects: projects, lastUsedProject: projectId!)
             } else { //else project was last used but no longer available
                 let firstProject = projects[0] as! NSDictionary
                 let firstProjectId = firstProject["id"]! as! String

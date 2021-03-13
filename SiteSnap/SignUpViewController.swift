@@ -118,13 +118,15 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
     func animateViewMoving (up:Bool, moveValue :CGFloat){
         let movementDuration:TimeInterval = 0.3
         let movement:CGFloat = ( up ? -moveValue : moveValue)
-        
-        UIView.beginAnimations("animateView", context: nil)
-        UIView.setAnimationBeginsFromCurrentState(true)
-        UIView.setAnimationDuration(movementDuration)
-        
-        self.view.frame = self.view.frame.offsetBy(dx: 0, dy: movement)
-        UIView.commitAnimations()
+        UIView.animate(withDuration: movementDuration, animations: {
+            self.view.frame = self.view.frame.offsetBy(dx: 0, dy: movement)
+        })
+//        UIView.beginAnimations("animateView", context: nil)
+//        UIView.setAnimationBeginsFromCurrentState(true)
+//        UIView.setAnimationDuration(movementDuration)
+//        
+//        self.view.frame = self.view.frame.offsetBy(dx: 0, dy: movement)
+//        UIView.commitAnimations()
     }
     
     func callToSignUp(token: String){
@@ -163,7 +165,8 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
             "surname": surNameTextField.text!,
             "email": emailTextField.text!,
             "token": token,
-            "isFromAndroid": true
+            "isFromAndroid": false,
+            "isFromiOS": true
         ]
         do {
             request.httpBody = try JSONSerialization.data(withJSONObject: parameters, options: .prettyPrinted)
@@ -181,6 +184,19 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                 switch error {
                 case 0:
                     print("Successful")
+                    DispatchQueue.main.async(execute: {
+                    
+                        let alert = UIAlertController(
+                            title: "Success",
+                            message: "A temporary password has been emailed to you.\n\nPress OK to return to the sign in screen and enter your password to continue.",
+                            preferredStyle: .alert)
+                        let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+                            self.dismiss(animated: true, completion: nil)
+                        }
+                        alert.addAction(OKAction)
+                        self.present(alert, animated: true, completion: nil)
+                        return
+                    })
                 case 1...3:
                     print("Malformed data")
                     
@@ -201,7 +217,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                     DispatchQueue.main.async(execute: {
                         let alert = UIAlertController(
                             title: "Error",
-                            message: "The email address provided is already associated with a Site Snap PRO user account. If you have forgotten your password please tap the BACK button and then the \"Forgot your password? TAP HERE\" box.",
+                            message: "The email address provided is already associated with a Site Snap PRO user account. If you have forgotten your password please tap the CANCEL button and then the \"Forgot your password? TAP HERE\" box.",
                             preferredStyle: .alert)
                         let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
                             // do something when user press OK button
@@ -215,7 +231,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate {
                     DispatchQueue.main.async(execute: {
                         let alert = UIAlertController(
                             title: "Error",
-                            message: "The email address provided is already associated with another Site Snap user account. If you have forgotten your password please tap the BACK button and then the \"Forgot your password? TAP HERE\" box.",
+                            message: "The email address provided is already associated with another Site Snap user account. If you have forgotten your password please tap the CANCEL button and then the \"Forgot your password? TAP HERE\" box.",
                             preferredStyle: .alert)
                         let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
                             // do something when user press OK button

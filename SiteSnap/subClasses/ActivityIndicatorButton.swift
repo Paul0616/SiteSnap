@@ -12,7 +12,6 @@ class ActivityIndicatorButton: UIButton {
     var activityIndicator: UIActivityIndicatorView!
     var image: UIImageView!
     
-    
 //      Only override draw() if you perform custom drawing.
 //      An empty implementation adversely affects performance during animation.
 //     override func draw(_ rect: CGRect) {
@@ -55,6 +54,8 @@ class ActivityIndicatorButton: UIButton {
         self.image.isHidden = true
         showSpinning()
     }
+    
+   
     
     private func createActivityIndicator() -> UIActivityIndicatorView {
         let activityIndicator = UIActivityIndicatorView()

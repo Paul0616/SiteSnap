@@ -26,7 +26,7 @@ class ReCAPTCHAViewController: UIViewController, WKNavigationDelegate, WKUIDeleg
             activityIndicator = UIActivityIndicatorView()
             activityIndicator.center = popUpView.convert(popUpView.center, from: popUpView.superview)
             activityIndicator.hidesWhenStopped = true
-            activityIndicator.style = UIActivityIndicatorView.Style.gray
+            activityIndicator.style = UIActivityIndicatorView.Style.medium
             
             
             webView.loadHTMLString(viewModel.html, baseURL: viewModel.url)

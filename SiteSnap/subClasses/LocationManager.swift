@@ -9,10 +9,15 @@
 import UIKit
 import CoreLocation
 
+
+
 class LocationManager: CLLocationManager {
     var isUpdatingLocation = false
     
+    
     static let shared = LocationManager()
+    
+
     
     override func startUpdatingLocation() {
         super.startUpdatingLocation()
@@ -25,4 +30,7 @@ class LocationManager: CLLocationManager {
         
         isUpdatingLocation = false
     }
+    
+    
 }
+

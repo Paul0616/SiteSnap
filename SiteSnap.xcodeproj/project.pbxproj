@@ -28,6 +28,7 @@
 		40B296BF21CCE61B00A3C487 /* Slide.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40B296BE21CCE61B00A3C487 /* Slide.xib */; };
 		40B9656121CA7240004A383D /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B9656021CA7240004A383D /* LocationManager.swift */; };
 		40E9A18E22280DA5008E8352 /* NoProjectsAssignedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E9A18D22280DA5008E8352 /* NoProjectsAssignedViewController.swift */; };
+		40EB38AB25F535E100BF830B /* ProcessingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40EB38AA25F535E100BF830B /* ProcessingViewController.swift */; };
 		803902112621DA84596AB896 /* Pods_SiteSnap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08D194FC8394711D1AE36F7F /* Pods_SiteSnap.framework */; };
 		DA1E46CE21F4EC46004FB425 /* ForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA1E46CD21F4EC46004FB425 /* ForgotPasswordViewController.swift */; };
 		DA1E46D021F50E3C004FB425 /* ConfirmForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA1E46CF21F50E3C004FB425 /* ConfirmForgotPasswordViewController.swift */; };
@@ -98,6 +99,7 @@
 		40B296BE21CCE61B00A3C487 /* Slide.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Slide.xib; sourceTree = "<group>"; };
 		40B9656021CA7240004A383D /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		40E9A18D22280DA5008E8352 /* NoProjectsAssignedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoProjectsAssignedViewController.swift; sourceTree = "<group>"; };
+		40EB38AA25F535E100BF830B /* ProcessingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingViewController.swift; sourceTree = "<group>"; };
 		6A73AA7E3AC6DD8718D48C21 /* Pods-SiteSnap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SiteSnap.release.xcconfig"; path = "Pods/Target Support Files/Pods-SiteSnap/Pods-SiteSnap.release.xcconfig"; sourceTree = "<group>"; };
 		8F546AE8E44AB36E527F9A39 /* Pods-SiteSnapUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SiteSnapUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SiteSnapUITests/Pods-SiteSnapUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		A1CFB1EA0BFC2019A65CB46F /* Pods_SiteSnapTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SiteSnapTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -240,6 +242,7 @@
 				DA977F0821C1460F00883640 /* AppDelegate.swift */,
 				4047811521EC820C006987B4 /* Constants.swift */,
 				DAD922F2222ADD0C00A7A93E /* BackendConnection.swift */,
+				40EB38AA25F535E100BF830B /* ProcessingViewController.swift */,
 				DA977F0A21C1460F00883640 /* SignInViewController.swift */,
 				407C5C0225E4E1B0003C4276 /* SignUpViewController.swift */,
 				403EEAA925E63C7D00EB151B /* ReCAPTCHAViewController.swift */,
@@ -503,6 +506,7 @@
 				4033274621F0A00D007EE9DF /* Project+CoreDataClass.swift in Sources */,
 				DAE790D12285A6A2003B465D /* NetworkState.swift in Sources */,
 				4033274821F0A016007EE9DF /* Project+CoreDataProperties.swift in Sources */,
+				40EB38AB25F535E100BF830B /* ProcessingViewController.swift in Sources */,
 				DAA2706021C922B80058148A /* ProcessingPopup.swift in Sources */,
 				409ABECC25E78E2A00C17E1E /* ProjectsListViewController.swift in Sources */,
 				4033274A21F5B52D007EE9DF /* SettingsViewController.swift in Sources */,
@@ -594,7 +598,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -650,7 +654,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -669,12 +673,12 @@
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = W4JDZP9URB;
 				INFOPLIST_FILE = SiteSnap/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.8;
+				MARKETING_VERSION = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.au.tridenttechnologies.sitesnapapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -691,12 +695,12 @@
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = W4JDZP9URB;
 				INFOPLIST_FILE = SiteSnap/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.8;
+				MARKETING_VERSION = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.au.tridenttechnologies.sitesnapapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

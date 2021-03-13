@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -28,7 +27,8 @@
                     </variation>
                 </imageView>
             </subviews>
-            <color key="backgroundColor" red="0.10196078431372549" green="0.10196078431372549" blue="0.10196078431372549" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" systemColor="systemGray6Color"/>
             <constraints>
                 <constraint firstItem="SM1-aA-9Ai" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" id="IkM-as-RWO"/>
                 <constraint firstItem="SM1-aA-9Ai" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="Oqa-YM-vDm"/>
@@ -36,7 +36,6 @@
                 <constraint firstItem="SM1-aA-9Ai" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="uCQ-0L-95D"/>
                 <constraint firstItem="SM1-aA-9Ai" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="yqn-lP-j53"/>
             </constraints>
-            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <variation key="default">
                 <mask key="constraints">
                     <exclude reference="hbT-Li-Z46"/>
@@ -45,6 +44,12 @@
             <connections>
                 <outlet property="mainImage" destination="SM1-aA-9Ai" id="mIu-Is-JXu"/>
             </connections>
+            <point key="canvasLocation" x="140" y="154"/>
         </view>
     </objects>
+    <resources>
+        <systemColor name="systemGray6Color">
+            <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
 </document>

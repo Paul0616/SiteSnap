@@ -11,9 +11,9 @@ import Photos
 import AssetsPickerViewController
 import CoreData
 
-class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate, BackendConnectionDelegate {
+class PhotosViewController: UIViewController, UIScrollViewDelegate, CLLocationManagerDelegate, BackendConnectionDelegate {
 
-    @IBOutlet weak var dropDownListProjectsTableView: UITableView!
+    //@IBOutlet weak var dropDownListProjectsTableView: UITableView!
     @IBOutlet weak var selectedProjectButton: ActivityIndicatorButton!
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var takePhotoButton: UIButton!
@@ -30,6 +30,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     @IBOutlet weak var addCommentButton: UIButton!
     @IBOutlet weak var stackViewAllComments: UIStackView!
     @IBOutlet weak var sameCommentsToAll: CheckBox!
+    @IBOutlet weak var commentsContainer: UIView!
     
     
     //var photosLocalIdentifiers: [String]?
@@ -46,6 +47,8 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     
     let minImageScale: CGFloat = 0.75
     let minImageAlpha: CGFloat = 0.2
+    let darkBlue: UIColor = UIColor(red: 17/255, green: 15/255, blue: 62/255, alpha: 1.0)
+    let systemGray6: UIColor = .systemGray6 //UIColor(red: 242/256, green: 242/256, blue: 247/256, alpha: 1.0)
     var firstTime: Bool = true
     var projectWasSelected: Bool = false
     private var locationSetupResult: CLAuthorizationStatus = CLLocationManager.authorizationStatus()
@@ -56,7 +59,19 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         // Do any additional setup after loading the view.
         scrollView.delegate = self
         scrollView.showsHorizontalScrollIndicator = false
+        selectedProjectButton.backgroundColor = darkBlue
        
+        //imageControl.customPageController(dotFillColor: darkBlue, dotBorderColor: darkBlue, dotBorderwidth: 2)
+        
+        commentScrollView.backgroundColor = .white
+        commentsContainer.layer.cornerRadius = 8
+        commentScrollView.layer.cornerRadius = 8
+        commentsContainer.layer.shadowColor = UIColor.gray.cgColor
+        commentsContainer.layer.shadowOpacity = 0.5
+        commentsContainer.layer.shadowOffset = CGSize(width: 0, height: 0)
+        commentsContainer.layer.shadowRadius = 5
+        //commentsContainer.layer.masksToBounds = true
+        commentLabel.textColor = darkBlue
         takePhotoButton.layer.cornerRadius = 6
         takePhotoButton.titleLabel?.lineBreakMode = .byWordWrapping
         takePhotoButton.titleLabel?.numberOfLines = 2
@@ -66,11 +81,18 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         addFromGalleryButton.titleLabel?.numberOfLines = 2
         addFromGalleryButton.titleLabel?.textAlignment = .center
         nextButton.layer.cornerRadius = 6
+        //nextButton.semanticContentAttribute = UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft ? .forceLeftToRight : .forceRightToLeft
+//        nextButton.transform = CGAffineTransform(scaleX: -1, y: 1)
+//        nextButton.titleLabel?.transform = CGAffineTransform(scaleX: -1, y: 1)
+//        nextButton.imageView?.transform = CGAffineTransform(translationX: 20, y: 0)
+//        nextButton.imageView?.transform = CGAffineTransform(scaleX: -1, y: 1)
+        
         addTagButton.layer.cornerRadius = 25
+    
         tagNumberLabel.layer.cornerRadius = 15
-        tagNumberLabel.layer.backgroundColor = UIColor(red:0.19, green:0.44, blue:0.90, alpha:1.0).cgColor // blue
-        //tagNumberLabel.layer.backgroundColor = UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0).cgColor // light purple
-        tagNumberLabel.layer.borderColor = UIColor.white.cgColor
+        tagNumberLabel.textColor = darkBlue
+        tagNumberLabel.layer.backgroundColor = systemGray6.cgColor//UIColor(red:0.19, green:0.44, blue:0.90, alpha:1.0).cgColor // blue
+        tagNumberLabel.layer.borderColor = darkBlue.cgColor//UIColor.white.cgColor
         tagNumberLabel.layer.borderWidth = 1
         deleteImageButton.layer.cornerRadius = 25
         addCommentButton.layer.cornerRadius = 25
@@ -84,18 +106,34 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleLabelCommentTap(_:)))
         commentLabel.isUserInteractionEnabled = true
         commentLabel.addGestureRecognizer(tap)
+        commentsContainer.addGestureRecognizer(tap)
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        let image = UIImage.outlinedEllipse(size: CGSize(width: 7.0, height: 7.0), color: darkBlue, lineWidth: 0.5)
+        
+    
+        imageControl.currentPageIndicatorTintColor = darkBlue
+        imageControl.pageIndicatorTintColor = UIColor.init(patternImage: image!)//darkBlue.withAlphaComponent(0.3)
+        if #available(iOS 14.0, *){
+    
+            //imageControl.preferredIndicatorImage = UIImage(systemName: "multiply.circle.fill")
+            //imageControl.currentPageIndicatorTintColor = darkBlue
+            imageControl.backgroundStyle = .prominent
+            imageControl.pageIndicatorTintColor = darkBlue.withAlphaComponent(0.3)
+            //imageControl.sizeToFit()
+        }
+        imageControl.transform = CGAffineTransform(scaleX: 2, y: 2)
+        
         photoObjects = PhotoHandler.fetchAllObjects()
         if !firstTime {
             updateCommentLabel()
             updateTagNumber()
         }
         
-        dropDownListProjectsTableView.isHidden = true
+        //dropDownListProjectsTableView.isHidden = true
         if let prjWasSelected = UserDefaults.standard.value(forKey: "projectWasSelected") as? Bool {
             projectWasSelected = prjWasSelected
         }
@@ -108,6 +146,9 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
             }
         }
         print("photos: \(photoObjects?.count as Any) = slides: \(slidesObjects.count)")
+//        if LocationManager.locationServicesEnabled() && !LocationManager.shared.isUpdatingLocation {
+//            locationManager.startUpdatingLocation()
+//        }
     }
     override func viewDidLayoutSubviews() {
         
@@ -120,13 +161,15 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
             loadImages(identifiers: identifiers)
         }
          updateTagNumber()
-        
+        self.addTagButton.isHidden = false
+        self.deleteImageButton.isHidden = false
         if self.view.safeAreaLayoutGuide.layoutFrame.size.width > self.view.safeAreaLayoutGuide.layoutFrame.size.height {
             print("landscape")
             self.takePhotoButton.setTitle("", for: .normal)
             self.addFromGalleryButton.setTitle("", for: .normal)
             self.takePhotoButton.layer.cornerRadius = 30
             self.addFromGalleryButton.layer.cornerRadius = 30
+            
         } else {
             print("portrait")
             self.takePhotoButton.setTitle("TAKE ANOTHER PHOTO", for: .normal)
@@ -146,6 +189,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
             timerBackend.invalidate()
             print("TIMER INVALID - photos")
         }
+//        locationManager.stopUpdatingLocation()
     }
     
     
@@ -157,8 +201,9 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     }
     //MARK: - Authorization for location
     func checkLocationAuthorization() {
-        locationManager = LocationManager()
+        locationManager = LocationManager.shared
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.distanceFilter = 35.0
         locationManager.delegate = self
         switch locationSetupResult {
         case .notDetermined:
@@ -181,7 +226,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
             locationSetupResult = .denied
         }
         
-        if LocationManager.locationServicesEnabled() {
+        if LocationManager.locationServicesEnabled() && !LocationManager.shared.isUpdatingLocation {
             locationManager.startUpdatingLocation()
         }
     }
@@ -208,6 +253,22 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     }
     
     //MARK: - Connect to SITESnap function DELEGATE
+    func displayMessageFromServer(_ message: String?) {
+        if let message = message{
+            DispatchQueue.main.async(execute: {
+                let alert = UIAlertController(
+                    title: nil,
+                    message: message,
+                    preferredStyle: .alert)
+                let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+                    // do something when user press OK button
+                }
+                alert.addAction(OKAction)
+                self.present(alert, animated: true, completion: nil)
+            })
+        }
+    }
+    
     func treatErrors(_ error: Error?) {
         if error != nil {
             print(error?.localizedDescription as Any)
@@ -268,6 +329,10 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         //return
     }
     
+    func userNeedToCreateFirstProject() {
+    
+    }
+    
     func databaseUpdateFinished() {
         loadingProjectIntoList()
         updateTagNumber()
@@ -295,9 +360,9 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     
     func loadingProjectIntoList(){
         //if project list is opened should not refresh projects
-        if !dropDownListProjectsTableView.isHidden {
-            return
-        }
+//        if !dropDownListProjectsTableView.isHidden {
+//            return
+//        }
         self.userProjects.removeAll()
         let projects = ProjectHandler.fetchAllProjects()
         for item in projects! {
@@ -330,53 +395,53 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
             }
             //-----------------
         }
-        self.dropDownListProjectsTableView.reloadData()
+        //self.dropDownListProjectsTableView.reloadData()
         
     }
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return userProjects.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cellProject", for: indexPath)
-        cell.textLabel?.textColor = UIColor.white
-        cell.textLabel?.text = userProjects[indexPath.row].projectName
-         return cell
-        
-    }
-    
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        let selected = tableView.indexPathForSelectedRow
-//        if selected == indexPath {
-//            cell.contentView.backgroundColor = UIColor.black
-//        } else {
-//            cell.contentView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+//    func numberOfSections(in tableView: UITableView) -> Int {
+//        return 1
+//    }
+//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        return userProjects.count
+//    }
+//
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "cellProject", for: indexPath)
+//        cell.textLabel?.textColor = UIColor.white
+//        cell.textLabel?.text = userProjects[indexPath.row].projectName
+//         return cell
+//
+//    }
+//
+//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+////        let selected = tableView.indexPathForSelectedRow
+////        if selected == indexPath {
+////            cell.contentView.backgroundColor = UIColor.black
+////        } else {
+////            cell.contentView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+////        }
+//    }
+//
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        if tableView == self.dropDownListProjectsTableView {
+//            let projectId = userProjects[indexPath.row].id
+//            let oldProjectId = UserDefaults.standard.value(forKey: "currentProjectId") as? String
+//
+//            //selectedProjectButton.setTitle("\(userProjects[indexPath.row].projectName)", for: .normal)
+//            animateProjectsList(toogle: false)
+//            let selectedCell:UITableViewCell = tableView.cellForRow(at: indexPath)!
+//            selectedCell.contentView.backgroundColor = UIColor.black
+//            if projectId != oldProjectId {
+//                UserDefaults.standard.set(projectId, forKey: "currentProjectId")
+//                UserDefaults.standard.set(userProjects[indexPath.row].projectName, forKey: "currentProjectName")
+//                UserDefaults.standard.set(true, forKey: "projectWasSelected")
+//                projectWasSelected = true
+//                setProjectsSelected(projectId: projectId)
+//                resetAllPhotosTags(oldProjectId: oldProjectId!, oldProjectName: userProjects[indexPath.row].projectName)
+//            }
 //        }
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if tableView == self.dropDownListProjectsTableView {
-            let projectId = userProjects[indexPath.row].id
-            let oldProjectId = UserDefaults.standard.value(forKey: "currentProjectId") as? String
-            
-            //selectedProjectButton.setTitle("\(userProjects[indexPath.row].projectName)", for: .normal)
-            animateProjectsList(toogle: false)
-            let selectedCell:UITableViewCell = tableView.cellForRow(at: indexPath)!
-            selectedCell.contentView.backgroundColor = UIColor.black
-            if projectId != oldProjectId {
-                UserDefaults.standard.set(projectId, forKey: "currentProjectId")
-                UserDefaults.standard.set(userProjects[indexPath.row].projectName, forKey: "currentProjectName")
-                UserDefaults.standard.set(true, forKey: "projectWasSelected")
-                projectWasSelected = true
-                setProjectsSelected(projectId: projectId)
-                resetAllPhotosTags(oldProjectId: oldProjectId!, oldProjectName: userProjects[indexPath.row].projectName)
-            }
-        }
-    }
+//    }
     
     func setProjectsSelected(projectId: String){
         if userProjects.count == 0 {
@@ -390,15 +455,15 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         }
     }
     
-    func animateProjectsList(toogle: Bool){
-        UIView.animate(withDuration: 0.3, animations: {
-            self.dropDownListProjectsTableView.isHidden = !toogle
-        })
-    }
+//    func animateProjectsList(toogle: Bool){
+//        UIView.animate(withDuration: 0.3, animations: {
+//            self.dropDownListProjectsTableView.isHidden = !toogle
+//        })
+//    }
     
     //MARK: - Selecting new project
     @IBAction func onClickSelectedProjectButton(_ sender: ActivityIndicatorButton) {
-        animateProjectsList(toogle: dropDownListProjectsTableView.isHidden)
+       // animateProjectsList(toogle: dropDownListProjectsTableView.isHidden)
     }
   
     
@@ -429,6 +494,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     @IBAction func onClickAddComment(_ sender: UIButton) {
         performSegue(withIdentifier: "AddCommentViewIdentifier", sender: sender)
     }
+    
     
     @objc func handleLabelCommentTap(_ sender: UITapGestureRecognizer) {
         performSegue(withIdentifier: "AddCommentViewIdentifier", sender: sender)
@@ -661,19 +727,22 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         if let photo = PhotoHandler.getSpecificPhoto(localIdentifier: localIdentifier){
             if let allComment = photo.allPhotosComment {
                 addCommentButton.setImage(UIImage(named:"edit"), for: .normal)
-                addCommentButton.backgroundColor = UIColor(red:0.19, green:0.44, blue:0.90, alpha:1.0) //UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
+                addCommentButton.backgroundColor = darkBlue //UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
                 commentLabel.text = allComment
                 stackViewAllComments.isHidden = false
             } else {
                 if let comment = photo.individualComment {
                     addCommentButton.setImage(UIImage(named:"edit"), for: .normal)
-                    addCommentButton.backgroundColor = UIColor(red:0.19, green:0.44, blue:0.90, alpha:1.0) //UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
+                    addCommentButton.backgroundColor = darkBlue //UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
                     commentLabel.text = comment
+                    commentLabel.textColor = darkBlue
                     stackViewAllComments.isHidden = false
                 } else {
-                    addCommentButton.setImage(UIImage(named:"one_comment"), for: .normal)
-                    addCommentButton.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1)
+                    addCommentButton.setImage(UIImage(named:"add_comment"), for: .normal)
+                    
+                    addCommentButton.backgroundColor = darkBlue//UIColor(red: 0, green: 0, blue: 0, alpha: 1)
                     commentLabel.text = "Tap here to add a comment"
+                    commentLabel.textColor = .systemGray2
                     stackViewAllComments.isHidden = true
                 }
             }
@@ -694,6 +763,11 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
             }
             
             if let selectedPhoto = photo {
+                if let tags = selectedPhoto.tags, tags.count.description == "0" {
+                    tagNumberLabel.isHidden = true
+                } else {
+                    tagNumberLabel.isHidden = false
+                }
                 tagNumberLabel.text = selectedPhoto.tags?.count.description
                 print("-------------")
                 for t in selectedPhoto.tags! {
@@ -767,9 +841,10 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
     //MARK: - Scroll View function from delegate
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>)
     {
-        if scrollView == dropDownListProjectsTableView as UIScrollView {
-            return
-        }
+    
+//        if scrollView == dropDownListProjectsTableView as UIScrollView {
+//            return
+//        }
         targetContentOffset.pointee = scrollView.contentOffset
        
         if scrollView == self.scrollView {
@@ -828,14 +903,20 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
             }, completion: { (finished: Bool) in 
                 self.updateCommentLabel()
                 self.updateTagNumber()
+                self.deleteImageButton.isHidden = false
+                self.addTagButton.isHidden = false
+                
             })
         }
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView == dropDownListProjectsTableView as UIScrollView {
-            return
-        }
+        deleteImageButton.isHidden = true
+        addTagButton.isHidden = true
+        tagNumberLabel.isHidden = true
+//        if scrollView == dropDownListProjectsTableView as UIScrollView {
+//            return
+//        }
         if scrollView == self.scrollView {
             let pageIndex = floor(scrollView.contentOffset.x * 2 / self.slidesContainer.frame.width)
             imageControl.currentPage = Int(pageIndex)
@@ -870,9 +951,10 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate,  UITableView
         }
     }
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        if scrollView == dropDownListProjectsTableView as UIScrollView {
-            return
-        }
+    
+//        if scrollView == dropDownListProjectsTableView as UIScrollView {
+//            return
+//        }
         if scrollView == self.scrollView {
             updateCommentLabel()
             updateTagNumber()
@@ -999,3 +1081,40 @@ extension PhotosViewController: AssetsPickerViewControllerDelegate {
     func assetsPicker(controller: AssetsPickerViewController, didDeselect asset: PHAsset, at indexPath: IndexPath) {}
 }
 
+extension UIPageControl {
+    
+    func customPageController(dotFillColor: UIColor, dotBorderColor: UIColor, dotBorderwidth: CGFloat){
+        for(pageIndex, dotView) in self.subviews.enumerated() {
+            if self.currentPage == pageIndex {
+                dotView.backgroundColor = dotFillColor
+                dotView.layer.cornerRadius = dotView.frame.size.height / 2
+            } else {
+                dotView.backgroundColor = .clear
+                dotView.layer.cornerRadius = dotView.frame.size.height / 2
+                dotView.layer.borderColor = dotBorderColor.cgColor
+                dotView.layer.borderWidth = dotBorderwidth
+            }
+        }
+    }
+}
+extension UIImage {
+    /// Creates a circular outline image.
+    class func outlinedEllipse(size: CGSize, color: UIColor, lineWidth: CGFloat = 1.0) -> UIImage? {
+
+        UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
+        guard let context = UIGraphicsGetCurrentContext() else {
+                return nil
+        }
+        context.setStrokeColor(color.cgColor)
+        context.setLineWidth(lineWidth)
+        // Inset the rect to account for the fact that strokes are
+        // centred on the bounds of the shape.
+        let rect = CGRect(origin: .zero, size: size).insetBy(dx: lineWidth * 0.5, dy: lineWidth * 0.5)
+        context.addEllipse(in: rect)
+        context.strokePath()
+
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
+    }
+}

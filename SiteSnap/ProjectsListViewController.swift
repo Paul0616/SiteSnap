@@ -12,7 +12,18 @@ protocol ProjectListViewControllerDelegate {
     func projectWasSelectedFromOutside(projectId: String)
 }
 
-class ProjectsListViewController: UIViewController, UITableViewDataSource {
+class ProjectsListViewController: UIViewController, UITableViewDataSource, NewProjectViewControllerDelegate {
+   
+    //MARK: - New Project DELEGATE
+    func newProjectAddedCallback(projectModel: ProjectModel?) {
+        if let project = projectModel{
+            if ProjectHandler.saveProject(id: project.id, name: project.projectName, latitude: project.latitudeCenterPosition, longitude: project.longitudeCenterPosition, projectOwnerName: project.projectOwnerName) {
+                print("PROJECT: \(project.projectName) added")
+                loadingProjectIntoList()
+            }
+        }
+    }
+    
 
     var userProjects = [ProjectModel]()
     var currentProjectId: String?
@@ -30,7 +41,13 @@ class ProjectsListViewController: UIViewController, UITableViewDataSource {
         newProjectButton.layer.cornerRadius = 8
         closeButton.layer.cornerRadius = 8
         // Do any additional setup after loading the view.
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        //print(UserDefaults.standard.value(forKey: "projectWasSelected"))
         loadingProjectIntoList()
+    
     }
     
     
@@ -67,8 +84,21 @@ class ProjectsListViewController: UIViewController, UITableViewDataSource {
         print("\(currentProjectId ?? "")")
         delegate?.projectWasSelectedFromOutside(projectId: currentProjectId!)
     }
-   
+    //MARK: - navigation
+
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destination.
+        // Pass the selected object to the new view controller.
+    
+        if segue.identifier == "createProjectIdentifier", let destination = segue.destination as? NewProjectViewController {
+            destination.delegate = self
+        }
+    }
 }
+
+
+
 //MARK: - TableView Delegate
 extension ProjectsListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
