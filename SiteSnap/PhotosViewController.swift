@@ -470,7 +470,8 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate, CLLocationMa
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         } else {
-            performSegue(withIdentifier: "SetTagSegue", sender: sender)
+            //performSegue(withIdentifier: "SetTagSegue", sender: sender)
+            performSegue(withIdentifier: "NewTagsSegue", sender: sender)
         }
     }
     
@@ -969,6 +970,14 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate, CLLocationMa
                 print("TIMER STARTED - photos")
             }
         }
+        if let sourceViewController = segue.source as? BrowseTagsViewController {
+            print(sourceViewController.description)
+            updateTagNumber()
+            if timerBackend == nil || !timerBackend.isValid {
+                timerBackend = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(callBackendConnection), userInfo: nil, repeats: true)
+                print("TIMER STARTED - photos")
+            }
+        }
     }
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -1013,7 +1022,17 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate, CLLocationMa
         
         if  segue.identifier == "NewTagsSegue",
             let destination = segue.destination as? BrowseTagsViewController {
-            //destination.lastLocation = lastLocation
+            if PhotoHandler.allTagsWasSet(localIdentifier: self.slidesObjects[imageControl.currentPage].localIdentifier!)
+            {
+                let identifier = PhotoHandler.getAllTagsPhotoIdentifier(localIdentifier: self.slidesObjects[imageControl.currentPage].localIdentifier!)
+                destination.currentPhotoLocalIdentifier = identifier
+            } else {
+                destination.currentPhotoLocalIdentifier = self.slidesObjects[imageControl.currentPage].localIdentifier
+            }
+            destination.lastLocation = lastLocation
+            timerBackend.invalidate()
+            
+            print("TIMER INVALID - photos")
             
         }
     }

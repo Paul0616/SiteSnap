@@ -28,6 +28,8 @@
 		40B296BF21CCE61B00A3C487 /* Slide.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40B296BE21CCE61B00A3C487 /* Slide.xib */; };
 		40B9656121CA7240004A383D /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B9656021CA7240004A383D /* LocationManager.swift */; };
 		40D025E325FDFCA600E660D0 /* BrowseTagsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D025E225FDFCA600E660D0 /* BrowseTagsViewController.swift */; };
+		40D025E625FE798C00E660D0 /* TagCell1TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D025E525FE798C00E660D0 /* TagCell1TableViewCell.swift */; };
+		40D025E925FE79A100E660D0 /* TagCell2TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D025E825FE79A100E660D0 /* TagCell2TableViewCell.swift */; };
 		40E9A18E22280DA5008E8352 /* NoProjectsAssignedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E9A18D22280DA5008E8352 /* NoProjectsAssignedViewController.swift */; };
 		40EB38AB25F535E100BF830B /* ProcessingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40EB38AA25F535E100BF830B /* ProcessingViewController.swift */; };
 		803902112621DA84596AB896 /* Pods_SiteSnap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08D194FC8394711D1AE36F7F /* Pods_SiteSnap.framework */; };
@@ -100,6 +102,8 @@
 		40B296BE21CCE61B00A3C487 /* Slide.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Slide.xib; sourceTree = "<group>"; };
 		40B9656021CA7240004A383D /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		40D025E225FDFCA600E660D0 /* BrowseTagsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowseTagsViewController.swift; sourceTree = "<group>"; };
+		40D025E525FE798C00E660D0 /* TagCell1TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCell1TableViewCell.swift; sourceTree = "<group>"; };
+		40D025E825FE79A100E660D0 /* TagCell2TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCell2TableViewCell.swift; sourceTree = "<group>"; };
 		40E9A18D22280DA5008E8352 /* NoProjectsAssignedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoProjectsAssignedViewController.swift; sourceTree = "<group>"; };
 		40EB38AA25F535E100BF830B /* ProcessingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingViewController.swift; sourceTree = "<group>"; };
 		6A73AA7E3AC6DD8718D48C21 /* Pods-SiteSnap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SiteSnap.release.xcconfig"; path = "Pods/Target Support Files/Pods-SiteSnap/Pods-SiteSnap.release.xcconfig"; sourceTree = "<group>"; };
@@ -242,6 +246,8 @@
 				DA977F5621C3F21C00883640 /* subClasses */,
 				405977E821C242BF00AF9F4B /* Fonts */,
 				DA977F0821C1460F00883640 /* AppDelegate.swift */,
+				40D025E525FE798C00E660D0 /* TagCell1TableViewCell.swift */,
+				40D025E825FE79A100E660D0 /* TagCell2TableViewCell.swift */,
 				4047811521EC820C006987B4 /* Constants.swift */,
 				DAD922F2222ADD0C00A7A93E /* BackendConnection.swift */,
 				40EB38AA25F535E100BF830B /* ProcessingViewController.swift */,
@@ -478,6 +484,7 @@
 				40E9A18E22280DA5008E8352 /* NoProjectsAssignedViewController.swift in Sources */,
 				4095FBE921F071A7008A39D4 /* ProjectHandler.swift in Sources */,
 				4033274C21F5BE87007EE9DF /* SettingsTableViewCell.swift in Sources */,
+				40D025E625FE798C00E660D0 /* TagCell1TableViewCell.swift in Sources */,
 				DAB7796A21E0F15A00308543 /* Slider.swift in Sources */,
 				DAA270A221CBD5AD0058148A /* ImageDotButton.swift in Sources */,
 				DABA66E121D23F1D0036CEE7 /* Tag+CoreDataClass.swift in Sources */,
@@ -485,6 +492,7 @@
 				DABA66DE21D23F1D0036CEE7 /* Photo+CoreDataProperties.swift in Sources */,
 				DAA615A321E7B1D300B5B15E /* ImageForUpload.swift in Sources */,
 				DA47324C21D8FA7D003729BB /* PhotoHandler.swift in Sources */,
+				40D025E925FE79A100E660D0 /* TagCell2TableViewCell.swift in Sources */,
 				40A4E95625EB880400FEE564 /* NewProjectViewController.swift in Sources */,
 				DA1E46CE21F4EC46004FB425 /* ForgotPasswordViewController.swift in Sources */,
 				DA47324821D8BF75003729BB /* TagsModalViewController.swift in Sources */,
