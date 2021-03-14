@@ -70,7 +70,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate, CLLocationMa
         commentsContainer.layer.shadowOpacity = 0.5
         commentsContainer.layer.shadowOffset = CGSize(width: 0, height: 0)
         commentsContainer.layer.shadowRadius = 5
-        //commentsContainer.layer.masksToBounds = true
+      
         commentLabel.textColor = darkBlue
         takePhotoButton.layer.cornerRadius = 6
         takePhotoButton.titleLabel?.lineBreakMode = .byWordWrapping
@@ -81,11 +81,6 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate, CLLocationMa
         addFromGalleryButton.titleLabel?.numberOfLines = 2
         addFromGalleryButton.titleLabel?.textAlignment = .center
         nextButton.layer.cornerRadius = 6
-        //nextButton.semanticContentAttribute = UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft ? .forceLeftToRight : .forceRightToLeft
-//        nextButton.transform = CGAffineTransform(scaleX: -1, y: 1)
-//        nextButton.titleLabel?.transform = CGAffineTransform(scaleX: -1, y: 1)
-//        nextButton.imageView?.transform = CGAffineTransform(translationX: 20, y: 0)
-//        nextButton.imageView?.transform = CGAffineTransform(scaleX: -1, y: 1)
         
         addTagButton.layer.cornerRadius = 25
     
@@ -514,6 +509,9 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate, CLLocationMa
             self.present(alert, animated: true, completion: nil)
         }
     
+    }
+    @IBAction func onClickNewTags(_ sender: Any) {
+        performSegue(withIdentifier: "NewTagsSegue", sender: sender)
     }
     
     @IBAction func onPageChange(_ sender: UIPageControl) {
@@ -1010,6 +1008,12 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate, CLLocationMa
         if  segue.identifier == "ConfirmLocationSegue",
             let destination = segue.destination as? ConfirmLocationViewController {
             destination.lastLocation = lastLocation
+            
+        }
+        
+        if  segue.identifier == "NewTagsSegue",
+            let destination = segue.destination as? BrowseTagsViewController {
+            //destination.lastLocation = lastLocation
             
         }
     }
