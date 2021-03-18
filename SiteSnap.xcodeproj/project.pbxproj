@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4010AD7A25FF44A80048D5F7 /* CircleCheckBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4010AD7925FF44A80048D5F7 /* CircleCheckBox.swift */; };
+		4010AD7D25FF4E3A0048D5F7 /* AdddNewTagViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4010AD7C25FF4E3A0048D5F7 /* AdddNewTagViewController.swift */; };
+		4010AD8025FF4E650048D5F7 /* AddNewTagViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4010AD7F25FF4E650048D5F7 /* AddNewTagViewController.swift */; };
 		401B3F1B21E5FB8400509EF2 /* UploadsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401B3F1A21E5FB8400509EF2 /* UploadsViewController.swift */; };
 		4033274621F0A00D007EE9DF /* Project+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4033274521F0A00D007EE9DF /* Project+CoreDataClass.swift */; };
 		4033274821F0A016007EE9DF /* Project+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4033274721F0A016007EE9DF /* Project+CoreDataProperties.swift */; };
@@ -80,6 +83,9 @@
 
 /* Begin PBXFileReference section */
 		08D194FC8394711D1AE36F7F /* Pods_SiteSnap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SiteSnap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4010AD7925FF44A80048D5F7 /* CircleCheckBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleCheckBox.swift; sourceTree = "<group>"; };
+		4010AD7C25FF4E3A0048D5F7 /* AdddNewTagViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AdddNewTagViewController.swift; path = /Users/pauloprea/IOSProjects/SiteSnap/SiteSnap/AdddNewTagViewController.swift; sourceTree = "<absolute>"; };
+		4010AD7F25FF4E650048D5F7 /* AddNewTagViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewTagViewController.swift; sourceTree = "<group>"; };
 		401B3F1A21E5FB8400509EF2 /* UploadsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadsViewController.swift; sourceTree = "<group>"; };
 		4033274521F0A00D007EE9DF /* Project+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Project+CoreDataClass.swift"; sourceTree = "<group>"; };
 		4033274721F0A016007EE9DF /* Project+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Project+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -250,6 +256,7 @@
 				40D025E825FE79A100E660D0 /* TagCell2TableViewCell.swift */,
 				4047811521EC820C006987B4 /* Constants.swift */,
 				DAD922F2222ADD0C00A7A93E /* BackendConnection.swift */,
+				4010AD7C25FF4E3A0048D5F7 /* AdddNewTagViewController.swift */,
 				40EB38AA25F535E100BF830B /* ProcessingViewController.swift */,
 				DA977F0A21C1460F00883640 /* SignInViewController.swift */,
 				407C5C0225E4E1B0003C4276 /* SignUpViewController.swift */,
@@ -280,6 +287,7 @@
 				DA977F0F21C1460F00883640 /* SiteSnap.xcdatamodeld */,
 				DAA2705821C8FAB10058148A /* Base.lproj */,
 				40D025E225FDFCA600E660D0 /* BrowseTagsViewController.swift */,
+				4010AD7F25FF4E650048D5F7 /* AddNewTagViewController.swift */,
 			);
 			path = SiteSnap;
 			sourceTree = "<group>";
@@ -307,6 +315,7 @@
 				DAB7796721DFA26B00308543 /* PreviewView.swift */,
 				DAB7796921E0F15A00308543 /* Slider.swift */,
 				DA9F69FC22020474006436F6 /* CheckBox.swift */,
+				4010AD7925FF44A80048D5F7 /* CircleCheckBox.swift */,
 				DAE790D02285A6A2003B465D /* NetworkState.swift */,
 				409ABECF25E7A11200C17E1E /* ProjectTableViewCell.swift */,
 				40747BE825EA5F080009BFDE /* RoundCheckBox.swift */,
@@ -478,6 +487,7 @@
 				DA47325821DBB227003729BB /* PhotoInspectorViewController.swift in Sources */,
 				40D025E325FDFCA600E660D0 /* BrowseTagsViewController.swift in Sources */,
 				DA977F1121C1460F00883640 /* SiteSnap.xcdatamodeld in Sources */,
+				4010AD7D25FF4E3A0048D5F7 /* AdddNewTagViewController.swift in Sources */,
 				407C5C0325E4E1B0003C4276 /* SignUpViewController.swift in Sources */,
 				DABA66E221D23F1D0036CEE7 /* Tag+CoreDataProperties.swift in Sources */,
 				403EEAAA25E63C7D00EB151B /* ReCAPTCHAViewController.swift in Sources */,
@@ -505,10 +515,12 @@
 				DA9C51FC22153E4C00326611 /* DocumentFilesViewController.swift in Sources */,
 				DAB7796821DFA26B00308543 /* PreviewView.swift in Sources */,
 				40B9656121CA7240004A383D /* LocationManager.swift in Sources */,
+				4010AD7A25FF44A80048D5F7 /* CircleCheckBox.swift in Sources */,
 				DA47325221DA4402003729BB /* PaddingLabel.swift in Sources */,
 				DA47324E21D96A1A003729BB /* TagModel.swift in Sources */,
 				DAA615A121E663DF00B5B15E /* UploadsTableViewCell.swift in Sources */,
 				DAB7795C21DD60D400308543 /* PhotoAnnotation.swift in Sources */,
+				4010AD8025FF4E650048D5F7 /* AddNewTagViewController.swift in Sources */,
 				401B3F1B21E5FB8400509EF2 /* UploadsViewController.swift in Sources */,
 				DAB7795E21DE7DF400308543 /* PhotoAnnotationView.swift in Sources */,
 				DA9F69FD22020474006436F6 /* CheckBox.swift in Sources */,

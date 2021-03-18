@@ -496,6 +496,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate, CLLocationMa
         performSegue(withIdentifier: "AddCommentViewIdentifier", sender: sender)
     }
     
+    
     @IBAction func onClickDeleteImageButton(_ sender: UIButton) {
         if self.imageControl.numberOfPages > 0 {
             let alert = UIAlertController(title: "Please confirm choice", message: "Are you sure you want to remove this photo?", preferredStyle: .alert)
