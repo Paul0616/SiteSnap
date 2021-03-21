@@ -307,8 +307,8 @@ class BackendConnection: NSObject {
                 for tg in (project?.availableTags)! {
                     let tag = tg as! Tag
                     currentProjectTagIds.append(tag.id!)
-                     print("-----PROJECT TAGS-------\(String(describing: tag.text)) current project available tag")
                 }
+                print("-----PROJECT TAGS-------\(String(describing: project?.availableTags?.count)) available tags")//\(String(describing: tag.text)) current project available tag")
                 for photoTag in photo.tags! {
                     let tag = photoTag as! Tag
                     print("-----PHOTO TAGS-------\(String(describing: tag.text))")

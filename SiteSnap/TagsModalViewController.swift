@@ -195,36 +195,27 @@ class TagsModalViewController: UIViewController, UITableViewDelegate, UITableVie
             //cell.tagSwitch.isOn = tagsWithSections[indexPath.section][indexPath.row].selected
             cell.tagCheckBox.isOn = tagsWithSections[indexPath.section][indexPath.row].selected
             if indexPath.section == 0 {
-               // cell.tagSwitch.tag = indexPath.row
                 cell.tagCheckBox.tag = indexPath.row
             } else {
-                //cell.tagSwitch.tag = indexPath.section * tagsWithSections[indexPath.section - 1].count + indexPath.row
                 cell.tagCheckBox.tag = indexPath.section * tagsWithSections[indexPath.section - 1].count + indexPath.row
             }
             
             if tagsWithSections[indexPath.section][indexPath.row].tag.tagColor != nil {
                 cell.tagContainer.backgroundColor = UIColor(hexString: tagsWithSections[indexPath.section][indexPath.row].tag.tagColor!)
-                //cell.tagImage.backgroundColor = UIColor(hexString: tagsWithSections[indexPath.section][indexPath.row].tag.tagColor!)
-                //cell.tagText.backgroundColor = UIColor(hexString: tagsWithSections[indexPath.section][indexPath.row].tag.tagColor!)
-                //cell.tagText.roundCorners(corners: [.topLeft, .bottomLeft], radius: 6.0)
-                //cell.tagText.roundCorners(corners: [.topRight, .bottomRight], radius: 6.0)
             }
         } else {
             cell.tagText.text = searchTags[indexPath.section][indexPath.row].tag.text
-           // cell.tagSwitch.isOn = searchTags[indexPath.section][indexPath.row].selected
             cell.tagCheckBox.isOn = searchTags[indexPath.section][indexPath.row].selected
             if indexPath.section == 0 {
-                //cell.tagSwitch.tag = indexPath.row
                 cell.tagCheckBox.tag = indexPath.row
             } else {
-               // cell.tagSwitch.tag = indexPath.section * searchTags[indexPath.section - 1].count + indexPath.row
+               
                 cell.tagCheckBox.tag = indexPath.section * searchTags[indexPath.section - 1].count + indexPath.row
             }
             
             if searchTags[indexPath.section][indexPath.row].tag.tagColor != nil {
                 cell.tagContainer.backgroundColor = UIColor(hexString: searchTags[indexPath.section][indexPath.row].tag.tagColor!)
-               // cell.tagImage.backgroundColor = UIColor(hexString: searchTags[indexPath.section][indexPath.row].tag.tagColor!)
-               // cell.tagText.backgroundColor = UIColor(hexString: searchTags[indexPath.section][indexPath.row].tag.tagColor!)
+               
                 
             }
         }
@@ -260,7 +251,7 @@ class TagsModalViewController: UIViewController, UITableViewDelegate, UITableVie
         } else {
             searchFlag = false
         }
-        
+    
         tblView.reloadData()
     }
     

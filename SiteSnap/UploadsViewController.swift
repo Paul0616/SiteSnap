@@ -80,8 +80,8 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
             print("USER = CURRENT USER = \(String(describing: self.user?.username))")
         }
         currentUploadingLocalIdentifier = images[0][0].localIdentifier
-        uploadingProcessRunning = true
-        startUploadingOneByOne()
+        //uploadingProcessRunning = true
+        //startUploadingOneByOne()
       
     }
     

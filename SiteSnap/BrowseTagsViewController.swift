@@ -9,7 +9,9 @@
 import UIKit
 import CoreLocation
 
-class BrowseTagsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, BackendConnectionDelegate {
+
+
+class BrowseTagsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, BackendConnectionDelegate, AddNewTagViewControllerDelegate {
     
     var currentPhotoLocalIdentifier: String?
     var tags: [TagModel]!
@@ -21,14 +23,21 @@ class BrowseTagsViewController: UIViewController, UITableViewDelegate, UITableVi
     var projectWasSelected: Bool = false
     var lastLocation: CLLocation!
     var timerBackend: Timer!
+    var isPortrait: Bool?
     
 
+    var sameHeightTablesConstraint: NSLayoutConstraint?
+    var lowerTableZeroHightConstraint: NSLayoutConstraint?
+    var lowerTableHeaderHeightConstraint: NSLayoutConstraint?
+    
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var alltagsCheck: CheckBox!
     // var tagsApplied = 1
     
     @IBOutlet weak var allTagsTableView: UITableView!
+    @IBOutlet weak var allTagsStackView: UIStackView!
     @IBOutlet weak var tagsAppliedStackView: UIStackView!
+    @IBOutlet weak var tagsAppliedhHeaderView: UIView!
     @IBOutlet weak var applyTagLabel: UILabel!
     @IBOutlet weak var tblView1: UITableView!
     @IBOutlet weak var tblView2: UITableView!
@@ -37,8 +46,9 @@ class BrowseTagsViewController: UIViewController, UITableViewDelegate, UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
         alltagsCheck.isOn = PhotoHandler.allTagsWasSet(localIdentifier: currentPhotoLocalIdentifier!)
-        // Do any additional setup after loading the view.
+    
         makeTagArray()
+        setConstraints()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -58,6 +68,7 @@ class BrowseTagsViewController: UIViewController, UITableViewDelegate, UITableVi
         print("TIMER INVALID - tags")
     }
     
+    
     //MARK: - make tags array
     func makeTagArray(){
         tags = PhotoHandler.getTags(localIdentifier: currentPhotoLocalIdentifier!)
@@ -71,23 +82,51 @@ class BrowseTagsViewController: UIViewController, UITableViewDelegate, UITableVi
                 tagsUnselected.append(tag)
             }
         }
-        
-        //tagsWithSections = [tagsSelected, tagsUnselected]
     }
     
     override func viewDidLayoutSubviews() {
         if self.view.safeAreaLayoutGuide.layoutFrame.size.width > self.view.safeAreaLayoutGuide.layoutFrame.size.height {
             print("landscape")
+            isPortrait = false
             tagsAppliedStackView.isHidden = false
             applyTagLabel.isHidden = true
         } else {
             print("portrait")
+            isPortrait = true
             applyTagLabel.isHidden = false
             if tagsSelected?.count == 0 {
                 tagsAppliedStackView.isHidden = true
             } else {
                 tagsAppliedStackView.isHidden = false
             }
+        }
+        tagsAppliedConstraints()
+    }
+    
+    func setConstraints(){
+        tagsAppliedStackView.translatesAutoresizingMaskIntoConstraints = false
+        tagsAppliedhHeaderView.translatesAutoresizingMaskIntoConstraints = false
+        sameHeightTablesConstraint = tagsAppliedStackView.heightAnchor.constraint(equalTo: allTagsStackView.heightAnchor, multiplier: 1)
+        lowerTableZeroHightConstraint = tagsAppliedStackView.heightAnchor.constraint(equalToConstant: 0)
+        lowerTableHeaderHeightConstraint = tagsAppliedhHeaderView.heightAnchor.constraint(equalToConstant: 56)
+    }
+    
+    func tagsAppliedConstraints(){
+        if let isPortrait = isPortrait, !isPortrait {
+            sameHeightTablesConstraint?.isActive = true
+            lowerTableHeaderHeightConstraint?.isActive = true
+            lowerTableZeroHightConstraint?.isActive = false
+            return
+        }
+        
+        if tagsSelected.count == 0 {
+            sameHeightTablesConstraint?.isActive = false
+            lowerTableHeaderHeightConstraint?.isActive = false
+            lowerTableZeroHightConstraint?.isActive = true
+        } else {
+            sameHeightTablesConstraint?.isActive = true
+            lowerTableHeaderHeightConstraint?.isActive = true
+            lowerTableZeroHightConstraint?.isActive = false
         }
     }
 
@@ -134,7 +173,9 @@ class BrowseTagsViewController: UIViewController, UITableViewDelegate, UITableVi
             let tg = t as! Tag
             print("current photo contain \(tg.text ?? "nil")")
         }
+        databaseUpdateFinished()
     }
+    
     @IBAction func onCheckTag2(_ sender: CheckBox) {
         let index = sender.tag
         let tagId = tagsSelected[index].tag.id
@@ -160,12 +201,19 @@ class BrowseTagsViewController: UIViewController, UITableViewDelegate, UITableVi
             let tg = t as! Tag
             print("current photo contain \(tg.text ?? "nil")")
         }
+        databaseUpdateFinished()
     }
     
     func reloadTagsIntoTables(){
         tagsAppliedStackView.isHidden = tagsSelected?.count == 0
+        tagsAppliedConstraints()
         tblView1.reloadData()
         tblView2.reloadData()
+    }
+    
+    //MARK: - AddNewTagDelegate
+    func tagWasAdded() {
+        databaseUpdateFinished()
     }
     
     //MARK: - Tables delegate
@@ -201,14 +249,14 @@ class BrowseTagsViewController: UIViewController, UITableViewDelegate, UITableVi
                 cell.tagCheckBox.isOn = tagsUnselected[indexPath.row].selected
                 cell.tagCheckBox.tag = indexPath.row
                 if tagsUnselected[indexPath.row].tag.tagColor != nil {
-                    cell.container.backgroundColor = UIColor(hexString: tagsUnselected[indexPath.row].tag.tagColor!)
+                    cell.container.backgroundColor = UIColor(hexString: tagsUnselected[indexPath.row].tag.tagColor!).adjustedColor(percent: 1.2).withAlphaComponent(0.7)
                 }
             } else {
                 cell.tagText.text = searchTagsUnselected[indexPath.row].tag.text
                 cell.tagCheckBox.isOn = searchTagsUnselected[indexPath.row].selected
                 cell.tagCheckBox.tag = indexPath.row
                 if searchTagsUnselected[indexPath.row].tag.tagColor != nil {
-                    cell.container.backgroundColor = UIColor(hexString: searchTagsUnselected[indexPath.row].tag.tagColor!)
+                    cell.container.backgroundColor = UIColor(hexString: searchTagsUnselected[indexPath.row].tag.tagColor!).adjustedColor(percent: 1.2).withAlphaComponent(0.7)
                 }
             }
             return cell
@@ -219,14 +267,14 @@ class BrowseTagsViewController: UIViewController, UITableViewDelegate, UITableVi
                 cell.tagCheckBox.isOn = tagsSelected[indexPath.row].selected
                 cell.tagCheckBox.tag = indexPath.row
                 if tagsSelected[indexPath.row].tag.tagColor != nil {
-                    cell.container.backgroundColor = UIColor(hexString: tagsSelected[indexPath.row].tag.tagColor!)
+                    cell.container.backgroundColor = UIColor(hexString: tagsSelected[indexPath.row].tag.tagColor!).adjustedColor(percent: 1.2).withAlphaComponent(0.7)
                 }
             } else {
                 cell.tagText.text = searchTagsSelected[indexPath.row].tag.text
                 cell.tagCheckBox.isOn = searchTagsSelected[indexPath.row].selected
                 cell.tagCheckBox.tag = indexPath.row
                 if searchTagsSelected[indexPath.row].tag.tagColor != nil {
-                    cell.container.backgroundColor = UIColor(hexString: searchTagsSelected[indexPath.row].tag.tagColor!)
+                    cell.container.backgroundColor = UIColor(hexString: searchTagsSelected[indexPath.row].tag.tagColor!).adjustedColor(percent: 1.2).withAlphaComponent(0.7)
                 }
             }
             return cell
@@ -269,7 +317,6 @@ class BrowseTagsViewController: UIViewController, UITableViewDelegate, UITableVi
         searchBar.resignFirstResponder()
     }
     
-    //MARK: - The called function for the timer
     
     //MARK: - Backend delegate
     @objc func callBackendConnection(){
@@ -312,16 +359,20 @@ class BrowseTagsViewController: UIViewController, UITableViewDelegate, UITableVi
         makeTagArray()
         tblView1.reloadData()
         tblView2.reloadData()
+        tagsAppliedConstraints()
     }
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
+        if segue.identifier == "addNewTagSegue", let destination = segue.destination as? AddNewTagViewController {
+            destination.delegate = self
+        }
     }
-    */
+   
 
 }
 
@@ -343,5 +394,22 @@ extension UIColor {
             (a, r, g, b) = (255, 0, 0, 0)
         }
         self.init(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: CGFloat(a) / 255)
+    }
+    
+    func adjustedColor(percent: CGFloat) -> UIColor {
+        var _percent = percent
+        if _percent < 0 {
+            _percent = 0
+        }
+        
+        var r,g,b,a: CGFloat
+        r = 0.0
+        g = 0.0
+        b = 0.0
+        a = 0.0
+        if self.getRed(&r, green: &g, blue: &b, alpha: &a){
+            return UIColor(red: max(r * _percent, 0.0), green: max(g * _percent, 0.0), blue: max(b * _percent, 0.0), alpha: a)
+        }
+        return UIColor()
     }
 }

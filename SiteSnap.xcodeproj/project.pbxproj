@@ -30,6 +30,8 @@
 		40B296BC21CCE5A000A3C487 /* Slide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B296BB21CCE5A000A3C487 /* Slide.swift */; };
 		40B296BF21CCE61B00A3C487 /* Slide.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40B296BE21CCE61B00A3C487 /* Slide.xib */; };
 		40B9656121CA7240004A383D /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B9656021CA7240004A383D /* LocationManager.swift */; };
+		40C9F87A26072DAC00F69253 /* Annotation_v2.xib in Resources */ = {isa = PBXBuildFile; fileRef = 40C9F87926072DAC00F69253 /* Annotation_v2.xib */; };
+		40C9F87D26072F4500F69253 /* Annotation_V2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C9F87C26072F4500F69253 /* Annotation_V2.swift */; };
 		40D025E325FDFCA600E660D0 /* BrowseTagsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D025E225FDFCA600E660D0 /* BrowseTagsViewController.swift */; };
 		40D025E625FE798C00E660D0 /* TagCell1TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D025E525FE798C00E660D0 /* TagCell1TableViewCell.swift */; };
 		40D025E925FE79A100E660D0 /* TagCell2TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D025E825FE79A100E660D0 /* TagCell2TableViewCell.swift */; };
@@ -107,6 +109,8 @@
 		40B296BB21CCE5A000A3C487 /* Slide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slide.swift; sourceTree = "<group>"; };
 		40B296BE21CCE61B00A3C487 /* Slide.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Slide.xib; sourceTree = "<group>"; };
 		40B9656021CA7240004A383D /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		40C9F87926072DAC00F69253 /* Annotation_v2.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Annotation_v2.xib; sourceTree = "<group>"; };
+		40C9F87C26072F4500F69253 /* Annotation_V2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Annotation_V2.swift; sourceTree = "<group>"; };
 		40D025E225FDFCA600E660D0 /* BrowseTagsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowseTagsViewController.swift; sourceTree = "<group>"; };
 		40D025E525FE798C00E660D0 /* TagCell1TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCell1TableViewCell.swift; sourceTree = "<group>"; };
 		40D025E825FE79A100E660D0 /* TagCell2TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCell2TableViewCell.swift; sourceTree = "<group>"; };
@@ -218,6 +222,7 @@
 				40B296BE21CCE61B00A3C487 /* Slide.xib */,
 				DAB7795F21DE868200308543 /* Annotation.xib */,
 				DAB7796F21E1146B00308543 /* Slider.xib */,
+				40C9F87926072DAC00F69253 /* Annotation_v2.xib */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -282,6 +287,7 @@
 				40B296BB21CCE5A000A3C487 /* Slide.swift */,
 				DA9C51FA22153E4C00326611 /* DocumentFilesViewController.swift */,
 				DAB7796121DE8A3900308543 /* Annotation.swift */,
+				40C9F87C26072F4500F69253 /* Annotation_V2.swift */,
 				DA977F1221C1461100883640 /* Assets.xcassets */,
 				DA977F1721C1461100883640 /* Info.plist */,
 				DA977F0F21C1460F00883640 /* SiteSnap.xcdatamodeld */,
@@ -428,6 +434,7 @@
 			files = (
 				403EEAB525E63E5C00EB151B /* recaptcha.html in Resources */,
 				DAA2705E21C8FAB10058148A /* Main.storyboard in Resources */,
+				40C9F87A26072DAC00F69253 /* Annotation_v2.xib in Resources */,
 				40615ADB25E1443300D4E079 /* site_snap_logo.png in Resources */,
 				DA977F1621C1461100883640 /* LaunchScreen.storyboard in Resources */,
 				DAB7797021E1146B00308543 /* Slider.xib in Resources */,
@@ -530,6 +537,7 @@
 				4033274621F0A00D007EE9DF /* Project+CoreDataClass.swift in Sources */,
 				DAE790D12285A6A2003B465D /* NetworkState.swift in Sources */,
 				4033274821F0A016007EE9DF /* Project+CoreDataProperties.swift in Sources */,
+				40C9F87D26072F4500F69253 /* Annotation_V2.swift in Sources */,
 				40EB38AB25F535E100BF830B /* ProcessingViewController.swift in Sources */,
 				DAA2706021C922B80058148A /* ProcessingPopup.swift in Sources */,
 				409ABECC25E78E2A00C17E1E /* ProjectsListViewController.swift in Sources */,

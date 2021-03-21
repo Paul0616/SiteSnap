@@ -33,18 +33,35 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
     var firstTime: Bool = true
     var hiddenCurrentLocation: Bool = true
     var annotationIsMultiple: Bool = false
-    var editLocationMode: Bool = false
     var preventShowSlider: Bool = false
     var pointForCurrentAnnotation: CGPoint!
     var currentClusterAnnotationIdentifier: String!
     var selectedPhotoIdentifier: String!
-    var dummy: Annotation!
+    var dummy: Annotation_V2!
     private var scaleKvoToken:NSKeyValueObservation?
     var doubleTapGesture: UITapGestureRecognizer!
+    var isPortrait: Bool?
     
     var timerBackend: Timer!
     var projectWasSelected: Bool = false
     var oldProjectSelectedId: String!
+    private var _isEditingLocation: Bool = false
+    
+    var isEditingLocation: Bool {
+        get {
+            return self._isEditingLocation
+        }
+        set {
+            _isEditingLocation = newValue
+            if _isEditingLocation {
+                uploadButton.setTitle("   SET PHOTO\n   LOCATION", for: .normal)
+                uploadButton.setImage(UIImage(named: "gps_fixed"), for: .normal)
+            } else {
+                uploadButton.setTitle("   UPLOAD", for: .normal)
+                uploadButton.setImage(UIImage(named: "cloud_upload"), for: .normal)
+            }
+        }
+    }
     
     //MARK: -
     override func viewDidLoad() {
@@ -53,11 +70,15 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
         backButton.layer.cornerRadius = 20
         confirmPhotoLocationButton.layer.cornerRadius = 6
         confirmPhotoLocationButton.isEnabled = false
+        isEditingLocation = false
         cancelEditButton.layer.cornerRadius = 20
         cancelEditButton.isHidden = true
         gpsIcon.isHidden = true
         confirmPhotoLocationButton.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        confirmPhotoLocationButton.setTitle("Tap a pin to edit\nphoto location", for: .normal)
+        confirmPhotoLocationButton.titleLabel?.textAlignment = .center
         uploadButton.layer.cornerRadius = 6
+        
         // Do any additional setup after loading the view.
         photos = PhotoHandler.fetchAllObjects()
         self.map.delegate = self
@@ -105,7 +126,18 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
             sliderVisibility(hidden: true)
             slideArray =  slideContainer.slides
         }
+        if self.view.safeAreaLayoutGuide.layoutFrame.size.width > self.view.safeAreaLayoutGuide.layoutFrame.size.height {
+            print("landscape")
+            isPortrait = false
+            
+        } else {
+            print("portrait")
+            isPortrait = true
+           
+        }
     }
+    
+    
     //MARK: -
     @IBAction func onBack(_ sender: UIButton) {
         dismiss(animated: true, completion: nil)
@@ -128,51 +160,73 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
             map.mapType = .standard
         }
     }
+    @IBAction func onTapUpload(_ sender: Any) {
+        if isEditingLocation {
+            print("LOCATION EDITING - NO UPLOAD")
+            onTapSetPhotoLocation(uploadButton)
+        } else {
+            performSegue(withIdentifier: "uploadSegue", sender: nil)
+        }
+    }
+    
     @IBAction func onTapEditLocation(_ sender: UIButton) {
-        confirmPhotoLocationButton.isEnabled = true
-        confirmPhotoLocationButton.backgroundColor = UIColor(red:0.19, green:0.44, blue:0.90, alpha:1.0) //UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
+        isEditingLocation = true
+        //confirmPhotoLocationButton.isEnabled = true
+        //confirmPhotoLocationButton.backgroundColor = UIColor(red:0.19, green:0.44, blue:0.90, alpha:1.0) //UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
+        confirmPhotoLocationButton.setTitle("Drag the map to edit\nphoto location", for: .normal)
         cancelEditButton.isHidden = false
         gpsIcon.setImage(UIImage(named: "gps_not_fixed"), for: .normal)
         gpsIcon.isHidden = false
-        uploadButton.isHidden = true
+        //uploadButton.isHidden = true
         backButton.isHidden = true
-        editLocationMode = true
+        //createAnnotations(isAfterEditLocation: true)
         for annotation in annotationsArray {
             if(annotation.subtitle == currentClusterAnnotationIdentifier) {
                 map.view(for: annotation)?.isHidden = true
+            } else {
+                map.view(for: annotation)?.alpha = 0.5
             }
         }
         sliderVisibility(hidden: true)
-        dummy = Bundle.main.loadNibNamed("Annotation", owner: self, options: nil)?.first as? Annotation
-        dummy!.frame = CGRect(x: pointForCurrentAnnotation.x, y: pointForCurrentAnnotation.y, width: 120, height: 120)
-        dummy.numberOfPhotos.isHidden = true
+        dummy = Bundle.main.loadNibNamed("Annotation_v2", owner: self, options: nil)?.first as? Annotation_V2
+        dummy!.frame = CGRect(x: pointForCurrentAnnotation.x, y: pointForCurrentAnnotation.y, width: 100, height: 120)
+        //dummy.numberOfPhotos.isHidden = true
         selectedPhotoIdentifier = slideContainer.slides[slideContainer.photosControl.currentPage].localIdentifier
-        dummy.photoImage.image = slideContainer.slides[slideContainer.photosControl.currentPage].mainImage.image
+        //dummy.photoImage.image = slideContainer.slides[slideContainer.photosControl.currentPage].mainImage.image
+        for annotation in annotationsArray {
+            if annotation.subtitle == currentClusterAnnotationIdentifier {
+                dummy.numberOfPhotos.text = String(annotation.numberOfPhotos!)
+            }
+        }
         map.addSubview(dummy!)
     }
     
     @IBAction func onTapEditAllClusterLocation(_ sender: UIButton) {
-        confirmPhotoLocationButton.isEnabled = true
-        confirmPhotoLocationButton.backgroundColor = UIColor(red:0.19, green:0.44, blue:0.90, alpha:1.0) //UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
+        isEditingLocation = true
+        //confirmPhotoLocationButton.isEnabled = true
+        //confirmPhotoLocationButton.backgroundColor = UIColor(red:0.19, green:0.44, blue:0.90, alpha:1.0) //UIColor(red:0.76, green:0.40, blue:0.86, alpha:1.0)
+        confirmPhotoLocationButton.setTitle("Drag the map to edit\nphoto location", for: .normal)
         cancelEditButton.isHidden = false
         gpsIcon.setImage(UIImage(named: "gps_not_fixed"), for: .normal)
         gpsIcon.isHidden = false
-        uploadButton.isHidden = true
+        //uploadButton.isHidden = true
         backButton.isHidden = true
-        editLocationMode = true
+        //editLocationMode = true
         
         for annotation in annotationsArray {
             if(annotation.subtitle == currentClusterAnnotationIdentifier) {
                 map.view(for: annotation)?.isHidden = true
+            } else {
+                map.view(for: annotation)?.alpha = 0.5
             }
         }
         sliderVisibility(hidden: true)
-        dummy = Bundle.main.loadNibNamed("Annotation", owner: self, options: nil)?.first as? Annotation
-        dummy!.frame = CGRect(x: pointForCurrentAnnotation.x, y: pointForCurrentAnnotation.y, width: 120, height: 120)
-        dummy.numberOfPhotos.isHidden = true
+        dummy = Bundle.main.loadNibNamed("Annotation_v2", owner: self, options: nil)?.first as? Annotation_V2
+        dummy!.frame = CGRect(x: pointForCurrentAnnotation.x, y: pointForCurrentAnnotation.y, width: 100, height: 120)
+        //dummy.numberOfPhotos.isHidden = true
         selectedPhotoIdentifier = nil
-        dummy.photoImage.isHidden = true
-        dummy.numberOfPhotos.isHidden = false
+        //dummy.photoImage.isHidden = true
+        //dummy.numberOfPhotos.isHidden = false
         for annotation in annotationsArray {
             if annotation.subtitle == currentClusterAnnotationIdentifier {
                 dummy.numberOfPhotos.text = String(annotation.numberOfPhotos!)
@@ -184,6 +238,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
     @IBAction func onTapCancelEditButton(_ sender: UIButton) {
         for annotation in annotationsArray {
             map.view(for: annotation)?.isHidden = false
+            map.view(for: annotation)?.alpha = 1
             map.deselectAnnotation(annotation, animated: false)
         }
        cancelUI()
@@ -215,46 +270,23 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
         }
     }
     
-    func noProjectAssigned() {
-        timerBackend.invalidate()
-        print("TIMER INVALID - tags")
-        performSegue(withIdentifier: "NoProjectsAssigned", sender: nil)
-    }
-    
-    func userNeedToCreateFirstProject() {
-        
-    }
-    
-    func databaseUpdateFinished() {
-        //makeTagArray()
-        //tblView.reloadData()
-        if let currentPrj = UserDefaults.standard.value(forKey: "currentProjectId") as? String {
-            if oldProjectSelectedId != currentPrj {
-                let alertController = UIAlertController(title: "Project no longer available",
-                                                        message: "You no longer have access to the project \(String(describing: oldProjectSelectedId)), either because you have been removed from it or the project has been removed by an administrator.\r\n\r\nYou will be returned to the Photo Data Screen. Please confirm this is the correct project you wish to upload the photo(s) to before continuing.",
-                    preferredStyle: .alert)
-                alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
-                    self.dismiss(animated: true, completion: nil)
-                })
-                )
-                
-                self.present(alertController, animated: true, completion: nil)
-            }
-        }
-    }
-
-
     @IBAction func onTapSetPhotoLocation(_ sender: UIButton) {
-        let frame = map.frame
-        let center = CGPoint(x: frame.midX, y: frame.midY)
-        
-//        let line = SimpleLine(frame: CGRect(x: 0, y: 0, width: 21, height: 21))
-//        line.draw(CGRect(x: center.x, y: center.y, width: 21, height: 21))
-//        var identifierSelected: String = currentClusterAnnotationIdentifier
-//        if annotationIsMultiple {
-//            identifierSelected = slideContainer.slides[slideContainer.photosControl.currentPage].localIdentifier!
-//        }
-        let locationCoordinate = map.convert(center, toCoordinateFrom: map)
+        var locationCoordinate = map.centerCoordinate
+//        let pinCoordinate = view.annotation?.coordinate
+//        let currentCoordinates = mapView.centerCoordinate
+//        mapView.centerCoordinate = pinCoordinate!
+//        let viewCenter = self.view.center
+//        let fakeCenter = CGPoint(x: viewCenter.x, y: viewCenter.y - 100)
+//        let coordinate = mapView.convert(fakeCenter, toCoordinateFrom: self.view)
+//        mapView.centerCoordinate = currentCoordinates
+        if let isPortrait = isPortrait, !isPortrait {
+            let frame = map.frame
+            let center = CGPoint(x: frame.midX, y: frame.midY)
+           // map.centerCoordinate = center
+            let h: CGFloat = 120 //annotaion height
+            let fakeCenter = CGPoint(x: center.x, y: center.y + (h / 2) + 7 + 8)
+            locationCoordinate = map.convert(fakeCenter, toCoordinateFrom: map)
+        }
         var identifiers = [String]()
         if selectedPhotoIdentifier == nil {
             for cluster in clustersPhotos {
@@ -282,16 +314,46 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
             cancelUI()
         }
     }
+    
+    func noProjectAssigned() {
+        timerBackend.invalidate()
+        print("TIMER INVALID - tags")
+        performSegue(withIdentifier: "NoProjectsAssigned", sender: nil)
+    }
+    
+    func userNeedToCreateFirstProject() {
+        
+    }
+    
+    func databaseUpdateFinished() {
+        if let currentPrj = UserDefaults.standard.value(forKey: "currentProjectId") as? String {
+            if oldProjectSelectedId != currentPrj {
+                let alertController = UIAlertController(title: "Project no longer available",
+                                                        message: "You no longer have access to the project \(String(describing: oldProjectSelectedId)), either because you have been removed from it or the project has been removed by an administrator.\r\n\r\nYou will be returned to the Photo Data Screen. Please confirm this is the correct project you wish to upload the photo(s) to before continuing.",
+                    preferredStyle: .alert)
+                alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in
+                    self.dismiss(animated: true, completion: nil)
+                })
+                )
+                
+                self.present(alertController, animated: true, completion: nil)
+            }
+        }
+    }
+
+
+    
     //MARK: - private methods
     private func cancelUI(){
-        confirmPhotoLocationButton.isEnabled = false
-        confirmPhotoLocationButton.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        //confirmPhotoLocationButton.isEnabled = false
+        //confirmPhotoLocationButton.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        confirmPhotoLocationButton.setTitle("Tap a pin to edit\nphoto location", for: .normal)
         cancelEditButton.isHidden = true
         gpsIcon.setImage(UIImage(named: "gps_fixed"), for: .normal)
-        uploadButton.isHidden = false
+        //uploadButton.isHidden = false
         backButton.isHidden = false
-        editLocationMode = false
-        dummy.photoImage.image = nil
+        isEditingLocation = false
+       // dummy.photoImage.image = nil
         dummy.removeFromSuperview()
     }
     
@@ -304,20 +366,19 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
         for cluster in clustersPhotos {
             var annotation: PhotoAnnotation!
             let loc: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: (cluster.first?.latitude)!, longitude: (cluster.first?.longitude)!)
-            var image: UIImage! = nil
+//            var image: UIImage! = nil
             
-            if cluster.count == 1 {
-                image = loadImage(identifier: cluster.first?.localIdentifierString)
-            }
+//            if cluster.count == 1 {
+//                image = loadImage(identifier: cluster.first?.localIdentifierString)
+//            }
             
-            annotation =  PhotoAnnotation(coordinate: loc, title: "Image local identifier:", subtitle: (cluster.first?.localIdentifierString)!, isCluster: cluster.count > 1, numberOfPhotos: cluster.count, photoImage: image)
+            annotation =  PhotoAnnotation(coordinate: loc, title: "Image local identifier:", subtitle: (cluster.first?.localIdentifierString)!, isCluster: cluster.count > 1, numberOfPhotos: cluster.count, photoImage: nil) //photoImage: image)
             annotationsArray.append(annotation)
         }
         map.addAnnotations(annotationsArray)
         if !isAfterEditLocation {
             map.showAnnotations(annotationsArray, animated: true)
-//            let overlays = annotationsArray.map { MKCircle(center: $0.coordinate, radius: 2) }
-//            map.addOverlays(overlays)
+
         }
         
     
@@ -326,14 +387,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
     
     private func setPhotoClusters(){
         clustersPhotos.removeAll()
-//        for photo in photos!{
-//            if photo.latitude == 0 && photo.longitude == 0 {
-//                if let currentProject  = ProjectHandler.getCurrentProject() {
-//                    photo.latitude = currentProject.latitude
-//                    photo.longitude = currentProject.longitude
-//                }
-//            }
-//        }
+
         
         var uncheckedPhotos: [Photo]! = photos
         var restPhotos: [Photo]! = photos
@@ -371,8 +425,14 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
         editLocationButton.isHidden = hidden
         if !hidden {
             editAllLocationButton.isHidden = !annotationIsMultiple
+            confirmPhotoLocationButton.setTitle("Move single photos\nor a group", for: .normal)
         } else {
             editAllLocationButton.isHidden = hidden
+            if isEditingLocation {
+                confirmPhotoLocationButton.setTitle("Drag the map to edit\nphoto location", for: .normal)
+            } else {
+                confirmPhotoLocationButton.setTitle("Tap a pin to edit\nphoto location", for: .normal)
+            }
         }
     }
     //MARK: -
@@ -468,50 +528,65 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
     //MARK: - gesture delegate
     //if double tap is recognized on map slider need to stay hidden
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        if touch.tapCount == 2 && !editLocationMode {
+        if touch.tapCount == 2 && !isEditingLocation {
             preventShowSlider = true
+            confirmPhotoLocationButton.setTitle("Tap a pin to edit\nphoto location", for: .normal)
+            print("DOUBLE TAP preventShowSlider")
         }
         return true
     }
 
     //MARK: - map delegate methods
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+    
         if annotation is MKUserLocation {
             return nil
         }
         var annotationView = self.map.dequeueReusableAnnotationView(withIdentifier: "photoAnnotation") as? PhotoAnnotationView
         let currentAnnotation = annotation as! PhotoAnnotation
         if annotationView == nil{
-            annotationView = PhotoAnnotationView.init(annotation: annotation, reuseIdentifier: "photoAnnotation", isCluster: currentAnnotation.isCluster!, numberOfPhotos: currentAnnotation.numberOfPhotos!, photoImage: currentAnnotation.photo)
+            annotationView = PhotoAnnotationView.init(annotation: annotation, reuseIdentifier: "photoAnnotation", isCluster: currentAnnotation.isCluster!, numberOfPhotos: currentAnnotation.numberOfPhotos!, photoImage: nil)//currentAnnotation.photo
             annotationView?.canShowCallout = false
         }else{
             if annotationView?.customView != nil {
                 annotationView?.customView.removeFromSuperview()
             }
-            annotationView?.resetProperties(newIsCluster: currentAnnotation.isCluster!, newNumberOfPhotos: currentAnnotation.numberOfPhotos!, newPhotoImage: currentAnnotation.photo)
+            annotationView?.resetProperties(newIsCluster: currentAnnotation.isCluster!, newNumberOfPhotos: currentAnnotation.numberOfPhotos!, newPhotoImage: nil)//currentAnnotation.photo)
             annotationView?.canShowCallout = false
             annotationView?.annotation = annotation
         }
         let h: CGFloat = annotationView?.bounds.height ?? 0.0
         annotationView?.centerOffset = CGPoint.init(x: -8, y: -(h / 2.0)-7);
+        annotationView?.alpha = 1
         return annotationView
 
     }
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        //if let annotation = view.annotation?.title {
-        mapView.setCenter((view.annotation?.coordinate)!, animated: true)
+        
+        if let isPortrait = isPortrait, !isPortrait {
+            let pinCoordinate = view.annotation?.coordinate
+            let currentCoordinates = mapView.centerCoordinate
+            mapView.centerCoordinate = pinCoordinate!
+            let viewCenter = self.view.center
+            let fakeCenter = CGPoint(x: viewCenter.x, y: viewCenter.y - 100)
+            let coordinate = mapView.convert(fakeCenter, toCoordinateFrom: self.view)
+            mapView.centerCoordinate = currentCoordinates
+            mapView.setCenter(coordinate, animated: true)
+        } else {
+            mapView.setCenter((view.annotation?.coordinate)!, animated: true)
+        }
+        
         let annotations = mapView.annotations
         currentClusterAnnotationIdentifier = view.annotation!.subtitle as? String
         print("SELECT ---------- \(currentClusterAnnotationIdentifier ?? "")")
         gpsIcon.isHidden = true
+        
         for annotation in annotations {
             if annotation.subtitle != currentClusterAnnotationIdentifier {
-                //mapView.view(for: annotation)?.isHidden = true
                 print("\(annotation.subtitle! ?? "") is OTHER Annotation than CURRENT")
             } else {
                 let currentAnnotation = annotation as? PhotoAnnotation
                 annotationIsMultiple = currentAnnotation!.numberOfPhotos! > 1
-                //var identifiers = [String]()
                 var slides = [Slide]()
                 for cluster in clustersPhotos {
                     for item in cluster {
@@ -527,28 +602,31 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
                     }
 
                 }
+                confirmPhotoLocationButton.setTitle("Move single photos\nor a group", for: .normal)
                 slideContainer.setSlides(slides: slides)
                 
             }
         }
        
-  
+        
     }
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         if animated {
             print("map changed ANIMATED - here carousel should appear")
             if !preventShowSlider {
-                if !editLocationMode {
+                if !isEditingLocation {
                     sliderVisibility(hidden: false)
                 }
                 for annotation in annotationsArray {
                     if annotation.subtitle == currentClusterAnnotationIdentifier {
                         
                         let annotationView = mapView.view(for: annotation)
-                        let x = annotationView!.frame.minX + 8//+ (annotationView!.frame.maxX - annotationView!.frame.minX) / 2
-                        let y = annotationView!.frame.minY + 7//+ (annotationView!.frame.maxY - annotationView!.frame.minY) / 2
-                        pointForCurrentAnnotation = CGPoint(x: x, y: y) //annotationView!.convert(annotationView!.center, to: mapView)
+                        if let annotationView = annotationView {
+                            let x = annotationView.frame.minX + 8//+ (annotationView!.frame.maxX - annotationView!.frame.minX) / 2
+                            let y = annotationView.frame.minY + 7//+ (annotationView!.frame.maxY - annotationView!.frame.minY) / 2
+                            pointForCurrentAnnotation = CGPoint(x: x, y: y) //annotationView!.convert(annotationView!.center, to: mapView)
+                        }
                     }
                 }
             }
@@ -557,10 +635,9 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
     }
     func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
         print("DID DESELECT")
-     //   annotationWasSelected = false
     }
     func mapView(_ mapView: MKMapView, regionWillChangeAnimated animated: Bool) {
-        if !animated && !editLocationMode {
+        if !animated && !isEditingLocation {
             if hiddenCurrentLocation {
                 gpsIcon.isHidden = hiddenCurrentLocation
                 hiddenCurrentLocation = false
@@ -581,8 +658,6 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let renderer = MKCircleRenderer(overlay: overlay)
         renderer.fillColor = UIColor.black //.withAlphaComponent(0.5)
-        //renderer.strokeColor = UIColor.blue
-        //renderer.lineWidth = 2
         return renderer
     }
     
