@@ -131,17 +131,21 @@ class BackendConnection: NSObject {
         //if user is free tier and have no projects assigned then return
         if let isRunningSiteSnapFree = json["isRunningSiteSnapFree"] as? Bool,
            let userProjects = json["projects"] as? NSArray,
-           userProjects.count == 0,
-           isRunningSiteSnapFree {
-            self.delegate?.userNeedToCreateFirstProject()
-            return
+           userProjects.count == 0 {
+           if isRunningSiteSnapFree {
+                self.delegate?.userNeedToCreateFirstProject()
+                return
+           }
+            UserDefaults.standard.set(isRunningSiteSnapFree, forKey: "isRunningSiteSnapFree")
         }
+        
        
         let projects = json["projects"] as! NSArray
         
         //check if user have projects
         if projects.count == 0 {
             let isAdmin = json["isAdmin"] as! Bool
+            UserDefaults.standard.set(isAdmin, forKey: "isAdmin")
             if isAdmin {
                 delegate?.userNeedToCreateFirstProject()
             } else {

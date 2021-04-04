@@ -14,7 +14,9 @@ import CoreData
 extension Project {
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<Project> {
-        return NSFetchRequest<Project>(entityName: "Project")
+        let request = NSFetchRequest<Project>(entityName: "Project")
+        request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+        return request
     }
 
     @NSManaged public var id: String?

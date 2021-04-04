@@ -10,7 +10,7 @@ import UIKit
 import CoreLocation
 
 class TagsModalViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, BackendConnectionDelegate {
-   
+   // DELETE THIS VIEW CONTROLLER - not used anymore
     
 
     var currentPhotoLocalIdentifier: String?

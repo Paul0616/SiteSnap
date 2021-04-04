@@ -980,6 +980,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate, CLLocationMa
             }
         }
     }
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
@@ -993,20 +994,20 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate, CLLocationMa
             destination.currentPhotoLocalIdentifier = self.slidesObjects[imageControl.currentPage].localIdentifier
             
         }
-        if segue.identifier == "SetTagSegue",
-            let destination = segue.destination as? TagsModalViewController {
-            if PhotoHandler.allTagsWasSet(localIdentifier: self.slidesObjects[imageControl.currentPage].localIdentifier!)
-            {
-                let identifier = PhotoHandler.getAllTagsPhotoIdentifier(localIdentifier: self.slidesObjects[imageControl.currentPage].localIdentifier!)
-                destination.currentPhotoLocalIdentifier = identifier
-            } else {
-                destination.currentPhotoLocalIdentifier = self.slidesObjects[imageControl.currentPage].localIdentifier
-            }
-            destination.lastLocation = lastLocation
-            timerBackend.invalidate()
-            
-            print("TIMER INVALID - photos")
-        }
+//        if segue.identifier == "SetTagSegue",
+//            let destination = segue.destination as? TagsModalViewController {
+//            if PhotoHandler.allTagsWasSet(localIdentifier: self.slidesObjects[imageControl.currentPage].localIdentifier!)
+//            {
+//                let identifier = PhotoHandler.getAllTagsPhotoIdentifier(localIdentifier: self.slidesObjects[imageControl.currentPage].localIdentifier!)
+//                destination.currentPhotoLocalIdentifier = identifier
+//            } else {
+//                destination.currentPhotoLocalIdentifier = self.slidesObjects[imageControl.currentPage].localIdentifier
+//            }
+//            destination.lastLocation = lastLocation
+//            timerBackend.invalidate()
+//
+//            print("TIMER INVALID - photos")
+//        }
         
         if segue.identifier == "PhotoInspectorSegue",
             let destination = segue.destination as? PhotoInspectorViewController,

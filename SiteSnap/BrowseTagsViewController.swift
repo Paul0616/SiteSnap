@@ -29,6 +29,7 @@ class BrowseTagsViewController: UIViewController, UITableViewDelegate, UITableVi
     var sameHeightTablesConstraint: NSLayoutConstraint?
     var lowerTableZeroHightConstraint: NSLayoutConstraint?
     var lowerTableHeaderHeightConstraint: NSLayoutConstraint?
+    var lowerTableHeaderZeroHeightConstraint: NSLayoutConstraint?
     
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var alltagsCheck: CheckBox!
@@ -108,25 +109,33 @@ class BrowseTagsViewController: UIViewController, UITableViewDelegate, UITableVi
         tagsAppliedhHeaderView.translatesAutoresizingMaskIntoConstraints = false
         sameHeightTablesConstraint = tagsAppliedStackView.heightAnchor.constraint(equalTo: allTagsStackView.heightAnchor, multiplier: 1)
         lowerTableZeroHightConstraint = tagsAppliedStackView.heightAnchor.constraint(equalToConstant: 0)
+        
         lowerTableHeaderHeightConstraint = tagsAppliedhHeaderView.heightAnchor.constraint(equalToConstant: 56)
+        lowerTableHeaderZeroHeightConstraint = tagsAppliedhHeaderView.heightAnchor.constraint(equalToConstant: 0)
     }
     
     func tagsAppliedConstraints(){
         if let isPortrait = isPortrait, !isPortrait {
             sameHeightTablesConstraint?.isActive = true
-            lowerTableHeaderHeightConstraint?.isActive = true
             lowerTableZeroHightConstraint?.isActive = false
+            
+            lowerTableHeaderHeightConstraint?.isActive = true
+            lowerTableHeaderZeroHeightConstraint?.isActive = false
             return
         }
         
         if tagsSelected.count == 0 {
             sameHeightTablesConstraint?.isActive = false
-            lowerTableHeaderHeightConstraint?.isActive = false
             lowerTableZeroHightConstraint?.isActive = true
+            
+            lowerTableHeaderHeightConstraint?.isActive = false
+            lowerTableHeaderZeroHeightConstraint?.isActive = true
         } else {
             sameHeightTablesConstraint?.isActive = true
-            lowerTableHeaderHeightConstraint?.isActive = true
             lowerTableZeroHightConstraint?.isActive = false
+            
+            lowerTableHeaderHeightConstraint?.isActive = true
+            lowerTableHeaderZeroHeightConstraint?.isActive = false
         }
     }
 

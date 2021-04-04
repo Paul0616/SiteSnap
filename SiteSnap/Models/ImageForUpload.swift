@@ -19,6 +19,10 @@ class ImageForUpload: NSObject {
     var progress: CFloat
     var state: State = .waiting
     var date: Date!
+    var failCode: Int!
+    var showRemoveFlag: Bool = false
+    var uploadingTaskIdentifier: Int?
+    var startUploadingDate: Date!
     
     enum State {
         case waiting
@@ -47,4 +51,6 @@ class ImageForUpload: NSObject {
         self.progress = progress
         self.state = state
     }
+    
+    
 }

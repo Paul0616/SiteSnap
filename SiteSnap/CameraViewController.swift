@@ -18,6 +18,8 @@ import AWSCognitoIdentityProvider
 
 class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate, BackendConnectionDelegate, NewProjectViewControllerDelegate {
     
+    private let groupName = "group.com.au.tridenttechnologies.sitesnapapp"
+    private let userDefaultsKey = "incomingLocalIdentifiers"
     private let session = AVCaptureSession()
     private var isSessionRunning = false
     private let sessionQueue = DispatchQueue(label: "session queue") // Communicate with the session and other session objects on this queue.
@@ -79,6 +81,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     
     
+    
     //MARK: - Loading Camera View Controller
     
     
@@ -129,8 +132,11 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 isUserLogged = _userlogged
             }
         }
-        startCameraViewController()
+        
+       startCameraViewController()
     }
+    
+    
     
     fileprivate func startCameraViewController() {
         //initially user do not have project choosed
@@ -158,7 +164,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
         
         photoObjects = PhotoHandler.fetchAllObjects()!
-        if !galleryWillBeOpen {
+        if !galleryWillBeOpen  {
             if timerBackend == nil || !timerBackend.isValid {
                 timerBackend = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(callBackendConnection), userInfo: nil, repeats: true)
                 print("TIMER STARTED - camera")
@@ -235,6 +241,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
 //        }
     }
     
+    
     override func viewWillDisappear(_ animated: Bool) {
         sessionQueue.async {
             if self.cameraSetupResult == .success {
@@ -250,11 +257,13 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        print(" gallery \(galleryWillBeOpen)")
+        print("shared \(wasCalledFromSharedExtension())")
         if !galleryWillBeOpen {
             if timerBackend != nil {
                 timerBackend.invalidate()
             }
-            print("TIMER INVALID - camera")
+            print("TIMER INVALID - camera 1")
         }
     }
     
@@ -269,6 +278,16 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             
             videoPreviewLayerConnection.videoOrientation = newVideoOrientation
         }
+    }
+    
+    //MARK: - SHARE EXTENSION CHECK
+    func wasCalledFromSharedExtension() -> Bool {
+        let sharedExtension = (UserDefaults(suiteName: groupName)?.value(forKey: userDefaultsKey) as? [String]) != nil
+        return sharedExtension
+    }
+    
+    func openSharedExtensionView(){
+        performSegue(withIdentifier: "ShareImagesViewIdentifier", sender: nil)
     }
     
     //MARK: - New Project DELEGATE
@@ -341,7 +360,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func noProjectAssigned() {
         timerBackend.invalidate()
-        print("TIMER INVALID - camera")
+        print("TIMER INVALID - camera 2")
     
         DispatchQueue.main.async {
             
@@ -359,7 +378,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     func userNeedToCreateFirstProject() {
         timerBackend.invalidate()
-        print("TIMER INVALID - camera")
+        print("TIMER INVALID - camera 3")
     
         DispatchQueue.main.async {
             //self.selectedProjectButton.hideLoading(buttonText: nil)
@@ -375,7 +394,11 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func databaseUpdateFinished() {
+        if wasCalledFromSharedExtension() {
+            openSharedExtensionView()
+        }
         loadingProjectIntoList()
+        
     }
     
     
@@ -613,7 +636,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     {
         //noValidLocationIcon.isHidden = false
         gpsStatusImageView.image = GPSStatus.no_gps.image
-        print("Error \(error)")
+        print("Error on getting location \(error)")
     }
     
     //MARK: - log in user
@@ -878,6 +901,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         }
         selectedProjectButton.hideLoading(buttonText: nil)
         galleryButton.isEnabled = true
+        
         setProjectsSelected(projectId: currentProjectId)
         dropDownListProjectsTableView.reloadData()
         // }
@@ -1112,7 +1136,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 
                 self.processingPopup.hideAndDestroy(from: self.view)
                 self.timerBackend.invalidate()
-                print("TIMER INVALID - camera")
+                print("TIMER INVALID - camera 4")
                 self.performSegue(withIdentifier: "PhotsViewIdentifier", sender: nil)
                 
             }
@@ -1136,7 +1160,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 //            let dict = attr as NSDictionary
                 //            fileSize = dict.fileSize()
             } catch {
-                print("Error: \(error)")
+                print("Error to save image in database: \(error)")
             }
             // let size: Int64 = image.fileSize(image: fileName)
             //PhotoHandler.setFileSize(localIdentifiers: [localId!])
@@ -1318,6 +1342,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
             destination.delegate = self
             destination.isFirstProject = true
         }
+       
+        
     }
     //MARK: - delete hidden assets
     func deleteAssets(unused: Bool) {

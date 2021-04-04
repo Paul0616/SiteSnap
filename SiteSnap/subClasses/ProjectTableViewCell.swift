@@ -16,7 +16,10 @@ class ProjectTableViewCell: UITableViewCell {
     @IBOutlet weak var projectTitleLabel: UILabel!
     @IBOutlet weak var roundCheckBox: RoundCheckBox!
     @IBOutlet weak var projectOwnerLabel: UILabel!
-
+    @IBOutlet weak var projectTitleLabel1: UILabel!
+    
+    @IBOutlet weak var roundCheckBox1: RoundCheckBox!
+    @IBOutlet weak var projectOwnerLabel1: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

@@ -33,6 +33,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
         return self.orientationLock
     }
+    
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        print("open URL")
+        if let scheme = url.scheme,
+           scheme.caseInsensitiveCompare("SiteSnap") == .orderedSame,
+           let page = url.host {
+      
+            var parameters: [String: String] = [:]
+            URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems?.forEach{
+                parameters[$0.name] = $0.value
+            }
+            print("redirect(to: \(page), with: \(parameters)")
+            for parameter in parameters where parameter.key.caseInsensitiveCompare("url") == .orderedSame {
+                //UserDefaults().set(parameter.value, forKey: "incomingURLs")
+                print(parameter)
+            }
+        }
+        return true
+    }
+    
     struct AppUtility {
         
         static func lockOrientation(_ orientation: UIInterfaceOrientationMask) {
@@ -67,10 +87,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     //        self.window?.makeKeyAndVisible()
     //    }
     
+    func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        return true
+    }
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         if #available(iOS 13.0, *) {
             window?.overrideUserInterfaceStyle = .light
         }
+    
         // Override point for customization after application launch.
         
         //self.splashScreen()
@@ -92,7 +116,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.storyboard = UIStoryboard(name: "Main", bundle: nil)
         pool?.delegate = self
         
-        
+//        let url = launchOptions![UIApplication.LaunchOptionsKey.url]
+//        print("--->>>> \(String(describing: url))")
         return true
     }
     

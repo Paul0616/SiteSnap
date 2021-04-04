@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		4010AD7A25FF44A80048D5F7 /* CircleCheckBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4010AD7925FF44A80048D5F7 /* CircleCheckBox.swift */; };
-		4010AD7D25FF4E3A0048D5F7 /* AdddNewTagViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4010AD7C25FF4E3A0048D5F7 /* AdddNewTagViewController.swift */; };
 		4010AD8025FF4E650048D5F7 /* AddNewTagViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4010AD7F25FF4E650048D5F7 /* AddNewTagViewController.swift */; };
 		401B3F1B21E5FB8400509EF2 /* UploadsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 401B3F1A21E5FB8400509EF2 /* UploadsViewController.swift */; };
 		4033274621F0A00D007EE9DF /* Project+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4033274521F0A00D007EE9DF /* Project+CoreDataClass.swift */; };
@@ -19,6 +18,8 @@
 		403EEAAE25E63DB300EB151B /* ReCAPTCHAViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 403EEAAD25E63DB300EB151B /* ReCAPTCHAViewModel.swift */; };
 		403EEAB525E63E5C00EB151B /* recaptcha.html in Resources */ = {isa = PBXBuildFile; fileRef = 403EEAB325E63E3D00EB151B /* recaptcha.html */; };
 		4047811621EC820C006987B4 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4047811521EC820C006987B4 /* Constants.swift */; };
+		4054ED47260F3C180045A1C0 /* CompletedUploadsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4054ED46260F3C180045A1C0 /* CompletedUploadsTableViewCell.swift */; };
+		405738DB2610864B00C3EC78 /* BouncingProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 405738DA2610864B00C3EC78 /* BouncingProgressView.swift */; };
 		40615ADB25E1443300D4E079 /* site_snap_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 40615ADA25E1443300D4E079 /* site_snap_logo.png */; };
 		40747BE925EA5F080009BFDE /* RoundCheckBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40747BE825EA5F080009BFDE /* RoundCheckBox.swift */; };
 		407C5C0325E4E1B0003C4276 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407C5C0225E4E1B0003C4276 /* SignUpViewController.swift */; };
@@ -35,6 +36,10 @@
 		40D025E325FDFCA600E660D0 /* BrowseTagsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D025E225FDFCA600E660D0 /* BrowseTagsViewController.swift */; };
 		40D025E625FE798C00E660D0 /* TagCell1TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D025E525FE798C00E660D0 /* TagCell1TableViewCell.swift */; };
 		40D025E925FE79A100E660D0 /* TagCell2TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40D025E825FE79A100E660D0 /* TagCell2TableViewCell.swift */; };
+		40E44DD02618518B00C8373C /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E44DCF2618518B00C8373C /* ShareViewController.swift */; };
+		40E44DD72618518B00C8373C /* ShareExtensionSiteSnap.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 40E44DCD2618518B00C8373C /* ShareExtensionSiteSnap.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		40E44E74261885AB00C8373C /* ShareImagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E44E73261885AB00C8373C /* ShareImagesViewController.swift */; };
+		40E44EA0261A422700C8373C /* PhotoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E44E9F261A422700C8373C /* PhotoModel.swift */; };
 		40E9A18E22280DA5008E8352 /* NoProjectsAssignedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E9A18D22280DA5008E8352 /* NoProjectsAssignedViewController.swift */; };
 		40EB38AB25F535E100BF830B /* ProcessingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40EB38AA25F535E100BF830B /* ProcessingViewController.swift */; };
 		803902112621DA84596AB896 /* Pods_SiteSnap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08D194FC8394711D1AE36F7F /* Pods_SiteSnap.framework */; };
@@ -83,10 +88,33 @@
 		DAE790D12285A6A2003B465D /* NetworkState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAE790D02285A6A2003B465D /* NetworkState.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		40E44DD52618518B00C8373C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA977EFD21C1460F00883640 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 40E44DCC2618518B00C8373C;
+			remoteInfo = ShareExtensionSiteSnap;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		40E44DD82618518B00C8373C /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				40E44DD72618518B00C8373C /* ShareExtensionSiteSnap.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		08D194FC8394711D1AE36F7F /* Pods_SiteSnap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SiteSnap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4010AD7925FF44A80048D5F7 /* CircleCheckBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleCheckBox.swift; sourceTree = "<group>"; };
-		4010AD7C25FF4E3A0048D5F7 /* AdddNewTagViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AdddNewTagViewController.swift; path = /Users/pauloprea/IOSProjects/SiteSnap/SiteSnap/AdddNewTagViewController.swift; sourceTree = "<absolute>"; };
 		4010AD7F25FF4E650048D5F7 /* AddNewTagViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewTagViewController.swift; sourceTree = "<group>"; };
 		401B3F1A21E5FB8400509EF2 /* UploadsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadsViewController.swift; sourceTree = "<group>"; };
 		4033274521F0A00D007EE9DF /* Project+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Project+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -97,6 +125,8 @@
 		403EEAAD25E63DB300EB151B /* ReCAPTCHAViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReCAPTCHAViewModel.swift; sourceTree = "<group>"; };
 		403EEAB325E63E3D00EB151B /* recaptcha.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = recaptcha.html; path = SiteSnap/Models/recaptcha.html; sourceTree = "<group>"; };
 		4047811521EC820C006987B4 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		4054ED46260F3C180045A1C0 /* CompletedUploadsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedUploadsTableViewCell.swift; sourceTree = "<group>"; };
+		405738DA2610864B00C3EC78 /* BouncingProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BouncingProgressView.swift; sourceTree = "<group>"; };
 		405977E921C2455700AF9F4B /* MYRIADPRO-REGULAR.OTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = "MYRIADPRO-REGULAR.OTF"; sourceTree = "<group>"; };
 		40615ADA25E1443300D4E079 /* site_snap_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = site_snap_logo.png; sourceTree = "<group>"; };
 		40747BE825EA5F080009BFDE /* RoundCheckBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundCheckBox.swift; sourceTree = "<group>"; };
@@ -114,6 +144,13 @@
 		40D025E225FDFCA600E660D0 /* BrowseTagsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowseTagsViewController.swift; sourceTree = "<group>"; };
 		40D025E525FE798C00E660D0 /* TagCell1TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCell1TableViewCell.swift; sourceTree = "<group>"; };
 		40D025E825FE79A100E660D0 /* TagCell2TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagCell2TableViewCell.swift; sourceTree = "<group>"; };
+		40E44DCD2618518B00C8373C /* ShareExtensionSiteSnap.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShareExtensionSiteSnap.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		40E44DCF2618518B00C8373C /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		40E44DD42618518B00C8373C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		40E44E6F261884CE00C8373C /* ShareExtensionSiteSnap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ShareExtensionSiteSnap.entitlements; sourceTree = "<group>"; };
+		40E44E70261884DF00C8373C /* SiteSnap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SiteSnap.entitlements; sourceTree = "<group>"; };
+		40E44E73261885AB00C8373C /* ShareImagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareImagesViewController.swift; sourceTree = "<group>"; };
+		40E44E9F261A422700C8373C /* PhotoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoModel.swift; sourceTree = "<group>"; };
 		40E9A18D22280DA5008E8352 /* NoProjectsAssignedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoProjectsAssignedViewController.swift; sourceTree = "<group>"; };
 		40EB38AA25F535E100BF830B /* ProcessingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingViewController.swift; sourceTree = "<group>"; };
 		6A73AA7E3AC6DD8718D48C21 /* Pods-SiteSnap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SiteSnap.release.xcconfig"; path = "Pods/Target Support Files/Pods-SiteSnap/Pods-SiteSnap.release.xcconfig"; sourceTree = "<group>"; };
@@ -174,6 +211,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		40E44DCA2618518B00C8373C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DA977F0221C1460F00883640 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -227,6 +271,16 @@
 			path = views;
 			sourceTree = "<group>";
 		};
+		40E44DCE2618518B00C8373C /* ShareExtensionSiteSnap */ = {
+			isa = PBXGroup;
+			children = (
+				40E44E6F261884CE00C8373C /* ShareExtensionSiteSnap.entitlements */,
+				40E44DCF2618518B00C8373C /* ShareViewController.swift */,
+				40E44DD42618518B00C8373C /* Info.plist */,
+			);
+			path = ShareExtensionSiteSnap;
+			sourceTree = "<group>";
+		};
 		DA977EFC21C1460F00883640 = {
 			isa = PBXGroup;
 			children = (
@@ -234,6 +288,7 @@
 				40615ADA25E1443300D4E079 /* site_snap_logo.png */,
 				DA977F0721C1460F00883640 /* SiteSnap */,
 				DA977F2A21C1461100883640 /* SiteSnapUITests */,
+				40E44DCE2618518B00C8373C /* ShareExtensionSiteSnap */,
 				DA977F0621C1460F00883640 /* Products */,
 				3F13EECA5D4600273754C76C /* Pods */,
 				119EB5E4C864C37FECC5FF17 /* Frameworks */,
@@ -244,6 +299,7 @@
 			isa = PBXGroup;
 			children = (
 				DA977F0521C1460F00883640 /* SiteSnap.app */,
+				40E44DCD2618518B00C8373C /* ShareExtensionSiteSnap.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -251,6 +307,7 @@
 		DA977F0721C1460F00883640 /* SiteSnap */ = {
 			isa = PBXGroup;
 			children = (
+				40E44E70261884DF00C8373C /* SiteSnap.entitlements */,
 				DABA66CA21D23DE90036CEE7 /* dataModels */,
 				40B296BD21CCE5C100A3C487 /* views */,
 				DAA5DC7221C654EB0000B966 /* Models */,
@@ -261,7 +318,6 @@
 				40D025E825FE79A100E660D0 /* TagCell2TableViewCell.swift */,
 				4047811521EC820C006987B4 /* Constants.swift */,
 				DAD922F2222ADD0C00A7A93E /* BackendConnection.swift */,
-				4010AD7C25FF4E3A0048D5F7 /* AdddNewTagViewController.swift */,
 				40EB38AA25F535E100BF830B /* ProcessingViewController.swift */,
 				DA977F0A21C1460F00883640 /* SignInViewController.swift */,
 				407C5C0225E4E1B0003C4276 /* SignUpViewController.swift */,
@@ -270,6 +326,7 @@
 				DA1E46CF21F50E3C004FB425 /* ConfirmForgotPasswordViewController.swift */,
 				401B3F1A21E5FB8400509EF2 /* UploadsViewController.swift */,
 				DAA615A021E663DF00B5B15E /* UploadsTableViewCell.swift */,
+				4054ED46260F3C180045A1C0 /* CompletedUploadsTableViewCell.swift */,
 				DA977F5421C2E91300883640 /* CameraViewController.swift */,
 				409ABECB25E78E2A00C17E1E /* ProjectsListViewController.swift */,
 				40A4E95525EB880400FEE564 /* NewProjectViewController.swift */,
@@ -287,6 +344,7 @@
 				40B296BB21CCE5A000A3C487 /* Slide.swift */,
 				DA9C51FA22153E4C00326611 /* DocumentFilesViewController.swift */,
 				DAB7796121DE8A3900308543 /* Annotation.swift */,
+				40E44E73261885AB00C8373C /* ShareImagesViewController.swift */,
 				40C9F87C26072F4500F69253 /* Annotation_V2.swift */,
 				DA977F1221C1461100883640 /* Assets.xcassets */,
 				DA977F1721C1461100883640 /* Info.plist */,
@@ -325,6 +383,7 @@
 				DAE790D02285A6A2003B465D /* NetworkState.swift */,
 				409ABECF25E7A11200C17E1E /* ProjectTableViewCell.swift */,
 				40747BE825EA5F080009BFDE /* RoundCheckBox.swift */,
+				405738DA2610864B00C3EC78 /* BouncingProgressView.swift */,
 			);
 			path = subClasses;
 			sourceTree = "<group>";
@@ -349,6 +408,7 @@
 				4095FBE821F071A7008A39D4 /* ProjectHandler.swift */,
 				DA9DFA2F21F2656800CB68E2 /* Media.swift */,
 				403EEAAD25E63DB300EB151B /* ReCAPTCHAViewModel.swift */,
+				40E44E9F261A422700C8373C /* PhotoModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -369,6 +429,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		40E44DCC2618518B00C8373C /* ShareExtensionSiteSnap */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 40E44DDB2618518B00C8373C /* Build configuration list for PBXNativeTarget "ShareExtensionSiteSnap" */;
+			buildPhases = (
+				40E44DC92618518B00C8373C /* Sources */,
+				40E44DCA2618518B00C8373C /* Frameworks */,
+				40E44DCB2618518B00C8373C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ShareExtensionSiteSnap;
+			productName = ShareExtensionSiteSnap;
+			productReference = 40E44DCD2618518B00C8373C /* ShareExtensionSiteSnap.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		DA977F0421C1460F00883640 /* SiteSnap */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DA977F3021C1461100883640 /* Build configuration list for PBXNativeTarget "SiteSnap" */;
@@ -378,10 +455,12 @@
 				DA977F0221C1460F00883640 /* Frameworks */,
 				DA977F0321C1460F00883640 /* Resources */,
 				D0D025DE663E5B6141242319 /* [CP] Embed Pods Frameworks */,
+				40E44DD82618518B00C8373C /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				40E44DD62618518B00C8373C /* PBXTargetDependency */,
 			);
 			name = SiteSnap;
 			productName = SiteSnap;
@@ -394,10 +473,13 @@
 		DA977EFD21C1460F00883640 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1010;
+				LastSwiftUpdateCheck = 1240;
 				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = "Paul Oprea";
 				TargetAttributes = {
+					40E44DCC2618518B00C8373C = {
+						CreatedOnToolsVersion = 12.4;
+					};
 					DA977F0421C1460F00883640 = {
 						CreatedOnToolsVersion = 10.1;
 						LastSwiftMigration = 1030;
@@ -423,11 +505,19 @@
 			projectRoot = "";
 			targets = (
 				DA977F0421C1460F00883640 /* SiteSnap */,
+				40E44DCC2618518B00C8373C /* ShareExtensionSiteSnap */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		40E44DCB2618518B00C8373C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DA977F0321C1460F00883640 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -485,6 +575,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		40E44DC92618518B00C8373C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				40E44DD02618518B00C8373C /* ShareViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DA977F0121C1460F00883640 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -492,9 +590,9 @@
 				DABA66E421D65B620036CEE7 /* AddCommentsViewController.swift in Sources */,
 				4047811621EC820C006987B4 /* Constants.swift in Sources */,
 				DA47325821DBB227003729BB /* PhotoInspectorViewController.swift in Sources */,
+				40E44E74261885AB00C8373C /* ShareImagesViewController.swift in Sources */,
 				40D025E325FDFCA600E660D0 /* BrowseTagsViewController.swift in Sources */,
 				DA977F1121C1460F00883640 /* SiteSnap.xcdatamodeld in Sources */,
-				4010AD7D25FF4E3A0048D5F7 /* AdddNewTagViewController.swift in Sources */,
 				407C5C0325E4E1B0003C4276 /* SignUpViewController.swift in Sources */,
 				DABA66E221D23F1D0036CEE7 /* Tag+CoreDataProperties.swift in Sources */,
 				403EEAAA25E63C7D00EB151B /* ReCAPTCHAViewController.swift in Sources */,
@@ -513,10 +611,12 @@
 				40A4E95625EB880400FEE564 /* NewProjectViewController.swift in Sources */,
 				DA1E46CE21F4EC46004FB425 /* ForgotPasswordViewController.swift in Sources */,
 				DA47324821D8BF75003729BB /* TagsModalViewController.swift in Sources */,
+				405738DB2610864B00C3EC78 /* BouncingProgressView.swift in Sources */,
 				DA2D954F21EB6042005DE088 /* MenuViewController.swift in Sources */,
 				DA9DFA3021F2656800CB68E2 /* Media.swift in Sources */,
 				DA47325A21DCC26A003729BB /* ConfirmLocationViewController.swift in Sources */,
 				403EEAAE25E63DB300EB151B /* ReCAPTCHAViewModel.swift in Sources */,
+				40E44EA0261A422700C8373C /* PhotoModel.swift in Sources */,
 				DA2D955121ED0389005DE088 /* MenuTableViewCell.swift in Sources */,
 				DA977F5521C2E91300883640 /* CameraViewController.swift in Sources */,
 				DA9C51FC22153E4C00326611 /* DocumentFilesViewController.swift in Sources */,
@@ -528,6 +628,7 @@
 				DAA615A121E663DF00B5B15E /* UploadsTableViewCell.swift in Sources */,
 				DAB7795C21DD60D400308543 /* PhotoAnnotation.swift in Sources */,
 				4010AD8025FF4E650048D5F7 /* AddNewTagViewController.swift in Sources */,
+				4054ED47260F3C180045A1C0 /* CompletedUploadsTableViewCell.swift in Sources */,
 				401B3F1B21E5FB8400509EF2 /* UploadsViewController.swift in Sources */,
 				DAB7795E21DE7DF400308543 /* PhotoAnnotationView.swift in Sources */,
 				DA9F69FD22020474006436F6 /* CheckBox.swift in Sources */,
@@ -558,6 +659,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		40E44DD62618518B00C8373C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 40E44DCC2618518B00C8373C /* ShareExtensionSiteSnap */;
+			targetProxy = 40E44DD52618518B00C8373C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		DA977F1421C1461100883640 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
@@ -578,6 +687,48 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		40E44DD92618518B00C8373C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ShareExtensionSiteSnap/ShareExtensionSiteSnap.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = W4JDZP9URB;
+				INFOPLIST_FILE = ShareExtensionSiteSnap/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.au.tridenttechnologies.sitesnapapp.ShareExtensionSiteSnap;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		40E44DDA2618518B00C8373C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ShareExtensionSiteSnap/ShareExtensionSiteSnap.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = W4JDZP9URB;
+				INFOPLIST_FILE = ShareExtensionSiteSnap/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.au.tridenttechnologies.sitesnapapp.ShareExtensionSiteSnap;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		DA977F2E21C1461100883640 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -700,7 +851,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EB4AC2D94214D4822AE7D8E3 /* Pods-SiteSnap.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = SiteSnap/SiteSnap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = W4JDZP9URB;
@@ -722,7 +875,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6A73AA7E3AC6DD8718D48C21 /* Pods-SiteSnap.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = SiteSnap/SiteSnap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = W4JDZP9URB;
@@ -743,6 +898,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		40E44DDB2618518B00C8373C /* Build configuration list for PBXNativeTarget "ShareExtensionSiteSnap" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				40E44DD92618518B00C8373C /* Debug */,
+				40E44DDA2618518B00C8373C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		DA977F0021C1460F00883640 /* Build configuration list for PBXProject "SiteSnap" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
