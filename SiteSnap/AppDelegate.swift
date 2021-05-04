@@ -37,18 +37,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         print("open URL")
         if let scheme = url.scheme,
-           scheme.caseInsensitiveCompare("SiteSnap") == .orderedSame,
-           let page = url.host {
+           scheme.caseInsensitiveCompare("SiteSnap") == .orderedSame //,
+           //let page = url.host
+        {
       
-            var parameters: [String: String] = [:]
-            URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems?.forEach{
-                parameters[$0.name] = $0.value
-            }
-            print("redirect(to: \(page), with: \(parameters)")
-            for parameter in parameters where parameter.key.caseInsensitiveCompare("url") == .orderedSame {
-                //UserDefaults().set(parameter.value, forKey: "incomingURLs")
-                print(parameter)
-            }
+//            var parameters: [String: String] = [:]
+//            URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems?.forEach{
+//                parameters[$0.name] = $0.value
+//            }
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let viewController = storyboard.instantiateViewController(identifier: "shareImagesViewController") as! ShareImagesViewController
+            viewController.modalPresentationStyle = .fullScreen
+            self.window?.rootViewController = viewController
+            self.window?.makeKeyAndVisible()
+            
+         //   print("redirect(to: \(page), with: \(parameters)")
+//            for parameter in parameters where parameter.key.caseInsensitiveCompare("url") == .orderedSame {
+//                //UserDefaults().set(parameter.value, forKey: "incomingURLs")
+//                print(parameter)
+//            }
         }
         return true
     }

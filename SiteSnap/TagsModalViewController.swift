@@ -71,9 +71,9 @@ class TagsModalViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     //MARK: - The called function for the timer
     @objc func callBackendConnection(){
-        let backendConnection = BackendConnection(projectWasSelected: projectWasSelected, lastLocation: lastLocation)
+        let backendConnection = BackendConnection.shared
         backendConnection.delegate = self
-        backendConnection.attemptSignInToSiteSnapBackend()
+        backendConnection.attemptSignInToSiteSnapBackend(projectWasSelected: projectWasSelected, lastLocation: lastLocation)
     }
     
     func displayMessageFromServer(_ message: String?) {

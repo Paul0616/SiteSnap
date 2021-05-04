@@ -19,7 +19,7 @@ class PhotoHandler: NSObject {
             return ctx
     }
     
-    class func savePhotoInMyDatabase(localIdentifier: String, creationDate: Date, latitude: Double?, longitude: Double?, isHidden: Bool) -> Bool{
+    class func savePhotoInMyDatabase(localIdentifier: String, creationDate: Date, latitude: Double?, longitude: Double?, isHidden: Bool, comeFromSharing: Bool = false) -> Bool{
         let photos = fetchAllObjects()
         let context = getContext()
         for photo in photos! {
@@ -32,6 +32,7 @@ class PhotoHandler: NSObject {
         managedObject.setValue(localIdentifier, forKey: "localIdentifierString")
         managedObject.setValue(creationDate, forKey: "createdDate")
         managedObject.setValue(isHidden, forKey: "isHidden")
+        managedObject.setValue(comeFromSharing, forKey: "comeFromSharing")
         if let lat = latitude {
             managedObject.setValue(lat, forKey: "latitude")
         }
@@ -44,6 +45,17 @@ class PhotoHandler: NSObject {
         } catch  {
             return false
         }
+    }
+    
+    class func identifierAlreadyUploaded(localIdentifier: String) -> Bool {
+        let photos = fetchAllObjects()
+        for photo in photos! {
+            if photo.localIdentifierString == localIdentifier && photo.successfulUploaded == true {
+                //this identifier already exist and successfully uploaded
+                return true
+            }
+        }
+        return false
     }
     
     class func photosDatabaseContainHidden(localIdentifiers: [String]!) -> [String] {
@@ -102,11 +114,17 @@ class PhotoHandler: NSObject {
         }
     }
     
-    class func fetchAllObjects() -> [Photo]? {
+    class func fetchAllObjects(excludeUploaded: Bool? = nil) -> [Photo]? {
         let context = getContext()
         var photos: [Photo]? = nil
         do {
-            photos = try context.fetch(Photo.fetchRequest())
+            if let _ = excludeUploaded, excludeUploaded == true {
+                let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
+                fetchRequest.predicate = NSPredicate.init(format: "successfulUploaded == false")
+                photos = try context.fetch(fetchRequest)
+            } else {
+                photos = try context.fetch(Photo.fetchRequest())
+            }
             return photos
         } catch  {
             return photos
@@ -128,7 +146,7 @@ class PhotoHandler: NSObject {
         }
     }
     
-    class func updateSuccessfulyUploaded(localIdentifier: String, succsessfuly: Bool) -> Bool {
+    class func updateSuccessfulyUploaded(localIdentifier: String, succsessfuly: Bool, failCode: Int16 = -1, lastProjectToUploadedFor: String?) -> Bool {
         let context = getContext()
         let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
         fetchRequest.predicate = NSPredicate.init(format: "localIdentifierString=='\(localIdentifier)'")
@@ -136,6 +154,8 @@ class PhotoHandler: NSObject {
             let objects = try context.fetch(fetchRequest)
             for object in objects {
                 object.successfulUploaded = succsessfuly
+                object.failUploadedCode = failCode
+                object.lastProjectToUploadedFor = lastProjectToUploadedFor
             }
             try context.save()
             return true
@@ -221,8 +241,7 @@ class PhotoHandler: NSObject {
     
     class func photosDeleteBatch(identifiers: [String]) -> Bool {
         let context = getContext()
-        //context.reset()
-    
+        
         // Create Batch Delete Request
         let fetchDeleteRequest = NSFetchRequest<Photo>(entityName: "Photo")
         fetchDeleteRequest.predicate = NSPredicate.init(format: "localIdentifierString IN %@", identifiers)
@@ -239,9 +258,12 @@ class PhotoHandler: NSObject {
     }
     
     class func getFailedUploadPhotosNumber() -> Int {
+        /*
+         - This func is used for info in settings.
+        */
         let context = getContext()
         let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
-        fetchRequest.predicate = NSPredicate.init(format: "successfulUploaded = false")
+        fetchRequest.predicate = NSPredicate.init(format: "successfulUploaded == false")
         do {
             let objects = try context.fetch(fetchRequest)
             
@@ -252,11 +274,14 @@ class PhotoHandler: NSObject {
         }
     }
     
-    class func getUploadedPhotosForDelelete() -> [String]! {
+    class func getUploadedPhotosForDelete() -> [String]! {
+        /*
+         - This func is used for delete all upload history.
+        */
         var identifiers = [String]()
         let context = getContext()
         let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
-        fetchRequest.predicate = NSPredicate.init(format: "successfulUploaded = true")
+        fetchRequest.predicate = NSPredicate.init(format: "successfulUploaded == true")
         do {
             let objects = try context.fetch(fetchRequest)
             for object in objects {
@@ -270,10 +295,15 @@ class PhotoHandler: NSObject {
     }
     
     class func getHiddenAndUploadedPhotosForDelelete() -> [String]! {
+        /*
+         - This func is used for delete uploaded photo from documents directory.
+         Option from settings 'Automatically add image in gallery' is set to false.
+         - isHidden means photo was saved temporary in document directory not in album 'My Site Snap images'
+        */
         var identifiers = [String]()
         let context = getContext()
         let fetchRequest = NSFetchRequest<Photo>(entityName: "Photo")
-        fetchRequest.predicate = NSPredicate.init(format: "isHidden = true AND successfulUploaded = true")
+        fetchRequest.predicate = NSPredicate.init(format: "isHidden == true AND successfulUploaded == true")
         do {
             let objects = try context.fetch(fetchRequest)
             for object in objects {
@@ -315,6 +345,9 @@ class PhotoHandler: NSObject {
             return nil
         }
     }
+    
+  
+    
     class func getAvailableTagsForCurrentProject() -> Int {
         if let currentProject = ProjectHandler.getCurrentProject() {
             return (currentProject.availableTags?.count)!
@@ -352,7 +385,7 @@ class PhotoHandler: NSObject {
     class func addAllTags(currentLocalIdentifier: String) -> Bool {
         let context = getContext()
         
-        let photos = fetchAllObjects()
+        let photos = fetchAllObjects(excludeUploaded: true)
         do {
             for photo in photos! {
                 photo.allTagsWasSet = true
@@ -368,7 +401,7 @@ class PhotoHandler: NSObject {
     class func removeAllTags() -> Bool {
         let context = getContext()
         
-        let photos = fetchAllObjects()
+        let photos = fetchAllObjects(excludeUploaded: true)
         do {
             for photo in photos! {
                 photo.allTagsWasSet = false

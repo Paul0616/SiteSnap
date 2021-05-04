@@ -104,6 +104,18 @@ class ProjectHandler: NSObject {
         }
         
     }
+    
+    class func getTagsForProject(projectId: String) -> [TagModel] {
+        var tagModels = [TagModel]()
+        if let currentProject = ProjectHandler.getSpecificProject(id: projectId) {
+            for item in currentProject.availableTags! {
+                let tag = item as! Tag
+                tagModels.append(TagModel(tag: tag, selected: false)!)
+            }
+        }
+        return tagModels
+    }
+    
     class func fetchAllProjects() -> [Project]? {
         let context = getContext()
         var projects: [Project]? = nil

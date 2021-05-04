@@ -47,7 +47,6 @@
 		DA1E46D021F50E3C004FB425 /* ConfirmForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA1E46CF21F50E3C004FB425 /* ConfirmForgotPasswordViewController.swift */; };
 		DA2D954F21EB6042005DE088 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA2D954E21EB6042005DE088 /* MenuViewController.swift */; };
 		DA2D955121ED0389005DE088 /* MenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA2D955021ED0389005DE088 /* MenuTableViewCell.swift */; };
-		DA47324821D8BF75003729BB /* TagsModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA47324721D8BF75003729BB /* TagsModalViewController.swift */; };
 		DA47324A21D8E62E003729BB /* TagHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA47324921D8E62E003729BB /* TagHandler.swift */; };
 		DA47324C21D8FA7D003729BB /* PhotoHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA47324B21D8FA7D003729BB /* PhotoHandler.swift */; };
 		DA47324E21D96A1A003729BB /* TagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA47324D21D96A1A003729BB /* TagModel.swift */; };
@@ -163,7 +162,6 @@
 		DA1E46CF21F50E3C004FB425 /* ConfirmForgotPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmForgotPasswordViewController.swift; sourceTree = "<group>"; };
 		DA2D954E21EB6042005DE088 /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		DA2D955021ED0389005DE088 /* MenuTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTableViewCell.swift; sourceTree = "<group>"; };
-		DA47324721D8BF75003729BB /* TagsModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsModalViewController.swift; sourceTree = "<group>"; };
 		DA47324921D8E62E003729BB /* TagHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagHandler.swift; sourceTree = "<group>"; };
 		DA47324B21D8FA7D003729BB /* PhotoHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoHandler.swift; sourceTree = "<group>"; };
 		DA47324D21D96A1A003729BB /* TagModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagModel.swift; sourceTree = "<group>"; };
@@ -252,6 +250,139 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		4041C61D2622303E002E0CA4 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				4041C62A262231B7002E0CA4 /* Settings */,
+				4041C6292622318E002E0CA4 /* SharingExtension */,
+				4041C6282622315A002E0CA4 /* EditLocation */,
+				4041C6272622314C002E0CA4 /* Comments */,
+				4041C62626223136002E0CA4 /* Uploads */,
+				4041C62526223114002E0CA4 /* Projects */,
+				4041C624262230FC002E0CA4 /* Login */,
+				4041C623262230BA002E0CA4 /* Tags */,
+				4041C622262230A6002E0CA4 /* PhotoInspector */,
+				4041C62126223089002E0CA4 /* Photos */,
+				4041C61E2622304A002E0CA4 /* Camera */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		4041C61E2622304A002E0CA4 /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				DA977F5421C2E91300883640 /* CameraViewController.swift */,
+			);
+			path = Camera;
+			sourceTree = "<group>";
+		};
+		4041C62126223089002E0CA4 /* Photos */ = {
+			isa = PBXGroup;
+			children = (
+				40B296B921CCD87300A3C487 /* PhotosViewController.swift */,
+			);
+			path = Photos;
+			sourceTree = "<group>";
+		};
+		4041C622262230A6002E0CA4 /* PhotoInspector */ = {
+			isa = PBXGroup;
+			children = (
+				DA47325721DBB227003729BB /* PhotoInspectorViewController.swift */,
+			);
+			path = PhotoInspector;
+			sourceTree = "<group>";
+		};
+		4041C623262230BA002E0CA4 /* Tags */ = {
+			isa = PBXGroup;
+			children = (
+				40D025E525FE798C00E660D0 /* TagCell1TableViewCell.swift */,
+				DA47324F21DA3109003729BB /* TagCellTableViewCell.swift */,
+				40D025E825FE79A100E660D0 /* TagCell2TableViewCell.swift */,
+				40D025E225FDFCA600E660D0 /* BrowseTagsViewController.swift */,
+				4010AD7F25FF4E650048D5F7 /* AddNewTagViewController.swift */,
+			);
+			path = Tags;
+			sourceTree = "<group>";
+		};
+		4041C624262230FC002E0CA4 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				DA1E46CF21F50E3C004FB425 /* ConfirmForgotPasswordViewController.swift */,
+				407C5C0225E4E1B0003C4276 /* SignUpViewController.swift */,
+				DA977F0A21C1460F00883640 /* SignInViewController.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		4041C62526223114002E0CA4 /* Projects */ = {
+			isa = PBXGroup;
+			children = (
+				40E9A18D22280DA5008E8352 /* NoProjectsAssignedViewController.swift */,
+				403EEAA925E63C7D00EB151B /* ReCAPTCHAViewController.swift */,
+				409ABECF25E7A11200C17E1E /* ProjectTableViewCell.swift */,
+				DA1E46CD21F4EC46004FB425 /* ForgotPasswordViewController.swift */,
+				409ABECB25E78E2A00C17E1E /* ProjectsListViewController.swift */,
+				40A4E95525EB880400FEE564 /* NewProjectViewController.swift */,
+			);
+			path = Projects;
+			sourceTree = "<group>";
+		};
+		4041C62626223136002E0CA4 /* Uploads */ = {
+			isa = PBXGroup;
+			children = (
+				401B3F1A21E5FB8400509EF2 /* UploadsViewController.swift */,
+				4054ED46260F3C180045A1C0 /* CompletedUploadsTableViewCell.swift */,
+				DAA615A021E663DF00B5B15E /* UploadsTableViewCell.swift */,
+			);
+			path = Uploads;
+			sourceTree = "<group>";
+		};
+		4041C6272622314C002E0CA4 /* Comments */ = {
+			isa = PBXGroup;
+			children = (
+				DABA66E321D65B620036CEE7 /* AddCommentsViewController.swift */,
+			);
+			path = Comments;
+			sourceTree = "<group>";
+		};
+		4041C6282622315A002E0CA4 /* EditLocation */ = {
+			isa = PBXGroup;
+			children = (
+				DAB7796121DE8A3900308543 /* Annotation.swift */,
+				40C9F87C26072F4500F69253 /* Annotation_V2.swift */,
+				DA47325921DCC26A003729BB /* ConfirmLocationViewController.swift */,
+			);
+			path = EditLocation;
+			sourceTree = "<group>";
+		};
+		4041C6292622318E002E0CA4 /* SharingExtension */ = {
+			isa = PBXGroup;
+			children = (
+				40E44E73261885AB00C8373C /* ShareImagesViewController.swift */,
+			);
+			path = SharingExtension;
+			sourceTree = "<group>";
+		};
+		4041C62A262231B7002E0CA4 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				DA9C51FA22153E4C00326611 /* DocumentFilesViewController.swift */,
+				DA2D954E21EB6042005DE088 /* MenuViewController.swift */,
+				4033274921F5B52D007EE9DF /* SettingsViewController.swift */,
+				4033274B21F5BE87007EE9DF /* SettingsTableViewCell.swift */,
+				DA2D955021ED0389005DE088 /* MenuTableViewCell.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		4041C6312622390A002E0CA4 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				DAD922F2222ADD0C00A7A93E /* BackendConnection.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
 		405977E821C242BF00AF9F4B /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
@@ -307,6 +438,7 @@
 		DA977F0721C1460F00883640 /* SiteSnap */ = {
 			isa = PBXGroup;
 			children = (
+				4041C6312622390A002E0CA4 /* Network */,
 				40E44E70261884DF00C8373C /* SiteSnap.entitlements */,
 				DABA66CA21D23DE90036CEE7 /* dataModels */,
 				40B296BD21CCE5C100A3C487 /* views */,
@@ -314,44 +446,12 @@
 				DA977F5621C3F21C00883640 /* subClasses */,
 				405977E821C242BF00AF9F4B /* Fonts */,
 				DA977F0821C1460F00883640 /* AppDelegate.swift */,
-				40D025E525FE798C00E660D0 /* TagCell1TableViewCell.swift */,
-				40D025E825FE79A100E660D0 /* TagCell2TableViewCell.swift */,
+				4041C61D2622303E002E0CA4 /* UI */,
 				4047811521EC820C006987B4 /* Constants.swift */,
-				DAD922F2222ADD0C00A7A93E /* BackendConnection.swift */,
-				40EB38AA25F535E100BF830B /* ProcessingViewController.swift */,
-				DA977F0A21C1460F00883640 /* SignInViewController.swift */,
-				407C5C0225E4E1B0003C4276 /* SignUpViewController.swift */,
-				403EEAA925E63C7D00EB151B /* ReCAPTCHAViewController.swift */,
-				DA1E46CD21F4EC46004FB425 /* ForgotPasswordViewController.swift */,
-				DA1E46CF21F50E3C004FB425 /* ConfirmForgotPasswordViewController.swift */,
-				401B3F1A21E5FB8400509EF2 /* UploadsViewController.swift */,
-				DAA615A021E663DF00B5B15E /* UploadsTableViewCell.swift */,
-				4054ED46260F3C180045A1C0 /* CompletedUploadsTableViewCell.swift */,
-				DA977F5421C2E91300883640 /* CameraViewController.swift */,
-				409ABECB25E78E2A00C17E1E /* ProjectsListViewController.swift */,
-				40A4E95525EB880400FEE564 /* NewProjectViewController.swift */,
-				DA2D954E21EB6042005DE088 /* MenuViewController.swift */,
-				40E9A18D22280DA5008E8352 /* NoProjectsAssignedViewController.swift */,
-				4033274921F5B52D007EE9DF /* SettingsViewController.swift */,
-				4033274B21F5BE87007EE9DF /* SettingsTableViewCell.swift */,
-				DA2D955021ED0389005DE088 /* MenuTableViewCell.swift */,
-				40B296B921CCD87300A3C487 /* PhotosViewController.swift */,
-				DABA66E321D65B620036CEE7 /* AddCommentsViewController.swift */,
-				DA47325721DBB227003729BB /* PhotoInspectorViewController.swift */,
-				DA47325921DCC26A003729BB /* ConfirmLocationViewController.swift */,
-				DA47324721D8BF75003729BB /* TagsModalViewController.swift */,
-				DA47324F21DA3109003729BB /* TagCellTableViewCell.swift */,
-				40B296BB21CCE5A000A3C487 /* Slide.swift */,
-				DA9C51FA22153E4C00326611 /* DocumentFilesViewController.swift */,
-				DAB7796121DE8A3900308543 /* Annotation.swift */,
-				40E44E73261885AB00C8373C /* ShareImagesViewController.swift */,
-				40C9F87C26072F4500F69253 /* Annotation_V2.swift */,
 				DA977F1221C1461100883640 /* Assets.xcassets */,
 				DA977F1721C1461100883640 /* Info.plist */,
 				DA977F0F21C1460F00883640 /* SiteSnap.xcdatamodeld */,
 				DAA2705821C8FAB10058148A /* Base.lproj */,
-				40D025E225FDFCA600E660D0 /* BrowseTagsViewController.swift */,
-				4010AD7F25FF4E650048D5F7 /* AddNewTagViewController.swift */,
 			);
 			path = SiteSnap;
 			sourceTree = "<group>";
@@ -368,6 +468,7 @@
 		DA977F5621C3F21C00883640 /* subClasses */ = {
 			isa = PBXGroup;
 			children = (
+				40EB38AA25F535E100BF830B /* ProcessingViewController.swift */,
 				DA977F5721C3F25200883640 /* FlashStateButton.swift */,
 				DA977F5921C4E38B00883640 /* ActivityIndicatorButton.swift */,
 				DAA2705F21C922B80058148A /* ProcessingPopup.swift */,
@@ -378,10 +479,10 @@
 				DAB7795D21DE7DF400308543 /* PhotoAnnotationView.swift */,
 				DAB7796721DFA26B00308543 /* PreviewView.swift */,
 				DAB7796921E0F15A00308543 /* Slider.swift */,
+				40B296BB21CCE5A000A3C487 /* Slide.swift */,
 				DA9F69FC22020474006436F6 /* CheckBox.swift */,
 				4010AD7925FF44A80048D5F7 /* CircleCheckBox.swift */,
 				DAE790D02285A6A2003B465D /* NetworkState.swift */,
-				409ABECF25E7A11200C17E1E /* ProjectTableViewCell.swift */,
 				40747BE825EA5F080009BFDE /* RoundCheckBox.swift */,
 				405738DA2610864B00C3EC78 /* BouncingProgressView.swift */,
 			);
@@ -610,7 +711,6 @@
 				40D025E925FE79A100E660D0 /* TagCell2TableViewCell.swift in Sources */,
 				40A4E95625EB880400FEE564 /* NewProjectViewController.swift in Sources */,
 				DA1E46CE21F4EC46004FB425 /* ForgotPasswordViewController.swift in Sources */,
-				DA47324821D8BF75003729BB /* TagsModalViewController.swift in Sources */,
 				405738DB2610864B00C3EC78 /* BouncingProgressView.swift in Sources */,
 				DA2D954F21EB6042005DE088 /* MenuViewController.swift in Sources */,
 				DA9DFA3021F2656800CB68E2 /* Media.swift in Sources */,
@@ -692,6 +792,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = ShareExtensionSiteSnap/ShareExtensionSiteSnap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = W4JDZP9URB;
 				INFOPLIST_FILE = ShareExtensionSiteSnap/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
@@ -700,6 +801,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MARKETING_VERSION = 2.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.au.tridenttechnologies.sitesnapapp.ShareExtensionSiteSnap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -713,6 +815,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = ShareExtensionSiteSnap/ShareExtensionSiteSnap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = W4JDZP9URB;
 				INFOPLIST_FILE = ShareExtensionSiteSnap/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
@@ -721,6 +824,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				MARKETING_VERSION = 2.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.au.tridenttechnologies.sitesnapapp.ShareExtensionSiteSnap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -855,7 +959,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = SiteSnap/SiteSnap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = W4JDZP9URB;
 				INFOPLIST_FILE = SiteSnap/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -863,7 +967,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 2.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.au.tridenttechnologies.sitesnapapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -879,7 +983,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = SiteSnap/SiteSnap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = W4JDZP9URB;
 				INFOPLIST_FILE = SiteSnap/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -887,7 +991,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 2.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.au.tridenttechnologies.sitesnapapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

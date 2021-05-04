@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="20D74" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="20D91" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Photo" representedClassName=".Photo" syncable="YES">
         <attribute name="allPhotosComment" optional="YES" attributeType="String"/>
         <attribute name="allTagsWasSet" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="comeFromSharing" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="createdDate" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="failUploadedCode" optional="YES" attributeType="Integer 16" defaultValueString="-1" usesScalarValueType="YES"/>
         <attribute name="fileSize" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="individualComment" optional="YES" attributeType="String"/>
         <attribute name="isHidden" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="lastProjectToUploadedFor" optional="YES" attributeType="String"/>
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="localIdentifierForAllTags" optional="YES" attributeType="String"/>
         <attribute name="localIdentifierString" attributeType="String"/>
@@ -30,7 +33,7 @@
         <relationship name="projects" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Project" inverseName="availableTags" inverseEntity="Project"/>
     </entity>
     <elements>
-        <element name="Photo" positionX="-449.66015625" positionY="-27.453125" width="128" height="225"/>
+        <element name="Photo" positionX="-449.66015625" positionY="-27.453125" width="128" height="254"/>
         <element name="Project" positionX="-1039.6953125" positionY="89.3359375" width="128" height="119"/>
         <element name="Tag" positionX="-889.71484375" positionY="287.21875" width="128" height="120"/>
     </elements>
