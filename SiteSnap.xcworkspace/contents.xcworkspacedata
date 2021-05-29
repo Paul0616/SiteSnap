@@ -2,7 +2,10 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:SiteSnap/dataModels/Photo+CoreDataProperties.swift">
+      location = "group:Photo+CoreDataClass.swift">
+   </FileRef>
+   <FileRef
+      location = "group:/Users/pauloprea/IOSProjects/SiteSnap/SiteSnap/dataModels/Photo+CoreDataProperties.swift">
    </FileRef>
    <FileRef
       location = "group:SiteSnap.xcodeproj">

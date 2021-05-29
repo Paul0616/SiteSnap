@@ -180,20 +180,21 @@ class NewProjectViewController: UIViewController, UITextFieldDelegate {
                     message = "Error"
                     print(err)
                 }
-                
-                DispatchQueue.main.async(execute: {
-                    let alert = UIAlertController(
-                        title: "SiteSnap server access",
-                        message: message,
-                        preferredStyle: .alert)
+                if message != "Error"{
+                    DispatchQueue.main.async(execute: {
+                        let alert = UIAlertController(
+                            title: "SiteSnap server access",
+                            message: message,
+                            preferredStyle: .alert)
+                        
+                        let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+                            // do something when user press OK button
+                        }
+                        alert.addAction(OKAction)
+                        self.present(alert, animated: true, completion: nil)
                     
-                    let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
-                        // do something when user press OK button
-                    }
-                    alert.addAction(OKAction)
-                    self.present(alert, animated: true, completion: nil)
-                
-                })
+                    })
+                }
             }
         }
     }

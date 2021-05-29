@@ -46,6 +46,8 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
     var projectWasSelected: Bool = false
     var oldProjectSelectedId: String!
     private var _isEditingLocation: Bool = false
+    private var sizeForLess700ScreenHeight: CGSize = CGSize(width: 83 * 0.8, height: 100 * 0.8)
+    private var sizeForMore700ScreenHeight: CGSize = CGSize(width: 100 * 0.8, height: 120 * 0.8)
     
     var isEditingLocation: Bool {
         get {
@@ -65,6 +67,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
     
     //MARK: -
     override func viewDidLoad() {
+       
         super.viewDidLoad()
         map.showsCompass = false
         backButton.layer.cornerRadius = 20
@@ -198,7 +201,14 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
         }
         sliderVisibility(hidden: true)
         dummy = Bundle.main.loadNibNamed("Annotation_v2", owner: self, options: nil)?.first as? Annotation_V2
-        dummy!.frame = CGRect(x: pointForCurrentAnnotation.x, y: pointForCurrentAnnotation.y, width: 100, height: 120)
+        if UIScreen.main.bounds.height < 700 {
+            dummy!.frame = CGRect(x: pointForCurrentAnnotation.x, y: pointForCurrentAnnotation.y, width: sizeForLess700ScreenHeight.width, height: sizeForLess700ScreenHeight.height)
+            dummy.pinCircle.layer.cornerRadius = CGFloat(sizeForLess700ScreenHeight.width * 0.3)
+        } else {
+            dummy!.frame = CGRect(x: pointForCurrentAnnotation.x, y: pointForCurrentAnnotation.y, width: sizeForMore700ScreenHeight.width, height: sizeForMore700ScreenHeight.height)
+            dummy.pinCircle.layer.cornerRadius = CGFloat(sizeForMore700ScreenHeight.width * 0.3)
+        }
+    
         //dummy.numberOfPhotos.isHidden = true
         selectedPhotoIdentifier = slideContainer.slides[slideContainer.photosControl.currentPage].localIdentifier
         //dummy.photoImage.image = slideContainer.slides[slideContainer.photosControl.currentPage].mainImage.image
@@ -231,7 +241,14 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
         }
         sliderVisibility(hidden: true)
         dummy = Bundle.main.loadNibNamed("Annotation_v2", owner: self, options: nil)?.first as? Annotation_V2
-        dummy!.frame = CGRect(x: pointForCurrentAnnotation.x, y: pointForCurrentAnnotation.y, width: 100, height: 120)
+        if UIScreen.main.bounds.height < 700 {
+            dummy!.frame = CGRect(x: pointForCurrentAnnotation.x, y: pointForCurrentAnnotation.y, width: sizeForLess700ScreenHeight.width, height: sizeForLess700ScreenHeight.height)
+            dummy.pinCircle.layer.cornerRadius = CGFloat(sizeForLess700ScreenHeight.width * 0.3)
+        } else {
+            dummy!.frame = CGRect(x: pointForCurrentAnnotation.x, y: pointForCurrentAnnotation.y, width: sizeForMore700ScreenHeight.width, height: sizeForMore700ScreenHeight.height)
+            dummy.pinCircle.layer.cornerRadius = CGFloat(sizeForMore700ScreenHeight.width * 0.3)
+        }
+        
         //dummy.numberOfPhotos.isHidden = true
         selectedPhotoIdentifier = nil
         //dummy.photoImage.isHidden = true
@@ -557,7 +574,15 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
         var annotationView = self.map.dequeueReusableAnnotationView(withIdentifier: "photoAnnotation") as? PhotoAnnotationView
         let currentAnnotation = annotation as! PhotoAnnotation
         if annotationView == nil{
-            annotationView = PhotoAnnotationView.init(annotation: annotation, reuseIdentifier: "photoAnnotation", isCluster: currentAnnotation.isCluster!, numberOfPhotos: currentAnnotation.numberOfPhotos!, photoImage: nil)//currentAnnotation.photo
+            var width: Double, height: Double
+            if UIScreen.main.bounds.height < 700{
+                width = Double(sizeForLess700ScreenHeight.width)
+                height = Double(sizeForLess700ScreenHeight.height)
+            } else {
+                width = Double(sizeForMore700ScreenHeight.width)
+                height = Double(sizeForMore700ScreenHeight.height)
+            }
+            annotationView = PhotoAnnotationView.init(annotation: annotation, reuseIdentifier: "photoAnnotation", isCluster: currentAnnotation.isCluster!, numberOfPhotos: currentAnnotation.numberOfPhotos!, photoImage: nil, width: width, height: height)//currentAnnotation.photo
             annotationView?.canShowCallout = false
         }else{
             if annotationView?.customView != nil {

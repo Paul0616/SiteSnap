@@ -55,6 +55,9 @@ class ActivityIndicatorButton: UIButton {
         showSpinning()
     }
     
+    func haveProjectSelected() -> Bool {
+        return self.title(for: .normal) != "Connecting to SiteSnap..."
+    }
    
     
     private func createActivityIndicator() -> UIActivityIndicatorView {

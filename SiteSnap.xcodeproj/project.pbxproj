@@ -40,6 +40,8 @@
 		40E44DD72618518B00C8373C /* ShareExtensionSiteSnap.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 40E44DCD2618518B00C8373C /* ShareExtensionSiteSnap.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		40E44E74261885AB00C8373C /* ShareImagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E44E73261885AB00C8373C /* ShareImagesViewController.swift */; };
 		40E44EA0261A422700C8373C /* PhotoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E44E9F261A422700C8373C /* PhotoModel.swift */; };
+		40E7F19026623625003DC556 /* Photo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E7F18E26623625003DC556 /* Photo+CoreDataProperties.swift */; };
+		40E7F19126623625003DC556 /* Photo+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E7F18F26623625003DC556 /* Photo+CoreDataClass.swift */; };
 		40E9A18E22280DA5008E8352 /* NoProjectsAssignedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E9A18D22280DA5008E8352 /* NoProjectsAssignedViewController.swift */; };
 		40EB38AB25F535E100BF830B /* ProcessingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40EB38AA25F535E100BF830B /* ProcessingViewController.swift */; };
 		803902112621DA84596AB896 /* Pods_SiteSnap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08D194FC8394711D1AE36F7F /* Pods_SiteSnap.framework */; };
@@ -78,8 +80,6 @@
 		DAB7796821DFA26B00308543 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB7796721DFA26B00308543 /* PreviewView.swift */; };
 		DAB7796A21E0F15A00308543 /* Slider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB7796921E0F15A00308543 /* Slider.swift */; };
 		DAB7797021E1146B00308543 /* Slider.xib in Resources */ = {isa = PBXBuildFile; fileRef = DAB7796F21E1146B00308543 /* Slider.xib */; };
-		DABA66DD21D23F1D0036CEE7 /* Photo+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA66D721D23F1D0036CEE7 /* Photo+CoreDataClass.swift */; };
-		DABA66DE21D23F1D0036CEE7 /* Photo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA66D821D23F1D0036CEE7 /* Photo+CoreDataProperties.swift */; };
 		DABA66E121D23F1D0036CEE7 /* Tag+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA66DB21D23F1D0036CEE7 /* Tag+CoreDataClass.swift */; };
 		DABA66E221D23F1D0036CEE7 /* Tag+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA66DC21D23F1D0036CEE7 /* Tag+CoreDataProperties.swift */; };
 		DABA66E421D65B620036CEE7 /* AddCommentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA66E321D65B620036CEE7 /* AddCommentsViewController.swift */; };
@@ -150,6 +150,8 @@
 		40E44E70261884DF00C8373C /* SiteSnap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SiteSnap.entitlements; sourceTree = "<group>"; };
 		40E44E73261885AB00C8373C /* ShareImagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareImagesViewController.swift; sourceTree = "<group>"; };
 		40E44E9F261A422700C8373C /* PhotoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoModel.swift; sourceTree = "<group>"; };
+		40E7F18E26623625003DC556 /* Photo+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Photo+CoreDataProperties.swift"; path = "/Users/pauloprea/IOSProjects/SiteSnap/SiteSnap/dataModels/Photo+CoreDataProperties.swift"; sourceTree = "<absolute>"; };
+		40E7F18F26623625003DC556 /* Photo+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Photo+CoreDataClass.swift"; path = "../../Photo+CoreDataClass.swift"; sourceTree = "<group>"; };
 		40E9A18D22280DA5008E8352 /* NoProjectsAssignedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoProjectsAssignedViewController.swift; sourceTree = "<group>"; };
 		40EB38AA25F535E100BF830B /* ProcessingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingViewController.swift; sourceTree = "<group>"; };
 		6A73AA7E3AC6DD8718D48C21 /* Pods-SiteSnap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SiteSnap.release.xcconfig"; path = "Pods/Target Support Files/Pods-SiteSnap/Pods-SiteSnap.release.xcconfig"; sourceTree = "<group>"; };
@@ -197,8 +199,6 @@
 		DAB7796721DFA26B00308543 /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		DAB7796921E0F15A00308543 /* Slider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slider.swift; sourceTree = "<group>"; };
 		DAB7796F21E1146B00308543 /* Slider.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Slider.xib; sourceTree = "<group>"; };
-		DABA66D721D23F1D0036CEE7 /* Photo+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataClass.swift"; sourceTree = "<group>"; };
-		DABA66D821D23F1D0036CEE7 /* Photo+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		DABA66DB21D23F1D0036CEE7 /* Tag+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tag+CoreDataClass.swift"; sourceTree = "<group>"; };
 		DABA66DC21D23F1D0036CEE7 /* Tag+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tag+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		DABA66E321D65B620036CEE7 /* AddCommentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCommentsViewController.swift; sourceTree = "<group>"; };
@@ -517,10 +517,10 @@
 		DABA66CA21D23DE90036CEE7 /* dataModels */ = {
 			isa = PBXGroup;
 			children = (
+				40E7F18F26623625003DC556 /* Photo+CoreDataClass.swift */,
+				40E7F18E26623625003DC556 /* Photo+CoreDataProperties.swift */,
 				4033274721F0A016007EE9DF /* Project+CoreDataProperties.swift */,
 				4033274521F0A00D007EE9DF /* Project+CoreDataClass.swift */,
-				DABA66D721D23F1D0036CEE7 /* Photo+CoreDataClass.swift */,
-				DABA66D821D23F1D0036CEE7 /* Photo+CoreDataProperties.swift */,
 				DABA66DB21D23F1D0036CEE7 /* Tag+CoreDataClass.swift */,
 				DABA66DC21D23F1D0036CEE7 /* Tag+CoreDataProperties.swift */,
 			);
@@ -700,12 +700,12 @@
 				40E9A18E22280DA5008E8352 /* NoProjectsAssignedViewController.swift in Sources */,
 				4095FBE921F071A7008A39D4 /* ProjectHandler.swift in Sources */,
 				4033274C21F5BE87007EE9DF /* SettingsTableViewCell.swift in Sources */,
+				40E7F19126623625003DC556 /* Photo+CoreDataClass.swift in Sources */,
 				40D025E625FE798C00E660D0 /* TagCell1TableViewCell.swift in Sources */,
 				DAB7796A21E0F15A00308543 /* Slider.swift in Sources */,
 				DAA270A221CBD5AD0058148A /* ImageDotButton.swift in Sources */,
 				DABA66E121D23F1D0036CEE7 /* Tag+CoreDataClass.swift in Sources */,
 				DA1E46D021F50E3C004FB425 /* ConfirmForgotPasswordViewController.swift in Sources */,
-				DABA66DE21D23F1D0036CEE7 /* Photo+CoreDataProperties.swift in Sources */,
 				DAA615A321E7B1D300B5B15E /* ImageForUpload.swift in Sources */,
 				DA47324C21D8FA7D003729BB /* PhotoHandler.swift in Sources */,
 				40D025E925FE79A100E660D0 /* TagCell2TableViewCell.swift in Sources */,
@@ -742,9 +742,9 @@
 				40EB38AB25F535E100BF830B /* ProcessingViewController.swift in Sources */,
 				DAA2706021C922B80058148A /* ProcessingPopup.swift in Sources */,
 				409ABECC25E78E2A00C17E1E /* ProjectsListViewController.swift in Sources */,
+				40E7F19026623625003DC556 /* Photo+CoreDataProperties.swift in Sources */,
 				4033274A21F5B52D007EE9DF /* SettingsViewController.swift in Sources */,
 				DA977F5821C3F25200883640 /* FlashStateButton.swift in Sources */,
-				DABA66DD21D23F1D0036CEE7 /* Photo+CoreDataClass.swift in Sources */,
 				DA977F0B21C1460F00883640 /* SignInViewController.swift in Sources */,
 				DA47324A21D8E62E003729BB /* TagHandler.swift in Sources */,
 				DAA5DC7421C655170000B966 /* ProjectModel.swift in Sources */,
@@ -792,7 +792,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = ShareExtensionSiteSnap/ShareExtensionSiteSnap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = W4JDZP9URB;
 				INFOPLIST_FILE = ShareExtensionSiteSnap/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
@@ -801,7 +801,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.2;
+				MARKETING_VERSION = 2.0.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.au.tridenttechnologies.sitesnapapp.ShareExtensionSiteSnap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -815,7 +815,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = ShareExtensionSiteSnap/ShareExtensionSiteSnap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = W4JDZP9URB;
 				INFOPLIST_FILE = ShareExtensionSiteSnap/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
@@ -824,7 +824,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.2;
+				MARKETING_VERSION = 2.0.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.au.tridenttechnologies.sitesnapapp.ShareExtensionSiteSnap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -959,7 +959,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = SiteSnap/SiteSnap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = W4JDZP9URB;
 				INFOPLIST_FILE = SiteSnap/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -967,7 +967,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.2;
+				MARKETING_VERSION = 2.0.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.au.tridenttechnologies.sitesnapapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -983,7 +983,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = SiteSnap/SiteSnap.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = W4JDZP9URB;
 				INFOPLIST_FILE = SiteSnap/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -991,7 +991,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.2;
+				MARKETING_VERSION = 2.0.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.au.tridenttechnologies.sitesnapapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

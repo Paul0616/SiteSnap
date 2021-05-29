@@ -10,7 +10,7 @@ import Foundation
 import AWSCognitoIdentityProvider
 import CoreLocation
 
-protocol BackendConnectionDelegate: class {
+protocol BackendConnectionDelegate: AnyObject {
     func treatErrors(_ error: Error?)
     func treatErrorsApi(_ json: NSDictionary?)
     func displayMessageFromServer(_ message: String?)
@@ -28,6 +28,7 @@ class BackendConnection: NSObject {
     var pool: AWSCognitoIdentityUserPool?
     weak var delegate: BackendConnectionDelegate?
     var backgroundUrlSession: URLSession?
+    private var taskIsRunning: Bool = false
     
     
     
@@ -36,10 +37,12 @@ class BackendConnection: NSObject {
     override init() {
         self.pool = AWSCognitoIdentityUserPool(forKey: AWSCognitoUserPoolsSignInProviderKey)
         super.init()
-        let config = URLSessionConfiguration.background(withIdentifier: "com.au.tridenttechnologies.sitesnapapp")
+        //let config = URLSessionConfiguration.background(withIdentifier: "com.au.tridenttechnologies.sitesnapapp")
+        let config = URLSessionConfiguration.default
         config.isDiscretionary = true
         config.sessionSendsLaunchEvents = true
         config.allowsCellularAccess = true
+        config.timeoutIntervalForRequest = TimeInterval(3.0)
         backgroundUrlSession = URLSession(configuration: config, delegate: self, delegateQueue: .main)
     }
     
@@ -69,7 +72,12 @@ class BackendConnection: NSObject {
         self.lastLocation = lastLocation
         self.projectWasSelected = projectWasSelected
         let request = makeUrlRequest()
-        if let request = request {
+        print("start CONNECTING SITE SNAP")
+        print(request)
+        print("*******************************Task is running: \(taskIsRunning.description.uppercased())")
+        if let request = request, !taskIsRunning {
+            print("CONNECTING")
+            taskIsRunning = true;
             let task = backgroundUrlSession?.downloadTask(with: request)
             task?.resume()
         }
@@ -323,6 +331,7 @@ extension BackendConnection: URLSessionDelegate, URLSessionDownloadDelegate, URL
         do{
             let data = try Data(contentsOf: location)
             let json = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
+            taskIsRunning = false
             self.setUpInternalTables(json: json, projectWasSelected: self.projectWasSelected, lastLocation: self.lastLocation)
             
         } catch let error as NSError
@@ -334,6 +343,7 @@ extension BackendConnection: URLSessionDelegate, URLSessionDownloadDelegate, URL
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         if let error = error {
+            taskIsRunning = false
             self.delegate?.treatErrors(error)
         }
     }
@@ -341,6 +351,7 @@ extension BackendConnection: URLSessionDelegate, URLSessionDownloadDelegate, URL
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         do {
             let json = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
+            taskIsRunning = false
             self.apiError(json)
         } catch let error as NSError
         {

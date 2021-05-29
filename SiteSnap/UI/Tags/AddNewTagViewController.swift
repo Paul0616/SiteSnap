@@ -306,7 +306,7 @@ class AddNewTagViewController: UIViewController, CircleCheckBoxDelegate, UITextF
                 default:
                     print("Default error")
                 }
-                showToast(message: "\(message)", font: .systemFont(ofSize: 16))
+                //showToast(message: "\(message)", font: .systemFont(ofSize: 16))
                 if error != 0{
                     DispatchQueue.main.async(execute: {
                         let alert = UIAlertController(
@@ -349,7 +349,7 @@ class AddNewTagViewController: UIViewController, CircleCheckBoxDelegate, UITextF
     }
     func treatErrors(_ error: Error?) {
         self.dismissProgressVC(completion: nil)
-        showToast(message: "\(error?.localizedDescription ?? "error null")", font: .systemFont(ofSize: 16))
+        //showToast(message: "\(error?.localizedDescription ?? "error null")", font: .systemFont(ofSize: 16))
         if error != nil {
             print(error?.localizedDescription as Any)
             if let err = error as? URLError {
@@ -366,20 +366,21 @@ class AddNewTagViewController: UIViewController, CircleCheckBoxDelegate, UITextF
                     message = "Error"
                     print(err)
                 }
-                
-                DispatchQueue.main.async(execute: {
-                    let alert = UIAlertController(
-                        title: "SiteSnap server access",
-                        message: message,
-                        preferredStyle: .alert)
+                if message != "Error"{
+                    DispatchQueue.main.async(execute: {
+                        let alert = UIAlertController(
+                            title: "SiteSnap server access",
+                            message: message,
+                            preferredStyle: .alert)
+                        
+                        let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+                            // do something when user press OK button
+                        }
+                        alert.addAction(OKAction)
+                        self.present(alert, animated: true, completion: nil)
                     
-                    let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
-                        // do something when user press OK button
-                    }
-                    alert.addAction(OKAction)
-                    self.present(alert, animated: true, completion: nil)
-                
-                })
+                    })
+                }
             }
         }
     }

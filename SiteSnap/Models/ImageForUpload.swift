@@ -39,7 +39,8 @@ class ImageForUpload: NSObject {
           fileSize: Int64,
           speed: Int,
           progress: CFloat,
-          state: State
+          state: State,
+          date: Date?
         ) {
         
         //Initializeaza proprietatile
@@ -50,6 +51,7 @@ class ImageForUpload: NSObject {
         self.speed = speed
         self.progress = progress
         self.state = state
+        self.date = date
     }
     
     

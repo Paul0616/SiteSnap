@@ -10,18 +10,23 @@ import MapKit
 
 class PhotoAnnotationView: MKAnnotationView {
     var customView: Annotation_V2!
+    var width: Double = 100.0
+    var height: Double = 120.0
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
    
-    init(annotation: MKAnnotation?, reuseIdentifier: String?, isCluster: Bool, numberOfPhotos: Int, photoImage: UIImage?) {
+    init(annotation: MKAnnotation?, reuseIdentifier: String?, isCluster: Bool, numberOfPhotos: Int, photoImage: UIImage?, width: Double, height: Double) {
+        self.width = width
+        self.height = height
         super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
         resetProperties(newIsCluster: isCluster, newNumberOfPhotos: numberOfPhotos, newPhotoImage: photoImage)
     }
     
     func resetProperties(newIsCluster: Bool, newNumberOfPhotos: Int, newPhotoImage: UIImage?){
         customView = Bundle.main.loadNibNamed("Annotation_v2", owner: self, options: nil)?.first as? Annotation_V2
-        self.frame = CGRect(x: 0, y: 0, width: 100, height: 120)//100/120
-        
+         
+        self.frame = CGRect(x: 0, y: 0, width: width, height: height)//100/120
+        customView.pinCircle.layer.cornerRadius = CGFloat(width * 0.3)
         self.addSubview(customView)
         customView.translatesAutoresizingMaskIntoConstraints = false
         customView.bottomAnchor.constraint(equalToSystemSpacingBelow: self.bottomAnchor, multiplier: 1).isActive = true

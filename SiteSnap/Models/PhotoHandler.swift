@@ -156,6 +156,7 @@ class PhotoHandler: NSObject {
                 object.successfulUploaded = succsessfuly
                 object.failUploadedCode = failCode
                 object.lastProjectToUploadedFor = lastProjectToUploadedFor
+                object.lastUploadedDate = Date()
             }
             try context.save()
             return true

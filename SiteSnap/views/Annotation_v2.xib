@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -20,11 +20,11 @@
                     <color key="tintColor" red="0.066666666669999999" green="0.058823529409999999" blue="0.24313725489999999" alpha="1" colorSpace="calibratedRGB"/>
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jbx-i6-HKn">
-                    <rect key="frame" x="21.5" y="20" width="64" height="64"/>
+                    <rect key="frame" x="21.5" y="24" width="64" height="64"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BaB-an-ROk">
-                            <rect key="frame" x="21.5" y="12" width="21" height="40"/>
-                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="33"/>
+                            <rect key="frame" x="23.5" y="16.5" width="17" height="31.5"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="26"/>
                             <color key="textColor" red="0.066666666669999999" green="0.058823529409999999" blue="0.24313725489999999" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
@@ -34,12 +34,10 @@
                         <constraint firstItem="BaB-an-ROk" firstAttribute="centerY" secondItem="jbx-i6-HKn" secondAttribute="centerY" id="2cZ-qf-eJt"/>
                         <constraint firstItem="BaB-an-ROk" firstAttribute="centerX" secondItem="jbx-i6-HKn" secondAttribute="centerX" id="GnS-Ai-MYX"/>
                         <constraint firstAttribute="width" secondItem="jbx-i6-HKn" secondAttribute="height" multiplier="1:1" id="VAi-62-UBL"/>
-                        <constraint firstAttribute="height" constant="64" id="tQa-G3-Weu"/>
-                        <constraint firstAttribute="width" constant="64" id="ubZ-O3-FSy"/>
                     </constraints>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                            <integer key="value" value="32"/>
+                            <integer key="value" value="100"/>
                         </userDefinedRuntimeAttribute>
                     </userDefinedRuntimeAttributes>
                 </view>
@@ -50,7 +48,8 @@
                 <constraint firstItem="I7F-v3-nOA" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="41J-ST-nfX"/>
                 <constraint firstItem="I7F-v3-nOA" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="BV8-5H-Bzz"/>
                 <constraint firstItem="jbx-i6-HKn" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="I7H-dJ-VAD"/>
-                <constraint firstItem="jbx-i6-HKn" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" constant="-12" id="UDI-ZR-iyB"/>
+                <constraint firstItem="jbx-i6-HKn" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" constant="-8" id="UDI-ZR-iyB"/>
+                <constraint firstItem="jbx-i6-HKn" firstAttribute="width" secondItem="I7F-v3-nOA" secondAttribute="width" multiplier="0.6" id="hnP-Bm-E0b"/>
                 <constraint firstItem="I7F-v3-nOA" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="mhl-XE-fnu"/>
                 <constraint firstItem="I7F-v3-nOA" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" id="p7s-yB-k61"/>
             </constraints>

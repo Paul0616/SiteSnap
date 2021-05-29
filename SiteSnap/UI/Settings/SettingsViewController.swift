@@ -34,25 +34,27 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "settingsCell", for: indexPath) as! SettingsTableViewCell
         
-        cell.settingLabel?.textColor = UIColor.white
+        //cell.settingLabel?.textColor = UIColor.white
         switch indexPath.row {
         case 0:
-            cell.settingLabel?.text = "Save photos to gallery automatically"
-            cell.settingSwitch.tag = indexPath.row
+            cell.settingLabel?.text = "Save photos to device gallery"
+            cell.settingSubtitle?.text = "Photos taken in SiteSnap will save to the device's photo gallery."
+            cell.checkBox.tag = indexPath.row
             
             if let status = UserDefaults.standard.value(forKey: "saveToGallery") as? Bool {
-                cell.settingSwitch.isOn = status
+                cell.checkBox.isOn = status
             } else {
-                cell.settingSwitch.isOn = true
+                cell.checkBox.isOn = true
             }
             break
         case 1:
-            cell.settingLabel?.text = "Enable debug mode (photos will not be uploaded to server)"
-            cell.settingSwitch.tag = indexPath.row
+            cell.settingLabel?.text = "Enable debug mode"
+            cell.settingSubtitle?.text = "Photos taken will not be uploaded to SiteSnap."
+            cell.checkBox.tag = indexPath.row
             if let status = UserDefaults.standard.value(forKey: "debugMode") as? Bool {
-                cell.settingSwitch.isOn = status
+                cell.checkBox.isOn = status
             } else {
-                cell.settingSwitch.isOn = false
+                cell.checkBox.isOn = false
             }
             break
 //        case 2:
@@ -70,14 +72,23 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         return 80
     }
     
-    @IBAction func onSwitchSetting(_ sender: UISwitch) {
+    
+    
+    @IBAction func onCheckSetting(_ sender: CheckBox) {
+//        let darkBlue: UIColor = UIColor(red: 17/255, green: 15/255, blue: 62/255, alpha: 1.0)
+//        if sender.isOn {
+//            sender.backgroundColor = darkBlue
+//            sender.tintColor = .white
+//        }
+//        else {
+//            sender.backgroundColor = .clear
+//            sender.tintColor = darkBlue
+//        }
         switch sender.tag {
         case 0:
             UserDefaults.standard.set(sender.isOn, forKey: "saveToGallery")
         case 1:
             UserDefaults.standard.set(sender.isOn, forKey: "debugMode")
-//        case 2:
-//            performSegue(withIdentifier: "files", sender: sender)
         default:
              print(sender.tag)
         }

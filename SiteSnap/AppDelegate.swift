@@ -20,6 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var userWantToResetPassword: Bool = false
     var userWantToSignUp: Bool = false
     var isSignInControlerPresenting = false
+    var timer: Timer!
 
     
     //    var user: AWSCognitoIdentityUser?
@@ -45,8 +46,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //            URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems?.forEach{
 //                parameters[$0.name] = $0.value
 //            }
+            UINavigationBar.appearance().tintColor = .white
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let viewController = storyboard.instantiateViewController(identifier: "shareImagesViewController") as! ShareImagesViewController
+           
             viewController.modalPresentationStyle = .fullScreen
             self.window?.rootViewController = viewController
             self.window?.makeKeyAndVisible()

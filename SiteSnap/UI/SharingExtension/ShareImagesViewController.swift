@@ -70,6 +70,7 @@ class ShareImagesViewController: UIViewController, UITableViewDataSource, Backen
         activityIndicator.startAnimating()
         view.isUserInteractionEnabled = false
         projectsTableView.isHidden = true
+        //self.navigationController?.navigationBar.tintColor = UIColor.white
         self.pool = AWSCognitoIdentityUserPool(forKey: AWSCognitoUserPoolsSignInProviderKey)
         if (self.user == nil) {
             self.user = self.pool?.currentUser()
@@ -83,7 +84,7 @@ class ShareImagesViewController: UIViewController, UITableViewDataSource, Backen
         }
         
         if !(pool?.token().isCompleted ?? false) {
-            self.showToast(message: "token completed \(String(describing: pool?.token().isCompleted))", font: .systemFont(ofSize: 14))
+           // self.showToast(message: "token completed \(String(describing: pool?.token().isCompleted))", font: .systemFont(ofSize: 14))
             timerAuthenticationCognito = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(refresh), userInfo: nil, repeats: true)
         } else {
             BackendConnection.shared.delegate = self
@@ -91,12 +92,14 @@ class ShareImagesViewController: UIViewController, UITableViewDataSource, Backen
         }
         
     }
+    
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return .lightContent
+    }
 
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
-    
-    
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -105,7 +108,7 @@ class ShareImagesViewController: UIViewController, UITableViewDataSource, Backen
 //            startBackendConnection()
 //
 //        }
-        showToast(message: "Delegate self", font: .systemFont(ofSize: 16))
+        //showToast(message: "Delegate self", font: .systemFont(ofSize: 16))
         BackendConnection.shared.delegate = self
     }
     
@@ -221,7 +224,7 @@ class ShareImagesViewController: UIViewController, UITableViewDataSource, Backen
                 self.response = task.result
                 UserDefaults.standard.set(self.user?.deviceId, forKey: "deviceId")
                 print("RESPONSE to refresh user")
-                self.showToast(message: "RESPONSE to refresh user", font: .systemFont(ofSize: 14))
+                //self.showToast(message: "RESPONSE to refresh user", font: .systemFont(ofSize: 14))
                 for attribute in (self.response?.userAttributes)! {
                     if attribute.name == "given_name" {
                         UserDefaults.standard.set(attribute.value, forKey: "given_name")
@@ -245,7 +248,7 @@ class ShareImagesViewController: UIViewController, UITableViewDataSource, Backen
                     UserDefaults.standard.removeObject(forKey: "token")
                 }
                 print("USER DEFAULTS SETTED")
-                self.showToast(message: "USER DEFAULTS SETTED", font: .systemFont(ofSize: 14))
+                //self.showToast(message: "USER DEFAULTS SETTED", font: .systemFont(ofSize: 14))
             }
             return nil
         }
@@ -414,7 +417,7 @@ class ShareImagesViewController: UIViewController, UITableViewDataSource, Backen
         view.isUserInteractionEnabled = true
         loadingProjectIntoList()
         //updateTagNumber()
-        showToast(message: "DatabaseUpdated", font: .systemFont(ofSize: 14))
+        //showToast(message: "DatabaseUpdated", font: .systemFont(ofSize: 14))
     }
     
     func userNeedToCreateFirstProject() {
@@ -425,7 +428,10 @@ class ShareImagesViewController: UIViewController, UITableViewDataSource, Backen
         currentProjectId = userProjects[sender.tag].id
         UserDefaults.standard.set(currentProjectId, forKey: "currentProjectId")
         let project = ProjectHandler.getSpecificProject(id: currentProjectId!)
-        print(project?.name)
+        print(project?.name ?? "")
+        if let project = project {
+            UserDefaults.standard.set(project.name, forKey: "currentProjectName")
+        }
         currentTags = ProjectHandler.getTagsForProject(projectId: currentProjectId!)
         updateTagsButton()
         projectsTableView.reloadData()
@@ -452,12 +458,12 @@ class ShareImagesViewController: UIViewController, UITableViewDataSource, Backen
             self.currentProjectId = UserDefaults.standard.value(forKey: "currentProjectId") as? String
         } else {
             let project = ProjectHandler.getSpecificProject(id: currentProjectId!)
-            print(project?.name)
+            print(project?.name ?? "")
         }
         if currentTags.isEmpty {
             currentTags = ProjectHandler.getTagsForProject(projectId: currentProjectId!)
             let project = ProjectHandler.getSpecificProject(id: currentProjectId!)
-            print(project?.name)
+            print(project?.name ?? "")
         }
         projectsTableView.reloadData()
     }

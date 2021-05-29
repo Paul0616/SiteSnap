@@ -91,9 +91,10 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         photos = PhotoHandler.fetchAllObjects()!
         //var unprocessedImages = [ImageForUpload]()
-        var currentProjectName = UserDefaults.standard.value(forKey: "currentProjectName") as! String
+       
     
         for photo in photos {
+            var currentProjectName = UserDefaults.standard.value(forKey: "currentProjectName") as! String
             if let projectIdToUploadToFromSharing = projectIdToUploadToFromSharing, photo.comeFromSharing {
                 if let project = ProjectHandler.getSpecificProject(id: projectIdToUploadToFromSharing){
                     currentProjectName = project.name!
@@ -102,7 +103,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
             if photo.successfulUploaded,  let lastProjectToUploadedFor = photo.lastProjectToUploadedFor{
                 currentProjectName = lastProjectToUploadedFor
             }
-            let image = ImageForUpload(localIdentifier: photo.localIdentifierString!, projectName: currentProjectName, estimatedTime: -1, fileSize: photo.fileSize, speed: 0, progress: 0, state: photo.successfulUploaded ? .done : .waiting)
+            let image = ImageForUpload(localIdentifier: photo.localIdentifierString!, projectName: currentProjectName, estimatedTime: -1, fileSize: photo.fileSize, speed: 0, progress: 0, state: photo.successfulUploaded ? .done : .waiting, date: photo.lastUploadedDate)
             if !photo.successfulUploaded && photo.failUploadedCode != -1{
                 image?.state = .fail
                 image?.failCode = Int(photo.failUploadedCode)
@@ -119,7 +120,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         currentUploadingLocalIdentifier = images[0].localIdentifier
         //uploadingProcessRunning = true
         //startUploadingOneByOne()
-      
+        onPauseResumeAll(pauseResumeAllButton!)
     }
     
     override func viewDidLayoutSubviews() {
@@ -288,6 +289,19 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         currentUploadsState = .running
         setUploadingState()
         tableView1.reloadData()
+    }
+    
+    func startUploading(){
+        //setUploadingState()
+        if sessionManager == nil {
+            createSessionManager()
+        }
+        for image in images.filter({$0.state == .waiting}){
+            image.state = .inProgress
+            prepareUploadPhoto(localIdentifier: image.localIdentifier)
+        }
+        tableView1.reloadData()
+        tableView2.reloadData()
     }
     
     @IBAction func onPauseResumeAll(_ sender: Any) {
@@ -557,7 +571,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         if let appVersion = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as? String {
             version = appVersion
         } else {
-            version = "1.0"
+            version = "2.0"
         }
         let parameters = [
             "forProject": currentProjectId,
@@ -954,7 +968,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 cell.bouncingProgressView.stopAnimate()
                 cell.playRetryButton.isHidden = true
                 cell.deleteFromQueueButton.isHidden = false
-                cell.projectNameAndTimeLabel.text = "\(images[indexPath.row].projectName)"
+                cell.projectNameAndTimeLabel.text = "\(uploadingImages[indexPath.row].projectName)"
                 if images[indexPath.row].estimatedTime != -1 {
                    cell.projectNameAndTimeLabel.text = "\(uploadingImages[indexPath.row].projectName) - \(uploadingImages[indexPath.row].estimatedTime)s"
                 }
@@ -973,7 +987,8 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
             return cell
         case tableView2:
             let cell = tableView.dequeueReusableCell(withIdentifier: "UploadedCellIdentifier", for: indexPath) as! CompletedUploadsTableViewCell
-            let uploadedImages = images.filter({$0.state == .done})
+            var uploadedImages = images.filter({$0.state == .done})
+            uploadedImages.sort{ $0.date > $1.date}
             cell.photoImage.loadImage(identifier: uploadedImages[indexPath.row].localIdentifier)
             cell.showRemoveButton.tag = indexPath.row
             cell.removeButton.tag = indexPath.row

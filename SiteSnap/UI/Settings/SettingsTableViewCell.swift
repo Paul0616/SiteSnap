@@ -11,7 +11,8 @@ import UIKit
 class SettingsTableViewCell: UITableViewCell {
 
     @IBOutlet weak var settingLabel: UILabel!
-    @IBOutlet weak var settingSwitch: UISwitch!
+    @IBOutlet weak var settingSubtitle: UILabel!
+    @IBOutlet weak var checkBox: CheckBox!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

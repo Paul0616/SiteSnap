@@ -2,7 +2,7 @@
 //  Photo+CoreDataProperties.swift
 //  
 //
-//  Created by Paul Oprea on 10.04.2021.
+//  Created by Paul Oprea on 29.05.2021.
 //
 //
 
@@ -18,18 +18,19 @@ extension Photo {
 
     @NSManaged public var allPhotosComment: String?
     @NSManaged public var allTagsWasSet: Bool
+    @NSManaged public var comeFromSharing: Bool
     @NSManaged public var createdDate: Date?
     @NSManaged public var failUploadedCode: Int16
     @NSManaged public var fileSize: Int64
     @NSManaged public var individualComment: String?
     @NSManaged public var isHidden: Bool
+    @NSManaged public var lastProjectToUploadedFor: String?
+    @NSManaged public var lastUploadedDate: Date?
     @NSManaged public var latitude: Double
     @NSManaged public var localIdentifierForAllTags: String?
     @NSManaged public var localIdentifierString: String?
     @NSManaged public var longitude: Double
     @NSManaged public var successfulUploaded: Bool
-    @NSManaged public var comeFromSharing: Bool
-    @NSManaged public var lastProjectToUploadedFor: String?
     @NSManaged public var tags: NSSet?
 
 }

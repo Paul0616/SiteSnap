@@ -151,8 +151,10 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         loadingProjectIntoList()
         checkLocationAuthorization()
         libraryAuthorization()
-        
-        timerAuthenticationCognito = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(refresh), userInfo: nil, repeats: true)
+        if let isCompleted = self.pool?.token().isCompleted, !isCompleted {
+            print("NO TOKEN YET")
+            timerAuthenticationCognito = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(refresh), userInfo: nil, repeats: true)
+        }
         refresh()
        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -168,8 +170,10 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         super.viewDidAppear(animated)
         BackendConnection.shared.delegate = self
         let  failedPhotosNumber = PhotoHandler.getFailedUploadPhotosNumber()
+        
         if failedPhotosNumber > 0, shouldNavigateToPhotos {
             shouldNavigateToPhotos = false
+           
             performSegue(withIdentifier: "PhotsViewIdentifier", sender: nil)
         }
         if let prjWasSelected = UserDefaults.standard.value(forKey: "projectWasSelected") as? Bool {
@@ -189,6 +193,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         if let prjId = UserDefaults.standard.value(forKey: "currentProjectId") as? String {
             print(prjId)
             self.setProjectsSelected(projectId: prjId)
+            
         }
         //        if isUserLogged{
         sessionQueue.async {
@@ -352,20 +357,21 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                     message = "Error"
                     print(err)
                 }
-                
-                DispatchQueue.main.async(execute: {
-                    let alert = UIAlertController(
-                        title: "SiteSnap server access",
-                        message: message,
-                        preferredStyle: .alert)
+                if message != "Error"{
+                    DispatchQueue.main.async(execute: {
+                        let alert = UIAlertController(
+                            title: "SiteSnap server access",
+                            message: message,
+                            preferredStyle: .alert)
+                        
+                        let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+                            // do something when user press OK button
+                        }
+                        alert.addAction(OKAction)
+                        self.present(alert, animated: true, completion: nil)
                     
-                    let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
-                        // do something when user press OK button
-                    }
-                    alert.addAction(OKAction)
-                    self.present(alert, animated: true, completion: nil)
-                
-                })
+                    })
+                }
             }
         }
     }
@@ -659,7 +665,7 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
     @objc func refresh() {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.userTappedLogOut = false
-        
+        print("TRY TO OBTAIN TOKEN")
         self.user?.getDetails().continueOnSuccessWith { (task) -> AnyObject? in
             DispatchQueue.main.async {
                 self.response = task.result
@@ -680,9 +686,13 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 //                print(self.user?.username! as Any)
                 //                print("\(self.pool?.getUser() as Any)")
                 if (self.pool?.token().isCompleted)! {
+                    print("HAVE TOKEN")
                     UserDefaults.standard.set(self.pool?.token().result, forKey: "token")
                     print(self.pool?.token().result as Any)
-                    self.timerAuthenticationCognito.invalidate()
+                    if let _ = self.timerAuthenticationCognito {
+                        print("INVALIDATE COGNITO TIMER")
+                        self.timerAuthenticationCognito.invalidate()
+                    }
                 } else {
                     UserDefaults.standard.removeObject(forKey: "token")
                 }
@@ -967,6 +977,8 @@ class CameraViewController: UIViewController, UITableViewDelegate, UITableViewDa
         for i in 0...userProjects.count-1 {
             //userProjects[i].selected = userProjects[i].id == projectId
             if userProjects[i].id == projectId {
+                selectedProjectButton.hideLoading(buttonText: nil)
+                galleryButton.isEnabled = true
                 selectedProjectButton.setTitle(userProjects[i].projectName, for: .normal)
             }
         }

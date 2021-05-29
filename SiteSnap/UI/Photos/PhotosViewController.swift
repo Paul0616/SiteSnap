@@ -181,7 +181,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate, CLLocationMa
             firstTime = false
             loadImages(identifiers: identifiers)
         }
-        print("---->> viewDidLayoutSubviews")
+        print("######################################>> viewDidLayoutSubviews")
          updateTagNumber()
         self.addTagButton.isHidden = false
         self.deleteImageButton.isHidden = false
@@ -772,6 +772,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate, CLLocationMa
                 photo = PhotoHandler.getSpecificPhoto(localIdentifier: identifier!)
             } else {
                 photo = PhotoHandler.getSpecificPhoto(localIdentifier: localIdentifier)
+                print("\(photo == nil ? "NIL \(localIdentifier)" : localIdentifier)")
             }
             
             if let selectedPhoto = photo {
@@ -1090,7 +1091,9 @@ extension PhotosViewController: AssetsPickerViewControllerDelegate {
             if !PhotoHandler.identifierAlreadyUploaded(localIdentifier: phAsset.localIdentifier) {
                 if PhotoHandler.savePhotoInMyDatabase(localIdentifier: phAsset.localIdentifier, creationDate: phAsset.creationDate!, latitude: coordinates.latitude, longitude: coordinates.longitude, isHidden: false) {
                     print("photo saved in DataCore")
+                    
                     loadImages(identifiers: identifiers)
+                    photoObjects = PhotoHandler.fetchAllObjects(excludeUploaded: true)
                     PhotoHandler.setFileSize(localIdentifiers: identifiers)
                 }
             } else {
