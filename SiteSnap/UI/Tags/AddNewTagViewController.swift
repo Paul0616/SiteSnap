@@ -204,67 +204,9 @@ class AddNewTagViewController: UIViewController, CircleCheckBoxDelegate, UITextF
         }
         
         BackendConnection.shared.attemptCreateNewTag(request: request as URLRequest)
-//        let task = URLSession.shared.dataTask(with: request as URLRequest) {(data, response, error) -> Void in
-//            guard error == nil else { //have errors code
-//                self.dismissProgressVC(completion: {
-//                   self.treatErrors(error)
-//                })
-//                return
-//            }
-//            guard let data = data else { //data is nil
-//                self.dismissProgressVC(completion: nil)
-//                return
-//            }
-//            do {
-//                let json = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions.mutableContainers) as! NSDictionary
-//                print(json)
-//                self.dismissProgressVC(completion: { [self] in
-//                    treatErrorsAPI(json)
-//                })
-//            }
-//            catch let error as NSError
-//            {
-//                print(error.localizedDescription)
-//                self.dismissProgressVC(completion: nil)
-//            }
-//        }
-//        task.resume()
     }
     
-//    func treatErrors(_ error: Error?) {
-//        if error != nil {
-//            print(error?.localizedDescription as Any)
-//            if let err = error as? URLError {
-//                var message: String?
-//                switch err.code {
-//                case .notConnectedToInternet:
-//                    message = "Not Connected To The Internet"
-//                case .timedOut:
-//                    message = "Request Timed Out"
-//                case .networkConnectionLost:
-//                    message = "Lost Connection to the Network"
-//                default:
-//                    print("Default Error")
-//                    message = "Error"
-//                    print(err)
-//                }
-//                
-//                DispatchQueue.main.async(execute: {
-//                    let alert = UIAlertController(
-//                        title: "SiteSnap server access",
-//                        message: message,
-//                        preferredStyle: .alert)
-//                    
-//                    let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
-//                        // do something when user press OK button
-//                    }
-//                    alert.addAction(OKAction)
-//                    self.present(alert, animated: true, completion: nil)
-//                
-//                })
-//            }
-//        }
-//    }
+
     
     func treatErrorsAPI(_ json: NSDictionary?) {
         if json != nil {

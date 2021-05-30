@@ -82,6 +82,7 @@ class BrowseTagsViewController: UIViewController, UITableViewDelegate, UITableVi
     
     //MARK: - make tags array
     func makeTagArray(){
+        print("^^^^^^^^^^^^^^^^MAKE TAG ARRAY")
         tags = PhotoHandler.getTags(localIdentifier: currentPhotoLocalIdentifier!)
         tags = self.tags.sorted(by: { $0.selected && !$1.selected})
         tagsSelected = [TagModel]()
@@ -289,10 +290,10 @@ class BrowseTagsViewController: UIViewController, UITableViewDelegate, UITableVi
     //MARK: - AddNewTagDelegate
     func tagWasAdded() {
         BackendConnection.shared.delegate = self
-        databaseUpdateFinished()
     }
     func addNewTagwasDismissed() {
         BackendConnection.shared.delegate = self
+        databaseUpdateFinished()
     }
     
     //MARK: - Tables delegate

@@ -82,6 +82,14 @@ class BackendConnection: NSObject {
             task?.resume()
         }
     }
+    
+    func getPhoneSessionInfoNow(){
+        let request = makeUrlRequest()
+        if let request = request {
+            let task = backgroundUrlSession?.downloadTask(with: request)
+            task?.resume()
+        }
+    }
   
     private func setCurrentProjectName(projects: NSArray, lastUsedProject: String){
         for item in projects {

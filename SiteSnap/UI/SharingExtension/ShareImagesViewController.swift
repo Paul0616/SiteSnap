@@ -163,6 +163,7 @@ class ShareImagesViewController: UIViewController, UITableViewDataSource, Backen
     }
     
     @IBAction func openSiteSnapTapped(_ sender: Any) {
+        showToast(message: "user logged: \(isUserLogged) Photos: \(photoObjects.count)")
         guard !photoObjects.isEmpty else {
             return
         }
@@ -176,24 +177,21 @@ class ShareImagesViewController: UIViewController, UITableViewDataSource, Backen
                     oldPhotosCount += 1
                 }
             }
-            let alert = UIAlertController(
-                title: "SiteSnap",
-                message: "There are already \(oldPhotosCount) images, which do not appear to have been uploaded. They will be assigned the current project.",
-                preferredStyle: .alert)
-            let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
-                UserDefaults.standard.set(self.currentProjectId, forKey: "currentProjectId")
-                let currentProjectName = self.userProjects.first(where: {$0.id == self.currentProjectId})?.projectName
-                UserDefaults.standard.set(currentProjectName, forKey: "currentProjectName")
-                UserDefaults.standard.set(true, forKey: "projectWasSelected")
-                self.addCurrentPhotosToDatabase()
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let viewController = storyboard.instantiateViewController(identifier: "photosViewController") as! PhotosViewController
-                viewController.modalPresentationStyle = .fullScreen
-                viewController.wasCalledFromImageSharing = true
-                self.present(viewController, animated: true, completion: nil)
+            if oldPhotosCount > 0 {
+                let alert = UIAlertController(
+                    title: "SiteSnap",
+                    message: "There are already \(oldPhotosCount) images, which do not appear to have been uploaded. They will be assigned the current project.",
+                    preferredStyle: .alert)
+                let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+                    self.openSiteSnap()
+                }
+                alert.addAction(OKAction)
+                self.present(alert, animated: true, completion: nil)
+            } else {
+                openSiteSnap()
             }
-            alert.addAction(OKAction)
-            self.present(alert, animated: true, completion: nil)
+        } else {
+            openSiteSnap()
         }
         
     
@@ -252,6 +250,19 @@ class ShareImagesViewController: UIViewController, UITableViewDataSource, Backen
             }
             return nil
         }
+    }
+    
+    private func openSiteSnap(){
+        UserDefaults.standard.set(self.currentProjectId, forKey: "currentProjectId")
+        let currentProjectName = self.userProjects.first(where: {$0.id == self.currentProjectId})?.projectName
+        UserDefaults.standard.set(currentProjectName, forKey: "currentProjectName")
+        UserDefaults.standard.set(true, forKey: "projectWasSelected")
+        self.addCurrentPhotosToDatabase()
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let viewController = storyboard.instantiateViewController(identifier: "photosViewController") as! PhotosViewController
+        viewController.modalPresentationStyle = .fullScreen
+        viewController.wasCalledFromImageSharing = true
+        self.present(viewController, animated: true, completion: nil)
     }
     
     func startBackendConnection(){
@@ -578,7 +589,7 @@ extension ShareImagesViewController: UITableViewDelegate {
 }
 
 extension UIViewController {
-    func showToast(message : String, font: UIFont) {
+    func showToast(message : String, font: UIFont = .systemFont(ofSize: 14)) {
         let toastLabel = UILabel(frame: CGRect(x: self.view.frame.size.width/2 - 75, y: self.view.frame.size.height-100, width: 150, height: 35))
         toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.6)
         toastLabel.textColor = UIColor.white

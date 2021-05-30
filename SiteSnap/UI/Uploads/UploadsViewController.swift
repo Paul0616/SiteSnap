@@ -123,6 +123,10 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         onPauseResumeAll(pauseResumeAllButton!)
     }
     
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return .lightContent
+    }
+    
     override func viewDidLayoutSubviews() {
         if self.view.safeAreaLayoutGuide.layoutFrame.size.width > self.view.safeAreaLayoutGuide.layoutFrame.size.height {
             print("landscape")
