@@ -163,7 +163,6 @@ class ShareImagesViewController: UIViewController, UITableViewDataSource, Backen
     }
     
     @IBAction func openSiteSnapTapped(_ sender: Any) {
-        showToast(message: "user logged: \(isUserLogged) Photos: \(photoObjects.count)")
         guard !photoObjects.isEmpty else {
             return
         }

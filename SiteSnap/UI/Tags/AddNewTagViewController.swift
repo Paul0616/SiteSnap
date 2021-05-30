@@ -229,6 +229,12 @@ class AddNewTagViewController: UIViewController, CircleCheckBoxDelegate, UITextF
                             let project = ProjectHandler.getSpecificProject(id: (UserDefaults.standard.value(forKey: "currentProjectId") as? String)!)
                             project?.addToAvailableTags(tag!)
                             print("new tag was added to CoreData and assigned to current project")
+                            tagNameTextField.text = nil
+                            selectedTagName = nil
+                            for button in tagButtonsList {
+                                button.isOn = false
+                            }
+                            buttonValidation()
                             self.dismiss(animated: true, completion: nil)
                             delegate!.tagWasAdded()
                         }
@@ -284,6 +290,7 @@ class AddNewTagViewController: UIViewController, CircleCheckBoxDelegate, UITextF
     
     func databaseUpdateFinished() {
         print("#######################=====>>>")
+    
     }
     
     func userNeedToCreateFirstProject() {
