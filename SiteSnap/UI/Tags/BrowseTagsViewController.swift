@@ -18,8 +18,9 @@ class BrowseTagsViewController: UIViewController, UITableViewDelegate, UITableVi
     var tagsUnselected: [TagModel]!
     var tagsSelected: [TagModel]!
     var searchTagsUnselected: [TagModel]!
-    var searchTagsSelected: [TagModel]!
+    
     var searchFlag: Bool = false
+    var searchText: String?
     var projectWasSelected: Bool = false
     var lastLocation: CLLocation!
     var timerBackend: Timer!
@@ -86,14 +87,53 @@ class BrowseTagsViewController: UIViewController, UITableViewDelegate, UITableVi
         tags = PhotoHandler.getTags(localIdentifier: currentPhotoLocalIdentifier!)
         tags = self.tags.sorted(by: { $0.selected && !$1.selected})
         tagsSelected = [TagModel]()
-        tagsUnselected = [TagModel]()
         for tag in tags {
-            if tag.selected {
+            if tag.selected{
                 tagsSelected.append(tag)
-            } else {
-                tagsUnselected.append(tag)
             }
         }
+        if !searchFlag {
+            searchTagsUnselected = [TagModel]()
+            tagsUnselected = [TagModel]()
+        
+            for tag in tags {
+                if !tag.selected {
+                    tagsUnselected.append(tag)
+                }
+            }
+        
+        } else {
+            if let searchText = self.searchText {
+                searchTagsUnselected = tags.filter { (dataArray:TagModel) -> Bool in
+                    return ((dataArray.tag.text?.lowercased().contains(searchText.lowercased()))! && !dataArray.selected
+                    )}
+                tagsUnselected = [TagModel]()
+            }
+        }
+//        print("$$$$$$$$$$ searchFlag: \(searchFlag)")
+//        if searchFlag {
+//            if let searchTagsUnselected = self.searchTagsUnselected {
+//                for tag in searchTagsUnselected {
+//                    print("-OFF \(tag.tag.text)")
+//                }
+//            }
+//            if let tagsSelected = self.tagsSelected{
+//                for tag in tagsSelected {
+//                    print("^ON \(tag.tag.text)")
+//                }
+//            }
+//        } else {
+//            if let tagsUnselected = self.tagsUnselected {
+//                for tag in tagsUnselected {
+//                    print("-OFF \(tag.tag.text)")
+//                }
+//            }
+//            if let tagsSelected = self.tagsSelected{
+//                for tag in tagsSelected {
+//                    print("^ON \(tag.tag.text)")
+//                }
+//            }
+//        }
     }
     
     func makeTagArrayWithNoCurrentPhoto(){
@@ -112,7 +152,10 @@ class BrowseTagsViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     func syncTags(){
-        let currentProjectId = UserDefaults.standard.value(forKey: "currentProjectId") as! String
+        guard let currentProjectId = UserDefaults.standard.value(forKey: "currentProjectId") as? String else {
+            return
+        }
+        
         let project = ProjectHandler.getSpecificProject(id: currentProjectId)
         print(project?.name)
         let newTags  = ProjectHandler.getTagsForProject(projectId: currentProjectId)
@@ -210,7 +253,12 @@ class BrowseTagsViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     @IBAction func onCheckTag1(_ sender: CheckBox) {
         let index = sender.tag
-        let tagId = tagsUnselected[index].tag.id
+        var tagId: String?
+        if searchFlag {
+            tagId = searchTagsUnselected[index].tag.id
+        } else {
+            tagId = tagsUnselected[index].tag.id
+        }
         if let _ = currentPhotoLocalIdentifier{
             let photo = PhotoHandler.getSpecificPhoto(localIdentifier: currentPhotoLocalIdentifier!)
             let tag = TagHandler.getSpecificTag(id: tagId!)
@@ -310,11 +358,7 @@ class BrowseTagsViewController: UIViewController, UITableViewDelegate, UITableVi
                 return searchTagsUnselected?.count ?? 0
             }
         case tblView2:
-            if !searchFlag {
-                return tagsSelected.count
-            } else {
-                return searchTagsSelected?.count ?? 0
-            }
+            return tagsSelected.count
         default:
             return 0
         }
@@ -342,21 +386,13 @@ class BrowseTagsViewController: UIViewController, UITableViewDelegate, UITableVi
             return cell
         case tblView2:
             let cell = tableView.dequeueReusableCell(withIdentifier: "TagCell2", for: indexPath) as! TagCell2TableViewCell
-            if !searchFlag {
+            //if !searchFlag {
                 cell.tagText.text = tagsSelected[indexPath.row].tag.text
                 cell.tagCheckBox.isOn = tagsSelected[indexPath.row].selected
                 cell.tagCheckBox.tag = indexPath.row
                 if tagsSelected[indexPath.row].tag.tagColor != nil {
                     cell.container.backgroundColor = UIColor(hexString: tagsSelected[indexPath.row].tag.tagColor!).adjustedColor(percent: 1.2).withAlphaComponent(0.7)
                 }
-            } else {
-                cell.tagText.text = searchTagsSelected[indexPath.row].tag.text
-                cell.tagCheckBox.isOn = searchTagsSelected[indexPath.row].selected
-                cell.tagCheckBox.tag = indexPath.row
-                if searchTagsSelected[indexPath.row].tag.tagColor != nil {
-                    cell.container.backgroundColor = UIColor(hexString: searchTagsSelected[indexPath.row].tag.tagColor!).adjustedColor(percent: 1.2).withAlphaComponent(0.7)
-                }
-            }
             return cell
         default:
             return UITableViewCell()
@@ -379,17 +415,26 @@ class BrowseTagsViewController: UIViewController, UITableViewDelegate, UITableVi
                 )}
         
             searchTagsUnselected = [TagModel]()
-            searchTagsSelected = [TagModel]()
+            tagsUnselected = [TagModel]()
+            //tagsSelected = [TagModel]()
             for tag in searchValues {
-                if tag.selected {
-                    searchTagsSelected.append(tag)
-                } else {
+                if !tag.selected {
                     searchTagsUnselected.append(tag)
                 }
             }
             searchFlag = true
+            self.searchText = searchText
         } else {
+            //tagsSelected = [TagModel]()
+            tagsUnselected = [TagModel]()
+            searchTagsUnselected = [TagModel]()
+            for tag in tags {
+                if !tag.selected {
+                    tagsUnselected.append(tag)
+                }
+            }
             searchFlag = false
+            self.searchText = nil
         }
         
         reloadTagsIntoTables()

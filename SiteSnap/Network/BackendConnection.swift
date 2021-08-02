@@ -72,11 +72,11 @@ class BackendConnection: NSObject {
         self.lastLocation = lastLocation
         self.projectWasSelected = projectWasSelected
         let request = makeUrlRequest()
-        print("start CONNECTING SITE SNAP")
-        print(request)
-        print("*******************************Task is running: \(taskIsRunning.description.uppercased())")
+//        print("start CONNECTING SITE SNAP")
+//        print(request)
+//        print("*******************************Task is running: \(taskIsRunning.description.uppercased())")
         if let request = request, !taskIsRunning {
-            print("CONNECTING")
+//            print("CONNECTING")
             taskIsRunning = true;
             let task = backgroundUrlSession?.downloadTask(with: request)
             task?.resume()
@@ -96,7 +96,7 @@ class BackendConnection: NSObject {
             let project = item as! NSDictionary
             let pID = project["id"]! as! String
             if pID == lastUsedProject {
-                UserDefaults.standard.set(project["name"]! as! String, forKey: "currentProjectName")
+                UserDefaults.standard.set(project["name"]! as? String, forKey: "currentProjectName")
                 break
             }
         }
@@ -220,7 +220,9 @@ class BackendConnection: NSObject {
                 allProjectsIds.append(pID)
             }
             let deletedProjectsNumber = ProjectHandler.deleteExtraProjects(projectsForVerification: allProjectsIds)
-            print("\(deletedProjectsNumber) projects was deleted")
+            if deletedProjectsNumber > 0 {
+                print("\(deletedProjectsNumber) projects was deleted")
+            }
             //------------------------
             //----------------------- add extra tags from server to CoreData (saveTag will add new tag only if it not already exist)
             var allTagIds: [String]!
@@ -231,12 +233,15 @@ class BackendConnection: NSObject {
                 let tag = item as! NSDictionary
                 allTagIds.append(tag["id"] as! String)
                 if TagHandler.saveTag(id: tag["id"] as! String, text: tag["name"] as! String, tagColor: tag["colour"] as! String?) {
+                    
                     print("TAG \(tag["name"] as! String) \(tag["id"] as! String) with was added")
                 }
             }
             if let ids = allTagIds {
                 let deletedTagsNumber = TagHandler.deleteExtraTags(tagsForVerification: ids)
-                print("\(deletedTagsNumber) tags was deleted")
+                if deletedTagsNumber > 0 {
+                    print("\(deletedTagsNumber) tags was deleted")
+                }
             }
             
             
@@ -292,39 +297,42 @@ class BackendConnection: NSObject {
                 }
             }
             //------------------ for each photo tags, search it in project available tags and if it no longer there removed from photo tag
-            let photos = PhotoHandler.fetchAllObjects()
-            for photo in photos! {
-                //let tagModels = PhotoHandler.getTags(localIdentifier: photo.localIdentifierString!)
-                
-                let project = ProjectHandler.getCurrentProject()
-                var currentProjectTagIds = [String]()
-                for tg in (project?.availableTags)! {
-                    let tag = tg as! Tag
-                    currentProjectTagIds.append(tag.id!)
-                }
-                print("-----PROJECT TAGS-------\(String(describing: project?.availableTags?.count)) available tags")//\(String(describing: tag.text)) current project available tag")
-                for photoTag in photo.tags! {
-                    let tag = photoTag as! Tag
-                    print("-----PHOTO TAGS-------\(String(describing: tag.text))")
-                    if !currentProjectTagIds.contains(String(describing: tag.id!)) {
-                        photo.removeFromTags(tag)
-                        print("\(String(describing: tag.text)) was removed from photo \(String(describing: photo.localIdentifierString))")
+            if let photos = PhotoHandler.fetchAllObjects() {
+                for photo in photos {
+                    //let tagModels = PhotoHandler.getTags(localIdentifier: photo.localIdentifierString!)
+                    
+                    if let project = ProjectHandler.getCurrentProject(){
+                        var currentProjectTagIds = [String]()
+                        for tg in (project.availableTags) ?? [] {
+                            let tag = tg as! Tag
+                            currentProjectTagIds.append(tag.id!)
+                        }
+                    
+                        for photoTag in photo.tags ?? [] {
+                            let tag = photoTag as! Tag
+                            print("-----PHOTO TAGS-------\(String(describing: tag.text))")
+                            if !currentProjectTagIds.contains(String(describing: tag.id!)) {
+                                photo.removeFromTags(tag)
+                                print("\(String(describing: tag.text)) was removed from photo \(String(describing: photo.localIdentifierString))")
+                            }
+                        }
                     }
                 }
+            
+                // get the current date and time
+                let currentDateTime = Date()
+                
+                // initialize the date formatter and set the style
+                let formatter = DateFormatter()
+                formatter.timeStyle = .medium
+                formatter.dateStyle = .long
+                
+                // get the date time String from the date object
+                //print(formatter.string(from: currentDateTime)) // October 8, 2016 at 10:48:53 PM
+                
+                self.delegate?.databaseUpdateFinished()
+            
             }
-        
-            // get the current date and time
-            let currentDateTime = Date()
-            
-            // initialize the date formatter and set the style
-            let formatter = DateFormatter()
-            formatter.timeStyle = .medium
-            formatter.dateStyle = .long
-            
-            // get the date time String from the date object
-            print(formatter.string(from: currentDateTime)) // October 8, 2016 at 10:48:53 PM
-            
-            self.delegate?.databaseUpdateFinished()
         }
     }
     

@@ -94,7 +94,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
        
     
         for photo in photos {
-            var currentProjectName = UserDefaults.standard.value(forKey: "currentProjectName") as! String
+            var currentProjectName = UserDefaults.standard.value(forKey: "currentProjectName") as? String
             if let projectIdToUploadToFromSharing = projectIdToUploadToFromSharing, photo.comeFromSharing {
                 if let project = ProjectHandler.getSpecificProject(id: projectIdToUploadToFromSharing){
                     currentProjectName = project.name!
@@ -103,7 +103,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
             if photo.successfulUploaded,  let lastProjectToUploadedFor = photo.lastProjectToUploadedFor{
                 currentProjectName = lastProjectToUploadedFor
             }
-            let image = ImageForUpload(localIdentifier: photo.localIdentifierString!, projectName: currentProjectName, estimatedTime: -1, fileSize: photo.fileSize, speed: 0, progress: 0, state: photo.successfulUploaded ? .done : .waiting, date: photo.lastUploadedDate)
+            let image = ImageForUpload(localIdentifier: photo.localIdentifierString!, projectName: currentProjectName ?? "", estimatedTime: -1, fileSize: photo.fileSize, speed: 0, progress: 0, state: photo.successfulUploaded ? .done : .waiting, date: photo.lastUploadedDate)
             if !photo.successfulUploaded && photo.failUploadedCode != -1{
                 image?.state = .fail
                 image?.failCode = Int(photo.failUploadedCode)
@@ -516,12 +516,17 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
     //MARK; - Prepare upload photo
     func prepareUploadPhoto(localIdentifier: String) {
         //let index = getIndexOfImage(withIdentifier: localIdentifier)
-        var currentProjectId = UserDefaults.standard.value(forKey: "currentProjectId") as! String
+        var currentProjectId = UserDefaults.standard.value(forKey: "currentProjectId") as? String
+        
         
         let photo = PhotoHandler.getSpecificPhoto(localIdentifier: localIdentifier)
         if let projectIdToUploadToFromSharing = projectIdToUploadToFromSharing, photo!.comeFromSharing {
             currentProjectId = projectIdToUploadToFromSharing
         }
+        if currentProjectId == nil {
+            return
+        }
+        
         let latitude = photo?.latitude
         let longitude = photo?.longitude
         
@@ -578,7 +583,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
             version = "2.0"
         }
         let parameters = [
-            "forProject": currentProjectId,
+            "forProject": currentProjectId!,
             "gpsLocation": gpsLocation,
             "isPrivate": "false",
             "debug": debug,
@@ -992,7 +997,7 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
         case tableView2:
             let cell = tableView.dequeueReusableCell(withIdentifier: "UploadedCellIdentifier", for: indexPath) as! CompletedUploadsTableViewCell
             var uploadedImages = images.filter({$0.state == .done})
-            uploadedImages.sort{ $0.date > $1.date}
+            uploadedImages.sort{ ($0.date ?? Date.distantPast) > ($1.date ?? Date.distantPast)}
             cell.photoImage.loadImage(identifier: uploadedImages[indexPath.row].localIdentifier)
             cell.showRemoveButton.tag = indexPath.row
             cell.removeButton.tag = indexPath.row
@@ -1059,6 +1064,8 @@ class UploadsViewController: UIViewController, UITableViewDelegate, UITableViewD
 //            return 0
 //        }
 //    }
+    
+ 
 
     //MARK: - update uploading progress
     @objc func updateProgressAndReloadData(localIdentifier: String, progress: CFloat, speed: Int, estimatedTime: Int){

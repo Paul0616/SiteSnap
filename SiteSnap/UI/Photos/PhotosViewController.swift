@@ -708,7 +708,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate, CLLocationMa
 //        for photo in photoObjects! {
 //            print("\(photo.localIdentifierString)")
 //        }
-        print("photos: \(photoObjects?.count as Any) = slides: \(slides.count) in SETUP SCROLL VIEW")
+        print("photos: \(photoObjects?.count ?? 0) = slides: \(slides.count) in SETUP SCROLL VIEW")
     }
     
     @objc func inspectPhoto(_ sender: UITapGestureRecognizer){
@@ -787,7 +787,7 @@ class PhotosViewController: UIViewController, UIScrollViewDelegate, CLLocationMa
                     let tag = t as! Tag
                     print("TAG-urile pozei: \(tag.text!)")
                 }
-                print("#############")
+               // print("#############")
             }
         }
     }

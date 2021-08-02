@@ -92,17 +92,19 @@ class ProjectHandler: NSObject {
     }
     class func getCurrentProject() -> Project? {
         let context = getContext()
-        let currentProjectId = UserDefaults.standard.value(forKey: "currentProjectId") as? String
-        let fetchRequest = NSFetchRequest<Project>(entityName: "Project")
-        fetchRequest.predicate = NSPredicate.init(format: "id=='\(currentProjectId!)'")
-        do {
-            let objects = try context.fetch(fetchRequest)
-            
-            return objects.first
-        } catch _ {
+        if let currentProjectId = UserDefaults.standard.value(forKey: "currentProjectId") as? String? {
+            let fetchRequest = NSFetchRequest<Project>(entityName: "Project")
+            fetchRequest.predicate = NSPredicate.init(format: "id=='\(currentProjectId)'")
+            do {
+                let objects = try context.fetch(fetchRequest)
+                
+                return objects.first
+            } catch _ {
+                return nil
+            }
+        } else {
             return nil
         }
-        
     }
     
     class func getTagsForProject(projectId: String) -> [TagModel] {

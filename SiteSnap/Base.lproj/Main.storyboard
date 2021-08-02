@@ -1295,21 +1295,22 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DNz-zP-eO7" userLabel="CommentsView">
                                 <rect key="frame" x="47" y="327" width="281" height="150"/>
                                 <subviews>
-                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hxu-Ia-0jm">
+                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hxu-Ia-0jm">
                                         <rect key="frame" x="8" y="8" width="265" height="134"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap here to add a comment" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4xv-in-xe2">
-                                                <rect key="frame" x="8" y="8" width="208.5" height="20.5"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap here to add a comment" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4xv-in-xe2">
+                                                <rect key="frame" x="8" y="8" width="249" height="20.5"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstAttribute="bottom" secondItem="4xv-in-xe2" secondAttribute="bottom" constant="98.670000000000002" id="0cm-N0-Bq8"/>
-                                            <constraint firstItem="4xv-in-xe2" firstAttribute="leading" secondItem="hxu-Ia-0jm" secondAttribute="leading" constant="8" id="Gh8-8H-tAb"/>
+                                            <constraint firstAttribute="bottom" secondItem="4xv-in-xe2" secondAttribute="bottom" id="0cm-N0-Bq8"/>
+                                            <constraint firstAttribute="leading" secondItem="4xv-in-xe2" secondAttribute="leading" constant="-8" id="Gh8-8H-tAb"/>
+                                            <constraint firstItem="4xv-in-xe2" firstAttribute="centerX" secondItem="hxu-Ia-0jm" secondAttribute="centerX" id="Vxl-wa-CPj"/>
                                             <constraint firstItem="4xv-in-xe2" firstAttribute="top" secondItem="hxu-Ia-0jm" secondAttribute="top" constant="8" id="gt1-RL-tbo"/>
-                                            <constraint firstAttribute="trailing" secondItem="4xv-in-xe2" secondAttribute="trailing" constant="8" id="qgf-Aw-u1a"/>
+                                            <constraint firstAttribute="trailing" secondItem="4xv-in-xe2" secondAttribute="trailing" id="qgf-Aw-u1a"/>
                                         </constraints>
                                     </scrollView>
                                 </subviews>
@@ -4048,6 +4049,20 @@ photo location</string>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VxT-wA-jWe" userLabel="header projects">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="94"/>
                                         <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jhb-Qp-zyl">
+                                                <rect key="frame" x="16" y="43" width="40" height="40"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="40" id="Vrg-ap-2NX"/>
+                                                    <constraint firstAttribute="width" constant="40" id="tUC-eY-NcY"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <inset key="contentEdgeInsets" minX="5" minY="5" maxX="5" maxY="5"/>
+                                                <state key="normal" title="EXIT"/>
+                                                <connections>
+                                                    <action selector="onBack:" destination="dDO-f8-nvU" eventType="touchUpInside" id="VTM-Se-PEu"/>
+                                                </connections>
+                                            </button>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="9" translatesAutoresizingMaskIntoConstraints="NO" id="Ryg-Zf-LJC">
                                                 <rect key="frame" x="93" y="43" width="189" height="40"/>
                                                 <subviews>
@@ -4071,9 +4086,11 @@ photo location</string>
                                         </subviews>
                                         <color key="backgroundColor" red="0.066666666669999999" green="0.058823529409999999" blue="0.24313725489999999" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
+                                            <constraint firstItem="Jhb-Qp-zyl" firstAttribute="leading" secondItem="VxT-wA-jWe" secondAttribute="leading" constant="16" id="7bO-6F-dwj"/>
                                             <constraint firstItem="Ryg-Zf-LJC" firstAttribute="centerY" secondItem="VxT-wA-jWe" secondAttribute="centerY" constant="16" id="I33-NC-4df"/>
                                             <constraint firstAttribute="height" constant="94" id="dc3-wj-DHe"/>
                                             <constraint firstItem="Ryg-Zf-LJC" firstAttribute="centerX" secondItem="VxT-wA-jWe" secondAttribute="centerX" id="kZ7-0q-fXO"/>
+                                            <constraint firstItem="Jhb-Qp-zyl" firstAttribute="centerY" secondItem="Ryg-Zf-LJC" secondAttribute="centerY" id="shl-9B-Pto"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a0x-pv-FvH" userLabel="header gray">
@@ -4337,7 +4354,7 @@ photo location</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FOl-b7-ZDY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1764" y="-1527.3399014778327"/>
+            <point key="canvasLocation" x="1764" y="-1527.8860569715143"/>
         </scene>
         <!--ReCAPTCHA View Controller-->
         <scene sceneID="yXM-Gj-rjr">

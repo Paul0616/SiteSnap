@@ -223,8 +223,8 @@ class AddNewTagViewController: UIViewController, CircleCheckBoxDelegate, UITextF
                     handler = { [self] (action) in
                         self.dismiss(animated: true, completion: nil)
                     }
-                    if let newTagId = json!["id"] as? String {
-                        if TagHandler.saveTag(id: newTagId, text: self.selectedTagName!, tagColor: self.selectedColorString) {
+                    if let newTagId = json!["id"] as? String, let selectedTagname = self.selectedTagName {
+                        if TagHandler.saveTag(id: newTagId, text: selectedTagname, tagColor: self.selectedColorString) {
                             let tag = TagHandler.getSpecificTag(id: newTagId)
                             let project = ProjectHandler.getSpecificProject(id: (UserDefaults.standard.value(forKey: "currentProjectId") as? String)!)
                             project?.addToAvailableTags(tag!)
@@ -238,6 +238,11 @@ class AddNewTagViewController: UIViewController, CircleCheckBoxDelegate, UITextF
                             self.dismiss(animated: true, completion: nil)
                             delegate!.tagWasAdded()
                         }
+                    } else {
+                        print("Fail")
+                        message = "Adding new tag failed."
+                        title = "Error"
+                        self.dismiss(animated: true, completion: nil)
                     }
                 case 1:
                     print("Invalid body, server could not decode body sent or one or more variables were sent unset")
@@ -255,7 +260,7 @@ class AddNewTagViewController: UIViewController, CircleCheckBoxDelegate, UITextF
                     print("Default error")
                 }
                 //showToast(message: "\(message)", font: .systemFont(ofSize: 16))
-                if error != 0{
+               // if error != 0{
                     DispatchQueue.main.async(execute: {
                         let alert = UIAlertController(
                             title: title,
@@ -265,7 +270,7 @@ class AddNewTagViewController: UIViewController, CircleCheckBoxDelegate, UITextF
                         alert.addAction(OKAction)
                         self.present(alert, animated: true, completion: nil)
                     })
-                }
+              //  }
 
             }
         }

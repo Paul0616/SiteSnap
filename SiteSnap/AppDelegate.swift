@@ -35,6 +35,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return self.orientationLock
     }
     
+    struct AppUtility {
+        
+        static func lockOrientation(_ orientation: UIInterfaceOrientationMask) {
+            
+            if let delegate = UIApplication.shared.delegate as? AppDelegate {
+                delegate.orientationLock = orientation
+            }
+        }
+        
+        /// OPTIONAL Added method to adjust lock and rotate to the desired orientation
+        static func lockOrientation(_ orientation: UIInterfaceOrientationMask, andRotateTo rotateOrientation:UIInterfaceOrientation) {
+            
+            self.lockOrientation(orientation)
+            
+            UIDevice.current.setValue(rotateOrientation.rawValue, forKey: "orientation")
+        }
+        
+    }
+    
+    //MARK: - SHARE IMAGES
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         print("open URL")
         if let scheme = url.scheme,
@@ -63,24 +83,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
     
-    struct AppUtility {
-        
-        static func lockOrientation(_ orientation: UIInterfaceOrientationMask) {
-            
-            if let delegate = UIApplication.shared.delegate as? AppDelegate {
-                delegate.orientationLock = orientation
-            }
-        }
-        
-        /// OPTIONAL Added method to adjust lock and rotate to the desired orientation
-        static func lockOrientation(_ orientation: UIInterfaceOrientationMask, andRotateTo rotateOrientation:UIInterfaceOrientation) {
-            
-            self.lockOrientation(orientation)
-            
-            UIDevice.current.setValue(rotateOrientation.rawValue, forKey: "orientation")
-        }
-        
-    }
+    
     
     //MARK: - Launcher Screen
     //    private func splashScreen(){
@@ -157,7 +160,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.saveContext()
     }
     
-    
+    // MARK: - Core Data Saving support
     lazy var persistentContainer: NSPersistentContainer = {
         /*
          The persistent container for the application. This implementation
@@ -185,8 +188,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return container
     }()
     
-    // MARK: - Core Data Saving support
-    
     func saveContext () {
         let context = persistentContainer.viewContext
         if context.hasChanges {
@@ -202,6 +203,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
 }
+
+// MARK:- AWSCognitoIdentityInteractiveAuthentication protocol delegate
 extension AppDelegate: AWSCognitoIdentityInteractiveAuthenticationDelegate {
     
     /*
@@ -219,10 +222,6 @@ extension AppDelegate: AWSCognitoIdentityInteractiveAuthenticationDelegate {
             signInViewController?.modalPresentationStyle = .fullScreen
         }
         
-//        if self.signUpViewController == nil {
-//            self.signUpViewController = storyboard!.instantiateInitialViewController(withIdentifier: "signUpViewController") as? SignUpViewController
-//            signUpViewController?.modalPresentationStyle = .fullScreen
-//        }
         
         DispatchQueue.main.async {
             

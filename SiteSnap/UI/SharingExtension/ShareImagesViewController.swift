@@ -117,6 +117,12 @@ class ShareImagesViewController: UIViewController, UITableViewDataSource, Backen
         invalidateTimer()
     }
     
+    @IBAction func onBack(_ sender: Any) {
+        print("TAP")
+        exit(0)
+        //dismiss(animated: true, completion: nil)
+    }
+    
     @IBAction func addTaggTapped(_ sender: Any) {
         if let _ = currentProjectId {
 //            if !currentTags.isEmpty {
@@ -470,9 +476,9 @@ class ShareImagesViewController: UIViewController, UITableViewDataSource, Backen
             let project = ProjectHandler.getSpecificProject(id: currentProjectId!)
             print(project?.name ?? "")
         }
-        if currentTags.isEmpty {
-            currentTags = ProjectHandler.getTagsForProject(projectId: currentProjectId!)
-            let project = ProjectHandler.getSpecificProject(id: currentProjectId!)
+        if currentTags.isEmpty, let currentProjectId = currentProjectId{
+            currentTags = ProjectHandler.getTagsForProject(projectId: currentProjectId)
+            let project = ProjectHandler.getSpecificProject(id: currentProjectId)
             print(project?.name ?? "")
         }
         projectsTableView.reloadData()
