@@ -486,7 +486,7 @@ class BrowseTagsViewController: UIViewController, UITableViewDelegate, UITableVi
     func databaseUpdateFinished() {
         if let _ = currentPhotoLocalIdentifier {
             makeTagArray()
-        } else {
+        }else {
             syncTags()
         }
         tblView1.reloadData()

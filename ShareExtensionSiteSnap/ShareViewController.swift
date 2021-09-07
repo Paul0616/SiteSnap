@@ -104,7 +104,7 @@ class ShareViewController: UIViewController {
                         if let error = error {
                             print("Text-Error: \(error.localizedDescription)")
                         }
-                        if let url = item as? NSURL, let urlString = url.absoluteString {
+                        if let url = item as? NSURL, let _ = url.absoluteString {
                             if self.imageLocalIdentifiers == nil {
                                 self.imageLocalIdentifiers = [String]()
                             }

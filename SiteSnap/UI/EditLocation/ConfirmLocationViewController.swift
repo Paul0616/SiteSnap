@@ -514,7 +514,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
             }
         }
     }
-    //MARK: -
+    //MARK: - USED WHEN COMPOSE PINS ang grouping them
     func isLocationsNearby(firstLocation: Photo, secondLocation: Photo) -> Bool {
         let first = CLLocation(latitude: firstLocation.latitude, longitude: firstLocation.longitude)
         let second = CLLocation(latitude: secondLocation.latitude, longitude: secondLocation.longitude)
@@ -649,6 +649,10 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate, UIGest
 
     }
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        let screenCenter = self.view.center
+        let annotationFrame = view.frame
+        let annotationMiddleBottom = CGPoint(x: view.center.x + 8.4, y: view.center.y + (view.bounds.height / 2.0) - 2.7)
+        //let x = mapView.convert( annotationMiddleBottom, to: self.view)
         
         if let isPortrait = isPortrait, !isPortrait {
             let pinCoordinate = view.annotation?.coordinate
